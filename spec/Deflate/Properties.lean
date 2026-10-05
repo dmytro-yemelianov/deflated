@@ -9,6 +9,7 @@ import Deflate.Huffman
 import Deflate.HuffmanTable
 import Deflate.LZ77
 import Deflate.Match
+import Deflate.BitWriter
 import Deflate.Decode
 import Deflate.Encode
 
@@ -1558,5 +1559,173 @@ theorem validFrom_iff (out : Array UInt8) (ts : List Token) :
 theorem valid_iff_prefix (ts : List Token) :
     Valid ts ↔ ∀ n (h : n < ts.length), ts[n].valid (expand (ts.take n)).size :=
   validFrom_iff #[] ts
+
+/-! ### M7a — Bit writer read-back (spec §3.3)
+
+  What `writeBits` / `writeCode` put at position `p` reads back at `p`,
+  whatever is written afterwards (`rest`). The `Agree` forms feed
+  `decodeSym_local`, so a symbol decoded from a pattern reader is decoded
+  the same way from the emitted stream. -/
+
+section BitWriterProps
+open BitWriter
+
+theorem natOfBits_testBit : ∀ (n : Nat) (f : Nat → Bool) (j : Nat),
+    (natOfBits f n).testBit j = (decide (j < n) && f j) := by
+  intro n
+  induction n with
+  | zero => intro f j; simp [natOfBits]
+  | succ n ih =>
+    intro f j
+    simp only [natOfBits]
+    cases j with
+    | zero =>
+      cases h : f 0 <;> simp [Nat.testBit_zero, Nat.add_mod]
+    | succ j =>
+      rw [Nat.testBit_succ, show ((if f 0 then 1 else 0) + 2 * natOfBits (fun j => f (j + 1)) n) / 2
+        = natOfBits (fun j => f (j + 1)) n by split <;> omega, ih]
+      simp
+
+theorem natOfBits_lt : ∀ (n : Nat) (f : Nat → Bool), natOfBits f n < 2 ^ n := by
+  intro n
+  induction n with
+  | zero => intro f; simp [natOfBits]
+  | succ n ih =>
+    intro f
+    have := ih (fun j => f (j + 1))
+    simp only [natOfBits, Nat.pow_succ]
+    split <;> omega
+
+theorem toBytes_size (w : BitWriter) : w.toBytes.size = (w.bits.size + 7) / 8 := by
+  simp [toBytes, ByteArray.size]
+
+theorem toBytes_bitAt (w : BitWriter) (i : Nat) (h : i < w.bits.size) :
+    bitAt w.toBytes i = w.bits[i] := by
+  rw [bitAt_eq_testBit]
+  have hk : i / 8 < w.toBytes.size := by rw [toBytes_size]; omega
+  rw [byteAt, dif_pos hk]
+  simp only [toBytes, ByteArray.getElem_eq_getElem_data, Array.getElem_ofFn, byteOf]
+  rw [UInt8.toNat_ofNat', Nat.mod_eq_of_lt (natOfBits_lt 8 _), natOfBits_testBit]
+  simp [Nat.mod_lt i (by decide : 8 > 0), Nat.div_add_mod, h]
+
+theorem bitAt_toBytes_append (a b : Array Bool) (i : Nat) (h : i < a.size) :
+    bitAt (BitWriter.mk (a ++ b)).toBytes i = a[i] := by
+  rw [toBytes_bitAt _ i (by simp; omega)]
+  simp [Array.getElem_append_left h]
+
+theorem readBits_of_bits : ∀ (n : Nat) (r : BitReader) (v : Nat), v < 2 ^ n →
+    (∀ i < n, r.pos + i < r.size ∧ bitAt r.bytes (r.pos + i) = v.testBit i) →
+    readBits r n = some (v, ⟨r.bytes, r.pos + n⟩) := by
+  intro n
+  induction n with
+  | zero => intro r v hv _; simp at hv; subst hv; rfl
+  | succ n ih =>
+    intro r v hv hb
+    obtain ⟨hlt, hb0⟩ := hb 0 (by omega)
+    simp only [Nat.add_zero] at hlt hb0
+    have hv2 : v / 2 < 2 ^ n := by rw [Nat.pow_succ] at hv; omega
+    have hb2 : ∀ i < n, (⟨r.bytes, r.pos + 1⟩ : BitReader).pos + i < (⟨r.bytes, r.pos + 1⟩ : BitReader).size ∧
+        bitAt (⟨r.bytes, r.pos + 1⟩ : BitReader).bytes ((⟨r.bytes, r.pos + 1⟩ : BitReader).pos + i)
+          = (v / 2).testBit i := by
+      intro i hi
+      have hi' : i + 1 < n + 1 := by omega
+      obtain ⟨a, e⟩ := hb (i + 1) hi'
+      dsimp only [BitReader.size, BitPos] at *
+      refine ⟨by omega, ?_⟩
+      dsimp only
+      rw [Nat.add_assoc, Nat.add_comm 1 i, e, Nat.testBit_succ]
+    have hrest := ih ⟨r.bytes, r.pos + 1⟩ (v / 2) hv2 hb2
+    simp only [readBits, readBit_of_lt hlt, hrest, hb0, Option.bind_eq_bind, Option.bind_some,
+      Option.pure_def, Option.some.injEq, Prod.mk.injEq, BitReader.mk.injEq, true_and]
+    refine ⟨?_, by dsimp only [BitPos]; omega⟩
+    rw [Nat.testBit_zero]
+    split <;> simp_all <;> omega
+
+theorem lsbBits_size (v n : Nat) : (lsbBits v n).size = n := by simp [lsbBits]
+
+theorem writeBits_bits (w : BitWriter) (v n : Nat) :
+    (w.writeBits v n).bits = w.bits ++ lsbBits v n := rfl
+
+theorem writeBits_size (w : BitWriter) (v n : Nat) :
+    (w.writeBits v n).bits.size = w.bits.size + n := by
+  simp [writeBits_bits, lsbBits_size]
+
+theorem bitAt_written (w : BitWriter) (v n : Nat) (rest : BitWriter) (i : Nat) (hi : i < n) :
+    bitAt (BitWriter.mk ((w.writeBits v n).bits ++ rest.bits)).toBytes (w.bits.size + i)
+      = v.testBit i := by
+  rw [bitAt_toBytes_append _ _ _ (by rw [writeBits_size]; omega)]
+  simp [writeBits_bits, lsbBits, Array.getElem_append_right]
+
+theorem written_bits (w : BitWriter) (v n : Nat) (rest : BitWriter) :
+    ∀ i < n, w.bits.size + i < (BitReader.mk (BitWriter.mk ((w.writeBits v n).bits ++ rest.bits)).toBytes 0).size ∧
+      bitAt (BitWriter.mk ((w.writeBits v n).bits ++ rest.bits)).toBytes (w.bits.size + i)
+        = v.testBit i := by
+  intro i hi
+  refine ⟨?_, bitAt_written w v n rest i hi⟩
+  simp only [BitReader.size, toBytes_size, Array.size_append, writeBits_size]
+  omega
+
+theorem readBits_written (w : BitWriter) (v n : Nat) (rest : BitWriter) (hv : v < 2 ^ n) :
+    readBits ⟨(BitWriter.mk ((w.writeBits v n).bits ++ rest.bits)).toBytes, w.bits.size⟩ n
+      = some (v, ⟨(BitWriter.mk ((w.writeBits v n).bits ++ rest.bits)).toBytes,
+          w.bits.size + n⟩) :=
+  readBits_of_bits n _ v hv (written_bits w v n rest)
+
+theorem agree_written (w : BitWriter) (v n : Nat) (rest : BitWriter) (q : BitReader)
+    (hq : ∀ i < n, q.pos + i < q.size ∧ bitAt q.bytes (q.pos + i) = v.testBit i) :
+    Agree q ⟨(BitWriter.mk ((w.writeBits v n).bits ++ rest.bits)).toBytes, w.bits.size⟩ n := by
+  intro i hi
+  obtain ⟨a, e⟩ := hq i hi
+  obtain ⟨a', e'⟩ := written_bits w v n rest i hi
+  exact ⟨a, a', by rw [e, e']⟩
+
+theorem agree_patternReader_written (w : BitWriter) (v n : Nat) (rest : BitWriter)
+    (hn : n ≤ 16) :
+    Agree (patternReader v)
+      ⟨(BitWriter.mk ((w.writeBits v n).bits ++ rest.bits)).toBytes, w.bits.size⟩ n :=
+  agree_written w v n rest _ fun i hi =>
+    ⟨by rw [patternReader_size]; show 0 + i < 16; omega,
+     by show bitAt (patternReader v).bytes (0 + i) = _; rw [Nat.zero_add]; exact patternReader_bit v i (by omega)⟩
+
+theorem decodeSym_written {c : Code} {w : BitWriter} {v n : Nat} {s : Nat} {r' : BitReader}
+    (rest : BitWriter) (h : decodeSym c (patternReader v) = .ok (s, r')) (hl : r'.pos = n)
+    (hn : n ≤ 16) :
+    decodeSym c ⟨(BitWriter.mk ((w.writeBits v n).bits ++ rest.bits)).toBytes, w.bits.size⟩
+      = .ok (s, ⟨(BitWriter.mk ((w.writeBits v n).bits ++ rest.bits)).toBytes,
+          w.bits.size + n⟩) := by
+  subst hl
+  have hag := agree_patternReader_written w v (r'.pos - (patternReader v).pos) rest
+    (by show r'.pos - 0 ≤ 16; omega)
+  have hd := decodeSym_local h hag
+  rw [show r'.pos - (patternReader v).pos = r'.pos from Nat.sub_zero _] at hd
+  exact hd
+
+theorem reverseBits_lt (code len : Nat) : reverseBits code len < 2 ^ len := natOfBits_lt _ _
+
+theorem reverseBits_testBit (code len i : Nat) (hi : i < len) :
+    (reverseBits code len).testBit i = code.testBit (len - 1 - i) := by
+  simp [reverseBits, natOfBits_testBit, hi]
+
+theorem writeCode_eq (w : BitWriter) (code len : Nat) :
+    w.writeCode code len = w.writeBits (reverseBits code len) len := rfl
+
+theorem bitAt_writeCode (w : BitWriter) (code len : Nat) (rest : BitWriter) (i : Nat) (hi : i < len) :
+    bitAt (BitWriter.mk ((w.writeCode code len).bits ++ rest.bits)).toBytes (w.bits.size + i)
+      = code.testBit (len - 1 - i) := by
+  rw [writeCode_eq, bitAt_written _ _ _ _ _ hi, reverseBits_testBit _ _ _ hi]
+
+theorem decodeSym_writeCode {c : Code} {w : BitWriter} {code len s : Nat} {r' : BitReader}
+    (rest : BitWriter) (h : decodeSym c (patternReader (reverseBits code len)) = .ok (s, r'))
+    (hl : r'.pos = len) (hn : len ≤ 16) :
+    decodeSym c ⟨(BitWriter.mk ((w.writeCode code len).bits ++ rest.bits)).toBytes, w.bits.size⟩
+      = .ok (s, ⟨(BitWriter.mk ((w.writeCode code len).bits ++ rest.bits)).toBytes,
+          w.bits.size + len⟩) :=
+  decodeSym_written rest h hl hn
+
+/-- BFINAL=1, BTYPE=01, then literal 0's fixed code `0x30` (8 bits,
+    MSB first) packs to `0x63 0x00`, as in a zlib fixed-Huffman stream. -/
+example : (BitWriter.empty.writeBits 1 1 |>.writeBits 1 2 |>.writeCode 0x30 8).toBytes.data = #[99, 0] := by decide +kernel
+
+end BitWriterProps
 
 end Deflate

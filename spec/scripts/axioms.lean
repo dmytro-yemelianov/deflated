@@ -43,3 +43,10 @@ open Deflate
 #print axioms Deflate.expand_compressTokens
 #print axioms Deflate.compressTokens_valid
 #print axioms Deflate.valid_iff_prefix
+#print axioms Deflate.toBytes_bitAt
+#print axioms Deflate.readBits_written
+#print axioms Deflate.agree_written
+#print axioms Deflate.agree_patternReader_written
+#print axioms Deflate.decodeSym_written
+#print axioms Deflate.decodeSym_writeCode
+#print axioms Deflate.bitAt_writeCode
