@@ -3565,15 +3565,27 @@ end EmitBlocksProps
 
 /-- The headline round trip: whichever encoding `compress` keeps, the
     decoder returns the input, for every finder. -/
-theorem decode_compress (find : Finder) (x : ByteArray) (limit : Nat) (h : x.size ≤ limit) :
-    decode (compress find x) limit = .ok x := by
+theorem decode_compress (find : Finder) (lengthsFor : LengthsFor) (x : ByteArray) (limit : Nat)
+    (h : x.size ≤ limit) :
+    decode (compress find lengthsFor x) limit = .ok x := by
   unfold compress
   dsimp only
   split
   · have he := expand_compressTokens find x.data
-    have hf := decode_emitFixed (compressTokens find x.data) limit
+    have hb := decode_emitBlocks lengthsFor (compressTokens find x.data) limit
       (compressTokens_valid find x.data) (by rw [he]; exact h)
-    rw [hf, he]
+    rw [hb, he]
   · exact decode_encodeStored x limit h
+
+/-- With no dynamic lengths and at most one block of tokens, `compress` is
+    M7a's compressor: one fixed block against stored (spec §3.5). -/
+theorem compress_none (find : Finder) (x : ByteArray)
+    (h : (compressTokens find x.data).length ≤ blockTokens) :
+    compress find (fun _ => none) x =
+      (let f := emitFixed (compressTokens find x.data)
+       let s := encodeStored x
+       if f.size < s.size then f else s) := by
+  unfold compress
+  rw [emitBlocks_none _ h]
 
 end Deflate
