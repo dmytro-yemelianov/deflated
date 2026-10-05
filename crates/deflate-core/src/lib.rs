@@ -20,6 +20,7 @@ pub mod deflate;
 pub mod encode_fixed;
 pub mod error;
 pub mod huffman;
+pub mod huffman_build;
 pub mod inflate;
 pub mod lz77;
 pub mod matcher;
