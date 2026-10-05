@@ -61,3 +61,8 @@ open Deflate
 #print axioms Deflate.decodeSym_canonical
 #print axioms Deflate.canonicalCode_fixedLit
 #print axioms Deflate.canonicalCode_fixedDist
+#print axioms Deflate.rleLengths_expand
+#print axioms Deflate.rleLengths_inRange
+#print axioms Deflate.readCodeLengths_go_emit
+#print axioms Deflate.readCLLens_go_emit
+#print axioms Deflate.readDynamicCodes_emitHeader

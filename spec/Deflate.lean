@@ -12,6 +12,7 @@ import Deflate.Match
 import Deflate.Decode
 import Deflate.Encode
 import Deflate.EncodeFixed
+import Deflate.EncodeDynamic
 import Deflate.Compress
 import Deflate.Properties
 

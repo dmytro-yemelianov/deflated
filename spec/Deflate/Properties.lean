@@ -14,6 +14,7 @@ import Deflate.BitWriter
 import Deflate.Decode
 import Deflate.Encode
 import Deflate.EncodeFixed
+import Deflate.EncodeDynamic
 import Deflate.Compress
 
 namespace Deflate
@@ -2518,6 +2519,558 @@ theorem canonicalCode_fixedDist :
   decide +kernel
 
 end CanonicalProps
+
+/-! ### M7b — Dynamic header (spec §3.2)
+
+  `emitHeader` writes HLIT, HDIST, HCLEN, the CL lengths in `clOrder` and
+  the RLE of `lit ++ dist` under the canonical CL code. The decoder reads
+  it back in three stages: `readCLLens_go_emit` (the CL lengths land at
+  their `clOrder` positions, and the trimmed tail is zero by `clCount`),
+  `readCodeLengths_go_emit` (each RLE symbol decodes by
+  `decodeSym_canonical` and appends what `ClSym.apply` says), and
+  `rleLengths_expand` (those appends rebuild `lit ++ dist`). -/
+
+section EncodeDynamicProps
+open BitWriter
+
+theorem foldl_apply_append (a b : List ClSym) (acc : Array Nat) :
+    (a ++ b).foldl ClSym.apply acc = b.foldl ClSym.apply (a.foldl ClSym.apply acc) := by
+  simp [List.foldl_append]
+
+theorem foldl_apply_replicate_len (v : Nat) : ∀ (n : Nat) (acc : Array Nat),
+    (List.replicate n (ClSym.len v)).foldl ClSym.apply acc = acc ++ Array.replicate n v := by
+  intro n
+  induction n with
+  | zero => intro acc; simp
+  | succ n ih =>
+    intro acc
+    rw [List.replicate_succ, List.foldl_cons, ih]
+    simp only [ClSym.apply]
+    apply Array.ext'
+    simp [List.replicate_succ]
+
+theorem zerosRun_apply : ∀ (n : Nat) (acc : Array Nat),
+    (zerosRun n).foldl ClSym.apply acc = acc ++ Array.replicate n 0 := by
+  intro n
+  induction n using zerosRun.induct with
+  | case1 n h ih =>
+    intro acc
+    rw [zerosRun, if_pos h, List.foldl_cons, ih]
+    simp only [ClSym.apply]
+    apply Array.ext'
+    simp only [Array.toList_append, Array.toList_replicate, List.append_assoc, List.replicate_append_replicate]
+    congr 2; omega
+  | case2 n h1 h2 =>
+    intro acc
+    rw [zerosRun, if_neg h1, if_pos h2]
+    simp only [List.foldl_cons, List.foldl_nil, ClSym.apply]
+    congr 2; omega
+  | case3 n h1 h2 =>
+    intro acc
+    rw [zerosRun, if_neg h1, if_neg h2, foldl_apply_replicate_len]
+
+theorem repRun_apply (v : Nat) : ∀ (n : Nat) (acc : Array Nat), acc.back? = some v →
+    (repRun v n).foldl ClSym.apply acc = acc ++ Array.replicate n v := by
+  intro n
+  induction n using repRun.induct with
+  | case1 n h ih =>
+    intro acc hb
+    rw [repRun, if_pos h, List.foldl_cons, ih]
+    · simp only [ClSym.apply, hb, Option.getD_some]
+      apply Array.ext'
+      simp only [Array.toList_append, Array.toList_replicate, List.append_assoc, List.replicate_append_replicate]
+      congr 2; omega
+    · simp only [ClSym.apply, hb, Option.getD_some]
+      rw [Array.back?_append]
+      simp [Array.back?_replicate]
+  | case2 n h =>
+    intro acc _
+    rw [repRun, if_neg h, foldl_apply_replicate_len]
+
+theorem runSyms_apply (v n : Nat) (hn : 1 ≤ n) (acc : Array Nat) :
+    (runSyms v n).foldl ClSym.apply acc = acc ++ Array.replicate n v := by
+  unfold runSyms
+  split
+  · subst v; exact zerosRun_apply n acc
+  · rw [List.foldl_cons, repRun_apply v (n - 1) _ (by simp [ClSym.apply])]
+    simp only [ClSym.apply]
+    apply Array.ext'
+    simp only [Array.toList_append, Array.toList_push, Array.toList_replicate, List.append_assoc]
+    congr 1
+    obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := ⟨n - 1, by omega⟩
+    simp [List.replicate_succ]
+
+theorem takeWhile_beq_split (v : Nat) (rest : List Nat) :
+    v :: rest = List.replicate ((rest.takeWhile (· == v)).length + 1) v
+      ++ rest.drop (rest.takeWhile (· == v)).length := by
+  have h1 : rest.takeWhile (· == v) = List.replicate (rest.takeWhile (· == v)).length v := by
+    rw [List.eq_replicate_iff]
+    refine ⟨rfl, ?_⟩
+    intro b hb
+    have := List.all_eq_true.mp (List.all_takeWhile (p := (· == v)) (l := rest)) b hb
+    simpa using this
+  have h2 : rest.drop (rest.takeWhile (· == v)).length = rest.dropWhile (· == v) := by
+    have e := List.takeWhile_append_dropWhile (p := (· == v)) (l := rest)
+    calc rest.drop (rest.takeWhile (· == v)).length
+        = (rest.takeWhile (· == v) ++ rest.dropWhile (· == v)).drop
+            (rest.takeWhile (· == v)).length := by rw [e]
+      _ = rest.dropWhile (· == v) := List.drop_left
+  rw [h2, List.replicate_succ, List.cons_append, ← h1, List.takeWhile_append_dropWhile]
+
+theorem rleList_apply : ∀ (l : List Nat) (acc : Array Nat),
+    (rleList l).foldl ClSym.apply acc = acc ++ l.toArray := by
+  intro l
+  induction l using rleList.induct with
+  | case1 => intro acc; simp [rleList]
+  | case2 v rest k ih =>
+    intro acc
+    rw [rleList, foldl_apply_append, runSyms_apply v _ (by omega), ih]
+    conv => rhs; rw [takeWhile_beq_split v rest]
+    apply Array.ext'
+    simp; rfl
+
+/-- **RLE round trip** (spec §3.2): expanding the RLE symbols, as the
+    decoder does, gives back the lengths. -/
+theorem rleLengths_expand (ls : Array Nat) : expandRle (rleLengths ls) = ls := by
+  unfold expandRle rleLengths
+  rw [rleList_apply]
+  simp
+
+
+/-- One RLE symbol is well formed after the lengths `acc`: a literal
+    length is 0..15, each extra value fits its bits, and a 16 has a
+    previous length to repeat. -/
+def ClSym.Ok (acc : Array Nat) : ClSym → Prop
+  | .len v => v < 16
+  | .rep16 n => n < 4 ∧ acc.size ≠ 0
+  | .zeros17 n => n < 8
+  | .zeros18 n => n < 128
+
+/-- Every symbol of the list is well formed where it occurs. -/
+def RleOk : Array Nat → List ClSym → Prop
+  | _, [] => True
+  | acc, s :: ss => s.Ok acc ∧ RleOk (s.apply acc) ss
+
+theorem rleOk_append : ∀ (a b : List ClSym) (acc : Array Nat),
+    RleOk acc a → RleOk (a.foldl ClSym.apply acc) b → RleOk acc (a ++ b) := by
+  intro a
+  induction a with
+  | nil => intro b acc _ h; simpa using h
+  | cons s a ih =>
+    intro b acc ha hb
+    exact ⟨ha.1, ih b _ ha.2 hb⟩
+
+theorem apply_size (acc : Array Nat) (s : ClSym) : acc.size < (s.apply acc).size := by
+  cases s <;> simp [ClSym.apply] <;> omega
+
+theorem foldl_apply_size : ∀ (syms : List ClSym) (acc : Array Nat),
+    acc.size + syms.length ≤ (syms.foldl ClSym.apply acc).size := by
+  intro syms
+  induction syms with
+  | nil => intro acc; simp
+  | cons s ss ih =>
+    intro acc
+    have := ih (s.apply acc)
+    have := apply_size acc s
+    simp only [List.foldl_cons, List.length_cons]
+    omega
+
+theorem rleOk_replicate_len (v : Nat) (hv : v < 16) : ∀ (n : Nat) (acc : Array Nat),
+    RleOk acc (List.replicate n (ClSym.len v)) := by
+  intro n
+  induction n with
+  | zero => intro acc; trivial
+  | succ n ih => intro acc; exact ⟨hv, ih _⟩
+
+theorem zerosRun_ok : ∀ (n : Nat) (acc : Array Nat), RleOk acc (zerosRun n) := by
+  intro n
+  induction n using zerosRun.induct with
+  | case1 n h ih =>
+    intro acc
+    rw [zerosRun, if_pos h]
+    exact ⟨show min n 138 - 11 < 128 by omega, ih _⟩
+  | case2 n h1 h2 =>
+    intro acc
+    rw [zerosRun, if_neg h1, if_pos h2]
+    exact ⟨show n - 3 < 8 by omega, trivial⟩
+  | case3 n h1 h2 =>
+    intro acc
+    rw [zerosRun, if_neg h1, if_neg h2]
+    exact rleOk_replicate_len 0 (by decide) n acc
+
+theorem repRun_ok (v : Nat) (hv : v < 16) : ∀ (n : Nat) (acc : Array Nat), acc.size ≠ 0 →
+    RleOk acc (repRun v n) := by
+  intro n
+  induction n using repRun.induct with
+  | case1 n h ih =>
+    intro acc ha
+    rw [repRun, if_pos h]
+    exact ⟨⟨by omega, ha⟩, ih _ (by have := apply_size acc (.rep16 (min n 6 - 3)); omega)⟩
+  | case2 n h =>
+    intro acc _
+    rw [repRun, if_neg h]
+    exact rleOk_replicate_len v hv n acc
+
+theorem runSyms_ok (v n : Nat) (hv : v < 16) (acc : Array Nat) : RleOk acc (runSyms v n) := by
+  unfold runSyms
+  split
+  · exact zerosRun_ok n acc
+  · exact ⟨hv, repRun_ok v hv _ _ (by simp [ClSym.apply])⟩
+
+theorem rleList_ok : ∀ (l : List Nat), (∀ x ∈ l, x < 16) → ∀ (acc : Array Nat),
+    RleOk acc (rleList l) := by
+  intro l
+  induction l using rleList.induct with
+  | case1 => intro _ acc; rw [rleList]; trivial
+  | case2 v rest k ih =>
+    intro hl acc
+    rw [rleList]
+    exact rleOk_append _ _ _ (runSyms_ok v _ (hl v (by simp)) acc)
+      (ih (fun x hx => hl x (List.mem_cons_of_mem _ (List.mem_of_mem_drop hx))) _)
+
+/-- **RLE symbols in range** (spec §3.2): for lengths ≤ 15, every RLE
+    symbol is a valid CL symbol whose repeat count fits its extra bits,
+    and every 16 follows some length. -/
+theorem rleLengths_inRange (ls : Array Nat) (h : ∀ x ∈ ls, x ≤ 15) :
+    RleOk #[] (rleLengths ls) :=
+  rleList_ok _ (fun x hx => by have := h x (by simpa using hx); omega) _
+
+
+theorem writeClSym_bits (cl : Array Nat) (w : BitWriter) (s : ClSym) :
+    (writeClSym cl w s).bits = w.bits ++ (lsbBits (reverseBits (canonicalCode cl s.sym).1
+      (canonicalCode cl s.sym).2) (canonicalCode cl s.sym).2 ++ lsbBits s.extra.1 s.extra.2) := by
+  simp [writeClSym, writeBits_bits, writeCode_eq, Array.append_assoc]
+
+theorem writeClSym_size (cl : Array Nat) (w : BitWriter) (s : ClSym) :
+    (writeClSym cl w s).bits.size
+      = (w.writeCode (canonicalCode cl s.sym).1 (canonicalCode cl s.sym).2).bits.size + s.extra.2 := by
+  simp [writeClSym, writeBits_size]
+
+theorem foldl_writeClSym_bits (cl : Array Nat) : ∀ (syms : List ClSym) (w : BitWriter),
+    ∃ T, (syms.foldl (writeClSym cl) w).bits = w.bits ++ T := by
+  intro syms
+  induction syms with
+  | nil => intro w; exact ⟨#[], by simp⟩
+  | cons s ss ih =>
+    intro w
+    obtain ⟨T, hT⟩ := ih (writeClSym cl w s)
+    exact ⟨_, by rw [List.foldl_cons, hT, writeClSym_bits, Array.append_assoc]⟩
+
+theorem ClSym.ok_extra {acc : Array Nat} {s : ClSym} (h : s.Ok acc) : s.extra.1 < 2 ^ s.extra.2 := by
+  cases s <;> simp [ClSym.Ok, ClSym.extra] at h ⊢ <;> omega
+
+theorem ClSym.ok_sym {acc : Array Nat} {s : ClSym} (h : s.Ok acc) : s.sym < 19 := by
+  cases s <;> simp [ClSym.Ok, ClSym.sym] at h ⊢; omega
+
+/-- The decoder's code-length loop reads back RLE symbols written under the
+    canonical CL code, whatever follows them. -/
+theorem readCodeLengths_go_emit (cl : Array Nat) (hcl : cl.size = 19)
+    (hc15 : ∀ i (h : i < cl.size), cl[i] ≤ 15) (hcc : (⟨cl⟩ : Code).isComplete = true)
+    (total : Nat) (bs : ByteArray) :
+    ∀ (syms : List ClSym) (acc : Array Nat) (w : BitWriter) (R : Array Bool) (fuel : Nat),
+    bs = (BitWriter.mk ((syms.foldl (writeClSym cl) w).bits ++ R)).toBytes →
+    RleOk acc syms → (∀ s ∈ syms, 0 < cl[s.sym]!) →
+    (syms.foldl ClSym.apply acc).size = total → syms.length < fuel →
+    readCodeLengths.go ⟨cl⟩ total acc ⟨bs, w.bits.size⟩ fuel
+      = .ok (syms.foldl ClSym.apply acc, ⟨bs, (syms.foldl (writeClSym cl) w).bits.size⟩) := by
+  intro syms
+  induction syms with
+  | nil =>
+    intro acc w R fuel _ _ _ htot hf
+    obtain ⟨k, rfl⟩ : ∃ k, fuel = k + 1 := ⟨fuel - 1, by simp at hf; omega⟩
+    simp only [List.foldl_nil] at htot ⊢
+    rw [readCodeLengths.go, if_pos (by omega)]
+  | cons s ss ih =>
+    intro acc w R fuel hbs hok hused htot hf
+    obtain ⟨k, rfl⟩ : ∃ k, fuel = k + 1 := ⟨fuel - 1, by simp at hf; omega⟩
+    obtain ⟨hs, hss⟩ := hok
+    have hsym := ClSym.ok_sym hs
+    have hext := ClSym.ok_extra hs
+    have hsz := foldl_apply_size ss (s.apply acc)
+    have hgrow := apply_size acc s
+    simp only [List.foldl_cons] at htot hbs ⊢
+    obtain ⟨T, hT⟩ := foldl_writeClSym_bits cl ss (writeClSym cl w s)
+    have hl0 : 0 < cl[s.sym] := by
+      have := hused s (by simp); rwa [getElem!_pos cl s.sym (by omega)] at this
+    -- the CL code of `s`
+    have hd := decodeSym_canonical (ls := cl) (bs := bs) (w := w)
+      (R := lsbBits s.extra.1 s.extra.2 ++ (T ++ R)) (s := s.sym) (by omega) hl0
+      (hc15 _ _) (Or.inl hcc)
+      (by rw [hbs, hT, writeClSym_bits]; simp [writeBits_bits, writeCode_eq, Array.append_assoc])
+    -- its extra bits
+    have hx := readBits_written
+      (w.writeCode (canonicalCode cl s.sym).1 (canonicalCode cl s.sym).2) s.extra.1 s.extra.2
+      ⟨T ++ R⟩ hext
+    have hbs' : bs = (BitWriter.mk (((w.writeCode (canonicalCode cl s.sym).1
+        (canonicalCode cl s.sym).2).writeBits s.extra.1 s.extra.2).bits ++ (T ++ R))).toBytes := by
+      rw [hbs, hT]; simp [writeClSym, Array.append_assoc]
+    rw [← hbs'] at hx
+    have ih' := ih (s.apply acc) (writeClSym cl w s) R k (by rw [hbs]) hss
+      (fun t ht => hused t (List.mem_cons_of_mem _ ht)) htot (by simp at hf; omega)
+    rw [readCodeLengths.go, if_neg (by omega)]
+    simp only [bind, Except.bind]
+    rw [hd]
+    dsimp only
+    cases s with
+    | len v =>
+      simp only [ClSym.Ok] at hs
+      simp only [ClSym.sym] at hd hx ⊢
+      rw [if_pos hs]
+      simp only [writeClSym, ClSym.extra, ClSym.sym, ClSym.apply] at ih' ⊢
+      rw [show ((w.writeCode (canonicalCode cl v).1 (canonicalCode cl v).2).writeBits 0 0)
+          = w.writeCode (canonicalCode cl v).1 (canonicalCode cl v).2 from rfl] at ih'
+      exact ih'
+    | rep16 n =>
+      obtain ⟨hn, hne⟩ := hs
+      simp only [ClSym.sym, ClSym.extra] at hd hx ⊢
+      rw [if_neg (by omega), if_pos trivial]
+      obtain ⟨prev, hprev⟩ : ∃ p, acc.back? = some p := by
+        cases h : acc.back? with
+        | none => exfalso; apply hne; simpa [Array.back?_eq_none_iff] using h
+        | some p => exact ⟨p, rfl⟩
+      simp only [ClSym.apply, hprev, Option.getD_some, writeClSym_size, ClSym.sym, ClSym.extra]
+        at htot ih' hsz ⊢
+      simp only [BitReader.readBitsE, hx]
+      rw [if_neg (by
+        have := foldl_apply_size ss (acc ++ Array.replicate (3 + n) prev)
+        rw [htot] at this; simp at this; omega)]
+      exact ih'
+    | zeros17 n =>
+      simp only [ClSym.Ok] at hs
+      simp only [ClSym.sym, ClSym.extra] at hd hx ⊢
+      rw [if_neg (by omega), if_neg (by omega), if_pos trivial]
+      simp only [ClSym.apply, writeClSym_size, ClSym.sym, ClSym.extra] at htot ih' hsz ⊢
+      simp only [BitReader.readBitsE, hx]
+      rw [if_neg (by
+        have := foldl_apply_size ss (acc ++ Array.replicate (3 + n) 0)
+        rw [htot] at this; simp at this; omega)]
+      exact ih'
+    | zeros18 n =>
+      simp only [ClSym.Ok] at hs
+      simp only [ClSym.sym, ClSym.extra] at hd hx ⊢
+      rw [if_neg (by omega), if_neg (by omega), if_neg (by omega), if_pos trivial]
+      simp only [ClSym.apply, writeClSym_size, ClSym.sym, ClSym.extra] at htot ih' hsz ⊢
+      simp only [BitReader.readBitsE, hx]
+      rw [if_neg (by
+        have := foldl_apply_size ss (acc ++ Array.replicate (11 + n) 0)
+        rw [htot] at this; simp at this; omega)]
+      exact ih'
+
+
+theorem clCount_le (cl : Array Nat) : ∀ k, clCount cl k ≤ k := by
+  intro k
+  induction k with
+  | zero => simp [clCount]
+  | succ k ih => simp only [clCount]; split <;> omega
+
+/-- Past `clCount`, every CL length in `clOrder` is zero. -/
+theorem clCount_zero (cl : Array Nat) : ∀ k p, clCount cl k ≤ p → p < k → cl[clOrder[p]!]! = 0 := by
+  intro k
+  induction k with
+  | zero => intro p _ h; omega
+  | succ k ih =>
+    intro p hp hk
+    simp only [clCount] at hp
+    split at hp
+    · omega
+    · rename_i hz
+      by_cases e : p = k
+      · subst e; simpa using hz
+      · exact ih p hp (by omega)
+
+theorem clOrder_lt : ∀ p, p < 19 → clOrder[p]! < 19 := by decide
+
+theorem clOrder_onto : ∀ j, j < 19 → ∃ p, p < 19 ∧ clOrder[p]! = j := by decide
+
+theorem writeCLLensFrom_bits (cl : Array Nat) (ncode : Nat) : ∀ (i : Nat) (w : BitWriter),
+    ∃ T, (writeCLLensFrom cl ncode i w).bits = w.bits ++ T ∧ T.size = 3 * (ncode - i) := by
+  intro i w
+  induction i, w using writeCLLensFrom.induct cl ncode with
+  | case1 i w h ih =>
+    obtain ⟨T, hT, hs⟩ := ih
+    rw [writeCLLensFrom, if_pos h, hT]
+    exact ⟨_, by rw [writeBits_bits, Array.append_assoc], by simp [lsbBits_size]; omega⟩
+  | case2 i w h =>
+    rw [writeCLLensFrom, if_neg h]
+    exact ⟨#[], by simp, by simp; omega⟩
+
+theorem getElem!_setIfInBounds_19 (acc : Array Nat) (q v j : Nat) (hs : acc.size = 19) (hj : j < 19) :
+    (acc.set! q v)[j]! = if q = j then v else acc[j]! := by
+  rw [getElem!_pos _ j (by simp [hs, hj]), getElem!_pos _ j (by omega)]
+  simp only [Array.set!]
+  exact Array.getElem_setIfInBounds (by omega)
+
+/-- `readCLLens.go` reads back what `writeCLLensFrom` wrote: position
+    `clOrder[p]` holds `cl[clOrder[p]]` for every `p` read so far. -/
+theorem readCLLens_go_emit (cl : Array Nat) (h8 : ∀ j : Nat, cl[j]! < 8) (ncode : Nat) (bs : ByteArray) :
+    ∀ (d i : Nat), d = ncode - i → ∀ (acc : Array Nat) (w : BitWriter) (R : Array Bool),
+    bs = (BitWriter.mk ((writeCLLensFrom cl ncode i w).bits ++ R)).toBytes → acc.size = 19 →
+    (∀ j : Nat, j < 19 → acc[j]! = if ∃ p, p < i ∧ clOrder[p]! = j then cl[j]! else 0) →
+    ∃ acc', readCLLens.go ncode i acc ⟨bs, w.bits.size⟩
+        = .ok (acc', ⟨bs, (writeCLLensFrom cl ncode i w).bits.size⟩) ∧ acc'.size = 19 ∧
+      ∀ j : Nat, j < 19 → acc'[j]! = if ∃ p, p < max i ncode ∧ clOrder[p]! = j then cl[j]! else 0 := by
+  intro d
+  induction d with
+  | zero =>
+    intro i hd acc w R _ hs hacc
+    refine ⟨acc, ?_, hs, ?_⟩
+    · rw [readCLLens.go, if_pos (by omega), writeCLLensFrom, if_neg (by omega)]
+    · rw [Nat.max_eq_left (by omega)]; exact hacc
+  | succ d ih =>
+    intro i hd acc w R hbs hs hacc
+    obtain ⟨T, hT, _⟩ := writeCLLensFrom_bits cl ncode (i + 1) (w.writeBits cl[clOrder[i]!]! 3)
+    have hw : writeCLLensFrom cl ncode i w
+        = writeCLLensFrom cl ncode (i + 1) (w.writeBits cl[clOrder[i]!]! 3) := by
+      rw [writeCLLensFrom, if_pos (by omega)]
+    rw [hw] at hbs ⊢
+    have hx := readBits_written w cl[clOrder[i]!]! 3 ⟨T ++ R⟩ (h8 _)
+    have hbs' : bs = (BitWriter.mk ((w.writeBits cl[clOrder[i]!]! 3).bits ++ (T ++ R))).toBytes := by
+      rw [hbs, hT, Array.append_assoc]
+    rw [← hbs'] at hx
+    have hsz : (w.writeBits cl[clOrder[i]!]! 3).bits.size = w.bits.size + 3 := writeBits_size _ _ _
+    rw [← hsz] at hx
+    obtain ⟨acc', h1, h2, h3⟩ := ih (i + 1) (by omega) (acc.set! clOrder[i]! cl[clOrder[i]!]!)
+      (w.writeBits cl[clOrder[i]!]! 3) R hbs (by simp [hs]) (by
+        intro j hj
+        rw [getElem!_setIfInBounds_19 _ _ _ _ hs hj, hacc j hj]
+        by_cases e : clOrder[i]! = j
+        · subst e
+          rw [if_pos rfl, if_pos ⟨i, by omega, rfl⟩]
+        · rw [if_neg e]
+          congr 1
+          apply propext
+          constructor
+          · rintro ⟨p, hp, hq⟩; exact ⟨p, by omega, hq⟩
+          · rintro ⟨p, hp, hq⟩
+            refine ⟨p, ?_, hq⟩
+            by_cases hpi : p = i
+            · subst hpi; exact absurd hq e
+            · omega)
+    refine ⟨acc', ?_, h2, ?_⟩
+    · rw [readCLLens.go, if_neg (by omega)]
+      simp only [BitReader.readBitsE, hx]
+      exact h1
+    · rw [show max i ncode = max (i + 1) ncode by omega]; exact h3
+
+/-- The CL lengths read for `ncode ≥ clCount cl 19` positions are `cl`. -/
+theorem clLens_eq (cl : Array Nat) (hcl : cl.size = 19) (ncode : Nat) (hn : clCount cl 19 ≤ ncode)
+    (acc : Array Nat) (hs : acc.size = 19)
+    (h : ∀ j : Nat, j < 19 → acc[j]! = if ∃ p, p < ncode ∧ clOrder[p]! = j then cl[j]! else 0) :
+    acc = cl := by
+  apply Array.ext (by omega)
+  intro j hj _
+  rw [← getElem!_pos acc j hj, ← getElem!_pos cl j (by omega), h j (by omega)]
+  split
+  · rfl
+  · rename_i hne
+    obtain ⟨p, hp, hq⟩ := clOrder_onto j (by omega)
+    have hpn : ncode ≤ p := by
+      apply Nat.le_of_not_lt
+      intro hlt; exact hne ⟨p, hlt, hq⟩
+    have := clCount_zero cl 19 p (by omega) hp
+    rw [hq] at this
+    exact this.symm
+
+
+theorem hclenOf_lt (cl : Array Nat) : hclenOf cl < 16 := by
+  have := clCount_le cl 19
+  unfold hclenOf; omega
+
+/-- **Dynamic header round trip** (spec §3.2). For lengths satisfying the
+    header part of `validLengths` (sizes in range, lengths ≤ 15 and CL
+    lengths ≤ 7, `lit` and `cl` complete, `dist` a valid distance code,
+    every CL symbol the RLE uses has a code), `readDynamicCodes` at the
+    start of `emitHeader`'s bits returns exactly the codes `⟨lit⟩` and
+    `⟨dist⟩` and stops at the header's end, whatever bits `R` follow. -/
+theorem readDynamicCodes_emitHeader {lit dist cl : Array Nat} {w : BitWriter} {R : Array Bool}
+    {bs : ByteArray}
+    (hlit : 257 ≤ lit.size ∧ lit.size ≤ 286) (hdist : 1 ≤ dist.size ∧ dist.size ≤ 30)
+    (hcl : cl.size = 19)
+    (hl15 : ∀ x ∈ lit, x ≤ 15) (hd15 : ∀ x ∈ dist, x ≤ 15) (hc7 : ∀ x ∈ cl, x ≤ 7)
+    (hlc : (⟨lit⟩ : Code).isComplete = true) (hdc : (⟨dist⟩ : Code).isValidDistance = true)
+    (hcc : (⟨cl⟩ : Code).isComplete = true)
+    (hused : ∀ s ∈ rleLengths (lit ++ dist), 0 < cl[s.sym]!)
+    (hB : bs = (BitWriter.mk ((emitHeader w lit dist cl).bits ++ R)).toBytes) :
+    readDynamicCodes ⟨bs, w.bits.size⟩
+      = .ok ((⟨lit⟩, ⟨dist⟩), ⟨bs, (emitHeader w lit dist cl).bits.size⟩) := by
+  -- the writer stages
+  generalize hw1 : w.writeBits (lit.size - 257) 5 = w1
+  generalize hw2 : w1.writeBits (dist.size - 1) 5 = w2
+  generalize hw3 : w2.writeBits (hclenOf cl) 4 = w3
+  generalize hWC : writeCLLens cl w3 = WC
+  have hE : emitHeader w lit dist cl = (rleLengths (lit ++ dist)).foldl (writeClSym cl) WC := by
+    rw [← hWC, ← hw3, ← hw2, ← hw1]; rfl
+  rw [hE] at hB ⊢
+  obtain ⟨T2, hT2⟩ := foldl_writeClSym_bits cl (rleLengths (lit ++ dist)) WC
+  obtain ⟨T1, hT1, _⟩ := writeCLLensFrom_bits cl (hclenOf cl + 4) 0 w3
+  simp only [writeCLLens] at hWC
+  rw [hWC] at hT1
+  -- the three counts
+  have hx1 := readBits_written w (lit.size - 257) 5
+    ⟨lsbBits (dist.size - 1) 5 ++ lsbBits (hclenOf cl) 4 ++ T1 ++ T2 ++ R⟩ (by omega)
+  have hx2 := readBits_written w1 (dist.size - 1) 5
+    ⟨lsbBits (hclenOf cl) 4 ++ T1 ++ T2 ++ R⟩ (by omega)
+  have hx3 := readBits_written w2 (hclenOf cl) 4 ⟨T1 ++ T2 ++ R⟩
+    (by have := hclenOf_lt cl; omega)
+  have e3 : bs = (BitWriter.mk ((w2.writeBits (hclenOf cl) 4).bits
+      ++ (BitWriter.mk (T1 ++ T2 ++ R)).bits)).toBytes := by
+    rw [hB, hT2, hT1, hw3]; simp [Array.append_assoc]
+  have e2 : bs = (BitWriter.mk ((w1.writeBits (dist.size - 1) 5).bits
+      ++ (BitWriter.mk (lsbBits (hclenOf cl) 4 ++ T1 ++ T2 ++ R)).bits)).toBytes := by
+    rw [e3, writeBits_bits, hw2]; simp [Array.append_assoc]
+  have e1 : bs = (BitWriter.mk ((w.writeBits (lit.size - 257) 5).bits
+      ++ (BitWriter.mk (lsbBits (dist.size - 1) 5 ++ lsbBits (hclenOf cl) 4 ++ T1 ++ T2 ++ R)).bits)).toBytes := by
+    rw [e2, writeBits_bits, hw1]; simp [Array.append_assoc]
+  rw [← e1] at hx1; rw [← e2] at hx2; rw [← e3] at hx3
+  rw [← writeBits_size, hw1] at hx1
+  rw [← writeBits_size, hw2] at hx2
+  rw [← writeBits_size, hw3] at hx3
+  unfold readDynamicCodes
+  simp only [bind, Except.bind, BitReader.readBitsE, hx1, hx2, hx3]
+  rw [if_neg (by omega)]
+  -- the CL lengths
+  have h8 : ∀ j : Nat, cl[j]! < 8 := by
+    intro j
+    by_cases hj : j < cl.size
+    · rw [getElem!_pos cl j hj]; have := hc7 _ (Array.getElem_mem hj); omega
+    · rw [getElem!_neg cl j hj]; decide
+  obtain ⟨acc', hr, hs', hacc'⟩ := readCLLens_go_emit cl h8 (hclenOf cl + 4) bs _ 0 rfl
+    (Array.replicate 19 0) w3 (T2 ++ R) (by rw [hWC, hB, hT2, Array.append_assoc]) (by simp)
+    (by intro j hj; simp [hj])
+  have hcl' : acc' = cl := clLens_eq cl hcl (hclenOf cl + 4)
+    (by unfold hclenOf; omega) acc' hs'
+    (by rw [Nat.max_eq_right (by omega)] at hacc'; exact hacc')
+  rw [hcl', hWC] at hr
+  unfold readCLLens
+  rw [hr]
+  dsimp only
+  rw [if_neg (by simp [hcc])]
+  -- the RLE body
+  have hL : lit.size - 257 + 257 = lit.size := by omega
+  have hD : dist.size - 1 + 1 = dist.size := by omega
+  rw [hL, hD]
+  have hok := rleLengths_inRange (lit ++ dist) (by
+    intro x hx
+    rcases Array.mem_append.mp hx with h | h
+    · exact hl15 x h
+    · exact hd15 x h)
+  have hexp := rleLengths_expand (lit ++ dist)
+  unfold expandRle at hexp
+  have hlen := foldl_apply_size (rleLengths (lit ++ dist)) #[]
+  rw [hexp] at hlen
+  have hgo := readCodeLengths_go_emit cl hcl
+    (fun i h => by have := hc7 _ (Array.getElem_mem h); omega) hcc (lit.size + dist.size) bs
+    (rleLengths (lit ++ dist)) #[] WC R (lit.size + dist.size + 1) hB hok hused
+    (by rw [hexp]; simp) (by simp at hlen; omega)
+  rw [hexp] at hgo
+  unfold readCodeLengths
+  rw [hgo]
+  dsimp only
+  have hx1 : (lit ++ dist).extract 0 lit.size = lit := by simp
+  have hx2 : (lit ++ dist).extract lit.size (lit.size + dist.size) = dist := by simp
+  rw [hx1, hx2, if_neg (by simp [hlc]), if_neg (by simp [hdc])]
+
+end EncodeDynamicProps
 
 /-! ### Model compressor (spec §3.6) -/
 
