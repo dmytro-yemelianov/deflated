@@ -21,7 +21,7 @@ These theorems are statements about **the Lean model in `spec/Deflate/`**.
 - **The executable.** File I/O, argument parsing, process startup, the
   allocator, the linker and the compiler are all outside the boundary
   (spec §6). `vdeflate` is never "formally verified".
-- **`lean-zip`.** Its theorems are about its own Lean code. They never
+- **`lean-zip` (commit `2f7a63f38195bc667a926881b55d10c9f8a88eeb`).** Its theorems are about its own Lean code. They never
   appear in the "Formally covered" column of `docs/conformance.md`
   (spec §13). It is used here as an independent reading of RFC 1951 in the
   differential harness.

@@ -635,7 +635,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: nothing.
 - Produces: the recorded decision — `lean-zip` is an oracle and a definition reference, never a source of coverage. Task 20 depends on the build instructions this ADR records.
 
-- [ ] **Step 1: Clone and record the exact revision**
+- [x] **Step 1: Clone and record the exact revision**
 
 ```bash
 mkdir -p /tmp/leanzip && cd /tmp/leanzip
@@ -648,7 +648,7 @@ ls LICENSE* COPYING* 2>/dev/null && head -5 LICENSE*
 
 Record the commit SHA, the `lean-toolchain` contents, and the license verbatim. If the toolchain differs from `v4.30.0`, note it — the harness invokes `lean-zip` as a separate built binary, so a toolchain mismatch is tolerable, but it must be written down.
 
-- [ ] **Step 2: Map its definitions to RFC 1951 features**
+- [x] **Step 2: Map its definitions to RFC 1951 features**
 
 ```bash
 cd /tmp/leanzip/lean-zip
@@ -658,7 +658,7 @@ rg -n 'theorem .*(decompress|compress|roundtrip|round_trip)' --type lean | head 
 
 For each of the seven features in `docs/conformance.md`, write one line in the ADR naming the `lean-zip` definition that covers it, or "none found".
 
-- [ ] **Step 3: Build it and confirm it runs as an oracle**
+- [x] **Step 3: Build it and confirm it runs as an oracle**
 
 ```bash
 cd /tmp/leanzip/lean-zip && lake build 2>&1 | tail -20
@@ -666,7 +666,7 @@ cd /tmp/leanzip/lean-zip && lake build 2>&1 | tail -20
 
 If it builds, find or add an entry point that takes a compressed stream and prints the decompressed bytes. If the build takes more than 20 minutes or fails on this machine, record that: it determines whether Task 20 can include `lean-zip` as a live fourth oracle or only as a documented cross-check of RFC readings.
 
-- [ ] **Step 4: Write the ADR**
+- [x] **Step 4: Write the ADR**
 
 `docs/adr/0002-lean-zip.md`:
 
@@ -724,12 +724,12 @@ as findings to investigate, not as test failures, until a disagreement is
 traced to a defect on one side.
 ```
 
-- [ ] **Step 5: Verify the gate**
+- [x] **Step 5: Verify the gate**
 
 Run: `test -s docs/adr/0002-lean-zip.md && ! grep -n '<SHA from Step 1>\|<verbatim\|<from Step 1>\|<one line per\|<table from' docs/adr/0002-lean-zip.md`
 Expected: exit 0 — every placeholder has been replaced with a recorded fact.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add docs/adr/0002-lean-zip.md tests/vectors/README.md docs/verification-boundary.md
