@@ -2,9 +2,9 @@
   "tool": "samply 0.13.1",
   "seconds_per_input": 4,
   "profiles": {
-    "text.dyn.deflate": {"samples": 4016, "inclusive_pct": {"block::decode_huff_block": 94.1, "huffman::decode": 52.8, "bitstream::read_bits": 18.9, "lz77::read_distance": 18.5, "lz77::copy_back": 10.8, "bitstream::read_bit": 9.1, "lz77::{closure#0}": 2.1, "lz77::read_length": 1.0}, "outside_core_pct": {"perf (outside deflate-core)": 5.2}},
-    "zeros.fixed.deflate": {"samples": 4000, "inclusive_pct": {"block::decode_huff_block": 95.9, "lz77::copy_back": 82.6, "huffman::decode": 8.6, "lz77::{closure#0}": 0.7}, "outside_core_pct": {"libsystem_kernel.dylib": 2.4, "libsystem_platform.dylib": 1.5}},
-    "repetitive.dyn.deflate": {"samples": 3980, "inclusive_pct": {"block::decode_huff_block": 96.8, "lz77::copy_back": 90.7, "huffman::decode": 1.3, "lz77::{closure#0}": 1.2, "bitstream::read_bits": 0.9, "lz77::read_distance": 0.7}, "outside_core_pct": {"libsystem_kernel.dylib": 1.6, "libsystem_platform.dylib": 1.5}},
-    "text.stored.deflate": {"samples": 3987, "inclusive_pct": {}, "outside_core_pct": {"libsystem_platform.dylib": 87.6, "libsystem_kernel.dylib": 11.9}}
+    "text.dyn.deflate": {"samples": 4004, "inclusive_pct": {"block::decode_huff_block": 72.0, "huffman::decode": 64.3, "lz77::copy_back": 18.1, "bitstream::read_bits": 4.2, "bitstream::read_bit": 3.1, "lz77::read_length": 2.5, "lz77::read_distance": 2.5}, "outside_core_pct": {"perf (outside deflate-core)": 9.0, "libsystem_platform.dylib": 0.5}},
+    "zeros.fixed.deflate": {"samples": 3999, "inclusive_pct": {"block::decode_huff_block": 22.1, "huffman::decode": 18.3, "lz77::copy_back": 17.1, "bitstream::read_bit": 2.3, "bitstream::read_bits": 2.2, "lz77::read_length": 1.8, "lz77::read_distance": 1.1}, "outside_core_pct": {"libsystem_platform.dylib": 51.9, "libsystem_kernel.dylib": 6.2, "perf (outside deflate-core)": 2.2}},
+    "repetitive.dyn.deflate": {"samples": 3999, "inclusive_pct": {"lz77::copy_back": 15.1, "block::decode_huff_block": 11.7, "huffman::decode": 4.7, "bitstream::read_bits": 4.3, "lz77::read_distance": 2.7, "lz77::read_length": 2.3, "bitstream::read_bit": 1.8}, "outside_core_pct": {"libsystem_platform.dylib": 60.4, "libsystem_kernel.dylib": 9.7, "perf (outside deflate-core)": 2.4, "libsystem_malloc.dylib": 0.6}},
+    "text.stored.deflate": {"samples": 3993, "inclusive_pct": {}, "outside_core_pct": {"libsystem_platform.dylib": 85.4, "libsystem_kernel.dylib": 14.1}}
   }
 }

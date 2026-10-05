@@ -49,23 +49,48 @@ pub fn read_distance(sym: u16, r: &mut BitReader) -> Result<usize, Error> {
     Ok(base as usize + r.read_bits(extra as u32)? as usize)
 }
 
-/// Copy `len` bytes from `dist` back, one at a time, so that `len > dist`
-/// repeats what this very copy produces (RFC 1951 §3.2.3). On error nothing
-/// is appended.
+/// Below this length `copy_back` goes byte by byte (picked by `make perf`).
+const SHORT_COPY: usize = 16;
+
+/// Copy `len` bytes from `dist` back so that `len > dist` repeats what this
+/// very copy produces (RFC 1951 §3.2.3). On error nothing is appended.
+///
+/// Lean's `copyGo` goes one byte at a time; past `SHORT_COPY` this copies in
+/// chunks that only read bytes already written. Each chunk takes the whole
+/// window from `start` to the end, so the window doubles and stays a multiple
+/// of `dist`, which puts every chunk in phase with the byte-wise copy. The
+/// differential and `lz77_tests` reference checks hold the two together.
 pub fn copy_back(out: &mut Vec<u8>, dist: usize, len: usize) -> Result<(), Error> {
-    if dist == 0 || dist > out.len() {
-        return Err(Error::InvalidDistance);
-    }
+    let start = match out.len().checked_sub(dist) {
+        Some(s) if dist != 0 => s,
+        _ => return Err(Error::InvalidDistance),
+    };
     out.reserve(len);
-    for _ in 0..len {
-        // `dist <= out.len()` holds at entry and `out` only grows, so this
-        // index is in range at every iteration. `get` rather than `[]` keeps
-        // that an enforced fact rather than an argument.
-        let b = match out.len().checked_sub(dist).and_then(|i| out.get(i)) {
-            Some(b) => *b,
-            None => return Err(Error::InvalidDistance),
+    if len < SHORT_COPY {
+        // Short matches dominate text; here a bulk copy's per-call cost
+        // outweighs what it saves, so this is `copyGo` as written.
+        for _ in 0..len {
+            let b = match out.len().checked_sub(dist).and_then(|i| out.get(i)) {
+                Some(b) => *b,
+                None => return Err(Error::InvalidDistance),
+            };
+            out.push(b);
+        }
+        return Ok(());
+    }
+    let mut remaining = len;
+    while remaining > 0 {
+        // `out.len() - start >= dist >= 1`, so each pass makes progress and
+        // `end <= out.len()`. The checks keep that enforced rather than
+        // argued, so `extend_from_within` cannot panic.
+        let avail = out.len().saturating_sub(start);
+        let n = remaining.min(avail);
+        let end = match start.checked_add(n) {
+            Some(e) if n != 0 && e <= out.len() => e,
+            _ => return Err(Error::InvalidDistance),
         };
-        out.push(b);
+        out.extend_from_within(start..end);
+        remaining -= n;
     }
     Ok(())
 }

@@ -121,3 +121,58 @@ fn aligned_u16_short_is_eof_and_atomic() {
     assert_eq!(r.read_aligned_u16_le(), Err(Error::UnexpectedEof));
     assert_eq!(r.bit_pos(), 0);
 }
+
+/// Reference: `n` bits assembled from `read_bit` on a throwaway reader, as
+/// Lean `readBits` does. Errors on the first short `read_bit`; the caller's
+/// reader is never touched, so atomicity is checked separately via `bit_pos`.
+fn reference_read_bits(data: &[u8], pos: usize, n: u32) -> Result<u32, Error> {
+    if n > 32 {
+        return Err(Error::InvalidCode);
+    }
+    let mut r = BitReader::new(data);
+    for _ in 0..pos {
+        r.read_bit().unwrap();
+    }
+    let mut v: u32 = 0;
+    for k in 0..n {
+        v |= r.read_bit()? << k;
+    }
+    Ok(v)
+}
+
+#[test]
+fn read_bits_matches_bit_by_bit_reference_everywhere() {
+    // Deterministic buffers of every length 0..=9 with varied bit patterns.
+    let mut seed: u32 = 0x9E37_79B9;
+    for len in 0..=9usize {
+        for pattern in 0..3 {
+            let data: Vec<u8> = (0..len)
+                .map(|i| match pattern {
+                    0 => 0xFF,
+                    1 => (i as u8).wrapping_mul(37) ^ 0xA5,
+                    _ => {
+                        seed = seed.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
+                        (seed >> 24) as u8
+                    }
+                })
+                .collect();
+            for start in 0..=len * 8 {
+                for n in 0..=33u32 {
+                    let mut r = BitReader::new(&data);
+                    for _ in 0..start {
+                        r.read_bit().unwrap();
+                    }
+                    let got = r.read_bits(n);
+                    let want = reference_read_bits(&data, start, n);
+                    assert_eq!(got, want, "len={len} pattern={pattern} start={start} n={n}");
+                    let expected_pos = if got.is_ok() {
+                        start + n as usize
+                    } else {
+                        start
+                    };
+                    assert_eq!(r.bit_pos(), expected_pos, "len={len} start={start} n={n}");
+                }
+            }
+        }
+    }
+}

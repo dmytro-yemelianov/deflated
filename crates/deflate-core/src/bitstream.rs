@@ -1,10 +1,13 @@
 //! LSB-first bit reading (RFC 1951 §3.1.1).
 //!
-//! Mirrors `spec/Deflate/Bitstream.lean` function for function. The one place
-//! the two differ in shape: the Lean reader is a value, so a failed read
+//! Mirrors `spec/Deflate/Bitstream.lean` function for function. Two places
+//! differ in shape. First, the Lean reader is a value, so a failed read
 //! simply returns `none` and the caller keeps the old reader. Rust mutates in
 //! place, so every fallible read checks its whole width *before* consuming
 //! anything. `short_read_is_atomic_and_leaves_position_untouched` pins that.
+//! Second, `read_bits` takes all `n` bits from one byte window instead of
+//! looping over `read_bit` like Lean `readBits`; the tests check it against a
+//! bit-by-bit reference.
 
 use crate::error::Error;
 use alloc::vec::Vec;
@@ -54,10 +57,24 @@ impl<'a> BitReader<'a> {
         if self.pos + (n as usize) > self.bit_len() {
             return Err(Error::UnexpectedEof);
         }
-        let mut v: u32 = 0;
-        for k in 0..n {
-            v |= self.read_bit()? << k;
+        // Same value as `n` calls to `read_bit` (the Lean `readBits` loop),
+        // assembled at once: 7 bits of offset + 32 bits fit in 5 bytes.
+        // Bytes past the end read as 0; the check above guarantees the
+        // wanted bits all lie inside the stream.
+        let first = self.pos / 8;
+        let mut window: u64 = 0;
+        for k in 0..5 {
+            let byte = first
+                .checked_add(k)
+                .and_then(|i| self.bytes.get(i))
+                .copied()
+                .unwrap_or(0);
+            window |= u64::from(byte) << (8 * k);
         }
+        // n <= 32, so the shift cannot overflow a u64.
+        let mask = (1u64 << n) - 1;
+        let v = ((window >> (self.pos % 8)) & mask) as u32;
+        self.pos += n as usize;
         Ok(v)
     }
 

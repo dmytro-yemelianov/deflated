@@ -121,3 +121,54 @@ fn truncated_extra_bits_are_eof() {
     let mut r = BitReader::new(&[]);
     assert_eq!(read_distance(29, &mut r), Err(Error::UnexpectedEof)); // needs 13
 }
+
+// --- copy_back against a byte-at-a-time reference ---
+
+/// The RFC 1951 §3.2.3 copy, written the obvious way, as the oracle for
+/// whatever bulk strategy `copy_back` uses.
+fn reference_copy_back(out: &mut Vec<u8>, dist: usize, len: usize) -> Result<(), Error> {
+    if dist == 0 || dist > out.len() {
+        return Err(Error::InvalidDistance);
+    }
+    for _ in 0..len {
+        let b = out[out.len() - dist];
+        out.push(b);
+    }
+    Ok(())
+}
+
+#[test]
+fn copy_back_matches_byte_at_a_time_reference() {
+    for prefix_len in 1..=40usize {
+        // Distinct bytes make any misplaced source byte visible.
+        let prefix: Vec<u8> = (0..prefix_len)
+            .map(|i| (i as u8).wrapping_mul(37).wrapping_add(prefix_len as u8))
+            .collect();
+        for dist in 0..=prefix_len + 2 {
+            for len in 0..=300usize {
+                let mut want = prefix.clone();
+                let want_res = reference_copy_back(&mut want, dist, len);
+                let mut got = prefix.clone();
+                let got_res = copy_back(&mut got, dist, len);
+                assert_eq!(
+                    got_res, want_res,
+                    "prefix {prefix_len} dist {dist} len {len}"
+                );
+                assert_eq!(got, want, "prefix {prefix_len} dist {dist} len {len}");
+            }
+        }
+    }
+}
+
+#[test]
+fn copy_back_rejects_huge_distance_and_leaves_output_alone() {
+    let mut out = b"abc".to_vec();
+    assert_eq!(
+        copy_back(&mut out, usize::MAX, 5),
+        Err(Error::InvalidDistance)
+    );
+    assert_eq!(out, b"abc");
+    let mut empty = Vec::new();
+    assert_eq!(copy_back(&mut empty, 1, 0), Err(Error::InvalidDistance));
+    assert!(empty.is_empty());
+}
