@@ -50,7 +50,10 @@ partial def decodeStored (bs : ByteArray) (limit : Nat) :
     | .fixed =>
         let (out', r₂) ← decodeHuffBlock fixedLitLen fixedDist r₁ out limit (8 * bs.size + 1)
         if h.isFinal then .ok ⟨out'⟩ else loop r₂ out'
-    | _ => .error .invalidBlockType
+    | .dynamic =>
+        let ((lit, dst), r₂) ← readDynamicCodes r₁
+        let (out', r₃) ← decodeHuffBlock lit dst r₂ out limit (8 * bs.size + 1)
+        if h.isFinal then .ok ⟨out'⟩ else loop r₃ out'
   loop ⟨bs, 0⟩ #[]
 
 def decodeAndFormat (limit : Nat) (hx : String) : String :=

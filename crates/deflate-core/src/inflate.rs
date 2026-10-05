@@ -2,7 +2,9 @@
 //! Mirrors `spec/Deflate/Decode.lean`.
 
 use crate::bitstream::BitReader;
-use crate::block::{BlockType, decode_huff_block, read_block_header, read_stored};
+use crate::block::{
+    BlockType, decode_huff_block, read_block_header, read_dynamic_tables, read_stored,
+};
 use crate::error::Error;
 use crate::huffman::{fixed_dist, fixed_litlen};
 use alloc::vec::Vec;
@@ -30,7 +32,10 @@ pub fn inflate_with_limit(input: &[u8], limit: usize) -> Result<Vec<u8>, Error> 
                 let dst = fixed_dist();
                 decode_huff_block(&lit, &dst, &mut r, &mut out, limit)?;
             }
-            BlockType::Dynamic => return Err(Error::InvalidBlockType), // Task 16
+            BlockType::Dynamic => {
+                let (lit, dst) = read_dynamic_tables(&mut r)?;
+                decode_huff_block(&lit, &dst, &mut r, &mut out, limit)?;
+            }
         }
         if header.is_final {
             return Ok(out);

@@ -84,3 +84,77 @@ pub fn decode_huff_block(
         // model's statement of that argument.
     }
 }
+
+use crate::huffman::Completeness;
+
+/// RFC 1951 §3.2.7: the order in which code-length code lengths appear.
+pub const CL_ORDER: [usize; 19] = [
+    16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15,
+];
+
+/// Read a dynamic block's two Huffman tables (RFC 1951 §3.2.7).
+/// Mirrors `spec/Deflate/Block.lean`'s `readDynamicCodes`.
+pub fn read_dynamic_tables(r: &mut BitReader) -> Result<(HuffmanTable, HuffmanTable), Error> {
+    let nlen = r.read_bits(5)? as usize + 257;
+    let ndist = r.read_bits(5)? as usize + 1;
+    let ncode = r.read_bits(4)? as usize + 4;
+    // The 5-bit fields can express more than RFC 1951 permits.
+    if nlen > 286 || ndist > 30 {
+        return Err(Error::InvalidHuffmanTree);
+    }
+
+    let mut cl_lengths = [0u8; 19];
+    for &slot in CL_ORDER.iter().take(ncode) {
+        let v = r.read_bits(3)? as u8;
+        match cl_lengths.get_mut(slot) {
+            Some(c) => *c = v,
+            None => return Err(Error::InvalidHuffmanTree),
+        }
+    }
+    let cl = HuffmanTable::from_lengths(&cl_lengths, Completeness::Complete)?;
+
+    let total = nlen + ndist;
+    let mut lengths = alloc::vec![0u8; 0];
+    lengths.reserve(total);
+    while lengths.len() < total {
+        let sym = cl.decode(r)?;
+        match sym {
+            0..=15 => lengths.push(sym as u8),
+            16 => {
+                let prev = match lengths.last() {
+                    Some(p) => *p,
+                    None => return Err(Error::InvalidHuffmanTree),
+                };
+                let n = 3 + r.read_bits(2)? as usize;
+                if lengths.len() + n > total {
+                    return Err(Error::InvalidHuffmanTree);
+                }
+                lengths.resize(lengths.len() + n, prev);
+            }
+            17 => {
+                let n = 3 + r.read_bits(3)? as usize;
+                if lengths.len() + n > total {
+                    return Err(Error::InvalidHuffmanTree);
+                }
+                lengths.resize(lengths.len() + n, 0);
+            }
+            18 => {
+                let n = 11 + r.read_bits(7)? as usize;
+                if lengths.len() + n > total {
+                    return Err(Error::InvalidHuffmanTree);
+                }
+                lengths.resize(lengths.len() + n, 0);
+            }
+            _ => return Err(Error::InvalidHuffmanTree),
+        }
+    }
+
+    let (lit_lens, dist_lens) = match lengths.split_at_checked(nlen) {
+        Some(p) => p,
+        None => return Err(Error::InvalidHuffmanTree),
+    };
+    let lit = HuffmanTable::from_lengths(lit_lens, Completeness::Complete)?;
+    // ADR 0004: only the distance tree is allowed to be degenerate.
+    let dist = HuffmanTable::from_lengths(dist_lens, Completeness::AllowDegenerate)?;
+    Ok((lit, dist))
+}

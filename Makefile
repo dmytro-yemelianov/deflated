@@ -26,7 +26,7 @@ test-lean: build-lean
 
 test-differential: build-rust build-lean
 	@python3 oracles/differential.py --self-test
-	@python3 oracles/differential.py --no-zlib
+	@python3 oracles/differential.py
 
 fmt:
 	@cargo fmt --all --check

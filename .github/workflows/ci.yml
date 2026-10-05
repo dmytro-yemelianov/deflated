@@ -57,9 +57,9 @@ jobs:
       - name: Differential harness self-test
         run: python3 oracles/differential.py --self-test
 
-      - name: Differential harness (Rust vs Lean model)
+      - name: Differential harness (Rust vs Lean model vs zlib)
         run: |
           cargo build --release --workspace
           lake build
-          python3 oracles/differential.py --no-zlib
+          python3 oracles/differential.py
 

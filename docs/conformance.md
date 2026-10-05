@@ -9,10 +9,10 @@ proved, and it never counts a theorem from another project.
 | Bit reader (LSB-first, EOF) | yes | yes | yes |
 | Stored blocks | yes | yes | yes |
 | Fixed Huffman | yes | yes | yes |
-| Dynamic Huffman | no | no | no |
-| Multi-block streams | yes | yes | no |
+| Dynamic Huffman | yes | yes | yes |
+| Multi-block streams | yes | yes | yes |
 | Overlapping back-reference | yes | yes | yes |
-| Malformed input rejection | no | no | no |
+| Malformed input rejection | yes | yes | no |
 | Output limit | no | no | no |
 | Encoder validity | no | no | no |
 | Round trip | no | no | no |

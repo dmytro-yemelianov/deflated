@@ -4274,7 +4274,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `HuffmanTable::from_lengths`, `Completeness`, `BitReader`.
 - Produces: `block::CL_ORDER: [usize; 19]`, `block::read_dynamic_tables(&mut BitReader) -> Result<(HuffmanTable, HuffmanTable), Error>`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `crates/deflate-core/tests/dynamic_tests.rs`:
 
@@ -4345,7 +4345,7 @@ fn output_limit_is_enforced_on_dynamic_blocks() {
 }
 ```
 
-- [ ] **Step 2: Generate and commit the vectors**
+- [x] **Step 2: Generate and commit the vectors**
 
 ```bash
 python3 - <<'PY'
@@ -4368,12 +4368,12 @@ PY
 
 If the assertion fires, lengthen or vary the payload until zlib chooses a dynamic block; do not weaken the assertion.
 
-- [ ] **Step 3: Run to verify they fail**
+- [x] **Step 3: Run to verify they fail**
 
 Run: `cargo test -p deflate-core --test dynamic_tests`
 Expected: FAIL — `InvalidBlockType` from the `Dynamic` arm Task 14 left in place.
 
-- [ ] **Step 4: Write the implementation**
+- [x] **Step 4: Write the implementation**
 
 Append to `crates/deflate-core/src/block.rs`:
 
@@ -4465,12 +4465,12 @@ In `inflate.rs`, replace the `Dynamic` arm:
 
 Remove the `debug_assert!` before committing: `deflate-core` must behave identically in debug and release, and an assertion that can abort is a panic path.
 
-- [ ] **Step 5: Run to verify they pass**
+- [x] **Step 5: Run to verify they pass**
 
 Run: `cargo test -p deflate-core --test dynamic_tests`
 Expected: PASS — 5 tests.
 
-- [ ] **Step 6: Turn the zlib oracle back on**
+- [x] **Step 6: Turn the zlib oracle back on**
 
 The decoder is now complete, so the harness can compare against zlib on every stream. Extend `spec/Main.lean`'s driver to handle `.dynamic` via `readDynamicCodes` and `decodeHuffBlock`, then:
 
@@ -4481,7 +4481,7 @@ Any finding is a real disagreement. Minimize it, add it to `tests/malformed/` or
 
 Remove `--no-zlib` from `Makefile`'s `test-differential` and from the CI step.
 
-- [ ] **Step 7: Update conformance and commit**
+- [x] **Step 7: Update conformance and commit**
 
 `docs/conformance.md`: `| Dynamic Huffman | yes | yes | yes |`, `| Multi-block streams | yes | yes | yes |`, `| Malformed input rejection | yes | yes | no |`.
 
