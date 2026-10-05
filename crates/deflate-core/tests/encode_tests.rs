@@ -162,3 +162,66 @@ fn expand_rejects_distance_before_start() {
         Err(Error::InvalidDistance)
     );
 }
+
+// ---- Task 7: fixed-Huffman emitter ----
+use deflate_core::encode_fixed::{dist_sym, emit_fixed, length_sym};
+use deflate_core::lz77::{read_distance, read_length};
+
+#[test]
+fn length_and_dist_symbols_read_back() {
+    for len in 3..=258u16 {
+        let (sym, extra, nbits) = length_sym(len);
+        let mut w = BitWriter::new();
+        w.write_bits(extra, nbits);
+        let bytes = w.finish();
+        let mut r = BitReader::new(&bytes);
+        assert_eq!(read_length(sym, &mut r).unwrap(), usize::from(len));
+    }
+    for dist in 1..=32768u32 {
+        let (sym, extra, nbits) = dist_sym(dist as u16);
+        let mut w = BitWriter::new();
+        w.write_bits(extra, nbits);
+        let bytes = w.finish();
+        let mut r = BitReader::new(&bytes);
+        assert_eq!(read_distance(sym, &mut r).unwrap(), dist as usize);
+    }
+}
+
+fn check(ts: &[Token]) {
+    let want = expand(ts).unwrap();
+    assert_eq!(inflate(&emit_fixed(ts.iter().copied())).unwrap(), want);
+}
+
+#[test]
+fn emit_fixed_empty_and_literals() {
+    check(&[]);
+    let all: Vec<Token> = (0..=255u8).map(Token::Literal).collect();
+    check(&all);
+}
+
+#[test]
+fn emit_fixed_match_bounds() {
+    check(&[Token::Literal(7), Token::Match { len: 258, dist: 1 }]);
+    // dist == out.len() (Review Focus 3)
+    check(&[
+        Token::Literal(1),
+        Token::Literal(2),
+        Token::Literal(3),
+        Token::Match { len: 3, dist: 3 },
+    ]);
+    // dist 32768 after a 32768-byte prefix
+    let mut ts: Vec<Token> = (0..32768u32)
+        .map(|i| Token::Literal((i % 251) as u8))
+        .collect();
+    ts.push(Token::Match {
+        len: 258,
+        dist: 32768,
+    });
+    check(&ts);
+    // overlapping dist < len
+    check(&[
+        Token::Literal(1),
+        Token::Literal(2),
+        Token::Match { len: 100, dist: 2 },
+    ]);
+}

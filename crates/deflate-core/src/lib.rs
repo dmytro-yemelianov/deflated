@@ -16,6 +16,7 @@ pub mod bitstream;
 pub mod bitwriter;
 pub mod block;
 pub mod deflate;
+pub mod encode_fixed;
 pub mod error;
 pub mod huffman;
 pub mod inflate;
