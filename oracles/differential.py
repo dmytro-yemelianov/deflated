@@ -143,6 +143,126 @@ def encode_phase(payloads):
     return findings
 
 
+def greedy_tokens(data: bytes):
+    """Greedy LZ77 over a small window. Valid by construction: every match
+    has 3 <= len <= 258 and 1 <= dist <= position, overlap allowed."""
+    toks, i, n = [], 0, len(data)
+    table = {}
+    while i < n:
+        best_l, best_d = 0, 0
+        if i + 3 <= n:
+            for j in reversed(table.get(data[i:i + 3], [])[-8:]):
+                if i - j > 32768:
+                    break
+                l = 0
+                while l < 258 and i + l < n and data[j + l] == data[i + l]:
+                    l += 1
+                if l > best_l:
+                    best_l, best_d = l, i - j
+        step = best_l if best_l >= 3 else 1
+        if best_l >= 3:
+            toks.append(f"m:{best_l}:{best_d}")
+        else:
+            toks.append(f"l:{data[i]:02x}")
+        for k in range(i, min(i + step, n - 2)):
+            table.setdefault(data[k:k + 3], []).append(k)
+        i += step
+    return toks
+
+
+def random_tokens(rng, max_toks=60):
+    toks, size = [], 0
+    for _ in range(rng.randrange(0, max_toks)):
+        if size and rng.random() < 0.5:
+            l = rng.choice([3, 4, 10, 257, 258, rng.randrange(3, 259)])
+            d = rng.choice([1, size, rng.randrange(1, min(size, 32768) + 1)])
+            d = min(d, size, 32768)
+            toks.append(f"m:{l}:{d}")
+            size += l
+        else:
+            toks.append(f"l:{rng.randrange(256):02x}")
+            size += 1
+    return toks
+
+
+def expand(toks):
+    out = bytearray()
+    for t in toks:
+        f = t.split(":")
+        if f[0] == "l":
+            out.append(int(f[1], 16))
+        else:
+            for _ in range(int(f[1])):
+                out.append(out[-int(f[2])])
+    return bytes(out)
+
+
+def emit_phase(payloads, rust_emit_hook=None, count=300):
+    """Rust EMIT and Lean EMIT must reply byte-identically, and the stream
+    must expand (via zlib) to the tokens' own expansion."""
+    import random
+    rng = random.Random(11)
+    lists = [greedy_tokens(p) for p in payloads]
+    lists += [random_tokens(rng) for _ in range(count)]
+    reqs = ["EMIT " + " ".join(t) for t in lists]
+    rust = run_oracle([str(RUST), "--oracle"], requests=reqs)
+    if rust_emit_hook:
+        rust = rust_emit_hook(rust)
+    lean = run_oracle([str(LEAN)], requests=reqs)
+    findings = []
+    for r_, a, b, t in zip(reqs, rust, lean, lists):
+        if a.key() != b.key():
+            findings.append({"parties": ["rust-emit", "lean-emit"], "request": r_[:120],
+                             "outcomes": {"rust": repr(a), "lean": repr(b)}})
+        elif a.ok:
+            try:
+                got = zlib.decompress(a.data, -15)
+            except zlib.error as e:
+                got = repr(e).encode()
+            if got != expand(t):
+                findings.append({"parties": ["emit->zlib"], "request": r_[:120],
+                                 "outcomes": {"rust": repr(a)}})
+    return findings, len(reqs)
+
+
+def deflate_phase(payloads):
+    """Rust DEFLATE must decode to the payload under Rust, Lean, zlib and lean-zip."""
+    rust_enc = run_oracle([str(RUST), "--oracle"],
+                          requests=[f"DEFLATE {p.hex()}" for p in payloads])
+    findings, streams, pl = [], [], []
+    for p, e in zip(payloads, rust_enc):
+        if not e.ok:
+            findings.append({"parties": ["rust-deflate"], "payload": p.hex()[:64], "err": e.err})
+        else:
+            streams.append(e.data)
+            pl.append(p)
+    decs = {"rust": run_oracle([str(RUST), "--oracle"], streams),
+            "lean": run_oracle([str(LEAN)], streams),
+            "zlib": run_zlib(streams)}
+    if leanzip.available():
+        lz = leanzip.decode_all(streams, run_oracle)
+        if lz is not None:
+            decs["leanzip"] = lz
+    for name, outs in decs.items():
+        for p, s, o in zip(pl, streams, outs):
+            if not o.ok or o.data != p:
+                findings.append({"parties": [f"deflate->{name}"], "payload": p.hex()[:64],
+                                 "stream": s.hex()[:64], "outcome": repr(o)})
+    return findings, len(streams)
+
+
+def flip_bit(replies):
+    """Self-test wrapper: corrupt one bit of the first OK reply."""
+    out = list(replies)
+    for i, o in enumerate(out):
+        if o.ok and o.data:
+            b = bytearray(o.data)
+            b[0] ^= 1
+            out[i] = Outcome.ok(bytes(b))
+            break
+    return out
+
+
 def compare(outcomes, stream):
     """Rust and Lean must agree exactly, errors included. zlib is compared
     only on success/failure and bytes, since its error names are its own."""
@@ -167,7 +287,16 @@ def self_test() -> int:
     err, oth = Outcome.err("invalidStoredLength"), Outcome.err("unexpectedEof")
     assert compare({"rust": err, "lean": oth, "zlib": err}, stream) is not None, \
         "self-test: differing error kinds were not detected"
-    print("self-test: 3/3")
+    toks = greedy_tokens(b"abcabcabcabc")
+    assert expand(toks) == b"abcabcabcabc", "self-test: tokenizer is not lossless"
+    if RUST.exists() and LEAN.exists():
+        f, _ = emit_phase([b"hello hello hello"], rust_emit_hook=flip_bit, count=0)
+        assert f, "self-test: a corrupted Rust EMIT was not reported"
+        f, _ = emit_phase([b"hello hello hello"], count=0)
+        assert not f, f"self-test: clean EMIT reported a finding: {f}"
+        print("self-test: 6/6")
+    else:
+        print("self-test: 4/4 (emit checks skipped, binaries missing)")
     return 0
 
 
@@ -230,6 +359,11 @@ def main() -> int:
             })
 
     findings.extend(encode_phase(PAYLOADS))
+    ef, n_emit = emit_phase(PAYLOADS)
+    df, n_defl = deflate_phase(PAYLOADS)
+    findings.extend(ef)
+    findings.extend(df)
+    print(f"emit: {n_emit} requests, {len(ef)} findings; deflate: {n_defl} payloads, {len(df)} findings")
 
     report = {"streams": len(streams), "parties": sorted(results), "findings": findings}
     if "leanzip" in results:

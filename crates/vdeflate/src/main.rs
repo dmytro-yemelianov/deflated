@@ -49,16 +49,20 @@ fn to_hex(b: &[u8]) -> String {
     b.iter().map(|x| format!("{x:02x}")).collect()
 }
 
+fn is_digits(s: &str) -> bool {
+    !s.is_empty() && s.bytes().all(|c| c.is_ascii_digit())
+}
+
 fn parse_token(s: &str) -> Option<Token> {
     let mut it = s.split(':');
     match (it.next()?, it.next()?, it.next(), it.next()) {
         ("l", h, None, None) => {
-            if h.len() != 2 {
+            if h.len() != 2 || !h.bytes().all(|c| c.is_ascii_hexdigit()) {
                 return None;
             }
             Some(Token::Literal(u8::from_str_radix(h, 16).ok()?))
         }
-        ("m", l, Some(d), None) => Some(Token::Match {
+        ("m", l, Some(d), None) if is_digits(l) && is_digits(d) => Some(Token::Match {
             len: l.parse().ok()?,
             dist: d.parse().ok()?,
         }),
