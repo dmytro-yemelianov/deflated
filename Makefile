@@ -25,7 +25,8 @@ test-lean: build-lean
 	@! grep -q sorryAx /tmp/axioms.log
 
 test-differential: build-rust build-lean
-	@if [ -f oracles/differential.py ]; then python3 oracles/differential.py; else echo "==> oracles/differential.py not yet present (deferred to Task 8)"; fi
+	@python3 oracles/differential.py --self-test
+	@python3 oracles/differential.py --no-zlib
 
 fmt:
 	@cargo fmt --all --check

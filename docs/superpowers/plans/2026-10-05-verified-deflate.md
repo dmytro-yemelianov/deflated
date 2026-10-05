@@ -1970,7 +1970,7 @@ LIMIT <n>          (sets the limit for subsequent DECODE lines; default 1<<26)
 
 Both the Lean driver and `vdeflate --oracle` speak it on stdin and stdout. `<errorName>` is the Lean constructor name (`unexpectedEof`, `invalidStoredLength`, …); the Rust side maps its `Error` variants to those exact strings, so a disagreement on *which* error is a disagreement the harness can see.
 
-- [ ] **Step 1: Write the failing self-test**
+- [x] **Step 1: Write the failing self-test**
 
 `oracles/differential.py` is written in Step 3. First write the assertion that proves the harness can detect a disagreement — without this, a harness that silently agrees with everything looks like a pass. maked's schedule fuzzer has exactly this self-test.
 
@@ -1995,12 +1995,12 @@ def self_test() -> int:
     return 0
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `python3 oracles/differential.py --self-test`
 Expected: FAIL — `No such file or directory`.
 
-- [ ] **Step 3: Write the Lean oracle driver**
+- [x] **Step 3: Write the Lean oracle driver**
 
 Replace `spec/Main.lean`:
 
@@ -2082,7 +2082,7 @@ def main (_args : List String) : IO Unit := do
     | none => pure ()
 ```
 
-- [ ] **Step 4: Write the Rust oracle mode**
+- [x] **Step 4: Write the Rust oracle mode**
 
 Replace `crates/vdeflate/src/main.rs`:
 
@@ -2159,7 +2159,7 @@ fn main() {
 }
 ```
 
-- [ ] **Step 5: Write the harness**
+- [x] **Step 5: Write the harness**
 
 `oracles/corpus.py`:
 
@@ -2410,7 +2410,7 @@ if __name__ == "__main__":
     sys.exit(main())
 ```
 
-- [ ] **Step 6: Run the self-test, then the harness**
+- [x] **Step 6: Run the self-test, then the harness**
 
 Run: `python3 oracles/differential.py --self-test`
 Expected: PASS — `self-test: 3/3`.
@@ -2418,7 +2418,7 @@ Expected: PASS — `self-test: 3/3`.
 Run: `make all && python3 oracles/differential.py`
 Expected: findings only on fixed and dynamic blocks, which neither implementation supports yet — both must report `invalidBlockType` and therefore *agree*, so the Rust/Lean findings count must be **0**. zlib findings are expected and large at this milestone, because zlib decodes the compressed blocks we cannot. Run with `--no-zlib` for the gating number until Task 16 lands, and record why in the commit message.
 
-- [ ] **Step 7: Wire it into the build and CI**
+- [x] **Step 7: Wire it into the build and CI**
 
 In `Makefile`, change `test-differential` to run the self-test first:
 
@@ -2443,7 +2443,7 @@ In `.github/workflows/ci.yml`, replace the final step with:
 
 Task 16 removes `--no-zlib` once dynamic blocks land.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add oracles/ spec/Main.lean crates/vdeflate/src/main.rs Makefile .github/workflows/ci.yml
