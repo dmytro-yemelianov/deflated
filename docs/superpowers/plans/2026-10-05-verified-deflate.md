@@ -5197,7 +5197,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `vdeflate --oracle`, the Lean `deflate_spec` binary, `zlib`, and the `lean-zip` build from ADR 0002.
 - Produces: `docs/correspondence.md`, the document spec §18.8 asks for — correspondence *demonstrated*, with its exact strength stated.
 
-- [ ] **Step 1: Write the failing assertion**
+- [x] **Step 1: Write the failing assertion**
 
 The claim this task has to earn is that Rust and the Lean model agree on a corpus large enough to mean something, with the corpus size recorded. Add to `oracles/differential.py`:
 
@@ -5210,12 +5210,12 @@ MIN_STREAMS = 20000  # the floor docs/correspondence.md quotes
         return 2
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `python3 oracles/differential.py`
 Expected: FAIL — `corpus too small`, because Task 8's generators produce a few thousand streams.
 
-- [ ] **Step 3: Grow the corpus**
+- [x] **Step 3: Grow the corpus**
 
 In `oracles/corpus.py`, add a structured generator that reaches cases zlib never emits:
 
@@ -5266,7 +5266,7 @@ def handmade(seed: int = 0):
 
 Wire `handmade()` into `differential.py`'s stream list alongside `zlib_streams()` and `mutations()`.
 
-- [ ] **Step 4: Add lean-zip as the fourth party**
+- [x] **Step 4: Add lean-zip as the fourth party**
 
 `oracles/leanzip.py`:
 
@@ -5301,7 +5301,7 @@ def decode_all(streams):
 
 In `differential.py`, add `leanzip` to `results` when `leanzip.available()`, and report its disagreements under a separate `advisories` key in the JSON rather than under `findings`, so they are visible without gating CI.
 
-- [ ] **Step 5: Run and verify**
+- [x] **Step 5: Run and verify**
 
 Run: `make all && python3 oracles/differential.py`
 Expected: `>= 20000 streams, 0 findings`. Record the exact counts.
@@ -5309,7 +5309,7 @@ Expected: `>= 20000 streams, 0 findings`. Record the exact counts.
 Run: `LEANZIP_BIN=/tmp/leanzip/lean-zip/.lake/build/bin/<exe> python3 oracles/differential.py`
 Expected: same findings count; advisories recorded in the JSON. Investigate each advisory and either fix a side or record the RFC ambiguity in ADR 0002.
 
-- [ ] **Step 6: Write the correspondence document**
+- [x] **Step 6: Write the correspondence document**
 
 `docs/correspondence.md`:
 
@@ -5363,7 +5363,7 @@ hand-built corpus and the `lean-zip` advisories exist for that reason.
 
 Fill every `<n>` and `<hours>` from the actual run.
 
-- [ ] **Step 7: Update conformance and commit**
+- [x] **Step 7: Update conformance and commit**
 
 `docs/conformance.md`: add a line beneath the table: "Rust/Lean correspondence: demonstrated by differential testing over `<n>` streams with 0 findings; see `docs/correspondence.md`. Not proved."
 

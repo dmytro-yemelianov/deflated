@@ -13,12 +13,14 @@ import sys
 import zlib
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from corpus import mutations, zlib_streams
+from corpus import handmade, mutations, zlib_streams
+import leanzip
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RUST = ROOT / "target" / "release" / "vdeflate"
 LEAN = ROOT / ".lake" / "build" / "bin" / "deflate_spec"
 LIMIT = 1 << 26
+MIN_STREAMS = 20000  # the floor docs/correspondence.md quotes
 
 
 class Outcome:
@@ -142,6 +144,8 @@ def main() -> int:
         streams.append(s)
         expected[s] = raw
         streams.extend(mutations(s))
+    for s in handmade():
+        streams.append(s)
     if a.count:
         streams = streams[: a.count]
     streams = list(dict.fromkeys(streams))
@@ -152,13 +156,24 @@ def main() -> int:
     }
     if not a.no_zlib:
         results["zlib"] = run_zlib(streams)
+    if leanzip.available():
+        lz_outcomes = leanzip.decode_all(streams, run_oracle)
+        if lz_outcomes is not None:
+            results["leanzip"] = lz_outcomes
 
     findings = []
+    advisories = []
     for i, s in enumerate(streams):
         o = {k: v[i] for k, v in results.items()}
         d = compare(o, s)
         if d is not None:
             findings.append(d.as_dict())
+        if "leanzip" in o and o["rust"].coarse() != o["leanzip"].coarse():
+            advisories.append({
+                "parties": ["rust", "leanzip"],
+                "stream": s.hex(),
+                "outcomes": {"rust": repr(o["rust"]), "leanzip": repr(o["leanzip"])},
+            })
         # Stronger than agreement: on a stream zlib produced from known bytes,
         # the answer must be those bytes.
         if s in expected and o["rust"].ok and o["rust"].data != expected[s]:
@@ -169,11 +184,17 @@ def main() -> int:
             })
 
     report = {"streams": len(streams), "parties": sorted(results), "findings": findings}
+    if "leanzip" in results:
+        report["advisories"] = advisories
     pathlib.Path(a.report).parent.mkdir(parents=True, exist_ok=True)
     pathlib.Path(a.report).write_text(json.dumps(report, indent=2))
-    print(f"{len(streams)} streams, {len(results)} oracles, {len(findings)} findings")
+    extra = f", {len(advisories)} advisories" if "leanzip" in results else ""
+    print(f"{len(streams)} streams, {len(results)} oracles, {len(findings)} findings{extra}")
     for f in findings[:10]:
         print("  ", f["parties"], f["outcomes"])
+    if not a.count and report["streams"] < MIN_STREAMS:
+        print(f"corpus too small: {report['streams']} < {MIN_STREAMS}")
+        return 2
     return 1 if findings else 0
 
 

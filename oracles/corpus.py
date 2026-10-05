@@ -59,3 +59,47 @@ def mutations(stream: bytes, seed: int = 0, count: int = 8):
         i = rng.randrange(n)
         b[i] ^= 1 << rng.randrange(8)
         yield bytes(b)
+
+
+def handmade(seed: int = 0):
+    """Streams built bit by bit, to reach shapes no encoder produces.
+
+    zlib agreement proves interoperability; it cannot prove conformance,
+    because zlib is the de facto definition. These are the cases where the
+    RFC and the dominant implementation are the only two authorities, and
+    they are where our two implementations must agree with each other.
+    """
+    rng = random.Random(seed)
+
+    def pack(bits):
+        out = bytearray((len(bits) + 7) // 8)
+        for i, b in enumerate(bits):
+            out[i // 8] |= b << (i % 8)
+        return bytes(out)
+
+    def lsb(value, n):
+        return [(value >> i) & 1 for i in range(n)]
+
+    # Every stored LEN at and around the 16-bit boundary.
+    for n in (0, 1, 2, 65534, 65535):
+        yield bytes([0x01]) + n.to_bytes(2, "little") + (n ^ 0xFFFF).to_bytes(2, "little") + bytes(n)
+
+    # Every block-type/BFINAL combination, including the reserved one.
+    for final in (0, 1):
+        for btype in range(4):
+            yield pack(lsb(final, 1) + lsb(btype, 2) + [0] * 40)
+
+    # Empty fixed block: BFINAL=1, BTYPE=01, then the 7-bit end-of-block code.
+    yield pack([1, 1, 0] + [0] * 7 + [0] * 4)
+
+    # Dynamic headers with every HLIT and HDIST at and beyond the RFC caps.
+    for hlit in (0, 28, 29, 30, 31):
+        for hdist in (0, 28, 29, 30, 31):
+            yield pack(lsb(1, 1) + lsb(2, 2) + lsb(hlit, 5) + lsb(hdist, 5)
+                       + lsb(15, 4) + [0] * 200)
+
+    # Random bit soup: short, so a large fraction reaches the decoder's
+    # interesting paths rather than failing on the first header.
+    for _ in range(19000):
+        n = rng.randrange(1, 40)
+        yield bytes(rng.getrandbits(8) for _ in range(n))

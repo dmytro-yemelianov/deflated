@@ -16,3 +16,5 @@ proved, and it never counts a theorem from another project.
 | Output limit | yes | yes | yes |
 | Encoder validity | no | no | no |
 | Round trip | no | no | no |
+
+Rust/Lean correspondence: demonstrated by differential testing over 20,197 streams with 0 findings; see `docs/correspondence.md`. Not proved.
