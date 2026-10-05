@@ -3393,7 +3393,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `BitReader`, `Error`.
 - Produces: `lz77::LENGTH_BASE: [u16; 29]`, `LENGTH_EXTRA: [u8; 29]`, `DIST_BASE: [u16; 30]`, `DIST_EXTRA: [u8; 30]`, `lz77::read_length(u16, &mut BitReader) -> Result<usize, Error>`, `lz77::read_distance(u16, &mut BitReader) -> Result<usize, Error>`, `lz77::copy_back(&mut Vec<u8>, usize, usize) -> Result<(), Error>`. Tasks 14, 16 consume these.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `crates/deflate-core/tests/lz77_tests.rs`:
 
@@ -3523,12 +3523,12 @@ fn truncated_extra_bits_are_eof() {
 }
 ```
 
-- [ ] **Step 2: Run to verify they fail**
+- [x] **Step 2: Run to verify they fail**
 
 Run: `cargo test -p deflate-core --test lz77_tests`
 Expected: FAIL — `unresolved import deflate_core::lz77`.
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 `crates/deflate-core/src/lz77.rs`:
 
@@ -3608,12 +3608,12 @@ pub fn copy_back(out: &mut Vec<u8>, dist: usize, len: usize) -> Result<(), Error
 
 Add `pub mod lz77;` to `lib.rs`.
 
-- [ ] **Step 4: Run to verify they pass**
+- [x] **Step 4: Run to verify they pass**
 
 Run: `cargo test -p deflate-core --test lz77_tests`
 Expected: PASS — 13 tests.
 
-- [ ] **Step 5: Cross-check the overlap behavior against zlib**
+- [x] **Step 5: Cross-check the overlap behavior against zlib**
 
 Run:
 
@@ -3632,7 +3632,7 @@ PY
 
 Add the four payloads to `oracles/corpus.py`'s `PAYLOADS` so every later run of the differential harness carries them.
 
-- [ ] **Step 6: Update conformance and commit**
+- [x] **Step 6: Update conformance and commit**
 
 `docs/conformance.md`: `| Overlapping back-reference | yes | yes | yes |`.
 

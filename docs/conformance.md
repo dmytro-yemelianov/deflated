@@ -11,7 +11,7 @@ proved, and it never counts a theorem from another project.
 | Fixed Huffman | no | no | no |
 | Dynamic Huffman | no | no | no |
 | Multi-block streams | yes | yes | no |
-| Overlapping back-reference | no | no | no |
+| Overlapping back-reference | yes | yes | yes |
 | Malformed input rejection | no | no | no |
 | Output limit | no | no | no |
 | Encoder validity | no | no | no |

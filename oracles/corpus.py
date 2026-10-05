@@ -20,6 +20,10 @@ PAYLOADS = [
     b"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",      # long run: max-length matches
     b"abcabcabcabcabcabcabcabcabcabcabcabc",  # short period: overlapping copies
     b"the quick brown fox jumps over the lazy dog " * 20,
+    b"a" * 300,
+    b"abc" * 200,
+    b"ab" * 5000,
+    bytes(range(32)) * 100,
 ]
 
 

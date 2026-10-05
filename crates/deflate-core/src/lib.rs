@@ -17,6 +17,7 @@ pub mod block;
 pub mod error;
 pub mod huffman;
 pub mod inflate;
+pub mod lz77;
 
 pub use error::Error;
 pub use inflate::{inflate, inflate_with_limit};
