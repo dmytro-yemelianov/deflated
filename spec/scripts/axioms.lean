@@ -51,3 +51,8 @@ open Deflate
 #print axioms Deflate.decodeSym_written
 #print axioms Deflate.decodeSym_writeCode
 #print axioms Deflate.bitAt_writeCode
+#print axioms Deflate.fixedLit_code_decodes
+#print axioms Deflate.fixedDist_code_decodes
+#print axioms Deflate.lengthSym_reads
+#print axioms Deflate.distSym_reads
+#print axioms Deflate.decode_emitFixed

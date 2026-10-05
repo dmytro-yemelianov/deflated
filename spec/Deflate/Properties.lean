@@ -12,6 +12,7 @@ import Deflate.Match
 import Deflate.BitWriter
 import Deflate.Decode
 import Deflate.Encode
+import Deflate.EncodeFixed
 
 namespace Deflate
 open BitReader
@@ -1900,5 +1901,369 @@ theorem encodeStored_empty (limit : Nat) : decode (encodeStored ⟨#[]⟩) limit
 /-- P10, stated on its own: encoding is a stream the decoder accepts. -/
 theorem encodeStored_valid : (decode (encodeStored ⟨#[]⟩) 0).isOk = true := by
   rw [encodeStored_empty 0]; rfl
+
+/-! ### M7a — Fixed-Huffman emitter round trip (spec §3.4)
+
+  Each code the emitter writes is checked once on a pattern reader by
+  kernel evaluation (`litCheck_all`, `distCheck_all`) and lifted to any
+  stream by `decodeSym_writeCode`. Length and distance slots are argued
+  structurally (`slot_spec`): consecutive bases are at most `2 ^ extra`
+  apart, so the extra value always fits. Rust counterpart: `encode_fixed.rs`. -/
+
+section EmitFixedProps
+open BitWriter
+
+def litCheck (s : Nat) : Bool :=
+  match decodeSym fixedLitLen (patternReader (reverseBits (fixedLitCode s).1 (fixedLitCode s).2)) with
+  | .ok (s', r') => s' == s && r'.pos == (fixedLitCode s).2
+  | .error _ => false
+
+/-- Every fixed literal/length code decodes, on a pattern reader, to its own
+    symbol after exactly its own length. Kernel evaluation, 288 cases. -/
+theorem litCheck_all : ∀ s, s < 288 → litCheck s = true := by decide +kernel
+theorem litCheck_ok (s : Nat) (h : litCheck s = true) :
+    ∃ r', decodeSym fixedLitLen (patternReader (reverseBits (fixedLitCode s).1 (fixedLitCode s).2))
+      = .ok (s, r') ∧ r'.pos = (fixedLitCode s).2 := by
+  unfold litCheck at h
+  revert h
+  cases decodeSym fixedLitLen (patternReader (reverseBits (fixedLitCode s).1 (fixedLitCode s).2)) with
+  | error e => intro h; contradiction
+  | ok p => 
+    obtain ⟨s', r'⟩ := p
+    intro h
+    simp only [Bool.and_eq_true, beq_iff_eq] at h
+    obtain ⟨rfl, hl⟩ := h
+    exact ⟨r', rfl, hl⟩
+
+theorem writeLit_size (w : BitWriter) (s : Nat) :
+    (writeLit w s).bits.size = w.bits.size + (fixedLitCode s).2 := by
+  simp [writeLit, writeCode_eq, writeBits_size]
+theorem fixedLitCode_len (s : Nat) : 7 ≤ (fixedLitCode s).2 ∧ (fixedLitCode s).2 ≤ 9 := by
+  by_cases a : s < 144 <;> by_cases b : s < 256 <;> by_cases c : s < 280 <;>
+    simp [fixedLitCode, a, b, c]
+
+/-- **Symbol codes.** Wherever `writeLit w s` sits in a stream, `decodeSym
+    fixedLitLen` there returns `s` and stops right after the code. -/
+theorem fixedLit_code_decodes {bs : ByteArray} {w : BitWriter} {R : Array Bool} {s : Nat}
+    (hs : s < 288) (hB : bs = (BitWriter.mk ((writeLit w s).bits ++ R)).toBytes) :
+    decodeSym fixedLitLen ⟨bs, w.bits.size⟩ = .ok (s, ⟨bs, (writeLit w s).bits.size⟩) := by
+  obtain ⟨r', hd, hl⟩ := litCheck_ok s (litCheck_all s hs)
+  subst hB
+  rw [writeLit_size]
+  exact decodeSym_writeCode (w := w) ⟨R⟩ hd hl (by have := fixedLitCode_len s; omega)
+
+def distCheck (s : Nat) : Bool :=
+  match decodeSym fixedDist (patternReader (reverseBits s 5)) with
+  | .ok (s', r') => s' == s && r'.pos == 5
+  | .error _ => false
+
+/-- Likewise every 5-bit distance code 0..29. -/
+theorem distCheck_all : ∀ s, s < 30 → distCheck s = true := by decide +kernel
+
+/-- The same for the fixed distance code: code = symbol, 5 bits. -/
+theorem fixedDist_code_decodes {bs : ByteArray} {w : BitWriter} {R : Array Bool} {s : Nat}
+    (hs : s < 30) (hB : bs = (BitWriter.mk ((w.writeCode s 5).bits ++ R)).toBytes) :
+    decodeSym fixedDist ⟨bs, w.bits.size⟩ = .ok (s, ⟨bs, (w.writeCode s 5).bits.size⟩) := by
+  have hc := distCheck_all s hs
+  unfold distCheck at hc
+  split at hc
+  · rename_i s' r' hd
+    simp only [Bool.and_eq_true, beq_iff_eq] at hc
+    obtain ⟨rfl, hl⟩ := hc
+    subst hB
+    rw [writeCode_eq, writeBits_size]
+    exact decodeSym_writeCode (w := w) ⟨R⟩ hd hl (by omega)
+  · contradiction
+
+theorem slotGo_spec (base : Array Nat) (v : Nat) (h0 : base[0]! ≤ v) :
+    ∀ k, 0 < k → slotGo base v k < k ∧ base[slotGo base v k]! ≤ v ∧
+      ∀ j, slotGo base v k < j → j < k → v < base[j]! := by
+  intro k hk
+  induction k with
+  | zero => omega
+  | succ k ih =>
+    simp only [slotGo]
+    split
+    · rename_i h; exact ⟨by omega, h, fun j h1 h2 => by omega⟩
+    · rename_i h
+      cases k with
+      | zero => exact absurd h0 h
+      | succ k =>
+        obtain ⟨a, b, c⟩ := ih (by omega)
+        refine ⟨by omega, b, fun j h1 h2 => ?_⟩
+        by_cases hj : j = k + 1
+        · subst hj; omega
+        · exact c j h1 (by omega)
+
+/-- The slot search: `slot` picks a base at or below `v`, and when
+    consecutive bases are at most `2 ^ extra` apart, `v - base` fits in the
+    slot's extra bits. A table argument, so no 32768-case evaluation. -/
+theorem slot_spec (base extra : Array Nat) (v : Nat) (hsz : 0 < base.size) (h0 : base[0]! ≤ v)
+    (hstep : ∀ i, i + 1 < base.size → base[i + 1]! ≤ base[i]! + 2 ^ extra[i]!)
+    (hlast : v < base[base.size - 1]! + 2 ^ extra[base.size - 1]!) :
+    slot base v < base.size ∧ base[slot base v]! ≤ v ∧
+      v - base[slot base v]! < 2 ^ extra[slot base v]! := by
+  obtain ⟨a, b, c⟩ := slotGo_spec base v h0 base.size hsz
+  unfold slot
+  refine ⟨a, b, ?_⟩
+  by_cases hi : slotGo base v base.size + 1 < base.size
+  · have := c _ (by omega) hi
+    have := hstep _ hi
+    omega
+  · have : slotGo base v base.size = base.size - 1 := by omega
+    rw [this] at b ⊢; omega
+
+theorem lengthBase_step' : ∀ i, i < 28 →
+    lengthBase[i + 1]! ≤ lengthBase[i]! + 2 ^ lengthExtra[i]! := by decide +kernel
+theorem lengthBase_step (i : Nat) (h : i + 1 < lengthBase.size) :
+    lengthBase[i + 1]! ≤ lengthBase[i]! + 2 ^ lengthExtra[i]! :=
+  lengthBase_step' i (by have : lengthBase.size = 29 := rfl; omega)
+theorem distBase_step' : ∀ i, i < 29 →
+    distBase[i + 1]! ≤ distBase[i]! + 2 ^ distExtra[i]! := by decide +kernel
+theorem distBase_step (i : Nat) (h : i + 1 < distBase.size) :
+    distBase[i + 1]! ≤ distBase[i]! + 2 ^ distExtra[i]! :=
+  distBase_step' i (by have : distBase.size = 30 := rfl; omega)
+
+/-- What `lengthSym` returns, for an in-range length. -/
+theorem lengthSym_spec (len : Nat) (h1 : 3 ≤ len) (h2 : len ≤ 258) :
+    257 ≤ (lengthSym len).1 ∧ (lengthSym len).1 ≤ 285 ∧
+      lengthExtra[(lengthSym len).1 - 257]! = (lengthSym len).2.2 ∧
+      (lengthSym len).2.1 < 2 ^ (lengthSym len).2.2 ∧
+      lengthBase[(lengthSym len).1 - 257]! + (lengthSym len).2.1 = len := by
+  obtain ⟨a, b, c⟩ := slot_spec lengthBase lengthExtra len (by decide) (by simp [lengthBase]; omega)
+    lengthBase_step (by simp [lengthBase, lengthExtra]; omega)
+  dsimp only [lengthSym]
+  rw [Nat.add_sub_cancel_left]
+  have : lengthBase.size = 29 := rfl
+  exact ⟨by omega, by omega, rfl, c, by omega⟩
+
+theorem distSym_spec (dist : Nat) (h1 : 1 ≤ dist) (h2 : dist ≤ 32768) :
+    (distSym dist).1 ≤ 29 ∧ distExtra[(distSym dist).1]! = (distSym dist).2.2 ∧
+      (distSym dist).2.1 < 2 ^ (distSym dist).2.2 ∧
+      distBase[(distSym dist).1]! + (distSym dist).2.1 = dist := by
+  obtain ⟨a, b, c⟩ := slot_spec distBase distExtra dist (by decide) (by simp [distBase]; omega)
+    distBase_step (by simp [distBase, distExtra]; omega)
+  dsimp only [distSym]
+  have : distBase.size = 30 := rfl
+  exact ⟨by omega, rfl, c, by omega⟩
+
+/-- **Length codes.** For every length 3..258, `readLength` on the chosen
+    symbol and the written extra bits returns the length. -/
+theorem lengthSym_reads {bs : ByteArray} {w : BitWriter} {R : Array Bool} (len : Nat)
+    (h1 : 3 ≤ len) (h2 : len ≤ 258)
+    (hB : bs = (BitWriter.mk ((w.writeBits (lengthSym len).2.1 (lengthSym len).2.2).bits ++ R)).toBytes) :
+    readLength (lengthSym len).1 ⟨bs, w.bits.size⟩ =
+      .ok (len, ⟨bs, (w.writeBits (lengthSym len).2.1 (lengthSym len).2.2).bits.size⟩) := by
+  obtain ⟨a, b, c, d, e⟩ := lengthSym_spec len h1 h2
+  subst hB
+  unfold readLength
+  rw [if_pos ⟨a, b⟩]
+  dsimp only
+  rw [c, readBits_written w _ _ ⟨R⟩ d]
+  simp only [e, writeBits_size]
+
+/-- **Distance codes.** For every distance 1..32768, `readDistance` on the
+    chosen symbol and the written extra bits returns the distance. -/
+theorem distSym_reads {bs : ByteArray} {w : BitWriter} {R : Array Bool} (dist : Nat)
+    (h1 : 1 ≤ dist) (h2 : dist ≤ 32768)
+    (hB : bs = (BitWriter.mk ((w.writeBits (distSym dist).2.1 (distSym dist).2.2).bits ++ R)).toBytes) :
+    readDistance (distSym dist).1 ⟨bs, w.bits.size⟩ =
+      .ok (dist, ⟨bs, (w.writeBits (distSym dist).2.1 (distSym dist).2.2).bits.size⟩) := by
+  obtain ⟨a, c, d, e⟩ := distSym_spec dist h1 h2
+  subst hB
+  unfold readDistance
+  rw [if_pos a]
+  rw [c, readBits_written w _ _ ⟨R⟩ d]
+  simp only [e, writeBits_size]
+
+
+theorem writeLit_bits (w : BitWriter) (s : Nat) :
+    (writeLit w s).bits = w.bits ++ lsbBits (reverseBits (fixedLitCode s).1 (fixedLitCode s).2)
+      (fixedLitCode s).2 := rfl
+
+theorem foldl_expandStep_size : ∀ (ts : List Token) (out : Array UInt8),
+    out.size ≤ (ts.foldl expandStep out).size := by
+  intro ts
+  induction ts with
+  | nil => intro out; simp
+  | cons t ts ih =>
+    intro out
+    have h1 := ih (expandStep out t)
+    have h2 : out.size ≤ (expandStep out t).size := by
+      cases t <;> simp [expandStep, copyGo_size]
+    simp only [List.foldl_cons]; omega
+
+theorem emitToken_bits (w : BitWriter) (t : Token) :
+    ∃ T, (emitToken w t).bits = w.bits ++ T ∧ 1 ≤ T.size := by
+  cases t with
+  | literal b =>
+    refine ⟨_, writeLit_bits w b.toNat, ?_⟩
+    simp only [lsbBits_size]; have := fixedLitCode_len b.toNat; omega
+  | «match» len dist =>
+    refine ⟨lsbBits (reverseBits (fixedLitCode (lengthSym len).1).1 (fixedLitCode (lengthSym len).1).2)
+        (fixedLitCode (lengthSym len).1).2 ++ lsbBits (lengthSym len).2.1 (lengthSym len).2.2 ++
+        lsbBits (reverseBits (distSym dist).1 5) 5 ++ lsbBits (distSym dist).2.1 (distSym dist).2.2,
+      ?_, ?_⟩
+    · simp only [emitToken, writeBits_bits, writeCode_eq, writeLit_bits, Array.append_assoc]
+    · simp only [Array.size_append, lsbBits_size]; have := fixedLitCode_len (lengthSym len).1; omega
+
+theorem foldl_emitToken_bits : ∀ (ts : List Token) (w : BitWriter),
+    ∃ T, (ts.foldl emitToken w).bits = w.bits ++ T ∧ ts.length ≤ T.size := by
+  intro ts
+  induction ts with
+  | nil => intro w; exact ⟨#[], by simp, by simp⟩
+  | cons t ts ih =>
+    intro w
+    obtain ⟨T1, h1, s1⟩ := emitToken_bits w t
+    obtain ⟨T2, h2, s2⟩ := ih (emitToken w t)
+    refine ⟨T1 ++ T2, ?_, ?_⟩
+    · simp only [List.foldl_cons, h2, h1, Array.append_assoc]
+    · simp only [List.length_cons, Array.size_append]; omega
+
+/-- The end-of-block code: symbol 256 is 7 zero bits. -/
+def endBits : Array Bool :=
+  lsbBits (reverseBits (fixedLitCode 256).1 (fixedLitCode 256).2) (fixedLitCode 256).2
+
+/-- The block-body invariant: the reader sits at the bit offset of the next
+    token, the output is the expansion so far, and fuel exceeds the tokens
+    left (one iteration per token, plus one for symbol 256). -/
+theorem emitFixed_loop (bs : ByteArray) (limit : Nat) : ∀ (ts : List Token) (w : BitWriter)
+    (out : Array UInt8) (fuel : Nat),
+    bs = (BitWriter.mk ((ts.foldl emitToken w).bits ++ endBits)).toBytes →
+    ValidFrom out ts → (ts.foldl expandStep out).size ≤ limit → ts.length < fuel →
+    decodeHuffBlock fixedLitLen fixedDist ⟨bs, w.bits.size⟩ out limit fuel
+      = .ok (ts.foldl expandStep out, ⟨bs, (ts.foldl emitToken w).bits.size + 7⟩) := by
+  intro ts
+  induction ts with
+  | nil =>
+    intro w out fuel hbs _ _ hf
+    obtain ⟨k, rfl⟩ : ∃ k, fuel = k + 1 := ⟨fuel - 1, by simp at hf; omega⟩
+    have hd := fixedLit_code_decodes (bs := bs) (w := w) (R := #[]) (s := 256) (by decide)
+      (by rw [hbs]; simp [endBits, writeLit_bits])
+    simp only [decodeHuffBlock, hd, bind, Except.bind]
+    rw [if_neg (by decide), if_pos trivial]
+    simp [writeLit_size, fixedLitCode]
+  | cons t ts ih =>
+    intro w out fuel hbs hv hlim hf
+    obtain ⟨k, rfl⟩ : ∃ k, fuel = k + 1 := ⟨fuel - 1, by simp at hf; omega⟩
+    obtain ⟨T, hT, _⟩ := foldl_emitToken_bits ts (emitToken w t)
+    have hbs' : bs = (BitWriter.mk ((emitToken w t).bits ++ (T ++ endBits))).toBytes := by
+      rw [hbs, List.foldl_cons, hT, Array.append_assoc]
+    obtain ⟨hvt, hvs⟩ := hv
+    simp only [List.foldl_cons] at hlim ⊢
+    have hgrow := foldl_expandStep_size ts (expandStep out t)
+    have ih' := ih (emitToken w t) (expandStep out t) k (by rw [hbs, List.foldl_cons]) hvs hlim
+      (by simp at hf; omega)
+    cases t with
+    | literal b =>
+      have hd := fixedLit_code_decodes (bs := bs) (w := w) (R := T ++ endBits) (s := b.toNat)
+        (by have := b.toNat_lt; omega) hbs'
+      simp only [decodeHuffBlock, hd, bind, Except.bind]
+      simp only [expandStep, Array.size_push] at hgrow hlim
+      rw [if_pos b.toNat_lt, if_neg (by omega), UInt8.ofNat_toNat]
+      exact ih'
+    | «match» len dist =>
+      obtain ⟨h1, h2, h3, h4, h5⟩ := hvt
+      have hls := lengthSym_spec len h1 h2
+      have hds := distSym_spec dist h3 h4
+      have hd1 := fixedLit_code_decodes (bs := bs) (w := w)
+        (R := lsbBits (lengthSym len).2.1 (lengthSym len).2.2 ++
+          lsbBits (reverseBits (distSym dist).1 5) 5 ++
+          lsbBits (distSym dist).2.1 (distSym dist).2.2 ++ (T ++ endBits))
+        (s := (lengthSym len).1) (by omega)
+        (by rw [hbs']; simp only [emitToken, writeBits_bits, writeCode_eq, writeLit_bits,
+              Array.append_assoc])
+      have hd2 := lengthSym_reads (bs := bs) (w := writeLit w (lengthSym len).1)
+        (R := lsbBits (reverseBits (distSym dist).1 5) 5 ++
+          lsbBits (distSym dist).2.1 (distSym dist).2.2 ++ (T ++ endBits)) len h1 h2
+        (by rw [hbs']; simp only [emitToken, writeBits_bits, writeCode_eq, Array.append_assoc])
+      have hd3 := fixedDist_code_decodes (bs := bs)
+        (w := (writeLit w (lengthSym len).1).writeBits (lengthSym len).2.1 (lengthSym len).2.2)
+        (R := lsbBits (distSym dist).2.1 (distSym dist).2.2 ++ (T ++ endBits))
+        (s := (distSym dist).1) (by omega)
+        (by rw [hbs']; simp only [emitToken, writeBits_bits, writeCode_eq, Array.append_assoc])
+      have hd4 := distSym_reads (bs := bs)
+        (w := ((writeLit w (lengthSym len).1).writeBits (lengthSym len).2.1
+          (lengthSym len).2.2).writeCode (distSym dist).1 5)
+        (R := T ++ endBits) dist h3 h4
+        (by rw [hbs']; simp only [emitToken, writeBits_bits, Array.append_assoc])
+      simp only [expandStep, copyGo_size] at hgrow hlim
+      simp only [decodeHuffBlock, hd1, hd2, hd3, hd4, bind, Except.bind]
+      rw [if_neg (by omega), if_neg (by omega), if_neg (by omega)]
+      have hcb : copyBack out dist len = .ok (copyGo dist out len) := by
+        unfold copyBack; rw [if_neg (by omega)]
+      rw [hcb]
+      exact ih'
+
+theorem fixedHeader_size : fixedHeader.bits.size = 3 := by
+  simp [fixedHeader, writeBits_size, BitWriter.empty]
+
+/-- Any stream that starts with `fixedHeader`'s bits reads as a final fixed block. -/
+theorem readHeader_fixedHeader {bs : ByteArray} {R : Array Bool}
+    (hB : bs = (BitWriter.mk (fixedHeader.bits ++ R)).toBytes) :
+    readHeader ⟨bs, 0⟩ = .ok (⟨true, .fixed⟩, ⟨bs, 3⟩) := by
+  have e1 : bs = (BitWriter.mk ((BitWriter.empty.writeBits 1 1).bits ++
+      (BitWriter.mk (lsbBits 1 2 ++ R)).bits)).toBytes := by
+    rw [hB]; simp only [fixedHeader, writeBits_bits, Array.append_assoc]
+  have e2 : bs = (BitWriter.mk (((BitWriter.empty.writeBits 1 1).writeBits 1 2).bits ++
+      (BitWriter.mk R).bits)).toBytes := hB
+  have hsz0 : (BitWriter.empty).bits.size = 0 := rfl
+  have hsz1 : (BitWriter.empty.writeBits 1 1).bits.size = 1 := by
+    simp [writeBits_size, BitWriter.empty]
+  have hb0 := written_bits BitWriter.empty 1 1 ⟨lsbBits 1 2 ++ R⟩ 0 (by omega)
+  rw [← e1, hsz0] at hb0
+  obtain ⟨hlt, hbit⟩ := hb0
+  have hr2 := readBits_written (BitWriter.empty.writeBits 1 1) 1 2 ⟨R⟩ (by decide)
+  rw [← e2, hsz1] at hr2
+  unfold readHeader
+  rw [readBit_of_lt hlt]
+  dsimp only
+  rw [hbit, hr2]
+  rfl
+
+/-- **Fixed-Huffman round trip** (spec §3.4). A valid token list whose
+    expansion fits the limit decodes back to that expansion. Fuel: every
+    token takes at least 7 bits, so `8 * size + 1` covers one iteration
+    per token; this is for `emitFixed` streams only, not the general P8 gap. -/
+theorem decode_emitFixed (ts : List Token) (limit : Nat) (hv : Valid ts)
+    (hl : (expand ts).size ≤ limit) : decode (emitFixed ts) limit = .ok ⟨expand ts⟩ := by
+  obtain ⟨T, hT, hTs⟩ := foldl_emitToken_bits ts fixedHeader
+  have hbs : emitFixed ts =
+      (BitWriter.mk ((ts.foldl emitToken fixedHeader).bits ++ endBits)).toBytes := rfl
+  have hh := readHeader_fixedHeader (bs := emitFixed ts) (R := T ++ endBits)
+    (by rw [hbs, hT, Array.append_assoc])
+  have hfuel : ts.length < 8 * (emitFixed ts).size + 1 := by
+    rw [hbs, toBytes_size]
+    simp only [hT, Array.size_append]
+    omega
+  have hloop := emitFixed_loop (emitFixed ts) limit ts fixedHeader #[] _ hbs hv hl hfuel
+  rw [fixedHeader_size] at hloop
+  unfold decode decodeFuel
+  rw [decodeFuelLoop.eq_2, hh]
+  simp only [bind, Except.bind, decodeBlockBody]
+  rw [hloop]
+  dsimp only
+  rw [if_neg (by unfold expand at hl; omega), if_pos trivial]
+  rfl
+
+/-- The empty block: header, then symbol 256 (seven 0 bits), as Rust's
+    `fixed_tests` decode. -/
+example : (emitFixed []).data = #[0x03, 0x00] := by decide +kernel
+
+/-- `abca` then a match of 8 at distance 3: the bytes zlib produces for
+    `abcabcabcabc` (raw deflate, level 9), as in Rust's `fixed_tests`. -/
+example : (emitFixed [.literal 97, .literal 98, .literal 99, .literal 97, .match 8 3]).data =
+    #[0x4b, 0x4c, 0x4a, 0x4e, 0x84, 0x21, 0x00] := by decide +kernel
+
+/-- The bounds: length 258, distance 32768, and 9-bit literals. Rust's
+    `emit_fixed` writes the same bytes for these tokens. -/
+example : (emitFixed [.literal 97, .match 258 1, .match 3 32768]).data =
+    #[75, 28, 5, 192, 251, 255, 1] := by decide +kernel
+
+example : (emitFixed [.literal 200, .literal 255, .literal 0, .match 227 24577,
+    .match 257 32767]).data = #[59, 241, 159, 97, 4, 92, 0, 48, 226, 175, 255, 7, 0] := by
+  decide +kernel
+
+end EmitFixedProps
 
 end Deflate

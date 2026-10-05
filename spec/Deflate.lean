@@ -10,5 +10,6 @@ import Deflate.Tokens
 import Deflate.Match
 import Deflate.Decode
 import Deflate.Encode
+import Deflate.EncodeFixed
 import Deflate.Properties
 
