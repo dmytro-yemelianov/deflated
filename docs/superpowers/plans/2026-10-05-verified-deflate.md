@@ -3662,7 +3662,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `Code`, `decodeSym`, `readLength`, `readDistance`, `copyBack`, `BitReader`.
 - Produces: `Deflate.decodeHuffBlock (lit dist : Code) (r : BitReader) (out : Array UInt8) (limit fuel : Nat) : Except DecErr (Array UInt8 × BitReader)`. Tasks 15 and 18 call it with the fixed codes and with dynamic ones.
 
-- [ ] **Step 1: Write the failing theorem**
+- [x] **Step 1: Write the failing theorem**
 
 Append to `spec/Deflate/Properties.lean`:
 
@@ -3708,12 +3708,12 @@ theorem decodeHuffBlock_monotone : ∀ (fuel : Nat) (lit dist : Code) (r : BitRe
              simp_all; omega)
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `lake build`
 Expected: FAIL — `unknown identifier 'decodeHuffBlock'`.
 
-- [ ] **Step 3: Write the model**
+- [x] **Step 3: Write the model**
 
 Append to `spec/Deflate/Block.lean` (after adding `import Deflate.Huffman` and `import Deflate.LZ77`):
 
@@ -3749,12 +3749,12 @@ def decodeHuffBlock (lit dist : Code) (r : BitReader) (out : Array UInt8)
 
 Note the argument order: `fuel` is last so the equation compiler accepts the structural recursion. Update the theorem in Step 1 to match (`decodeHuffBlock lit dist r out limit fuel`).
 
-- [ ] **Step 4: Run to verify the theorem passes**
+- [x] **Step 4: Run to verify the theorem passes**
 
 Run: `lake build`
 Expected: PASS.
 
-- [ ] **Step 5: Add the remaining P4 theorems**
+- [x] **Step 5: Add the remaining P4 theorems**
 
 ```lean
 /-- The output limit is never exceeded by a successful block decode. This is
@@ -3823,7 +3823,7 @@ theorem decodeHuffBlock_progress : ∀ (fuel : Nat) (lit dist : Code)
 
 The last branch needs the position facts for `readLength`, `decodeSym` on the distance tree and `readDistance`. Add the two missing lemmas first — `readLength_pos` and `readDistance_pos`, each `r.pos ≤ r'.pos`, both one-line `unfold; split; simp_all [readBits_pos]` — then this proof closes with `omega`.
 
-- [ ] **Step 6: Run, register, commit**
+- [x] **Step 6: Run, register, commit**
 
 Run: `lake build && make test-lean`
 Expected: PASS.

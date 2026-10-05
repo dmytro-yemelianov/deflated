@@ -23,3 +23,6 @@ open Deflate
 #print axioms Deflate.copyBack_rejects
 #print axioms Deflate.readLength_range
 #print axioms Deflate.readDistance_range
+#print axioms Deflate.decodeHuffBlock_monotone
+#print axioms Deflate.decodeHuffBlock_within_limit
+#print axioms Deflate.decodeHuffBlock_progress

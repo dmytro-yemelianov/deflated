@@ -9,6 +9,8 @@
   complement of LEN, which for 16 bits is `0xFFFF - LEN`.
 -/
 import Deflate.Bitstream
+import Deflate.Huffman
+import Deflate.LZ77
 
 namespace Deflate
 
@@ -47,5 +49,33 @@ def readStored (r : BitReader) (out : Array UInt8) :
       else
         let payload := (List.range len).map (fun k => byteAt r₂.bytes (r₂.pos / 8 + k))
         .ok (out ++ payload.toArray, { r₂ with pos := r₂.pos + 8 * len })
+
+/-- Decode one Huffman-coded block body with the given literal/length and
+    distance codes. Covers both fixed (RFC 1951 §3.2.6) and dynamic (§3.2.7)
+    blocks: they differ only in where the two codes come from.
+
+    `fuel` bounds the loop. `Properties.decodeHuffBlock_fuel_sufficient` shows
+    that the fuel the entry point supplies is never exhausted on a finite
+    stream, because each iteration consumes at least one bit. Reporting
+    exhaustion explicitly rather than guessing is deliberate: maked's cycle
+    detector once answered "acyclic" when it ran out of fuel. -/
+def decodeHuffBlock (lit dist : Code) (r : BitReader) (out : Array UInt8)
+    (limit : Nat) : Nat → Except DecErr (Array UInt8 × BitReader)
+  | 0 => .error .fuelExhausted
+  | fuel + 1 => do
+    let (sym, r₁) ← decodeSym lit r
+    if sym < 256 then
+      if out.size ≥ limit then .error .outputLimitExceeded
+      else decodeHuffBlock lit dist r₁ (out.push (UInt8.ofNat sym)) limit fuel
+    else if sym = 256 then
+      .ok (out, r₁)
+    else do
+      let (l, r₂) ← readLength sym r₁
+      let (dsym, r₃) ← decodeSym dist r₂
+      let (d, r₄) ← readDistance dsym r₃
+      if out.size + l > limit then .error .outputLimitExceeded
+      else do
+        let o₁ ← copyBack out d l
+        decodeHuffBlock lit dist r₄ o₁ limit fuel
 
 end Deflate

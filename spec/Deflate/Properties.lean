@@ -596,4 +596,242 @@ theorem readDistance_range {sym : Nat} {r r' : BitReader} {d : Nat}
       <;> { simp [distBase, distExtra] at he ⊢; omega }
   · contradiction
 
+theorem readLength_pos {sym : Nat} {r r' : BitReader} {l : Nat}
+    (h : readLength sym r = .ok (l, r')) : r.pos ≤ r'.pos := by
+  unfold readLength at h; split at h
+  · cases hb : BitReader.readBits r (lengthExtra[sym - 257]!) with
+    | none => simp [hb] at h
+    | some p =>
+      obtain ⟨e, r₂⟩ := p
+      simp [hb] at h
+      obtain ⟨_, rfl⟩ := h
+      have hp := readBits_pos _ r e r₂ hb
+      rw [hp]
+      exact Nat.le_add_right r.pos _
+  · contradiction
+
+theorem readLength_bytes {sym : Nat} {r r' : BitReader} {l : Nat}
+    (h : readLength sym r = .ok (l, r')) : r'.bytes = r.bytes := by
+  unfold readLength at h; split at h
+  · cases hb : BitReader.readBits r (lengthExtra[sym - 257]!) with
+    | none => simp [hb] at h
+    | some p =>
+      obtain ⟨e, r₂⟩ := p
+      simp [hb] at h
+      obtain ⟨_, rfl⟩ := h
+      exact readBits_bytes _ r e r₂ hb
+  · contradiction
+
+theorem readDistance_pos {sym : Nat} {r r' : BitReader} {d : Nat}
+    (h : readDistance sym r = .ok (d, r')) : r.pos ≤ r'.pos := by
+  unfold readDistance at h; split at h
+  · cases hb : BitReader.readBits r (distExtra[sym]!) with
+    | none => simp [hb] at h
+    | some p =>
+      obtain ⟨e, r₂⟩ := p
+      simp [hb] at h
+      obtain ⟨_, rfl⟩ := h
+      have hp := readBits_pos _ r e r₂ hb
+      rw [hp]
+      exact Nat.le_add_right r.pos _
+  · contradiction
+
+theorem readDistance_bytes {sym : Nat} {r r' : BitReader} {d : Nat}
+    (h : readDistance sym r = .ok (d, r')) : r'.bytes = r.bytes := by
+  unfold readDistance at h; split at h
+  · cases hb : BitReader.readBits r (distExtra[sym]!) with
+    | none => simp [hb] at h
+    | some p =>
+      obtain ⟨e, r₂⟩ := p
+      simp [hb] at h
+      obtain ⟨_, rfl⟩ := h
+      exact readBits_bytes _ r e r₂ hb
+  · contradiction
+
+/-! ### P4 — Fixed Huffman blocks -/
+
+/-- A block body never alters the input and never shrinks the output. -/
+theorem decodeHuffBlock_monotone : ∀ (fuel : Nat) (lit dist : Code) (r : BitReader)
+    (out o : Array UInt8) (limit : Nat) (r' : BitReader),
+    decodeHuffBlock lit dist r out limit fuel = .ok (o, r') →
+    out.size ≤ o.size ∧ r'.bytes = r.bytes ∧ r.pos ≤ r'.pos := by
+  intro fuel
+  induction fuel with
+  | zero => intro _ _ _ _ _ _ _ h; simp [decodeHuffBlock] at h
+  | succ n ih =>
+    intro lit dist r out o limit r' h
+    unfold decodeHuffBlock at h
+    cases hs : decodeSym lit r with
+    | error e => rw [hs] at h; simp [Bind.bind, Except.bind] at h
+    | ok p =>
+      rcases p with ⟨sym, r₁⟩
+      rw [hs] at h
+      simp only [Bind.bind, Except.bind] at h
+      have ⟨hp, _⟩ := decodeSym_pos hs
+      have hb := decodeSym_bytes hs
+      split at h
+      · -- literal
+        split at h
+        · simp at h
+        · have hrec := ih lit dist _ _ o limit r' h
+          simp [Array.size_push] at hrec
+          obtain ⟨hsz, hby, hpos⟩ := hrec
+          exact ⟨by omega, by rw [hby, hb], Nat.le_trans (Nat.le_of_lt hp) hpos⟩
+      · split at h
+        · -- end of block
+          simp at h; obtain ⟨h1, h2⟩ := h; subst h1; subst h2
+          exact ⟨by omega, hb, Nat.le_of_lt hp⟩
+        · -- length/distance
+          cases hl : readLength sym r₁ with
+          | error e => rw [hl] at h; simp at h
+          | ok p₂ =>
+            obtain ⟨l, r₂⟩ := p₂
+            rw [hl] at h; dsimp at h
+            cases hd : decodeSym dist r₂ with
+            | error e => rw [hd] at h; simp at h
+            | ok p₃ =>
+              obtain ⟨dsym, r₃⟩ := p₃
+              rw [hd] at h; dsimp at h
+              cases hdd : readDistance dsym r₃ with
+              | error e => rw [hdd] at h; simp at h
+              | ok p₄ =>
+                obtain ⟨d, r₄⟩ := p₄
+                rw [hdd] at h; dsimp at h
+                split at h
+                · simp at h
+                · cases hco : copyBack out d l with
+                  | error e => rw [hco] at h; simp at h
+                  | ok o₁ =>
+                    rw [hco] at h; dsimp at h
+                    have hrec := ih lit dist r₄ o₁ o limit r' h
+                    have hcb := copyBack_size hco
+                    have hp_l := readLength_pos hl
+                    have hb_l := readLength_bytes hl
+                    have ⟨hp_d, _⟩ := decodeSym_pos hd
+                    have hb_d := decodeSym_bytes hd
+                    have hp_dist := readDistance_pos hdd
+                    have hb_dist := readDistance_bytes hdd
+                    obtain ⟨hsz, hby, hpos⟩ := hrec
+                    refine ⟨by omega, by rw [hby, hb_dist, hb_d, hb_l, hb], ?_⟩
+                    have h1 : r.pos ≤ r₁.pos := Nat.le_of_lt hp
+                    have h2 : r₁.pos ≤ r₂.pos := hp_l
+                    have h3 : r₂.pos ≤ r₃.pos := Nat.le_of_lt hp_d
+                    have h4 : r₃.pos ≤ r₄.pos := hp_dist
+                    have h5 : r₄.pos ≤ r'.pos := hpos
+                    exact Nat.le_trans h1 (Nat.le_trans h2 (Nat.le_trans h3 (Nat.le_trans h4 h5)))
+
+/-- The output limit is never exceeded by a successful block decode. This is
+    the model's half of spec §11's bomb requirement. -/
+theorem decodeHuffBlock_within_limit : ∀ (fuel : Nat) (lit dist : Code)
+    (r : BitReader) (out o : Array UInt8) (limit : Nat) (r' : BitReader),
+    out.size ≤ limit →
+    decodeHuffBlock lit dist r out limit fuel = .ok (o, r') → o.size ≤ limit := by
+  intro fuel
+  induction fuel with
+  | zero => intro _ _ _ _ _ _ _ _ h; simp [decodeHuffBlock] at h
+  | succ n ih =>
+    intro lit dist r out o limit r' hle h
+    unfold decodeHuffBlock at h
+    cases hs : decodeSym lit r with
+    | error e => rw [hs] at h; simp [Bind.bind, Except.bind] at h
+    | ok p =>
+      rcases p with ⟨sym, r₁⟩
+      rw [hs] at h
+      simp only [Bind.bind, Except.bind] at h
+      split at h
+      · -- literal
+        split at h
+        · simp at h
+        · exact ih lit dist _ _ o limit r' (by simp [Array.size_push]; omega) h
+      · split at h
+        · -- end of block
+          simp at h; obtain ⟨h1, _⟩ := h; subst h1; exact hle
+        · -- length/distance
+          cases hl : readLength sym r₁ with
+          | error e => rw [hl] at h; simp at h
+          | ok p₂ =>
+            obtain ⟨l, r₂⟩ := p₂
+            rw [hl] at h; dsimp at h
+            cases hd : decodeSym dist r₂ with
+            | error e => rw [hd] at h; simp at h
+            | ok p₃ =>
+              obtain ⟨dsym, r₃⟩ := p₃
+              rw [hd] at h; dsimp at h
+              cases hdd : readDistance dsym r₃ with
+              | error e => rw [hdd] at h; simp at h
+              | ok p₄ =>
+                obtain ⟨d, r₄⟩ := p₄
+                rw [hdd] at h; dsimp at h
+                split at h
+                · simp at h
+                · rename_i hlim
+                  cases hco : copyBack out d l with
+                  | error e => rw [hco] at h; simp at h
+                  | ok o₁ =>
+                    rw [hco] at h; dsimp at h
+                    have hcb := copyBack_size hco
+                    exact ih lit dist r₄ o₁ o limit r' (by omega) h
+
+/-- Every iteration consumes at least one bit, so a block body cannot spin
+    without advancing. The P8 ingredient. -/
+theorem decodeHuffBlock_progress : ∀ (fuel : Nat) (lit dist : Code)
+    (r : BitReader) (out o : Array UInt8) (limit : Nat) (r' : BitReader),
+    decodeHuffBlock lit dist r out limit fuel = .ok (o, r') → r.pos < r'.pos := by
+  intro fuel
+  induction fuel with
+  | zero => intro _ _ _ _ _ _ _ h; simp [decodeHuffBlock] at h
+  | succ n ih =>
+    intro lit dist r out o limit r' h
+    unfold decodeHuffBlock at h
+    cases hs : decodeSym lit r with
+    | error e => rw [hs] at h; simp [Bind.bind, Except.bind] at h
+    | ok p =>
+      rcases p with ⟨sym, r₁⟩
+      rw [hs] at h
+      simp only [Bind.bind, Except.bind] at h
+      have ⟨hp, _⟩ := decodeSym_pos hs
+      split at h
+      · -- literal
+        split at h
+        · simp at h
+        · have ⟨_, _, hpos⟩ := decodeHuffBlock_monotone n lit dist _ _ o limit r' h
+          exact Nat.lt_of_lt_of_le hp hpos
+      · split at h
+        · -- end of block
+          simp at h; obtain ⟨_, rfl⟩ := h
+          exact hp
+        · -- length/distance
+          cases hl : readLength sym r₁ with
+          | error e => rw [hl] at h; simp at h
+          | ok p₂ =>
+            obtain ⟨l, r₂⟩ := p₂
+            rw [hl] at h; dsimp at h
+            cases hd : decodeSym dist r₂ with
+            | error e => rw [hd] at h; simp at h
+            | ok p₃ =>
+              obtain ⟨dsym, r₃⟩ := p₃
+              rw [hd] at h; dsimp at h
+              cases hdd : readDistance dsym r₃ with
+              | error e => rw [hdd] at h; simp at h
+              | ok p₄ =>
+                obtain ⟨d, r₄⟩ := p₄
+                rw [hdd] at h; dsimp at h
+                split at h
+                · simp at h
+                · cases hco : copyBack out d l with
+                  | error e => rw [hco] at h; simp at h
+                  | ok o₁ =>
+                    rw [hco] at h; dsimp at h
+                    have ⟨_, _, hpos⟩ := decodeHuffBlock_monotone n lit dist r₄ o₁ o limit r' h
+                    have hp_l := readLength_pos hl
+                    have ⟨hp_d, _⟩ := decodeSym_pos hd
+                    have hp_dist := readDistance_pos hdd
+                    have h1 : r₁.pos ≤ r₂.pos := hp_l
+                    have h2 : r₂.pos ≤ r₃.pos := Nat.le_of_lt hp_d
+                    have h3 : r₃.pos ≤ r₄.pos := hp_dist
+                    have h4 : r₄.pos ≤ r'.pos := hpos
+                    have hrec : r₁.pos ≤ r'.pos :=
+                      Nat.le_trans h1 (Nat.le_trans h2 (Nat.le_trans h3 h4))
+                    exact Nat.lt_of_lt_of_le hp hrec
+
 end Deflate
