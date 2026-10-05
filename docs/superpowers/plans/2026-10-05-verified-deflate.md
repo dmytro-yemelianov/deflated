@@ -1493,7 +1493,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `Deflate.BitReader`, `readBit`, `readBits`, `alignToByte`, `DecErr`, `byteAt`.
 - Produces: `Deflate.BlockType` (`.stored`/`.fixed`/`.dynamic`), `Deflate.Header` (fields `isFinal`, `btype`), `Deflate.readHeader`, `Deflate.readStored`. Tasks 13, 15, 18 consume these.
 
-- [ ] **Step 1: Write the failing theorems**
+- [x] **Step 1: Write the failing theorems**
 
 Append to `spec/Deflate/Properties.lean`:
 
@@ -1524,12 +1524,12 @@ theorem readStored_aligned {r r' : BitReader} {out o : Array UInt8}
   all_goals omega
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `lake build`
 Expected: FAIL — `unknown identifier 'readHeader'`.
 
-- [ ] **Step 3: Write the model**
+- [x] **Step 3: Write the model**
 
 `spec/Deflate/Block.lean`:
 
@@ -1589,12 +1589,12 @@ end Deflate
 
 Add `import Deflate.Block` to `spec/Deflate.lean` and to the imports of `spec/Deflate/Properties.lean`.
 
-- [ ] **Step 4: Run to verify the two theorems pass**
+- [x] **Step 4: Run to verify the two theorems pass**
 
 Run: `lake build`
 Expected: PASS.
 
-- [ ] **Step 5: Add the remaining P3 theorems**
+- [x] **Step 5: Add the remaining P3 theorems**
 
 Append to `spec/Deflate/Properties.lean`:
 
@@ -1659,14 +1659,14 @@ theorem readHeader_bytes {r r' : BitReader} {h : Header}
       split at hh <;> simp_all
 ```
 
-- [ ] **Step 6: Run and close any open goals**
+- [x] **Step 6: Run and close any open goals**
 
 Run: `lake build && ! grep -rnwE 'sorry|admit' spec/ --include='*.lean'`
 Expected: PASS, exit 0.
 
 These proofs are mechanical but fiddly; `repeat' split at hs` followed by `simp_all` plus the `readBits_pos`/`readBits_bytes` facts is the pattern. If a goal resists, name the hypotheses explicitly with `rename_i` rather than reaching for automation, and never insert `sorry`.
 
-- [ ] **Step 7: Register with the axiom gate and commit**
+- [x] **Step 7: Register with the axiom gate and commit**
 
 Add to `spec/scripts/axioms.lean`:
 

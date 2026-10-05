@@ -4,6 +4,7 @@
   code. See `docs/verification-boundary.md`.
 -/
 import Deflate.Bitstream
+import Deflate.Block
 
 namespace Deflate
 open BitReader
@@ -182,5 +183,142 @@ theorem alignToByte_idem (r : BitReader) :
   omega
 
 theorem alignToByte_bytes (r : BitReader) : (alignToByte r).bytes = r.bytes := rfl
+
+/-! ### P3 — Stored blocks -/
+
+/-- A block header is exactly three bits: BFINAL then BTYPE. -/
+theorem readHeader_pos {r r' : BitReader} {h : Header}
+    (hh : readHeader r = .ok (h, r')) : r'.pos = r.pos + 3 := by
+  unfold readHeader at hh
+  split at hh
+  · contradiction
+  · rename_i b r₁ hb
+    split at hh
+    · contradiction
+    · rename_i t r₂ ht
+      have h1 := readBit_pos hb
+      have h2 := readBits_pos 2 r₁ t r₂ ht
+      split at hh
+      · cases hh; rw [h2, h1]
+      · split at hh
+        · cases hh; rw [h2, h1]
+        · split at hh
+          · cases hh; rw [h2, h1]
+          · contradiction
+
+/-- After a stored block the reader is byte aligned: the next block header
+    starts on a byte boundary, which is what makes RFC 1951 §3.2.4 work. -/
+theorem readStored_aligned {r r' : BitReader} {out o : Array UInt8}
+    (hs : readStored r out = .ok (o, r')) : r'.pos % 8 = 0 := by
+  unfold readStored at hs
+  dsimp at hs
+  split at hs
+  · contradiction
+  · split at hs
+    · contradiction
+    · split at hs
+      · contradiction
+      · split at hs
+        · contradiction
+        · rename_i _ len r₁ h1 _ nlen r₂ h2 _ _
+          cases hs
+          dsimp
+          have p1 := readBits_pos 16 _ len r₁ h1
+          have p2 := readBits_pos 16 r₁ nlen r₂ h2
+          change r₁.pos = (r.pos + 7) / 8 * 8 + 16 at p1
+          generalize hk : (r.pos + 7) / 8 = k
+          rw [hk] at p1
+          have heq : r₂.pos + 8 * len = (k + 4 + len) * 8 := by
+            have hlin : ∀ (p₁ p₂ k len : Nat), p₁ = k * 8 + 16 → p₂ = p₁ + 16 → p₂ + 8 * len = (k + 4 + len) * 8 := by
+              intros; omega
+            exact hlin r₁.pos r₂.pos k len p1 p2
+          rw [heq, Nat.mul_mod_left]
+
+/-- Reading a stored block never alters the input. -/
+theorem readStored_bytes {r r' : BitReader} {out o : Array UInt8}
+    (hs : readStored r out = .ok (o, r')) : r'.bytes = r.bytes := by
+  unfold readStored at hs
+  dsimp at hs
+  split at hs
+  · contradiction
+  · split at hs
+    · contradiction
+    · split at hs
+      · contradiction
+      · split at hs
+        · contradiction
+        · rename_i _ len r₁ h1 _ nlen r₂ h2 _ _
+          cases hs
+          dsimp
+          have b1 := readBits_bytes 16 _ len r₁ h1
+          have b2 := readBits_bytes 16 r₁ nlen r₂ h2
+          have ba : (BitReader.alignToByte r).bytes = r.bytes := rfl
+          rw [b2, b1, ba]
+
+/-- Output grows by exactly `LEN` bytes, and the reader advances by exactly
+    `32 + 8 * LEN` bits past the alignment point. This is the P3 statement:
+    LEN governs both the payload copy and the bit accounting, together. -/
+theorem readStored_consumes {r r' : BitReader} {out o : Array UInt8}
+    (hs : readStored r out = .ok (o, r')) :
+    out.size ≤ o.size ∧
+    r'.pos = (BitReader.alignToByte r).pos + 32 + 8 * (o.size - out.size) := by
+  unfold readStored at hs
+  dsimp at hs
+  split at hs
+  · contradiction
+  · split at hs
+    · contradiction
+    · split at hs
+      · contradiction
+      · split at hs
+        · contradiction
+        · rename_i _ len r₁ h1 _ nlen r₂ h2 _ _
+          cases hs
+          dsimp
+          have p1 := readBits_pos 16 _ len r₁ h1
+          have p2 := readBits_pos 16 r₁ nlen r₂ h2
+          simp
+          have hlin : ∀ (p₀ p₁ p₂ : Nat),
+              p₁ = p₀ + 16 → p₂ = p₁ + 16 →
+              p₂ = p₀ + 32 := by
+            intros; omega
+          exact hlin (alignToByte r).pos r₁.pos r₂.pos p1 p2
+
+/-- An invalid length complement is rejected, and nothing is appended. -/
+theorem readStored_rejects_bad_nlen (r : BitReader) (out : Array UInt8)
+    (len nlen : Nat) (r₁ r₂ : BitReader)
+    (h1 : BitReader.readBits (BitReader.alignToByte r) 16 = some (len, r₁))
+    (h2 : BitReader.readBits r₁ 16 = some (nlen, r₂))
+    (hne : nlen ≠ 0xFFFF - len) :
+    readStored r out = .error .invalidStoredLength := by
+  unfold readStored
+  simp [h1, h2, hne]
+
+/-- BTYPE = 3 is reserved and rejected deterministically. -/
+theorem readHeader_rejects_btype3 (r : BitReader) (f : Bool) (r₁ r₂ : BitReader)
+    (hb : BitReader.readBit r = some (f, r₁))
+    (ht : BitReader.readBits r₁ 2 = some (3, r₂)) :
+    readHeader r = .error .invalidBlockType := by
+  unfold readHeader; simp [hb, ht]
+
+/-- A header never alters the input. -/
+theorem readHeader_bytes {r r' : BitReader} {h : Header}
+    (hh : readHeader r = .ok (h, r')) : r'.bytes = r.bytes := by
+  unfold readHeader at hh
+  split at hh
+  · contradiction
+  · rename_i b r₁ hb
+    split at hh
+    · contradiction
+    · rename_i t r₂ ht
+      have h1 := readBit_bytes hb
+      have h2 := readBits_bytes 2 r₁ t r₂ ht
+      split at hh
+      · cases hh; rw [h2, h1]
+      · split at hh
+        · cases hh; rw [h2, h1]
+        · split at hh
+          · cases hh; rw [h2, h1]
+          · contradiction
 
 end Deflate

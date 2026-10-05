@@ -9,3 +9,7 @@ open Deflate
 #print axioms Deflate.readBits_lt
 #print axioms Deflate.readBits_eof
 #print axioms Deflate.alignToByte_idem
+#print axioms Deflate.readHeader_pos
+#print axioms Deflate.readStored_aligned
+#print axioms Deflate.readStored_consumes
+#print axioms Deflate.readStored_rejects_bad_nlen
