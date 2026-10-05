@@ -1,0 +1,10 @@
+{
+  "tool": "samply 0.13.1",
+  "seconds_per_input": 4,
+  "profiles": {
+    "text.dyn.deflate": {"samples": 4016, "inclusive_pct": {"block::decode_huff_block": 94.1, "huffman::decode": 52.8, "bitstream::read_bits": 18.9, "lz77::read_distance": 18.5, "lz77::copy_back": 10.8, "bitstream::read_bit": 9.1, "lz77::{closure#0}": 2.1, "lz77::read_length": 1.0}, "outside_core_pct": {"perf (outside deflate-core)": 5.2}},
+    "zeros.fixed.deflate": {"samples": 4000, "inclusive_pct": {"block::decode_huff_block": 95.9, "lz77::copy_back": 82.6, "huffman::decode": 8.6, "lz77::{closure#0}": 0.7}, "outside_core_pct": {"libsystem_kernel.dylib": 2.4, "libsystem_platform.dylib": 1.5}},
+    "repetitive.dyn.deflate": {"samples": 3980, "inclusive_pct": {"block::decode_huff_block": 96.8, "lz77::copy_back": 90.7, "huffman::decode": 1.3, "lz77::{closure#0}": 1.2, "bitstream::read_bits": 0.9, "lz77::read_distance": 0.7}, "outside_core_pct": {"libsystem_kernel.dylib": 1.6, "libsystem_platform.dylib": 1.5}},
+    "text.stored.deflate": {"samples": 3987, "inclusive_pct": {}, "outside_core_pct": {"libsystem_platform.dylib": 87.6, "libsystem_kernel.dylib": 11.9}}
+  }
+}

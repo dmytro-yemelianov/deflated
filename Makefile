@@ -1,6 +1,6 @@
 # Top-level driver for verified-deflate. Mirrors maked's Makefile.
 .PHONY: all build-rust build-lean test test-rust test-lean test-differential \
-        fmt lint fuzz size clean
+        fmt lint fuzz size perf profile clean
 
 all: build-rust build-lean
 
@@ -41,6 +41,14 @@ fuzz:
 
 size: build-rust
 	@bash scripts/size_report.sh
+
+perf:
+	@bash scripts/perf_report.sh
+	@bash scripts/check_perf_report.sh
+
+profile: perf
+	@bash scripts/profile_report.sh
+	@bash scripts/check_perf_report.sh
 
 clean:
 	@cargo clean

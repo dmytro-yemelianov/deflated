@@ -1,0 +1,21 @@
+{
+  "host": "aarch64-apple-darwin",
+  "cpu": "Apple M5",
+  "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)",
+  "uname": "Darwin 27.2.0 arm64",
+  "profile": "release",
+  "reference": "miniz_oxide v0.8.9",
+  "reps": 15,
+  "results": [
+    {"input": "random.stored.deflate", "compressed_bytes": 8389258, "decompressed_bytes": 8388608, "deflate_core_ns": 591917, "miniz_oxide_ns": 244875, "deflate_core_mb_s": 14171.9, "miniz_oxide_mb_s": 34256.7, "slowdown": 2.42},
+    {"input": "repetitive.dyn.deflate", "compressed_bytes": 16280, "decompressed_bytes": 8388608, "deflate_core_ns": 3822250, "miniz_oxide_ns": 2575750, "deflate_core_mb_s": 2194.7, "miniz_oxide_mb_s": 3256.8, "slowdown": 1.48},
+    {"input": "repetitive.fixed.deflate", "compressed_bytes": 60974, "decompressed_bytes": 8388608, "deflate_core_ns": 4015959, "miniz_oxide_ns": 2559083, "deflate_core_mb_s": 2088.8, "miniz_oxide_mb_s": 3278.0, "slowdown": 1.57},
+    {"input": "repetitive.stored.deflate", "compressed_bytes": 8389258, "decompressed_bytes": 8388608, "deflate_core_ns": 515959, "miniz_oxide_ns": 229625, "deflate_core_mb_s": 16258.3, "miniz_oxide_mb_s": 36531.8, "slowdown": 2.25},
+    {"input": "text.dyn.deflate", "compressed_bytes": 3050677, "decompressed_bytes": 8388608, "deflate_core_ns": 35258625, "miniz_oxide_ns": 16827125, "deflate_core_mb_s": 237.9, "miniz_oxide_mb_s": 498.5, "slowdown": 2.10},
+    {"input": "text.fixed.deflate", "compressed_bytes": 3854367, "decompressed_bytes": 8388608, "deflate_core_ns": 33144041, "miniz_oxide_ns": 17511417, "deflate_core_mb_s": 253.1, "miniz_oxide_mb_s": 479.0, "slowdown": 1.89},
+    {"input": "text.stored.deflate", "compressed_bytes": 8389258, "decompressed_bytes": 8388608, "deflate_core_ns": 510917, "miniz_oxide_ns": 237167, "deflate_core_mb_s": 16418.7, "miniz_oxide_mb_s": 35370.0, "slowdown": 2.15},
+    {"input": "zeros.dyn.deflate", "compressed_bytes": 8144, "decompressed_bytes": 8388608, "deflate_core_ns": 3000083, "miniz_oxide_ns": 1061416, "deflate_core_mb_s": 2796.1, "miniz_oxide_mb_s": 7903.2, "slowdown": 2.83},
+    {"input": "zeros.fixed.deflate", "compressed_bytes": 52840, "decompressed_bytes": 8388608, "deflate_core_ns": 3238667, "miniz_oxide_ns": 869834, "deflate_core_mb_s": 2590.1, "miniz_oxide_mb_s": 9643.9, "slowdown": 3.72},
+    {"input": "zeros.stored.deflate", "compressed_bytes": 8389258, "decompressed_bytes": 8388608, "deflate_core_ns": 544959, "miniz_oxide_ns": 223125, "deflate_core_mb_s": 15393.1, "miniz_oxide_mb_s": 37596.0, "slowdown": 2.44}
+  ]
+}

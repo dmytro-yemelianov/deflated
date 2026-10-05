@@ -25,6 +25,8 @@ feature-by-feature coverage.
     make test     # cargo test, Lean gate, differential harness
     make fuzz     # 60s per fuzz target
     make size     # reproducible binary-size measurement
+    make perf     # decode throughput against miniz_oxide
+    make profile  # where decode time goes (macOS, needs samply)
 
 Needs Rust 1.88 (edition 2024), elan with Lean v4.30.0, and Python 3.
 
@@ -32,6 +34,9 @@ Needs Rust 1.88 (edition 2024), elan with Lean v4.30.0, and Python 3.
 
 - The encoder emits stored blocks only, so output is slightly larger than
   input. LZ77 and Huffman encoding are a separate plan (spec §17 M7).
+- No optimization yet: decoding is slower than miniz_oxide on every input
+  measured. [docs/perf-report.md](docs/perf-report.md) has the
+  baseline, the profile, and the ranked candidates.
 - No gzip (RFC 1952) or ZIP framing (spec §17 M9, M10).
 - No refinement proof connects the Lean model and the Rust code. ADR 0003
   records the Charon/Aeneas spike result.
