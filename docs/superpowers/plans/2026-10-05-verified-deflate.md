@@ -1704,7 +1704,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `BitReader`, `Error`.
 - Produces: `block::BlockType` (`Stored`/`Fixed`/`Dynamic`), `block::BlockHeader { is_final: bool, btype: BlockType }`, `block::read_block_header(&mut BitReader) -> Result<BlockHeader, Error>`, `block::read_stored(&mut BitReader, &mut Vec<u8>, usize) -> Result<(), Error>` (third argument is the remaining output budget), `inflate::inflate(&[u8]) -> Result<Vec<u8>, Error>`, `inflate::inflate_with_limit(&[u8], usize) -> Result<Vec<u8>, Error>`. Tasks 14, 16, 17 extend `inflate`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `crates/deflate-core/tests/stored_tests.rs`:
 
@@ -1805,12 +1805,12 @@ fn trailing_bytes_after_the_final_block_are_ignored() {
 }
 ```
 
-- [ ] **Step 2: Run to verify they fail**
+- [x] **Step 2: Run to verify they fail**
 
 Run: `cargo test -p deflate-core --test stored_tests`
 Expected: FAIL — `unresolved import deflate_core::inflate`.
 
-- [ ] **Step 3: Write the block layer**
+- [x] **Step 3: Write the block layer**
 
 `crates/deflate-core/src/block.rs`:
 
@@ -1862,7 +1862,7 @@ pub fn read_stored(r: &mut BitReader, out: &mut Vec<u8>, budget: usize) -> Resul
 }
 ```
 
-- [ ] **Step 4: Write the decoder entry point**
+- [x] **Step 4: Write the decoder entry point**
 
 `crates/deflate-core/src/inflate.rs`:
 
@@ -1903,12 +1903,12 @@ pub fn inflate_with_limit(input: &[u8], limit: usize) -> Result<Vec<u8>, Error> 
 
 Add `pub mod block;` and `pub mod inflate;` plus `pub use inflate::{inflate, inflate_with_limit};` to `crates/deflate-core/src/lib.rs`.
 
-- [ ] **Step 5: Run to verify they pass**
+- [x] **Step 5: Run to verify they pass**
 
 Run: `cargo test -p deflate-core --test stored_tests`
 Expected: PASS — 11 tests. `reserved_block_type_is_rejected` must give `InvalidBlockType`, not the `Fixed | Dynamic` arm; confirm by reading the failure message if it fails.
 
-- [ ] **Step 6: Cross-check against zlib**
+- [x] **Step 6: Cross-check against zlib**
 
 Run:
 
@@ -1927,7 +1927,7 @@ PY
 
 Then add `tests/vectors/stored_level0.deflate` and `tests/vectors/stored_level0.raw` from those files, and a test that reads them with `include_bytes!` and asserts `inflate` returns the raw bytes. zlib at level 0 emits stored blocks, so this exercises the real encoder's framing, not only our own.
 
-- [ ] **Step 7: Update conformance and commit**
+- [x] **Step 7: Update conformance and commit**
 
 `docs/conformance.md`: `| Stored blocks | yes | yes | yes |`, `| Multi-block streams | yes | yes | no |`.
 

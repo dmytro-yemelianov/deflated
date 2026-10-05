@@ -13,6 +13,9 @@
 extern crate alloc;
 
 pub mod bitstream;
+pub mod block;
 pub mod error;
+pub mod inflate;
 
 pub use error::Error;
+pub use inflate::{inflate, inflate_with_limit};
