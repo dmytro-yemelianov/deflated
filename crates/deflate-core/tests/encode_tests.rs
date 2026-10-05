@@ -309,3 +309,87 @@ mod matcher_tests {
         assert!(!accept(x, usize::MAX, 3, 1)); // overflow
     }
 }
+
+// ---- deflate (Lean `compress`, spec §3.6) ----
+use deflate_core::deflate as compress;
+
+fn rand_bytes(n: usize, seed: u64) -> Vec<u8> {
+    let mut s = seed;
+    (0..n).map(|_| xorshift(&mut s) as u8).collect()
+}
+
+fn stored_size(n: usize) -> usize {
+    n + 5 * n.div_ceil(MAX_STORED).max(1)
+}
+
+fn rt(x: &[u8]) -> Vec<u8> {
+    let d = compress(x);
+    assert_eq!(inflate(&d).unwrap(), x, "len {}", x.len());
+    assert!(d.len() <= stored_size(x.len()), "len {}", x.len());
+    d
+}
+
+#[test]
+fn deflate_empty() {
+    rt(&[]);
+}
+
+#[test]
+fn deflate_stored_chunk_boundaries() {
+    for n in [65534usize, 65535, 65536, 65537, 131070, 131071, 131072] {
+        let r = rand_bytes(n, 7);
+        assert_eq!(rt(&r), deflate_stored(&r), "random {n}");
+        rt(&vec![b'a'; n]);
+    }
+}
+
+#[test]
+fn deflate_match_bounds() {
+    // len 258 at dist 1 and overlapping dist < len.
+    rt(&vec![7u8; 300]);
+    rt(&b"abc".repeat(200));
+    // dist = i (match right at the start of the second copy).
+    let p = rand_bytes(300, 3);
+    rt(&[p.clone(), p.clone()].concat());
+    // dist 32768 exactly, len 258.
+    let p = rand_bytes(32768, 5);
+    let mut x = p.clone();
+    x.extend_from_slice(p.get(..258).unwrap());
+    // Random prefix makes fixed lose to stored; round trip and bound still hold.
+    rt(&x);
+}
+
+#[test]
+fn deflate_long_runs() {
+    let d = rt(&vec![0u8; 1 << 20]);
+    assert!(d.len() < 1 << 14);
+    rt(&b"xy".repeat(100_000));
+}
+
+#[test]
+fn deflate_zeros_is_fast() {
+    let t = std::time::Instant::now();
+    compress(&vec![0u8; 1 << 20]);
+    assert!(t.elapsed().as_secs_f64() < 1.0);
+}
+
+#[test]
+fn deflate_random_is_stored() {
+    for n in [1000usize, 70000] {
+        let r = rand_bytes(n, 11);
+        assert_eq!(compress(&r), deflate_stored(&r), "len {n}");
+    }
+}
+
+#[test]
+fn deflate_text_beats_stored() {
+    let t = b"The quick brown fox jumps over the lazy dog. ".repeat(40);
+    let d = rt(&t);
+    assert!(d.len() < stored_size(t.len()));
+    eprintln!(
+        "text {} -> {} (stored {})",
+        t.len(),
+        d.len(),
+        stored_size(t.len())
+    );
+}
