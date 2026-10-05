@@ -6,7 +6,7 @@ proved, and it never counts a theorem from another project.
 
 | Feature | Implemented | Tested | Formally covered |
 | --- | --- | --- | --- |
-| Bit reader (LSB-first, EOF) | no | no | no |
+| Bit reader (LSB-first, EOF) | yes | yes | yes |
 | Stored blocks | no | no | no |
 | Fixed Huffman | no | no | no |
 | Dynamic Huffman | no | no | no |

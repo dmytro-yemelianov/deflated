@@ -12,6 +12,7 @@
 
 extern crate alloc;
 
+pub mod bitstream;
 pub mod error;
 
 pub use error::Error;

@@ -1196,7 +1196,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `deflate_core::Error` (Task 1).
 - Produces: `BitReader<'a>` with `new(&'a [u8])`, `bit_pos() -> usize`, `bit_len() -> usize`, `read_bit() -> Result<u32, Error>`, `read_bits(n: u32) -> Result<u32, Error>`, `align_to_byte()`, `read_aligned_u16_le() -> Result<u16, Error>`, `read_aligned_into(&mut Vec<u8>, usize) -> Result<(), Error>`. Tasks 7, 10, 12, 14, 16, 17 use these exact signatures.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `crates/deflate-core/tests/bitstream_tests.rs`:
 
@@ -1326,12 +1326,12 @@ fn aligned_u16_short_is_eof_and_atomic() {
 }
 ```
 
-- [ ] **Step 2: Run to verify they fail**
+- [x] **Step 2: Run to verify they fail**
 
 Run: `cargo test -p deflate-core --test bitstream_tests`
 Expected: FAIL — `unresolved import deflate_core::bitstream`.
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 `crates/deflate-core/src/bitstream.rs`:
 
@@ -1444,17 +1444,17 @@ impl<'a> BitReader<'a> {
 
 Add `pub mod bitstream;` to `crates/deflate-core/src/lib.rs`.
 
-- [ ] **Step 4: Run to verify they pass**
+- [x] **Step 4: Run to verify they pass**
 
 Run: `cargo test -p deflate-core --test bitstream_tests`
 Expected: PASS — 12 tests.
 
-- [ ] **Step 5: Run the full gate**
+- [x] **Step 5: Run the full gate**
 
 Run: `cargo clippy --workspace --all-targets -- -D warnings && cargo fmt --all --check && ! grep -rn 'unsafe' crates/deflate-core/src/`
 Expected: every command exits 0.
 
-- [ ] **Step 6: Update the conformance matrix**
+- [x] **Step 6: Update the conformance matrix**
 
 In `docs/conformance.md`, change the bit-reader row to:
 
@@ -1462,7 +1462,7 @@ In `docs/conformance.md`, change the bit-reader row to:
 | Bit reader (LSB-first, EOF) | yes | yes | yes |
 ```
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add crates/deflate-core/src/bitstream.rs crates/deflate-core/src/lib.rs \
