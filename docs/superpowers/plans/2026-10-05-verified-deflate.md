@@ -4037,7 +4037,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `Code`, `decodeSym`, `readBits`, `DecErr`.
 - Produces: `BitReader.readBitsE : BitReader → Nat → Except DecErr (Nat × BitReader)`, `Code.isComplete`, `Code.isValidDistance`, `Deflate.clOrder`, `Deflate.readCodeLengths`, `Deflate.readDynamicCodes`. Task 18 calls `readDynamicCodes`.
 
-- [ ] **Step 1: Split the validity predicate**
+- [x] **Step 1: Split the validity predicate**
 
 Task 9 gave `Code.isValid` the degenerate escape, which ADR 0004 says belongs to distance trees alone. Make that explicit before dynamic trees arrive, because a dynamic block builds three codes and only one of them gets the latitude.
 
@@ -4082,7 +4082,7 @@ Update `spec/scripts/axioms.lean` to the new names.
 Run: `lake build`
 Expected: PASS.
 
-- [ ] **Step 2: Write the failing theorems**
+- [x] **Step 2: Write the failing theorems**
 
 Append to `spec/Deflate/Properties.lean`:
 
@@ -4101,12 +4101,12 @@ theorem clOrder_is_a_permutation :
   · decide
 ```
 
-- [ ] **Step 3: Run to verify it fails**
+- [x] **Step 3: Run to verify it fails**
 
 Run: `lake build`
 Expected: FAIL — `unknown identifier 'clOrder'`.
 
-- [ ] **Step 4: Write the model**
+- [x] **Step 4: Write the model**
 
 Add to `spec/Deflate/Bitstream.lean`, inside `namespace BitReader`:
 
@@ -4199,12 +4199,12 @@ def readDynamicCodes (r : BitReader) : Except DecErr ((Code × Code) × BitReade
       else .ok ((lit, dst), r₅)
 ```
 
-- [ ] **Step 5: Run to verify the permutation theorem passes**
+- [x] **Step 5: Run to verify the permutation theorem passes**
 
 Run: `lake build`
 Expected: PASS. `clOrder_is_a_permutation` is the one place a typo in that nineteen-element table gets caught, so confirm it is really checked and not accidentally trivial: temporarily swap two entries, rebuild, and watch it fail. Restore before continuing.
 
-- [ ] **Step 6: Add the remaining P5 theorems**
+- [x] **Step 6: Add the remaining P5 theorems**
 
 ```lean
 /-- Decoded code lengths fill exactly the requested count — no more, no
@@ -4239,7 +4239,7 @@ theorem readDynamicCodes_pos {r r' : BitReader} {lit dst : Code}
 
 `readCodeLengths_size` as stated above is weaker than it looks; strengthen it to `lens.size = total` by first proving the loop invariant `acc.size ≤ total` as a separate lemma, then noting the loop exits only at `acc.size ≥ total`. Do that rather than ship the disjunction — a theorem that is true but says less than its name suggests is exactly the failure maked's `recipe_tamper_invalidates_key` is documented as. If the strengthening will not close, rename the theorem to say what it proves and record the gap in `docs/verification-boundary.md`.
 
-- [ ] **Step 7: Run, register, commit**
+- [x] **Step 7: Run, register, commit**
 
 Run: `lake build && make test-lean`
 Expected: PASS.

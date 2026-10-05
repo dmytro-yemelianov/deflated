@@ -13,8 +13,8 @@ open Deflate
 #print axioms Deflate.readStored_aligned
 #print axioms Deflate.readStored_consumes
 #print axioms Deflate.readStored_rejects_bad_nlen
-#print axioms Deflate.fixedLitLen_valid
-#print axioms Deflate.fixedDist_valid
+#print axioms Deflate.fixedLitLen_complete
+#print axioms Deflate.fixedDist_complete
 #print axioms Deflate.decodeSym_pos
 #print axioms Deflate.decodeSym_bytes
 #print axioms Deflate.decodeSym_in_range
@@ -26,3 +26,6 @@ open Deflate
 #print axioms Deflate.decodeHuffBlock_monotone
 #print axioms Deflate.decodeHuffBlock_within_limit
 #print axioms Deflate.decodeHuffBlock_progress
+#print axioms Deflate.clOrder_is_a_permutation
+#print axioms Deflate.readDynamicCodes_valid
+#print axioms Deflate.readDynamicCodes_pos

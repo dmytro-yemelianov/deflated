@@ -78,4 +78,81 @@ def decodeHuffBlock (lit dist : Code) (r : BitReader) (out : Array UInt8)
         let o₁ ← copyBack out d l
         decodeHuffBlock lit dist r₄ o₁ limit fuel
 
+/-- RFC 1951 §3.2.7: the order in which code-length code lengths appear.
+    Frequently-used lengths come first so trailing zeros can be omitted. -/
+def clOrder : Array Nat :=
+  #[16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]
+
+/-- Read `ncode` three-bit lengths and scatter them through `clOrder` into a
+    19-entry array; positions not covered stay 0. -/
+def readCLLens (r : BitReader) (ncode : Nat) : Except DecErr (Array Nat × BitReader) :=
+  let rec go (i : Nat) (acc : Array Nat) (r : BitReader) :
+      Except DecErr (Array Nat × BitReader) :=
+    if i ≥ ncode then .ok (acc, r)
+    else
+      match BitReader.readBitsE r 3 with
+      | .error e => .error e
+      | .ok (v, r') => go (i + 1) (acc.set! (clOrder[i]!) v) r'
+    termination_by ncode - i
+  go 0 (Array.replicate 19 0) r
+
+/-- Decode `total` code lengths with the code-length tree. Symbol 16 repeats
+    the previous length 3..6 times, 17 repeats zero 3..10 times, 18 repeats
+    zero 11..138 times. A 16 with nothing before it, and any repeat that
+    would overrun `total`, are both `invalidHuffmanTree`. -/
+def readCodeLengths (clCode : Code) (total : Nat) (r : BitReader) :
+    Except DecErr (Array Nat × BitReader) :=
+  let rec go (acc : Array Nat) (r : BitReader) (fuel : Nat) :
+      Except DecErr (Array Nat × BitReader) :=
+    match fuel with
+    | 0 => .error .fuelExhausted
+    | fuel + 1 =>
+      if acc.size ≥ total then .ok (acc, r)
+      else do
+        let (sym, r₁) ← decodeSym clCode r
+        if sym < 16 then
+          go (acc.push sym) r₁ fuel
+        else if sym = 16 then
+          match acc.back? with
+          | none => .error .invalidHuffmanTree
+          | some prev => do
+              let (e, r₂) ← BitReader.readBitsE r₁ 2
+              let n := 3 + e
+              if acc.size + n > total then .error .invalidHuffmanTree
+              else go (acc ++ Array.replicate n prev) r₂ fuel
+        else if sym = 17 then do
+          let (e, r₂) ← BitReader.readBitsE r₁ 3
+          let n := 3 + e
+          if acc.size + n > total then .error .invalidHuffmanTree
+          else go (acc ++ Array.replicate n 0) r₂ fuel
+        else if sym = 18 then do
+          let (e, r₂) ← BitReader.readBitsE r₁ 7
+          let n := 11 + e
+          if acc.size + n > total then .error .invalidHuffmanTree
+          else go (acc ++ Array.replicate n 0) r₂ fuel
+        else .error .invalidHuffmanTree
+  go #[] r (total + 1)
+
+/-- The dynamic block header (RFC 1951 §3.2.7). -/
+def readDynamicCodes (r : BitReader) : Except DecErr ((Code × Code) × BitReader) := do
+  let (hlit, r₁)  ← BitReader.readBitsE r 5
+  let (hdist, r₂) ← BitReader.readBitsE r₁ 5
+  let (hclen, r₃) ← BitReader.readBitsE r₂ 4
+  let nlen  := hlit + 257
+  let ndist := hdist + 1
+  let ncode := hclen + 4
+  -- RFC 1951 §3.2.7 caps these; the 5-bit fields can express more.
+  if nlen > 286 ∨ ndist > 30 then .error .invalidHuffmanTree
+  else do
+    let (clLens, r₄) ← readCLLens r₃ ncode
+    let clCode : Code := ⟨clLens⟩
+    if ¬ clCode.isComplete then .error .invalidHuffmanTree
+    else do
+      let (lens, r₅) ← readCodeLengths clCode (nlen + ndist) r₄
+      let lit : Code := ⟨lens.extract 0 nlen⟩
+      let dst : Code := ⟨lens.extract nlen (nlen + ndist)⟩
+      if ¬ lit.isComplete then .error .invalidHuffmanTree
+      else if ¬ dst.isValidDistance then .error .invalidHuffmanTree
+      else .ok ((lit, dst), r₅)
+
 end Deflate

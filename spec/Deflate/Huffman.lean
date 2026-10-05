@@ -41,14 +41,15 @@ def kraft (c : Code) : Nat :=
 /-- How many symbols the code actually assigns. -/
 def used (c : Code) : Nat := c.lengths.size - c.countOf 0
 
-/-- Over-subscribed codes are always rejected. Incomplete codes are rejected
-    too, except when at most one symbol is used: real encoders emit a
-    one-symbol (or empty) distance code for a block with no back-references,
-    and zlib accepts it. ADR 0004 records this reading of an RFC ambiguity. -/
-def isValid (c : Code) : Bool :=
-  if c.kraft > 2 ^ maxCodeLen then false
-  else if c.kraft = 2 ^ maxCodeLen then true
-  else c.used ≤ 1
+/-- Exactly complete: the Kraft sum is `2 ^ maxCodeLen`. Required of the
+    literal/length tree and the code-length tree (ADR 0004). -/
+def isComplete (c : Code) : Bool := c.kraft = 2 ^ maxCodeLen
+
+/-- Complete, or incomplete with at most one used symbol. Only a distance
+    tree is allowed this (ADR 0004): real encoders emit a one-symbol or empty
+    distance code for a block with no back-references. -/
+def isValidDistance (c : Code) : Bool :=
+  c.isComplete || (c.kraft < 2 ^ maxCodeLen && c.used ≤ 1)
 
 end Code
 

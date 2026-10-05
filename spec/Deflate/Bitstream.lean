@@ -50,5 +50,11 @@ def readBits : BitReader → Nat → Option (Nat × BitReader)
 def alignToByte (r : BitReader) : BitReader :=
   { r with pos := (r.pos + 7) / 8 * 8 }
 
+/-- `readBits` in the decoder's error monad: a short read is `unexpectedEof`. -/
+def readBitsE (r : BitReader) (n : Nat) : Except DecErr (Nat × BitReader) :=
+  match readBits r n with
+  | none => .error .unexpectedEof
+  | some p => .ok p
+
 end BitReader
 end Deflate

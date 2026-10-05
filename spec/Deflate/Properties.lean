@@ -328,9 +328,13 @@ theorem readHeader_bytes {r r' : BitReader} {h : Header}
 set_option maxRecDepth 4000 in
 /-- The two fixed codes of RFC 1951 §3.2.6 are exactly complete: their Kraft
     sums are `2 ^ 15` on the nose. Checked by the kernel, not by hand. -/
-theorem fixedLitLen_valid : Code.isValid fixedLitLen = true := by decide
+theorem fixedLitLen_complete : Code.isComplete fixedLitLen = true := by decide
 
-theorem fixedDist_valid : Code.isValid fixedDist = true := by decide
+theorem fixedDist_complete : Code.isComplete fixedDist = true := by decide
+
+/-- A complete code is always acceptable as a distance code. -/
+theorem isComplete_isValidDistance (c : Code) (h : Code.isComplete c = true) :
+    Code.isValidDistance c = true := by simp [Code.isValidDistance, h]
 
 /-- Decoding one symbol always consumes at least one bit and never more than
     `maxCodeLen`. The lower bound is what makes the decoder's outer loop
@@ -431,9 +435,12 @@ theorem decodeSym_in_range {c : Code} {r r' : BitReader} {s : Nat}
     (h : decodeSym c r = .ok (s, r')) : s < c.lengths.size :=
   decodeGo_in_range c maxCodeLen 1 0 0 r s r' h
 
-/-- An over-subscribed code is rejected, with no appeal to the decoder. -/
-theorem oversubscribed_invalid (c : Code) (h : c.kraft > 2 ^ maxCodeLen) :
-    Code.isValid c = false := by simp [Code.isValid, h]
+theorem oversubscribed_not_complete (c : Code) (h : c.kraft > 2 ^ maxCodeLen) :
+    Code.isComplete c = false := by simp [Code.isComplete]; omega
+
+theorem oversubscribed_not_valid_distance (c : Code) (h : c.kraft > 2 ^ maxCodeLen) :
+    Code.isValidDistance c = false := by
+  simp [Code.isValidDistance, Code.isComplete]; omega
 
 /-! ### P6 — LZ77 copies -/
 
@@ -833,5 +840,287 @@ theorem decodeHuffBlock_progress : ∀ (fuel : Nat) (lit dist : Code)
                     have hrec : r₁.pos ≤ r'.pos :=
                       Nat.le_trans h1 (Nat.le_trans h2 (Nat.le_trans h3 h4))
                     exact Nat.lt_of_lt_of_le hp hrec
+
+/-! ### P5 — Dynamic Huffman -/
+
+attribute [local irreducible] Code.isComplete Code.isValidDistance
+
+/-- The code-length alphabet order of RFC 1951 §3.2.7 is a permutation of
+    0..18: every code-length symbol is read exactly once. A transposition
+    here would silently mis-assign every dynamic tree, so it is checked by
+    the kernel rather than by eye. -/
+theorem clOrder_is_a_permutation :
+    clOrder.size = 19 ∧
+    (List.range 19).all (fun s => clOrder.toList.count s = 1) = true := by
+  constructor
+  · decide
+  · decide
+
+/-- A dynamic header yields a complete literal/length code and a distance
+    code acceptable under ADR 0004 — or an error. There is no third outcome
+    in which the decoder proceeds with a malformed tree. -/
+theorem readDynamicCodes_valid {r r' : BitReader} {lit dst : Code}
+    (h : readDynamicCodes r = .ok ((lit, dst), r')) :
+    Code.isComplete lit = true ∧ Code.isValidDistance dst = true := by
+  unfold readDynamicCodes at h
+  dsimp [Bind.bind, Except.bind] at h
+  split at h; · contradiction
+  split at h; · contradiction
+  split at h; · contradiction
+  split at h; · contradiction
+  split at h; · contradiction
+  split at h; · contradiction
+  split at h; · contradiction
+  split at h; · contradiction
+  split at h; · contradiction
+  simp_all
+
+/-- `readBitsE` advances the position by exactly `n`. -/
+theorem readBitsE_pos {r r' : BitReader} {n v : Nat}
+    (h : BitReader.readBitsE r n = .ok (v, r')) : r'.pos = r.pos + n := by
+  unfold BitReader.readBitsE at h
+  split at h
+  · contradiction
+  · rename_i p hp
+    cases h
+    exact readBits_pos n r v r' hp
+
+/-- `readBitsE` never alters the input. -/
+theorem readBitsE_bytes {r r' : BitReader} {n v : Nat}
+    (h : BitReader.readBitsE r n = .ok (v, r')) : r'.bytes = r.bytes := by
+  unfold BitReader.readBitsE at h
+  split at h
+  · contradiction
+  · rename_i p hp
+    cases h
+    exact readBits_bytes n r v r' hp
+
+theorem readCLLens_go_pos (ncode : Nat) (i : Nat) (acc : Array Nat) (r : BitReader)
+    (out : Array Nat) (r' : BitReader) (h : readCLLens.go ncode i acc r = .ok (out, r')) :
+    r.pos ≤ r'.pos ∧ r'.bytes = r.bytes := by
+  induction i, acc, r using readCLLens.go.induct ncode with
+  | case1 i acc r hge =>
+    rw [readCLLens.go] at h
+    simp [hge] at h
+    rcases h with ⟨-, rfl⟩
+    exact ⟨Nat.le_refl _, rfl⟩
+  | case2 i acc r hlt e he =>
+    rw [readCLLens.go] at h
+    simp [hlt, he] at h
+  | case3 i acc r hlt v r₁ hr ih =>
+    rw [readCLLens.go] at h
+    simp [hlt, hr] at h
+    have ⟨hpos_rec, hbytes_rec⟩ := ih h
+    have hp := readBitsE_pos hr
+    have hb := readBitsE_bytes hr
+    have hstep : r.pos ≤ r₁.pos := by rw [hp]; exact Nat.le_add_right _ _
+    exact ⟨Nat.le_trans hstep hpos_rec, by rw [hbytes_rec, hb]⟩
+
+theorem readCLLens_pos {r r' : BitReader} {ncode : Nat} {acc : Array Nat}
+    (h : readCLLens r ncode = .ok (acc, r')) :
+    r.pos ≤ r'.pos ∧ r'.bytes = r.bytes := by
+  unfold readCLLens at h
+  exact readCLLens_go_pos ncode 0 (Array.replicate 19 0) r acc r' h
+
+theorem readCodeLengths_go_pos (clCode : Code) (total : Nat) :
+    ∀ (fuel : Nat) (acc : Array Nat) (r : BitReader) (out : Array Nat) (r' : BitReader),
+    readCodeLengths.go clCode total acc r fuel = .ok (out, r') →
+    r.pos ≤ r'.pos ∧ r'.bytes = r.bytes := by
+  intro fuel
+  induction fuel with
+  | zero => intro acc r out r' h; rw [readCodeLengths.go] at h; contradiction
+  | succ fuel ih =>
+    intro acc r out r' h
+    rw [readCodeLengths.go] at h
+    dsimp only [Bind.bind, Except.bind] at h
+    split at h
+    · cases h
+      exact ⟨Nat.le_refl _, rfl⟩
+    · cases hs : decodeSym clCode r with
+      | error e => rw [hs] at h; contradiction
+      | ok p =>
+        rcases p with ⟨sym, r₁⟩
+        rw [hs] at h; dsimp only at h
+        have ⟨hsp_pos, _⟩ := decodeSym_pos hs
+        have hsp_bytes := decodeSym_bytes hs
+        have hstep1 : r.pos ≤ r₁.pos := Nat.le_of_lt hsp_pos
+        split at h
+        · have ⟨hrec_pos, hrec_bytes⟩ := ih (acc.push sym) r₁ out r' h
+          exact ⟨Nat.le_trans hstep1 hrec_pos, by rw [hrec_bytes, hsp_bytes]⟩
+        · split at h
+          · split at h
+            · contradiction
+            · rename_i prev _
+              cases he : BitReader.readBitsE r₁ 2 with
+              | error e => rw [he] at h; contradiction
+              | ok pe =>
+                rcases pe with ⟨e, r₂⟩
+                rw [he] at h; dsimp only at h
+                have hp2 := readBitsE_pos he
+                have hb2 := readBitsE_bytes he
+                have hstep2 : r₁.pos ≤ r₂.pos := by rw [hp2]; exact Nat.le_add_right _ _
+                split at h
+                · contradiction
+                · have ⟨hrec_pos, hrec_bytes⟩ := ih _ r₂ out r' h
+                  have htrans : r.pos ≤ r₂.pos := Nat.le_trans hstep1 hstep2
+                  exact ⟨Nat.le_trans htrans hrec_pos, by rw [hrec_bytes, hb2, hsp_bytes]⟩
+          · split at h
+            · cases he : BitReader.readBitsE r₁ 3 with
+              | error e => rw [he] at h; contradiction
+              | ok pe =>
+                rcases pe with ⟨e, r₂⟩
+                rw [he] at h; dsimp only at h
+                have hp2 := readBitsE_pos he
+                have hb2 := readBitsE_bytes he
+                have hstep2 : r₁.pos ≤ r₂.pos := by rw [hp2]; exact Nat.le_add_right _ _
+                split at h
+                · contradiction
+                · have ⟨hrec_pos, hrec_bytes⟩ := ih _ r₂ out r' h
+                  have htrans : r.pos ≤ r₂.pos := Nat.le_trans hstep1 hstep2
+                  exact ⟨Nat.le_trans htrans hrec_pos, by rw [hrec_bytes, hb2, hsp_bytes]⟩
+            · split at h
+              · cases he : BitReader.readBitsE r₁ 7 with
+                | error e => rw [he] at h; contradiction
+                | ok pe =>
+                  rcases pe with ⟨e, r₂⟩
+                  rw [he] at h; dsimp only at h
+                  have hp2 := readBitsE_pos he
+                  have hb2 := readBitsE_bytes he
+                  have hstep2 : r₁.pos ≤ r₂.pos := by rw [hp2]; exact Nat.le_add_right _ _
+                  split at h
+                  · contradiction
+                  · have ⟨hrec_pos, hrec_bytes⟩ := ih _ r₂ out r' h
+                    have htrans : r.pos ≤ r₂.pos := Nat.le_trans hstep1 hstep2
+                    exact ⟨Nat.le_trans htrans hrec_pos, by rw [hrec_bytes, hb2, hsp_bytes]⟩
+              · contradiction
+
+theorem readCodeLengths_pos {clCode : Code} {total : Nat} {r r' : BitReader} {lens : Array Nat}
+    (h : readCodeLengths clCode total r = .ok (lens, r')) :
+    r.pos ≤ r'.pos ∧ r'.bytes = r.bytes := by
+  unfold readCodeLengths at h
+  exact readCodeLengths_go_pos clCode total (total + 1) #[] r lens r' h
+
+theorem readCodeLengths_go_size (clCode : Code) (total : Nat) :
+    ∀ (fuel : Nat) (acc : Array Nat) (r : BitReader) (lens : Array Nat) (r' : BitReader),
+    readCodeLengths.go clCode total acc r fuel = .ok (lens, r') →
+    acc.size ≤ total →
+    lens.size = total := by
+  intro fuel
+  induction fuel with
+  | zero => intro acc r lens r' h hle; rw [readCodeLengths.go] at h; contradiction
+  | succ fuel ih =>
+    intro acc r lens r' h hle
+    rw [readCodeLengths.go] at h
+    dsimp only [Bind.bind, Except.bind] at h
+    split at h
+    · cases h
+      omega
+    · cases hs : decodeSym clCode r with
+      | error e => rw [hs] at h; contradiction
+      | ok p =>
+        rcases p with ⟨sym, r₁⟩
+        rw [hs] at h; dsimp only at h
+        split at h
+        · have hnext : (acc.push sym).size ≤ total := by simp; omega
+          exact ih (acc.push sym) r₁ lens r' h hnext
+        · split at h
+          · split at h
+            · contradiction
+            · rename_i prev _
+              cases he : BitReader.readBitsE r₁ 2 with
+              | error e => rw [he] at h; contradiction
+              | ok pe =>
+                rcases pe with ⟨e, r₂⟩
+                rw [he] at h; dsimp only at h
+                split at h
+                · contradiction
+                · have hnext : (acc ++ Array.replicate (3 + e) prev).size ≤ total := by simp; omega
+                  exact ih _ r₂ lens r' h hnext
+          · split at h
+            · cases he : BitReader.readBitsE r₁ 3 with
+              | error e => rw [he] at h; contradiction
+              | ok pe =>
+                rcases pe with ⟨e, r₂⟩
+                rw [he] at h; dsimp only at h
+                split at h
+                · contradiction
+                · have hnext : (acc ++ Array.replicate (3 + e) 0).size ≤ total := by simp; omega
+                  exact ih _ r₂ lens r' h hnext
+            · split at h
+              · cases he : BitReader.readBitsE r₁ 7 with
+                | error e => rw [he] at h; contradiction
+                | ok pe =>
+                  rcases pe with ⟨e, r₂⟩
+                  rw [he] at h; dsimp only at h
+                  split at h
+                  · contradiction
+                  · have hnext : (acc ++ Array.replicate (11 + e) 0).size ≤ total := by simp; omega
+                    exact ih _ r₂ lens r' h hnext
+              · contradiction
+
+/-- Decoded code lengths fill exactly the requested count — no more, no
+    fewer. Over-run of a repeat is the classic dynamic-header bug. -/
+theorem readCodeLengths_size {clCode : Code} {total : Nat} {r r' : BitReader}
+    {lens : Array Nat} (h : readCodeLengths clCode total r = .ok (lens, r')) :
+    lens.size = total := by
+  unfold readCodeLengths at h
+  exact readCodeLengths_go_size clCode total (total + 1) #[] r lens r' h (by simp)
+
+/-- A dynamic header never alters the input and only advances. -/
+theorem readDynamicCodes_pos {r r' : BitReader} {lit dst : Code}
+    (h : readDynamicCodes r = .ok ((lit, dst), r')) :
+    r.pos ≤ r'.pos ∧ r'.bytes = r.bytes := by
+  unfold readDynamicCodes at h
+  simp only [bind, Except.bind] at h
+  cases h1 : BitReader.readBitsE r 5 with
+  | error e => rw [h1] at h; contradiction
+  | ok p1 =>
+    rcases p1 with ⟨hlit, r₁⟩
+    rw [h1] at h; dsimp only at h
+    cases h2 : BitReader.readBitsE r₁ 5 with
+    | error e => rw [h2] at h; contradiction
+    | ok p2 =>
+      rcases p2 with ⟨hdist, r₂⟩
+      rw [h2] at h; dsimp only at h
+      cases h3 : BitReader.readBitsE r₂ 4 with
+      | error e => rw [h3] at h; contradiction
+      | ok p3 =>
+        rcases p3 with ⟨hclen, r₃⟩
+        rw [h3] at h; dsimp only at h
+        split at h
+        · contradiction
+        · cases h4 : readCLLens r₃ (hclen + 4) with
+          | error e => rw [h4] at h; contradiction
+          | ok p4 =>
+            rcases p4 with ⟨clLens, r₄⟩
+            rw [h4] at h; dsimp only at h
+            split at h
+            · contradiction
+            · cases h5 : readCodeLengths ⟨clLens⟩ (hlit + 257 + (hdist + 1)) r₄ with
+              | error e => rw [h5] at h; contradiction
+              | ok p5 =>
+                rcases p5 with ⟨lens, r₅⟩
+                rw [h5] at h; dsimp only at h
+                split at h
+                · contradiction
+                · split at h
+                  · contradiction
+                  · cases h
+                    have hp1 := readBitsE_pos h1
+                    have hb1 := readBitsE_bytes h1
+                    have hp2 := readBitsE_pos h2
+                    have hb2 := readBitsE_bytes h2
+                    have hp3 := readBitsE_pos h3
+                    have hb3 := readBitsE_bytes h3
+                    have ⟨hp4, hb4⟩ := readCLLens_pos h4
+                    have ⟨hp5, hb5⟩ := readCodeLengths_pos h5
+                    have h1_le : r.pos ≤ r₁.pos := by rw [hp1]; exact Nat.le_add_right _ _
+                    have h2_le : r₁.pos ≤ r₂.pos := by rw [hp2]; exact Nat.le_add_right _ _
+                    have h3_le : r₂.pos ≤ r₃.pos := by rw [hp3]; exact Nat.le_add_right _ _
+                    have htrans : r.pos ≤ r'.pos :=
+                      Nat.le_trans h1_le (Nat.le_trans h2_le (Nat.le_trans h3_le (Nat.le_trans hp4 hp5)))
+                    have hbytes : r'.bytes = r.bytes := by
+                      rw [hb5, hb4, hb3, hb2, hb1]
+                    exact ⟨htrans, hbytes⟩
 
 end Deflate
