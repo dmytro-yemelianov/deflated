@@ -18,11 +18,11 @@ test-rust:
 	@cargo test --workspace
 
 test-lean: build-lean
-	@echo "==> no sorry/admit"
-	@! grep -rnwE 'sorry|admit' spec/ --include='*.lean'
+	@echo "==> no sorry/admit/native_decide"
+	@! grep -rnwE 'sorry|admit|native_decide' spec/ --include='*.lean'
 	@echo "==> headline theorems rest on standard axioms only"
 	@lake env lean spec/scripts/axioms.lean | tee /tmp/axioms.log
-	@! grep -q sorryAx /tmp/axioms.log
+	@! grep -qE 'sorryAx|ofReduceBool' /tmp/axioms.log
 
 test-differential: build-rust build-lean
 	@python3 oracles/differential.py --self-test

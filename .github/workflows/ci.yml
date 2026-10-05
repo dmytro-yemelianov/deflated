@@ -43,15 +43,15 @@ jobs:
           ! grep -rnw 'unsafe' crates/deflate-core/src/
           ! grep -rnw 'std' crates/deflate-core/src/
 
-      - name: Lean model (lake build, no sorry, axiom gate)
+      - name: Lean model (lake build, no sorry/native_decide, axiom gate)
         run: |
           lake build
-          if grep -rnwE 'sorry|admit' spec/ --include='*.lean'; then
-            echo "::error::sorry/admit present in Lean sources"; exit 1
+          if grep -rnwE 'sorry|admit|native_decide' spec/ --include='*.lean'; then
+            echo "::error::sorry/admit/native_decide present in Lean sources"; exit 1
           fi
           lake env lean spec/scripts/axioms.lean | tee axioms.log
-          if grep -q sorryAx axioms.log; then
-            echo "::error::a headline theorem depends on sorryAx"; exit 1
+          if grep -qE 'sorryAx|ofReduceBool' axioms.log; then
+            echo "::error::a headline theorem depends on sorryAx or ofReduceBool"; exit 1
           fi
 
       - name: Differential harness self-test

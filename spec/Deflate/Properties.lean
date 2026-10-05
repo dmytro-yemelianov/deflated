@@ -5,6 +5,7 @@
 -/
 import Deflate.Bitstream
 import Deflate.Block
+import Deflate.Huffman
 
 namespace Deflate
 open BitReader
@@ -320,5 +321,117 @@ theorem readHeader_bytes {r r' : BitReader} {h : Header}
         · split at hh
           · cases hh; rw [h2, h1]
           · contradiction
+
+/-! ### P2 — Huffman decoding -/
+
+set_option maxRecDepth 4000 in
+/-- The two fixed codes of RFC 1951 §3.2.6 are exactly complete: their Kraft
+    sums are `2 ^ 15` on the nose. Checked by the kernel, not by hand. -/
+theorem fixedLitLen_valid : Code.isValid fixedLitLen = true := by decide
+
+theorem fixedDist_valid : Code.isValid fixedDist = true := by decide
+
+/-- Decoding one symbol always consumes at least one bit and never more than
+    `maxCodeLen`. The lower bound is what makes the decoder's outer loop
+    terminate (P8); the upper bound is RFC 1951 §3.2.7. -/
+theorem decodeGo_pos (c : Code) : ∀ (fuel len code first : Nat) (r : BitReader)
+    (s : Nat) (r' : BitReader),
+    decodeGo c len code first r fuel = .ok (s, r') →
+    r.pos < r'.pos ∧ r'.pos ≤ r.pos + fuel := by
+  intro fuel
+  induction fuel with
+  | zero => intro _ _ _ _ _ _ h; simp [decodeGo] at h
+  | succ n ih =>
+    intro len code first r s r' h
+    unfold decodeGo at h
+    split at h
+    · contradiction
+    · rename_i b r₁ hb
+      have hp := readBit_pos hb
+      dsimp [decodeGo] at h
+      cases b <;> {
+        dsimp at h
+        split at h
+        · rename_i hcond; clear hcond
+          split at h
+          · cases h; dsimp [BitPos] at *; omega
+          · contradiction
+        · rename_i hcond; clear hcond
+          have hrec := ih (len + 1) _ _ r₁ s r' h
+          dsimp [BitPos] at *; omega
+      }
+
+theorem decodeSym_pos {c : Code} {r r' : BitReader} {s : Nat}
+    (h : decodeSym c r = .ok (s, r')) :
+    r.pos < r'.pos ∧ r'.pos ≤ r.pos + maxCodeLen :=
+  decodeGo_pos c maxCodeLen 1 0 0 r s r' h
+
+theorem decodeGo_bytes (c : Code) : ∀ (fuel len code first : Nat) (r : BitReader)
+    (s : Nat) (r' : BitReader),
+    decodeGo c len code first r fuel = .ok (s, r') → r'.bytes = r.bytes := by
+  intro fuel
+  induction fuel with
+  | zero => intro _ _ _ _ _ _ h; simp [decodeGo] at h
+  | succ n ih =>
+    intro len code first r s r' h
+    unfold decodeGo at h
+    split at h
+    · contradiction
+    · rename_i b r₁ hb
+      have hbs := readBit_bytes hb
+      dsimp [decodeGo] at h
+      cases b <;> {
+        dsimp at h
+        split at h
+        · rename_i hcond; clear hcond
+          split at h
+          · cases h; simp_all
+          · contradiction
+        · rename_i hcond; clear hcond
+          have := ih (len + 1) _ _ r₁ s r' h
+          simp_all
+      }
+
+theorem decodeSym_bytes {c : Code} {r r' : BitReader} {s : Nat}
+    (h : decodeSym c r = .ok (s, r')) : r'.bytes = r.bytes :=
+  decodeGo_bytes c maxCodeLen 1 0 0 r s r' h
+
+/-- Every decoded symbol indexes the code's own length array. The decoder
+    cannot hand a caller a symbol the code does not define. -/
+theorem decodeGo_in_range (c : Code) : ∀ (fuel len code first : Nat) (r : BitReader)
+    (s : Nat) (r' : BitReader),
+    decodeGo c len code first r fuel = .ok (s, r') → s < c.lengths.size := by
+  intro fuel
+  induction fuel with
+  | zero => intro _ _ _ _ _ _ h; simp [decodeGo] at h
+  | succ n ih =>
+    intro len code first r s r' h
+    unfold decodeGo at h
+    split at h
+    · contradiction
+    · rename_i b r₁ hb
+      dsimp [decodeGo] at h
+      cases b <;> {
+        dsimp at h
+        split at h
+        · rename_i hcond; clear hcond
+          split at h
+          · rename_i sym hsym
+            have : sym ∈ Code.symbolsOf c len := List.mem_of_getElem? hsym
+            cases h
+            simp [Code.symbolsOf, List.mem_filter, List.mem_range] at this
+            simp_all
+          · contradiction
+        · rename_i hcond; clear hcond
+          exact ih (len + 1) _ _ r₁ s r' h
+      }
+
+theorem decodeSym_in_range {c : Code} {r r' : BitReader} {s : Nat}
+    (h : decodeSym c r = .ok (s, r')) : s < c.lengths.size :=
+  decodeGo_in_range c maxCodeLen 1 0 0 r s r' h
+
+/-- An over-subscribed code is rejected, with no appeal to the decoder. -/
+theorem oversubscribed_invalid (c : Code) (h : c.kraft > 2 ^ maxCodeLen) :
+    Code.isValid c = false := by simp [Code.isValid, h]
 
 end Deflate

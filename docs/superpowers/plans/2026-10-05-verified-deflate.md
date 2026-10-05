@@ -2477,7 +2477,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `BitReader`, `readBit`, `DecErr`.
 - Produces: `Deflate.maxCodeLen = 15`, `Deflate.Code` (field `lengths : Array Nat`), `Code.countOf`, `Code.symbolsOf`, `Code.kraft`, `Code.used`, `Code.isValid`, `Deflate.decodeSym`, `Deflate.fixedLitLen`, `Deflate.fixedDist`. Tasks 13, 15, 18, 21 consume these.
 
-- [ ] **Step 1: Write the failing theorems**
+- [x] **Step 1: Write the failing theorems**
 
 Append to `spec/Deflate/Properties.lean`:
 
@@ -2491,12 +2491,12 @@ theorem fixedLitLen_valid : Code.isValid fixedLitLen = true := by decide
 theorem fixedDist_valid : Code.isValid fixedDist = true := by decide
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `lake build`
 Expected: FAIL — `unknown identifier 'fixedLitLen'`.
 
-- [ ] **Step 3: Write the model**
+- [x] **Step 3: Write the model**
 
 `spec/Deflate/Huffman.lean`:
 
@@ -2590,14 +2590,14 @@ end Deflate
 
 Add `import Deflate.Huffman` to `spec/Deflate.lean` and to `spec/Deflate/Properties.lean`.
 
-- [ ] **Step 4: Run to verify the two `decide` proofs pass**
+- [x] **Step 4: Run to verify the two `decide` proofs pass**
 
 Run: `lake build`
 Expected: PASS. If `decide` times out, raise `maxRecDepth` with `set_option maxRecDepth 4000 in` before the theorem. **Do not reach for `native_decide`**: it introduces the `Lean.ofReduceBool` axiom, which moves the trust from the kernel to the compiler. Step 7 makes CI reject it.
 
 Sanity arithmetic, so a failure here is read correctly: the literal/length Kraft sum is `144·2⁷ + 112·2⁶ + 24·2⁸ + 8·2⁷ = 18432 + 7168 + 6144 + 1024 = 32768 = 2¹⁵`. The distance sum is `32·2¹⁰ = 32768`. Both are exactly complete.
 
-- [ ] **Step 5: Add the remaining P2 theorems**
+- [x] **Step 5: Add the remaining P2 theorems**
 
 ```lean
 /-- Decoding one symbol always consumes at least one bit and never more than
@@ -2686,12 +2686,12 @@ theorem oversubscribed_invalid (c : Code) (h : c.kraft > 2 ^ maxCodeLen) :
     Code.isValid c = false := by simp [Code.isValid, h]
 ```
 
-- [ ] **Step 6: Run and close any open goals**
+- [x] **Step 6: Run and close any open goals**
 
 Run: `lake build && ! grep -rnwE 'sorry|admit' spec/ --include='*.lean'`
 Expected: PASS, exit 0.
 
-- [ ] **Step 7: Extend the axiom gate to reject `native_decide`**
+- [x] **Step 7: Extend the axiom gate to reject `native_decide`**
 
 `native_decide` closes goals by running compiled code and adds `Lean.ofReduceBool` to the theorem's axioms. That is a different trust story from a kernel check, so the gate must catch it, not just `sorryAx`. In `Makefile`:
 
@@ -2706,7 +2706,7 @@ test-lean: build-lean
 
 Make the same change in the CI workflow's Lean step.
 
-- [ ] **Step 8: Register and commit**
+- [x] **Step 8: Register and commit**
 
 Add to `spec/scripts/axioms.lean`: `fixedLitLen_valid`, `fixedDist_valid`, `decodeSym_pos`, `decodeSym_bytes`, `decodeSym_in_range`.
 
