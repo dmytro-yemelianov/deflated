@@ -57,3 +57,7 @@ open Deflate
 #print axioms Deflate.distSym_reads
 #print axioms Deflate.decode_emitFixed
 #print axioms Deflate.decode_compress
+#print axioms Deflate.decodeSym_of_canonical_bits
+#print axioms Deflate.decodeSym_canonical
+#print axioms Deflate.canonicalCode_fixedLit
+#print axioms Deflate.canonicalCode_fixedDist

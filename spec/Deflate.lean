@@ -4,6 +4,7 @@ import Deflate.Bitstream
 import Deflate.BitWriter
 import Deflate.Block
 import Deflate.Huffman
+import Deflate.Canonical
 import Deflate.HuffmanTable
 import Deflate.LZ77
 import Deflate.Tokens

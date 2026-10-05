@@ -7,6 +7,7 @@ import Deflate.Bitstream
 import Deflate.Block
 import Deflate.Huffman
 import Deflate.HuffmanTable
+import Deflate.Canonical
 import Deflate.LZ77
 import Deflate.Match
 import Deflate.BitWriter
@@ -2266,6 +2267,257 @@ example : (emitFixed [.literal 200, .literal 255, .literal 0, .match 227 24577,
   decide +kernel
 
 end EmitFixedProps
+
+/-! ### M7b — Canonical codes (spec §3.1)
+
+  `decodeGo` walks lengths `1, 2, …`, carrying `first`, which is exactly
+  `nextCode` (RFC 1951's `next_code`). Symbol `s` of length `L` has code
+  `C = nextCode L + rank`. At each shorter length `k`, the `k`-bit prefix of
+  `C` is at least `nextCode k + countOf k`, because `nextCode` at least
+  doubles per length (`nextCode_gap`), so the range test fails; at `L`, the
+  test succeeds with offset `rank`, and `symbolsOf L` holds `s` there
+  (`symbolsOf_rank`). The Kraft bound (`kraft ≤ 2 ^ 15`, true for every code
+  the decoder accepts) gives `C < 2 ^ L`, so the `L` written bits are all of
+  `C`. -/
+
+section CanonicalProps
+open BitWriter
+
+theorem Nat.shiftRight_succ_bit (C m : Nat) :
+    (C >>> (m+1)) * 2 + (if C.testBit m then 1 else 0) = C >>> m := by
+  rw [Nat.shiftRight_eq_div_pow, Nat.shiftRight_eq_div_pow, Nat.testBit_eq_decide_div_mod_eq,
+    Nat.pow_succ, ← Nat.div_div_eq_div_mul]
+  have := Nat.div_add_mod (C / 2^m) 2
+  have := Nat.mod_lt (C / 2^m) (by decide : 2 > 0)
+  split <;> rename_i h <;> simp at h <;> omega
+
+theorem foldl_countStep_eq (len : Nat) : ∀ (xs : List Nat) (acc : Nat),
+    xs.foldl (fun acc l => if l = len then acc + 1 else acc) acc
+      = acc + (xs.filter (fun l => l = len)).length := by
+  intro xs
+  induction xs with
+  | nil => intro acc; simp
+  | cons x xs ih =>
+    intro acc
+    simp only [List.foldl_cons, List.filter_cons]
+    rw [ih]
+    by_cases h : x = len <;> simp [h] <;> omega
+
+theorem Array.toList_eq_map_range (ls : Array Nat) :
+    ls.toList = (List.range ls.size).map (fun i => ls[i]!) := by
+  apply List.ext_getElem
+  · simp
+  · intro i h1 h2
+    simp at h1
+    simp [List.getElem_map, List.getElem_range, h1]
+
+theorem Code.countOf_eq_length (c : Code) (len : Nat) :
+    c.countOf len = (c.symbolsOf len).length := by
+  unfold Code.countOf Code.symbolsOf
+  rw [foldl_countStep_eq, Array.toList_eq_map_range, List.filter_map, List.length_map, Nat.zero_add]
+  rfl
+
+theorem symbolsOf_rank (ls : Array Nat) (s : Nat) (hs : s < ls.size) :
+    (Code.symbolsOf ⟨ls⟩ ls[s]!)[canonicalRank ls s]? = some s := by
+  unfold Code.symbolsOf canonicalRank
+  dsimp only
+  obtain ⟨m, hm⟩ : ∃ m, ls.size = s + 1 + m := ⟨ls.size - (s + 1), by omega⟩
+  rw [hm, List.range_add, List.range_succ, List.filter_append, List.filter_append,
+    List.getElem?_append_left, List.getElem?_append_right (Nat.le_refl _), Nat.sub_self]
+  · simp
+  · simp
+
+theorem rank_lt_countOf (ls : Array Nat) (s : Nat) (hs : s < ls.size) :
+    canonicalRank ls s < Code.countOf ⟨ls⟩ ls[s]! := by
+  rw [Code.countOf_eq_length]
+  have := symbolsOf_rank ls s hs
+  exact (List.getElem?_eq_some_iff.mp this).1
+
+theorem nextCode_succ (c : Code) (k : Nat) (hk : 1 ≤ k) :
+    nextCode c (k + 1) = (nextCode c k + c.countOf k) * 2 := by
+  obtain ⟨j, rfl⟩ : ∃ j, k = j + 1 := ⟨k - 1, by omega⟩
+  rfl
+
+theorem nextCode_gap (c : Code) (k : Nat) (hk : 1 ≤ k) : ∀ d,
+    (nextCode c k + c.countOf k) * 2 ^ (d + 1) ≤ nextCode c (k + 1 + d) := by
+  intro d
+  induction d with
+  | zero => rw [nextCode_succ c k hk]; simp
+  | succ d ih =>
+    rw [show k + 1 + (d + 1) = (k + 1 + d) + 1 by omega, nextCode_succ c _ (by omega), Nat.pow_succ]
+    rw [← Nat.mul_assoc]
+    exact Nat.mul_le_mul_right 2 (Nat.le_trans ih (Nat.le_add_right _ _))
+
+def kraftStep (c : Code) (acc len : Nat) : Nat :=
+  if len = 0 then acc else acc + c.countOf len * 2 ^ (maxCodeLen - len)
+
+theorem kraft_partial (c : Code) : ∀ l, 1 ≤ l → l ≤ maxCodeLen →
+    (List.range (l + 1)).foldl (kraftStep c) 0
+      = (nextCode c l + c.countOf l) * 2 ^ (maxCodeLen - l) := by
+  intro l h1 h2
+  induction l with
+  | zero => omega
+  | succ l ih =>
+    rw [List.range_succ, List.foldl_append]
+    simp only [List.foldl_cons, List.foldl_nil]
+    rcases Nat.eq_zero_or_pos l with rfl | hl
+    · simp [kraftStep, nextCode, maxCodeLen]
+    · rw [ih hl (by omega), nextCode_succ c l hl]
+      unfold kraftStep
+      rw [if_neg (by omega)]
+      rw [show maxCodeLen - l = (maxCodeLen - (l + 1)) + 1 by unfold maxCodeLen at *; omega,
+        Nat.pow_succ]
+      generalize 2 ^ (maxCodeLen - (l + 1)) = p
+      simp only [Nat.add_mul, Nat.mul_assoc, Nat.mul_comm 2 p]
+
+theorem foldl_kraftStep_mono (c : Code) : ∀ (xs : List Nat) (acc : Nat),
+    acc ≤ xs.foldl (kraftStep c) acc := by
+  intro xs
+  induction xs with
+  | nil => intro acc; simp
+  | cons x xs ih =>
+    intro acc
+    simp only [List.foldl_cons]
+    refine Nat.le_trans ?_ (ih _)
+    unfold kraftStep; split <;> omega
+
+theorem kraft_ge (c : Code) (l : Nat) (h1 : 1 ≤ l) (h2 : l ≤ maxCodeLen) :
+    (nextCode c l + c.countOf l) * 2 ^ (maxCodeLen - l) ≤ c.kraft := by
+  rw [← kraft_partial c l h1 h2]
+  show _ ≤ (List.range (maxCodeLen + 1)).foldl (kraftStep c) 0
+  obtain ⟨m, hm⟩ : ∃ m, maxCodeLen + 1 = (l + 1) + m := ⟨maxCodeLen - l, by omega⟩
+  have e : List.range (maxCodeLen + 1) = List.range (l + 1) ++ (List.range m).map (fun x => l + 1 + x) := by
+    rw [hm, List.range_add]
+  rw [e, List.foldl_append]
+  exact foldl_kraftStep_mono c _ _
+
+theorem nextCode_count_le (c : Code) (hk : c.kraft ≤ 2 ^ maxCodeLen) (l : Nat) (h1 : 1 ≤ l)
+    (h2 : l ≤ maxCodeLen) : nextCode c l + c.countOf l ≤ 2 ^ l := by
+  have h := Nat.le_trans (kraft_ge c l h1 h2) hk
+  rw [show 2 ^ maxCodeLen = 2 ^ l * 2 ^ (maxCodeLen - l) by rw [← Nat.pow_add]; congr 1; omega] at h
+  exact Nat.le_of_mul_le_mul_right h (Nat.pow_pos (by decide))
+
+theorem kraft_le_of_valid (c : Code)
+    (hv : c.isComplete = true ∨ c.isValidDistance = true) : c.kraft ≤ 2 ^ maxCodeLen := by
+  rcases hv with h | h
+  · simp [Code.isComplete] at h; omega
+  · simp [Code.isValidDistance, Code.isComplete] at h; omega
+
+theorem decodeGo_canonical (c : Code) (r : BitReader) (C L s : Nat)
+    (hbits : ∀ i < L, r.pos + i < r.size ∧ bitAt r.bytes (r.pos + i) = C.testBit (L - 1 - i))
+    (hlo : nextCode c L ≤ C) (hhi : C - nextCode c L < c.countOf L)
+    (hsym : (c.symbolsOf L)[C - nextCode c L]? = some s)
+    (hgap : ∀ k, 1 ≤ k → k < L → (nextCode c k + c.countOf k) * 2 ^ (L - k) ≤ C) :
+    ∀ n j fuel, j + 1 + n = L → n < fuel →
+      decodeGo c (j + 1) (C >>> (L - j)) (nextCode c (j + 1)) ⟨r.bytes, r.pos + j⟩ fuel
+        = .ok (s, ⟨r.bytes, r.pos + L⟩) := by
+  intro n
+  induction n with
+  | zero =>
+    intro j fuel hj hf
+    obtain ⟨f, rfl⟩ : ∃ f, fuel = f + 1 := ⟨fuel - 1, by omega⟩
+    obtain ⟨hlt, hb⟩ := hbits j (by omega)
+    unfold decodeGo
+    rw [readBit_of_lt (r := ⟨r.bytes, r.pos + j⟩) hlt]
+    dsimp only
+    rw [hb, show L - 1 - j = 0 by omega, show L - j = 0 + 1 by omega, Nat.shiftRight_succ_bit,
+      Nat.shiftRight_zero, show j + 1 = L by omega, if_pos ⟨hlo, hhi⟩, hsym]
+    simp only [Except.ok.injEq, Prod.mk.injEq, BitReader.mk.injEq, true_and]
+    dsimp only [BitPos]; omega
+  | succ n ih =>
+    intro j fuel hj hf
+    obtain ⟨f, rfl⟩ : ∃ f, fuel = f + 1 := ⟨fuel - 1, by omega⟩
+    obtain ⟨hlt, hb⟩ := hbits j (by omega)
+    unfold decodeGo
+    rw [readBit_of_lt (r := ⟨r.bytes, r.pos + j⟩) hlt]
+    dsimp only
+    rw [hb, show L - j = (L - 1 - j) + 1 by omega, Nat.shiftRight_succ_bit]
+    have hg := hgap (j + 1) (by omega) (by omega)
+    have hcode : nextCode c (j + 1) + c.countOf (j + 1) ≤ C >>> (L - 1 - j) := by
+      rw [Nat.shiftRight_eq_div_pow, show L - 1 - j = L - (j + 1) by omega]
+      exact (Nat.le_div_iff_mul_le (Nat.pow_pos (by decide))).mpr hg
+    have hn : ¬(nextCode c (j + 1) ≤ C >>> (L - 1 - j) ∧
+        C >>> (L - 1 - j) - nextCode c (j + 1) < c.countOf (j + 1)) := by
+      generalize C >>> (L - 1 - j) = x at hcode ⊢; omega
+    rw [if_neg hn]
+    have := ih (j + 1) f (by omega) (by omega)
+    rw [show L - (j + 1) = L - 1 - j by omega, nextCode_succ c (j + 1) (by omega),
+      ← Nat.add_assoc] at this
+    exact this
+
+/-- The general form: on any reader whose next `ls[s]` bits are symbol `s`'s
+    canonical code, most significant first, `decodeSym ⟨ls⟩` returns `s` and
+    consumes exactly those bits. -/
+theorem decodeSym_of_canonical_bits {ls : Array Nat} {s : Nat} {r : BitReader}
+    (hs : s < ls.size) (h0 : 0 < ls[s]) (h15 : ls[s] ≤ maxCodeLen)
+    (hv : (⟨ls⟩ : Code).isComplete = true ∨ (⟨ls⟩ : Code).isValidDistance = true)
+    (hbits : ∀ i < ls[s], r.pos + i < r.size ∧
+      bitAt r.bytes (r.pos + i) = (canonicalCode ls s).1.testBit (ls[s] - 1 - i)) :
+    decodeSym ⟨ls⟩ r = .ok (s, ⟨r.bytes, r.pos + ls[s]⟩) := by
+  have hL : ls[s]! = ls[s] := getElem!_pos ls s hs
+  unfold canonicalCode at hbits
+  rw [hL] at hbits
+  rw [← hL] at h0 h15 hbits ⊢
+  generalize hLdef : ls[s]! = L at h0 h15 hbits ⊢
+  have hrank := rank_lt_countOf ls s hs
+  have hsym := symbolsOf_rank ls s hs
+  rw [hLdef] at hrank hsym
+  have hk := nextCode_count_le ⟨ls⟩ (kraft_le_of_valid _ hv) L (by omega) h15
+  generalize hF : nextCode ⟨ls⟩ L = F at hbits hk
+  generalize hR : canonicalRank ls s = R at hbits hrank hsym
+  have hC : F + R < 2 ^ L := by omega
+  have hgap : ∀ k, 1 ≤ k → k < L → (nextCode ⟨ls⟩ k + Code.countOf ⟨ls⟩ k) * 2 ^ (L - k) ≤ F + R := by
+    intro k hk1 hkL
+    have := nextCode_gap ⟨ls⟩ k hk1 (L - k - 1)
+    rw [show k + 1 + (L - k - 1) = L by omega, show L - k - 1 + 1 = L - k by omega, hF] at this
+    omega
+  have hw := decodeGo_canonical ⟨ls⟩ r (F + R) L s hbits (by omega) (by omega)
+    (by rw [hF, show F + R - F = R by omega]; exact hsym) hgap (L - 1) 0 maxCodeLen
+    (by omega) (by unfold maxCodeLen at *; omega)
+  rw [Nat.sub_zero, Nat.shiftRight_eq_div_pow, Nat.div_eq_of_lt hC, Nat.add_zero] at hw
+  exact hw
+
+/-- **Canonical codes decode.** For a length array the decoder accepts
+    (complete, or valid as a distance code), wherever `canonicalCode ls s`
+    is written with `writeCode` in a stream, `decodeSym ⟨ls⟩` there returns
+    `s` and stops right after the code. Generalizes `fixedLit_code_decodes`
+    to every valid code. -/
+theorem decodeSym_canonical {ls : Array Nat} {bs : ByteArray} {w : BitWriter} {R : Array Bool}
+    {s : Nat} (hs : s < ls.size) (h0 : 0 < ls[s]) (h15 : ls[s] ≤ maxCodeLen)
+    (hv : (⟨ls⟩ : Code).isComplete = true ∨ (⟨ls⟩ : Code).isValidDistance = true)
+    (hB : bs = (BitWriter.mk
+      ((w.writeCode (canonicalCode ls s).1 (canonicalCode ls s).2).bits ++ R)).toBytes) :
+    decodeSym ⟨ls⟩ ⟨bs, w.bits.size⟩
+      = .ok (s, ⟨bs, (w.writeCode (canonicalCode ls s).1 (canonicalCode ls s).2).bits.size⟩) := by
+  have hL : (canonicalCode ls s).2 = ls[s] := getElem!_pos ls s hs
+  have hsz : (w.writeCode (canonicalCode ls s).1 (canonicalCode ls s).2).bits.size
+      = w.bits.size + ls[s] := by
+    rw [writeCode_eq, writeBits_size, hL]
+  rw [hsz]
+  subst hB
+  apply decodeSym_of_canonical_bits hs h0 h15 hv
+  intro i hi
+  refine ⟨?_, ?_⟩
+  · show w.bits.size + i < (BitWriter.mk _).toBytes.size * 8
+    rw [toBytes_size, Array.size_append, hsz]
+    omega
+  · show bitAt _ (w.bits.size + i) = _
+    rw [← hL]
+    exact bitAt_writeCode w (canonicalCode ls s).1 (canonicalCode ls s).2 ⟨R⟩ i (by rw [hL]; exact hi)
+
+/-- `canonicalCode` reproduces RFC 1951 §3.2.6's fixed literal/length codes,
+    so the fixed tables are an instance of the canonical construction.
+    Kernel evaluation, 288 cases. -/
+theorem canonicalCode_fixedLit :
+    ∀ s, s < 288 → canonicalCode fixedLitLen.lengths s = fixedLitCode s := by
+  decide +kernel
+
+/-- Likewise the fixed distance code: code = symbol, 5 bits. -/
+theorem canonicalCode_fixedDist :
+    ∀ s, s < 32 → canonicalCode fixedDist.lengths s = (s, 5) := by
+  decide +kernel
+
+end CanonicalProps
 
 /-! ### Model compressor (spec §3.6) -/
 
