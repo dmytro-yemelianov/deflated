@@ -1,0 +1,33 @@
+[package]
+name = "deflate-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+
+[package.metadata]
+cargo-fuzz = true
+
+[workspace]
+
+[dependencies]
+libfuzzer-sys = "0.4"
+deflate-core = { path = "../crates/deflate-core" }
+miniz_oxide = "0.8"
+
+[[bin]]
+name = "inflate"
+path = "fuzz_targets/inflate.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "dynamic_header"
+path = "fuzz_targets/dynamic_header.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "differential"
+path = "fuzz_targets/differential.rs"
+test = false
+doc = false

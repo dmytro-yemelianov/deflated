@@ -4973,7 +4973,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `inflate_with_limit`, `block::read_dynamic_tables`.
 - Produces: three persistent fuzz targets and `tests/malformed/*.deflate` as checked-in regression cases. Spec §19.11: every minimized finding is kept forever.
 
-- [ ] **Step 1: Write the failing regression test**
+- [x] **Step 1: Write the failing regression test**
 
 `crates/deflate-core/tests/regression_tests.rs`:
 
@@ -5006,12 +5006,12 @@ fn every_malformed_corpus_entry_returns() {
 }
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `cargo test -p deflate-core --test regression_tests`
 Expected: FAIL — `the malformed corpus is empty`.
 
-- [ ] **Step 3: Write the fuzz targets**
+- [x] **Step 3: Write the fuzz targets**
 
 `fuzz/Cargo.toml`:
 
@@ -5100,7 +5100,7 @@ fuzz_target!(|data: &[u8]| {
 });
 ```
 
-- [ ] **Step 4: Run each target and seed the corpus**
+- [x] **Step 4: Run each target and seed the corpus**
 
 ```bash
 mkdir -p fuzz/corpus/inflate tests/malformed
@@ -5139,12 +5139,12 @@ print(len(cases), "seeds")
 PY
 ```
 
-- [ ] **Step 5: Run to verify the regression test passes**
+- [x] **Step 5: Run to verify the regression test passes**
 
 Run: `cargo test -p deflate-core --test regression_tests`
 Expected: PASS — the corpus is non-empty and every entry returns.
 
-- [ ] **Step 6: Wire fuzzing into the build and CI**
+- [x] **Step 6: Wire fuzzing into the build and CI**
 
 In `Makefile`:
 
@@ -5165,7 +5165,7 @@ In CI, add a short smoke run after the test step — long enough to catch a regr
           make fuzz
 ```
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add fuzz/ tests/malformed/ crates/deflate-core/tests/regression_tests.rs Makefile .github/workflows/ci.yml

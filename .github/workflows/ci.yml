@@ -63,3 +63,9 @@ jobs:
           lake build
           python3 oracles/differential.py
 
+      - name: Fuzz smoke (60s per target)
+        run: |
+          rustup toolchain install nightly --profile minimal
+          cargo install cargo-fuzz --locked
+          make fuzz
+

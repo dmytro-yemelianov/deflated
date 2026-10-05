@@ -35,7 +35,9 @@ lint:
 	@cargo clippy --workspace --all-targets -- -D warnings
 
 fuzz:
-	@cargo +nightly fuzz run inflate -- -max_total_time=60
+	@cargo +nightly fuzz run inflate        -- -max_total_time=60 -rss_limit_mb=4096
+	@cargo +nightly fuzz run dynamic_header -- -max_total_time=60 -rss_limit_mb=4096
+	@cargo +nightly fuzz run differential   -- -max_total_time=60 -rss_limit_mb=4096
 
 size: build-rust
 	@bash scripts/size_report.sh
