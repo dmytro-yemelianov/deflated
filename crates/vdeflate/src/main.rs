@@ -4,12 +4,15 @@
 //! `--oracle` speaks the differential line protocol on stdin/stdout. Task 23
 //! adds the user-facing CLI.
 
-use deflate_core::{Error, deflate_stored, inflate_with_limit};
+use deflate_core::encode_fixed::emit_fixed;
+use deflate_core::tokens::Token;
+use deflate_core::{Error, deflate, deflate_stored, inflate_with_limit};
 use std::io::{self, BufRead, Write};
 
 const USAGE: &str = "\
 usage: vdeflate -d [--limit N] < INPUT > OUTPUT   decompress raw DEFLATE
-       vdeflate -c             < INPUT > OUTPUT   compress (stored blocks)
+       vdeflate -c             < INPUT > OUTPUT   compress (LZ77 + fixed Huffman)
+       vdeflate -c --stored    < INPUT > OUTPUT   compress (stored blocks only)
 
 Raw RFC 1951 streams only: no gzip or zip framing.
 --limit N bounds the decompressed size in bytes (default: 1073741824).
@@ -46,6 +49,23 @@ fn to_hex(b: &[u8]) -> String {
     b.iter().map(|x| format!("{x:02x}")).collect()
 }
 
+fn parse_token(s: &str) -> Option<Token> {
+    let mut it = s.split(':');
+    match (it.next()?, it.next()?, it.next(), it.next()) {
+        ("l", h, None, None) => {
+            if h.len() != 2 {
+                return None;
+            }
+            Some(Token::Literal(u8::from_str_radix(h, 16).ok()?))
+        }
+        ("m", l, Some(d), None) => Some(Token::Match {
+            len: l.parse().ok()?,
+            dist: d.parse().ok()?,
+        }),
+        _ => None,
+    }
+}
+
 fn oracle() -> io::Result<()> {
     let stdin = io::stdin();
     let mut stdout = io::stdout().lock();
@@ -69,6 +89,21 @@ fn oracle() -> io::Result<()> {
                     writeln!(stdout, "OK {}", to_hex(&out))?;
                 }
             },
+            (Some("DEFLATE"), hx) => match from_hex(hx.unwrap_or("")) {
+                None => writeln!(stdout, "ERR badHex")?,
+                Some(bytes) => writeln!(stdout, "OK {}", to_hex(&deflate(&bytes)))?,
+            },
+            (Some("EMIT"), toks) => {
+                let parsed: Option<Vec<Token>> = toks
+                    .unwrap_or("")
+                    .split_whitespace()
+                    .map(parse_token)
+                    .collect();
+                match parsed {
+                    None => writeln!(stdout, "ERR badToken")?,
+                    Some(ts) => writeln!(stdout, "OK {}", to_hex(&emit_fixed(ts)))?,
+                }
+            }
             _ => {}
         }
         stdout.flush()?;
@@ -96,6 +131,7 @@ fn main() {
     }
 
     let mut limit = deflate_core::DEFAULT_LIMIT;
+    let mut stored = false;
     let mut i = 1;
     while i < args.len() {
         match args.get(i).map(String::as_str) {
@@ -109,6 +145,10 @@ fn main() {
                     std::process::exit(2);
                 }
             },
+            Some("--stored") if mode == Some("-c") => {
+                stored = true;
+                i += 1;
+            }
             _ => {
                 eprintln!("vdeflate: unexpected argument\n{USAGE}");
                 std::process::exit(2);
@@ -126,7 +166,8 @@ fn main() {
 
     let result = match mode {
         Some("-d") => inflate_with_limit(&input, limit).map_err(err_name),
-        Some("-c") => Ok(deflate_core::deflate_stored(&input)),
+        Some("-c") if stored => Ok(deflate_stored(&input)),
+        Some("-c") => Ok(deflate(&input)),
         _ => {
             eprint!("{USAGE}");
             std::process::exit(2);

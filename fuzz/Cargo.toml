@@ -31,3 +31,9 @@ name = "differential"
 path = "fuzz_targets/differential.rs"
 test = false
 doc = false
+
+[[bin]]
+name = "roundtrip"
+path = "fuzz_targets/roundtrip.rs"
+test = false
+doc = false
