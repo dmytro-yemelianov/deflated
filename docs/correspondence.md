@@ -21,7 +21,7 @@ byte-identical output on success, and the same named error on failure.
 
 Findings: **0**. Raw results: `oracles/reports/differential.json`.
 
-Independently, three `cargo-fuzz` targets have run with no reproducible crash or hang, and `tests/malformed/` replays every minimized finding on every `cargo test`.
+Independently, five `cargo-fuzz` targets have run with no reproducible crash or hang, and `tests/malformed/` replays every minimized finding on every `cargo test`.
 
 ## What was not demonstrated
 

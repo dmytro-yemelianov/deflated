@@ -57,7 +57,11 @@ not. The link is **mirroring plus differential testing, and nothing more**:
   `emitDynamicBlock`, `emitBlock` and `emitBlocks`; the oracle command
   `EMITDYN` exposes one dynamic-or-fixed block from given lengths in both.
 - The harness sends `EMIT` token lists to Rust and Lean and requires
-  byte-identical output (314 requests, 0 findings). It sends `DEFLATE`
+  byte-identical output (314 requests, 0 findings), `EMITDYN` requests
+  (explicit lit, dist and CL lengths; 1010 requests, 593 of them dynamic,
+  0 findings) and `EMITBLOCKS` requests (up to 40000 tokens, 5 requests,
+  0 findings). Its self-test, which checks that a corrupted Rust reply is
+  detected, passes 9/9. It sends `DEFLATE`
   payloads and requires that Rust, Lean and zlib each decode every produced
   stream back to the payload (14 payloads, 0 findings). The Lean `DEFLATE`
   finder always returns `none`, so the harness does not compare the two
@@ -65,14 +69,19 @@ not. The link is **mirroring plus differential testing, and nothing more**:
 - The Rust hash-chain matcher is not proved, and need not be: `decode_compress`
   holds for every finder (ADR 0006). What a bad finder can affect is ratio and
   time, not round-trip correctness in the model.
+- The length heuristic (`build_lengths`, `lengths_for`) is unproved. Its
+  results are checked by `valid_lengths` before use and a rejected set falls
+  back to fixed (ADR 0007), so a wrong heuristic costs ratio. That the Rust
+  `valid_lengths` and emitter mirror the Lean ones rests on the differential
+  evidence above.
 - `lean-zip` was not installed in the run that recorded these numbers, so no
   `lean-zip` result is claimed for the encoder.
 
 ## Explicit verification gaps
 
-- **P8 (Fuel non-exhaustion):** The model entry point `Deflate.decode` supplies `8 * bs.size + 1` fuel. Because each block consumes at least 3 header bits and each Huffman step consumes at least 1 bit, exhaustion is unreachable on any finite input. Fully formalizing this non-exhaustion invariant across `readCodeLengths.go`, `decodeHuffBlock`, and `decodeFuelLoop` is deferred. The general decoder gap is recorded here as an honest gap per plan Task 18 Step 4; fuel sufficiency is proved for the encoder functions `emitFixed` and `encodeStored`.
+- **P8 (Fuel non-exhaustion):** Still open in general. The model entry point `Deflate.decode` supplies `8 * bs.size + 1` fuel. Because each block consumes at least 3 header bits and each Huffman step consumes at least 1 bit, exhaustion is unreachable on any finite input. Fully formalizing this non-exhaustion invariant across `readCodeLengths.go`, `decodeHuffBlock`, and `decodeFuelLoop` is deferred. The general decoder gap is recorded here as an honest gap per plan Task 18 Step 4; fuel sufficiency is proved for the encoder functions `emitFixed`, `encodeStored` and, in M7b, the block loop `emitBlocks` (`decodeFuelLoop_emitBlocksGo`).
 - **Table-driven Huffman decoding (ADR 0005):** no gap in the Lean model: `decodeSymFast_eq` is the full equivalence, with no hypothesis on the code or the reader. The model's block decoder still calls `decodeSym`, and `decodeSymFast` is a separate definition proved equal to it. What is not proved is that the Rust table and peek mirror `buildTable` and `decodeSymFast`. Like the rest of the Rust, that rests on tests and the differential harness (ADR 0003), plus the unit test ADR 0005 asks for, which compares the Rust table against the by-evaluation construction.
 
 ## Status
 
-Milestones M0–M6, M7a, M8 complete (v1 milestone reached); M7b (dynamic-Huffman encoder) in progress, with its Lean track complete. Decoder, stored encoder, Lean formal model with 218 kernel-checked theorems (73 headline theorems registered in `spec/scripts/axioms.lean`), the compressing encoder with `decode_compress` (M7a fixed blocks, generalized in M7b to dynamic blocks through `decode_emitBlocks`), 4-way differential harness (20,197 streams, 0 findings), fuzz targets, size reports, and CLI all complete and passing CI gates.
+Milestones M0–M6, M7a, M8 complete (v1 milestone reached); M7b (dynamic-Huffman encoder) complete (ADR 0007). Decoder, stored encoder, Lean formal model with 218 kernel-checked theorems (73 headline theorems registered in `spec/scripts/axioms.lean`), the compressing encoder with `decode_compress` (M7a fixed blocks, generalized in M7b to dynamic blocks through `decode_emitBlocks`), 4-way differential harness (20,197 streams, 0 findings), fuzz targets, size reports, and CLI all complete and passing CI gates.
