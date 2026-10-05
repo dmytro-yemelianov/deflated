@@ -20,4 +20,4 @@ pub mod inflate;
 pub mod lz77;
 
 pub use error::Error;
-pub use inflate::{inflate, inflate_with_limit};
+pub use inflate::{DEFAULT_LIMIT, inflate, inflate_with_limit};

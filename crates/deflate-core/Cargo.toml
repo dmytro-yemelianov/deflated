@@ -11,3 +11,4 @@ authors.workspace = true
 [dependencies]
 
 [dev-dependencies]
+flate2 = "1"

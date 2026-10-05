@@ -13,6 +13,6 @@ proved, and it never counts a theorem from another project.
 | Multi-block streams | yes | yes | yes |
 | Overlapping back-reference | yes | yes | yes |
 | Malformed input rejection | yes | yes | no |
-| Output limit | no | no | no |
+| Output limit | yes | yes | yes |
 | Encoder validity | no | no | no |
 | Round trip | no | no | no |

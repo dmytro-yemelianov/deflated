@@ -4519,7 +4519,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: everything in `deflate-core`.
 - Produces: `inflate::DEFAULT_LIMIT: usize`, and the hardened contract for `inflate_with_limit`. Tasks 19, 20, 23 depend on it.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `crates/deflate-core/tests/hostile_tests.rs`:
 
@@ -4656,12 +4656,12 @@ flate2 = "1"
 
 This is a test-only dependency. The Global Constraints keep `[dependencies]` empty; CI's "no std in the core" step already proves `src/` cannot reach it.
 
-- [ ] **Step 2: Run to verify they fail**
+- [x] **Step 2: Run to verify they fail**
 
 Run: `cargo test -p deflate-core --test hostile_tests`
 Expected: FAIL — `DEFAULT_LIMIT` is not defined, and `bomb_stops_at_the_limit` may already pass by accident; read each failure before fixing.
 
-- [ ] **Step 3: Harden the entry points**
+- [x] **Step 3: Harden the entry points**
 
 In `crates/deflate-core/src/inflate.rs`:
 
@@ -4715,12 +4715,12 @@ Replace `DEFAULT_LIMIT`'s earlier `usize::MAX` default. Re-export it from `lib.r
 
 Rebuilding the fixed tables for every fixed block is wasteful but correct; measuring before optimizing is spec §19.12, and the measurement happens in Task 24.
 
-- [ ] **Step 4: Run to verify they pass**
+- [x] **Step 4: Run to verify they pass**
 
 Run: `cargo test -p deflate-core --test hostile_tests`
 Expected: PASS — 7 tests. `every_prefix_of_every_vector_errors_or_decodes_a_prefix` and `every_single_bit_flip_errors_or_decodes` together run several thousand decodes; if either takes more than a few seconds, something is looping and that is the bug this task exists to catch.
 
-- [ ] **Step 5: Measure, do not guess, that the bomb is bounded**
+- [x] **Step 5: Measure, do not guess, that the bomb is bounded**
 
 Run:
 
@@ -4731,7 +4731,7 @@ cargo test -p deflate-core --test hostile_tests --release -- --nocapture
 
 Record the peak RSS in the commit message. If it is anywhere near 64 MiB, the limit is being checked after allocation rather than before, and the `read_stored`/`decode_huff_block` ordering is wrong.
 
-- [ ] **Step 6: Update conformance and commit**
+- [x] **Step 6: Update conformance and commit**
 
 `docs/conformance.md`: `| Output limit | yes | yes | yes |`, `| Malformed input rejection | yes | yes | no |` (the model's half lands in Task 18).
 
