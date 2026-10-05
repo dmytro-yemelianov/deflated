@@ -6,6 +6,7 @@
 //! block's cost.
 //!
 //! usage: perf CORPUS_DIR [REPS]
+//!        perf compress CORPUS_DIR [REPS]   (encoder ratio and speed)
 //! With `PERF_ONLY=name.deflate` it decodes that one file in a loop for
 //! `PERF_SECS` seconds instead, so a sampling profiler has something to see.
 
@@ -22,8 +23,73 @@ fn best_of<F: FnMut()>(reps: u32, mut f: F) -> Duration {
         .unwrap_or_default()
 }
 
+/// Encoder measurement: `deflate_core::deflate` against `miniz_oxide`
+/// levels 1 and 6 on each `.raw` payload. Every stream is decoded back with
+/// `deflate-core` and compared before it is timed.
+fn compress_mode(dir: &std::path::Path, reps: u32) {
+    let mut names: Vec<String> = std::fs::read_dir(dir)
+        .expect("read corpus dir")
+        .filter_map(|e| e.ok()?.file_name().into_string().ok())
+        .filter(|n| n.ends_with(".raw"))
+        .collect();
+    names.sort();
+    println!("[");
+    for (i, name) in names.iter().enumerate() {
+        let raw = std::fs::read(dir.join(name)).expect("read input");
+        let mbps = |t: Duration| raw.len() as f64 / t.as_secs_f64() / 1e6;
+        let ours = deflate_core::deflate(&raw);
+        assert!(
+            deflate_core::inflate(&ours).expect("decode ours") == raw,
+            "{name}: our stream does not round-trip"
+        );
+        let t_ours = best_of(reps, || {
+            std::hint::black_box(deflate_core::deflate(std::hint::black_box(&raw)));
+        });
+        let mut fields = format!(
+            "\"input\": \"{name}\", \"raw_bytes\": {}, \"deflate_core_bytes\": {}, \
+             \"deflate_core_ratio\": {:.4}, \"deflate_core_mb_s\": {:.1}",
+            raw.len(),
+            ours.len(),
+            ours.len() as f64 / raw.len() as f64,
+            mbps(t_ours)
+        );
+        for level in [1u8, 6] {
+            let theirs = miniz_oxide::deflate::compress_to_vec(&raw, level);
+            assert!(
+                deflate_core::inflate(&theirs).expect("decode miniz") == raw,
+                "{name}: miniz_oxide level {level} does not round-trip"
+            );
+            let t = best_of(reps, || {
+                std::hint::black_box(miniz_oxide::deflate::compress_to_vec(
+                    std::hint::black_box(&raw),
+                    level,
+                ));
+            });
+            fields += &format!(
+                ", \"miniz_l{level}_bytes\": {}, \"miniz_l{level}_ratio\": {:.4}, \
+                 \"miniz_l{level}_mb_s\": {:.1}",
+                theirs.len(),
+                theirs.len() as f64 / raw.len() as f64,
+                mbps(t)
+            );
+        }
+        println!(
+            "  {{{fields}}}{}",
+            if i + 1 < names.len() { "," } else { "" }
+        );
+    }
+    println!("]");
+}
+
 fn main() {
-    let args: Vec<String> = std::env::args().skip(1).collect();
+    let mut args: Vec<String> = std::env::args().skip(1).collect();
+    if args.first().map(String::as_str) == Some("compress") {
+        args.remove(0);
+        let dir = std::path::PathBuf::from(args.first().expect("usage: perf compress DIR [REPS]"));
+        let reps: u32 = args.get(1).and_then(|s| s.parse().ok()).unwrap_or(5);
+        compress_mode(&dir, reps);
+        return;
+    }
     let dir = std::path::PathBuf::from(args.first().expect("usage: perf CORPUS_DIR [REPS]"));
     let reps: u32 = args.get(1).and_then(|s| s.parse().ok()).unwrap_or(15);
 

@@ -23,6 +23,20 @@ def throughput(perf):
     return "\n".join(rows)
 
 
+def compression(comp):
+    rows = [
+        "| Input | Ratio ours | Ratio level 1 | Ratio level 6 | MB/s ours | MB/s level 1 | MB/s level 6 |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ]
+    for r in comp["results"]:
+        rows.append(
+            f"| `{r['input']}` | {r['deflate_core_ratio']} | {r['miniz_l1_ratio']} "
+            f"| {r['miniz_l6_ratio']} | {r['deflate_core_mb_s']} | {r['miniz_l1_mb_s']} "
+            f"| {r['miniz_l6_mb_s']} |"
+        )
+    return "\n".join(rows)
+
+
 def profile(prof):
     out = []
     for name, d in prof["profiles"].items():
@@ -36,6 +50,7 @@ def profile(prof):
 def main():
     tables = {
         "throughput": throughput(json.load(open("scripts/reports/perf.json"))),
+        "compression": compression(json.load(open("scripts/reports/compress.json"))),
         "profile": profile(json.load(open("scripts/reports/profile.json"))),
     }
     doc = open(DOC).read()

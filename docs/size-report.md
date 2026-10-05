@@ -20,8 +20,10 @@ No byte target was set before measuring (spec §17 M8).
 
 | Profile | Total file | `.text` |
 | --- | ---: | ---: |
-| `release` | 446320 | 236432 |
-| `min` | 302816 | 205640 |
+| `release` | 465888 | 247968 |
+| `min` | 319376 | 210276 |
+
+These figures include the compressing encoder (`deflate`, M7a), which `vdeflate -c` now links; the previous baseline, in git history, had the stored encoder only. `scripts/reports/size.json` is the current measurement.
 
 **The total file size is the first column.** `.text` is one section of it and
 is never the number to quote (spec §15).

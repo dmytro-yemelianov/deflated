@@ -31,7 +31,7 @@ These theorems are statements about **the Lean model in `spec/Deflate/`**.
 
 ## Proved theorems in the Lean model
 
-As of Milestone M5 (Task 18), the following headline theorems in `spec/Deflate/Properties.lean` are kernel-checked with zero custom axioms:
+As of Milestone M7a, the following headline theorems in `spec/Deflate/Properties.lean` are kernel-checked with zero custom axioms:
 
 - **P1 (Bit reader):** `byteAt_oob`, `readBits_pos`, `readBits_bytes`, `readBits_lt`, `readBits_eof`, `alignToByte_idem`.
 - **P2 (Canonical Huffman):** `fixedLitLen_complete`, `fixedDist_complete`, `decodeSym_pos`, `decodeSym_bytes`, `decodeSym_in_range`.
@@ -40,15 +40,36 @@ As of Milestone M5 (Task 18), the following headline theorems in `spec/Deflate/P
 - **P4 (Huffman block body):** `decodeHuffBlock_monotone`, `decodeHuffBlock_within_limit`, `decodeHuffBlock_progress`.
 - **P5 (Dynamic Huffman tables):** `clOrder_is_a_permutation`, `readDynamicCodes_valid`, `readDynamicCodes_pos`.
 - **P6 & P7 (LZ77 back-references):** `copyBack_size`, `copyBack_overlap`, `copyBack_rejects`, `readLength_range`, `readDistance_range`.
-- **P10 & P11 (Encoder validity and round trip):** `decode_encodeStored` (every input round-trips through the stored encoder, multi-block inputs over 65535 bytes included: `x.size ≤ limit → decode (encodeStored x) limit = .ok x`), with `encodeStored_empty` and `encodeStored_valid` as corollaries for empty input.
+- **P10 & P11 (Encoder validity and round trip):** `decode_encodeStored` (every input round-trips through the stored encoder, multi-block inputs over 65535 bytes included: `x.size ≤ limit → decode (encodeStored x) limit = .ok x`). This closed the stored-encoder P11 gap that earlier versions of this document recorded, with `encodeStored_empty` and `encodeStored_valid` as corollaries for empty input.
 - **P11 (Compressed encoder, M7a):** `decode_compress` (the model compressor round-trips every input for every finder: `x.size ≤ limit → decode (compress find x) limit = .ok x`), resting on `decode_emitFixed` (a valid token list emitted as one fixed-Huffman block decodes to its expansion), `expand_compressTokens` and `compressTokens_valid` (the matcher re-checks every finder candidate, so tokenization is lossless and valid even for an adversarial finder).
 - **P12 (Determinism & output limits):** `decode_deterministic`, `decode_within_limit`.
+
+## The encoder boundary
+
+For the encoder, as for the decoder, the Lean model is proved and the Rust is
+not. The link is **mirroring plus differential testing, and nothing more**:
+
+- `accept`, `emitFixed`, `compressTokens` and `compress` in Lean have Rust
+  counterparts (`matcher::accept`, `emit_fixed`, `deflate`) written to match
+  them, with the Lean name in the comment.
+- The harness sends `EMIT` token lists to Rust and Lean and requires
+  byte-identical output (314 requests, 0 findings). It sends `DEFLATE`
+  payloads and requires that Rust, Lean and zlib each decode every produced
+  stream back to the payload (14 payloads, 0 findings). The Lean `DEFLATE`
+  finder always returns `none`, so the harness does not compare the two
+  encoders' compressed output for equality.
+- The Rust hash-chain matcher is not proved, and need not be: `decode_compress`
+  holds for every finder (ADR 0006). What a bad finder can affect is ratio and
+  time, not round-trip correctness in the model.
+- `lean-zip` was not installed in the run that recorded these numbers, so no
+  `lean-zip` result is claimed for the encoder.
 
 ## Explicit verification gaps
 
 - **P8 (Fuel non-exhaustion):** The model entry point `Deflate.decode` supplies `8 * bs.size + 1` fuel. Because each block consumes at least 3 header bits and each Huffman step consumes at least 1 bit, exhaustion is unreachable on any finite input. Fully formalizing this non-exhaustion invariant across `readCodeLengths.go`, `decodeHuffBlock`, and `decodeFuelLoop` is deferred; rather than admitting it with `sorry` or papering over it, it is recorded here as an honest gap per plan Task 18 Step 4.
+- **P8 stays open in general.** The M7a theorems do not close the general fuel gap described above.
 - **Table-driven Huffman decoding (ADR 0005):** no gap in the Lean model: `decodeSymFast_eq` is the full equivalence, with no hypothesis on the code or the reader. The model's block decoder still calls `decodeSym`, and `decodeSymFast` is a separate definition proved equal to it. What is not proved is that the Rust table and peek mirror `buildTable` and `decodeSymFast`. Like the rest of the Rust, that rests on tests and the differential harness (ADR 0003), plus the unit test ADR 0005 asks for, which compares the Rust table against the by-evaluation construction.
 
 ## Status
 
-Milestones M0–M6, M8 complete (v1 milestone reached). Decoder, stored encoder, Lean formal model with 142 kernel-checked theorems, 4-way differential harness (20,197 streams, 0 findings), fuzz targets, size reports, and CLI all complete and passing CI gates.
+Milestones M0–M6, M7a, M8 complete (v1 milestone reached). Decoder, stored encoder, Lean formal model with 142 kernel-checked theorems (54 headline theorems registered in `spec/scripts/axioms.lean`), the M7a compressing encoder with `decode_compress`, 4-way differential harness (20,197 streams, 0 findings), fuzz targets, size reports, and CLI all complete and passing CI gates.

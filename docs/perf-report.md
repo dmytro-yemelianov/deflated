@@ -1,6 +1,7 @@
-# Decode performance baseline
+# Performance baseline: decode and compress
 
-Raw data: `scripts/reports/perf.json` (throughput) and
+Raw data: `scripts/reports/perf.json` (decode throughput),
+`scripts/reports/compress.json` (encoder ratio and speed) and
 `scripts/reports/profile.json` (where the time goes). `make perf` and, on
 macOS with `samply` installed, `make profile` measure into `target/reports/`
 and print each input next to this baseline; that is how a candidate
@@ -28,7 +29,7 @@ side adds definitions and a proof of equivalence and leaves the model's
 decoder as it was. The text figure recorded at `496e31a` was a fast run:
 interleaved runs of that commit later measured about the same slowdown on both text inputs as the current table,
 which is the number to trust. Candidate 4 took stored inputs from about
-2.5 times slower than miniz_oxide to about twice as fast, and left the other
+two and a half times slower than miniz_oxide to about twice as fast, and left the other
 inputs where they were (interleaved runs against `496e31a`).
 
 ## Method
@@ -62,22 +63,64 @@ decompressed output (8388608 bytes for every input).
 <!-- perf:throughput -->
 | Input | Compressed bytes | deflate-core MB/s | miniz_oxide MB/s | Slowdown |
 | --- | ---: | ---: | ---: | ---: |
-| `random.stored.deflate` | 8389258 | 68176.8 | 36314.3 | 0.53× |
-| `repetitive.dyn.deflate` | 16280 | 8571.8 | 3073.7 | 0.36× |
-| `repetitive.fixed.deflate` | 60974 | 8045.3 | 3133.8 | 0.39× |
-| `repetitive.stored.deflate` | 8389258 | 61605.3 | 36745.2 | 0.6× |
-| `text.dyn.deflate` | 3050677 | 352.5 | 456.0 | 1.29× |
-| `text.fixed.deflate` | 3854367 | 347.7 | 446.9 | 1.29× |
-| `text.stored.deflate` | 8389258 | 62426.9 | 35043.8 | 0.56× |
-| `zeros.dyn.deflate` | 8144 | 8103.0 | 7444.4 | 0.92× |
-| `zeros.fixed.deflate` | 52840 | 6097.3 | 8576.6 | 1.41× |
-| `zeros.stored.deflate` | 8389258 | 59865.2 | 35246.3 | 0.59× |
+| `random.stored.deflate` | 8389258 | 71215.4 | 35944.8 | 0.5× |
+| `repetitive.dyn.deflate` | 16280 | 9035.8 | 3115.6 | 0.34× |
+| `repetitive.fixed.deflate` | 60974 | 8459.8 | 3186.9 | 0.38× |
+| `repetitive.stored.deflate` | 8389258 | 66030.2 | 37103.9 | 0.56× |
+| `text.dyn.deflate` | 3050677 | 371.3 | 482.1 | 1.3× |
+| `text.fixed.deflate` | 3854367 | 367.2 | 468.0 | 1.27× |
+| `text.stored.deflate` | 8389258 | 46907.5 | 31261.8 | 0.67× |
+| `zeros.dyn.deflate` | 8144 | 7101.2 | 7661.4 | 1.08× |
+| `zeros.fixed.deflate` | 52840 | 5928.5 | 9491.2 | 1.6× |
+| `zeros.stored.deflate` | 8389258 | 64506.9 | 36745.1 | 0.57× |
 <!-- /perf:throughput -->
 
 Back-to-back runs on the same machine moved the slowdown by up to about 5% on
 Huffman-coded inputs and up to about 15% on stored inputs, which take about
 half a millisecond and are bound by memory bandwidth. Treat a smaller change
 than that as noise.
+
+## Compression
+
+Raw data: `scripts/reports/compress.json`. `deflate_core::deflate` (a greedy
+hash-chain matcher, then the smaller of fixed-Huffman and stored output; no
+dynamic Huffman block yet) against `miniz_oxide` levels 1 and 6, on the `.raw`
+payloads from the same corpus. Ratio is compressed size over input size, so
+lower is better; above 1 means the stream is larger than the input (stored
+framing). MB/s are of input, best of 5 runs. Each stream, ours and
+miniz_oxide's, is decoded with `deflate-core` and compared to the input
+before it is timed.
+
+<!-- perf:compression -->
+| Input | Ratio ours | Ratio level 1 | Ratio level 6 | MB/s ours | MB/s level 1 | MB/s level 6 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `random.raw` | 1.0001 | 1.0009 | 1.0002 | 63.4 | 387.7 | 75.5 |
+| `repetitive.raw` | 0.0073 | 0.0091 | 0.0019 | 718.0 | 10172.1 | 1616.8 |
+| `text.raw` | 0.4744 | 0.5698 | 0.3633 | 71.2 | 222.3 | 105.1 |
+| `zeros.raw` | 0.0063 | 0.0046 | 0.001 | 763.1 | 17660.2 | 1689.3 |
+<!-- /perf:compression -->
+
+What the table says, and no more:
+
+- **Text.** Our ratio is between the two miniz_oxide levels: better than
+  level 1, worse than level 6. We are slower than both. The gap to level 6 is
+  the missing dynamic Huffman block and lazy matching, which is the next
+  candidate, not a defect.
+- **Random bytes.** The output is stored blocks, so the ratio is the stored
+  framing overhead and is slightly better than miniz_oxide's. The time
+  is the matcher failing to find anything.
+- **Zeros and the 9-byte pattern.** Fixed Huffman codes cannot do better than
+  a few bits per 258-byte match. On the pattern we beat level 1 on size and
+  lose to level 6; on zeros we lose to both. The matcher is far slower than
+  miniz_oxide's run-length fast paths. These are
+  the worst cases for the encoder and are not tuned.
+- **Noise.** Back-to-back runs moved these figures by up to about 5%.
+  Differences smaller than that mean nothing. The encoder has not been
+  optimized; the verified claim is that it round-trips, not that it is fast.
+
+The Lean side proves `decode (compress find input) = input` for every finder
+and every input (`decode_compress`); this table measures the Rust encoder
+only.
 
 ## Where the time goes
 
