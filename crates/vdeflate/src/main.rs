@@ -4,7 +4,10 @@
 //! `--oracle` speaks the differential line protocol on stdin/stdout. Task 23
 //! adds the user-facing CLI.
 
-use deflate_core::encode_fixed::emit_fixed;
+use deflate_core::bitwriter::BitWriter;
+use deflate_core::encode_dynamic::{emit_dynamic_block, lengths_for};
+use deflate_core::encode_fixed::{emit_fixed, emit_fixed_block};
+use deflate_core::huffman_build::{UsedSymbols, valid_lengths};
 use deflate_core::tokens::Token;
 use deflate_core::{Error, deflate, deflate_stored, inflate_with_limit};
 use std::io::{self, BufRead, Write};
@@ -70,6 +73,62 @@ fn parse_token(s: &str) -> Option<Token> {
     }
 }
 
+/// One hex digit per length; `None` on any non-hex character.
+fn parse_lengths(s: &str, sizes: std::ops::RangeInclusive<usize>) -> Option<Vec<u8>> {
+    if !sizes.contains(&s.len()) {
+        return None;
+    }
+    s.bytes()
+        .map(|c| char::from(c).to_digit(16).map(|d| d as u8))
+        .collect()
+}
+
+fn hex_lengths(l: &[u8]) -> String {
+    l.iter().map(|&d| format!("{d:x}")).collect()
+}
+
+/// `EMITDYN <lit> <dist> <cl> <tok>*`: one final block, dynamic iff valid.
+fn emit_dyn_reply(args: &str) -> String {
+    let mut it = args.split_ascii_whitespace();
+    let lens = (|| {
+        let lit = parse_lengths(it.next()?, 257..=286)?;
+        let dist = parse_lengths(it.next()?, 1..=30)?;
+        let cl = parse_lengths(it.next()?, 19..=19)?;
+        Some((lit, dist, cl))
+    })();
+    let Some((lit, dist, cl)) = lens else {
+        return "ERR badLengths".to_string();
+    };
+    let parsed: Option<Vec<Token>> = it.map(parse_token).collect();
+    let Some(ts) = parsed else {
+        return "ERR badToken".to_string();
+    };
+    let mut w = BitWriter::new();
+    if valid_lengths(&lit, &dist, &cl, &UsedSymbols::from_tokens(&ts)) {
+        emit_dynamic_block(&mut w, true, &lit, &dist, &cl, &ts);
+    } else {
+        emit_fixed_block(&mut w, true, ts.iter().copied());
+    }
+    format!("OK {}", to_hex(&w.finish()))
+}
+
+/// `LENGTHS <tok>*`: the lengths `deflate` would use for that block.
+fn lengths_reply(toks: &str) -> String {
+    let parsed: Option<Vec<Token>> = toks.split_ascii_whitespace().map(parse_token).collect();
+    match parsed {
+        None => "ERR badToken".to_string(),
+        Some(ts) => match lengths_for(&ts) {
+            None => "OK none".to_string(),
+            Some((l, d, c)) => format!(
+                "OK {} {} {}",
+                hex_lengths(&l),
+                hex_lengths(&d),
+                hex_lengths(&c)
+            ),
+        },
+    }
+}
+
 fn oracle() -> io::Result<()> {
     let stdin = io::stdin();
     let mut stdout = io::stdout().lock();
@@ -108,6 +167,8 @@ fn oracle() -> io::Result<()> {
                     Some(ts) => writeln!(stdout, "OK {}", to_hex(&emit_fixed(ts)))?,
                 }
             }
+            (Some("EMITDYN"), args) => writeln!(stdout, "{}", emit_dyn_reply(args.unwrap_or("")))?,
+            (Some("LENGTHS"), toks) => writeln!(stdout, "{}", lengths_reply(toks.unwrap_or("")))?,
             _ => {}
         }
         stdout.flush()?;

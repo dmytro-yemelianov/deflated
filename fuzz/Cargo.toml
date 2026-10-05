@@ -37,3 +37,9 @@ name = "roundtrip"
 path = "fuzz_targets/roundtrip.rs"
 test = false
 doc = false
+
+[[bin]]
+name = "dynamic_lengths"
+path = "fuzz_targets/dynamic_lengths.rs"
+test = false
+doc = false
