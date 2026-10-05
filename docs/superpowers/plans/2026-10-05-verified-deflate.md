@@ -5755,7 +5755,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `deflate_core::{inflate_with_limit, deflate_stored, DEFAULT_LIMIT}`.
 - Produces: the `vdeflate` binary with `-d`, `-c`, `--limit`, `--oracle`. Task 24 measures it.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `crates/vdeflate/tests/cli_tests.rs`:
 
@@ -5825,12 +5825,12 @@ fn empty_input_compresses_and_decompresses() {
 }
 ```
 
-- [ ] **Step 2: Run to verify they fail**
+- [x] **Step 2: Run to verify they fail**
 
 Run: `cargo test -p vdeflate`
 Expected: FAIL — the binary prints usage and exits 2 for every invocation.
 
-- [ ] **Step 3: Write the CLI**
+- [x] **Step 3: Write the CLI**
 
 Replace the `main` and usage parts of `crates/vdeflate/src/main.rs`, keeping `oracle()` and its helpers:
 
@@ -5924,12 +5924,12 @@ fn main() {
 
 `err_name` already maps `OutputLimitExceeded` to `"outputLimitExceeded"`, which contains "limit", satisfying `limit_is_honored_and_reported`.
 
-- [ ] **Step 4: Run to verify they pass**
+- [x] **Step 4: Run to verify they pass**
 
 Run: `cargo test -p vdeflate`
 Expected: PASS — 5 tests.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cargo clippy --workspace --all-targets -- -D warnings && cargo fmt --all --check

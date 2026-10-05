@@ -7,6 +7,19 @@
 use deflate_core::{Error, deflate_stored, inflate_with_limit};
 use std::io::{self, BufRead, Write};
 
+const USAGE: &str = "\
+usage: vdeflate -d [--limit N] < INPUT > OUTPUT   decompress raw DEFLATE
+       vdeflate -c             < INPUT > OUTPUT   compress (stored blocks)
+
+Raw RFC 1951 streams only: no gzip or zip framing.
+--limit N bounds the decompressed size in bytes (default: 1073741824).
+
+This program is NOT formally verified. The Lean theorems in spec/ are about
+the model in spec/Deflate/, not about this binary, and file I/O, argument
+parsing and startup are outside the verification boundary entirely.
+See docs/verification-boundary.md.
+";
+
 fn err_name(e: Error) -> &'static str {
     match e {
         Error::UnexpectedEof => "unexpectedEof",
@@ -63,15 +76,75 @@ fn oracle() -> io::Result<()> {
     Ok(())
 }
 
+fn read_stdin() -> std::io::Result<Vec<u8>> {
+    use std::io::Read;
+    let mut v = Vec::new();
+    std::io::stdin().lock().read_to_end(&mut v)?;
+    Ok(v)
+}
+
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
-    if args.first().map(String::as_str) == Some("--oracle") {
+    let mode = args.first().map(String::as_str);
+
+    if mode == Some("--oracle") {
         if let Err(e) = oracle() {
             eprintln!("vdeflate: {e}");
             std::process::exit(1);
         }
         return;
     }
-    eprintln!("vdeflate: usage: vdeflate --oracle");
-    std::process::exit(2);
+
+    let mut limit = deflate_core::DEFAULT_LIMIT;
+    let mut i = 1;
+    while i < args.len() {
+        match args.get(i).map(String::as_str) {
+            Some("--limit") => match args.get(i + 1).and_then(|s| s.parse::<usize>().ok()) {
+                Some(n) => {
+                    limit = n;
+                    i += 2;
+                }
+                None => {
+                    eprintln!("vdeflate: --limit needs a number\n{USAGE}");
+                    std::process::exit(2);
+                }
+            },
+            _ => {
+                eprintln!("vdeflate: unexpected argument\n{USAGE}");
+                std::process::exit(2);
+            }
+        }
+    }
+
+    let input = match read_stdin() {
+        Ok(v) => v,
+        Err(e) => {
+            eprintln!("vdeflate: reading stdin: {e}");
+            std::process::exit(1);
+        }
+    };
+
+    let result = match mode {
+        Some("-d") => inflate_with_limit(&input, limit).map_err(err_name),
+        Some("-c") => Ok(deflate_core::deflate_stored(&input)),
+        _ => {
+            eprint!("{USAGE}");
+            std::process::exit(2);
+        }
+    };
+
+    match result {
+        Ok(bytes) => {
+            use std::io::Write;
+            let mut out = std::io::stdout().lock();
+            if let Err(e) = out.write_all(&bytes).and_then(|()| out.flush()) {
+                eprintln!("vdeflate: writing stdout: {e}");
+                std::process::exit(1);
+            }
+        }
+        Err(name) => {
+            eprintln!("vdeflate: {name}");
+            std::process::exit(1);
+        }
+    }
 }
