@@ -40,3 +40,6 @@ open Deflate
 #print axioms Deflate.decode_within_limit
 #print axioms Deflate.encodeStored_empty
 #print axioms Deflate.encodeStored_valid
+#print axioms Deflate.expand_compressTokens
+#print axioms Deflate.compressTokens_valid
+#print axioms Deflate.valid_iff_prefix

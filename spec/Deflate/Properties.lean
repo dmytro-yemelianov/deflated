@@ -8,6 +8,7 @@ import Deflate.Block
 import Deflate.Huffman
 import Deflate.HuffmanTable
 import Deflate.LZ77
+import Deflate.Match
 import Deflate.Decode
 import Deflate.Encode
 
@@ -1432,5 +1433,130 @@ theorem encodeStored_empty (limit : Nat) : decode (encodeStored ⟨#[]⟩) limit
 /-- P10, stated on its own: encoding is a stream the decoder accepts. -/
 theorem encodeStored_valid : (decode (encodeStored ⟨#[]⟩) 0).isOk = true := by
   rw [encodeStored_empty 0]; rfl
+
+/-! ### M7a — Tokens and the matcher (spec §3.1–3.2)
+
+  The matcher re-checks every finder candidate, so both headline theorems
+  hold for every `find`. -/
+
+theorem extract_push_getElem (x : Array UInt8) (i : Nat) (hi : i < x.size) :
+    (x.extract 0 i).push x[i] = x.extract 0 (i + 1) := by
+  apply Array.ext
+  · simp
+  · intro j h1 h2
+    simp at h1 h2
+    rw [Array.getElem_push]
+    split
+    · simp
+    · simp; congr 1; simp at *; omega
+
+theorem accept_spec {x : Array UInt8} {i len dist : Nat}
+    (h : accept x i len dist = true) :
+    3 ≤ len ∧ len ≤ 258 ∧ 1 ≤ dist ∧ dist ≤ 32768 ∧ dist ≤ i ∧ i + len ≤ x.size ∧
+      ∀ k, k < len → x[i + k]! = x[i + k - dist]! := by
+  simp only [accept, Bool.and_eq_true, decide_eq_true_eq, List.all_eq_true,
+    List.mem_range, beq_iff_eq] at h
+  obtain ⟨⟨⟨⟨⟨⟨h1, h2⟩, h3⟩, h4⟩, h5⟩, h6⟩, h7⟩ := h
+  exact ⟨h1, h2, h3, h4, h5, h6, h7⟩
+
+/-- A copy whose source bytes agree with `x` extends a prefix of `x`. -/
+theorem copyGo_extract (x : Array UInt8) (dist : Nat) (hd : 1 ≤ dist) :
+    ∀ (m i : Nat), dist ≤ i → i + m ≤ x.size →
+      (∀ k, k < m → x[i + k]! = x[i + k - dist]!) →
+      copyGo dist (x.extract 0 i) m = x.extract 0 (i + m) := by
+  intro m
+  induction m with
+  | zero => intro i _ _ _; simp [copyGo]
+  | succ n ih =>
+    intro i hdi hm heq
+    simp only [copyGo]
+    have hsz : (x.extract 0 i).size = i := by simp; omega
+    have hsrc : (x.extract 0 i)[(x.extract 0 i).size - dist]! = x[i] := by
+      rw [hsz]
+      have h0 := heq 0 (by omega)
+      simp only [Nat.add_zero] at h0
+      rw [getElem!_pos x i (by omega)] at h0
+      rw [h0, getElem!_pos x (i - dist) (by omega), getElem!_pos _ (i - dist) (by omega)]
+      simp
+    rw [hsrc, extract_push_getElem x i (by omega)]
+    rw [ih (i + 1) (by omega) (by omega) (fun k hk => by
+      have := heq (k + 1) (by omega)
+      rw [show i + (k + 1) = i + 1 + k by omega] at this
+      exact this)]
+    congr 1; omega
+
+
+/-- The generalized invariant: from position `i`, the remaining tokens
+    replayed after `x.extract 0 i` give back `x`, and each is valid. -/
+theorem compressFrom_spec (find : Finder) (x : Array UInt8) (i : Nat) (hi : i ≤ x.size) :
+    (compressFrom find x i).foldl expandStep (x.extract 0 i) = x ∧
+      ValidFrom (x.extract 0 i) (compressFrom find x i) := by
+  rw [compressFrom]
+  split
+  · rename_i hlt
+    have hlit : (compressFrom find x (i + 1)).foldl expandStep (x.extract 0 (i + 1)) = x ∧
+        ValidFrom (x.extract 0 (i + 1)) (compressFrom find x (i + 1)) :=
+      compressFrom_spec find x (i + 1) (by omega)
+    have hlit' :
+        (Token.literal x[i] :: compressFrom find x (i + 1)).foldl expandStep (x.extract 0 i) = x ∧
+        ValidFrom (x.extract 0 i) (Token.literal x[i] :: compressFrom find x (i + 1)) := by
+      simp only [List.foldl_cons, ValidFrom, expandStep, Token.valid, true_and]
+      rw [extract_push_getElem x i hlt]
+      exact hlit
+    split
+    · rename_i len dist _
+      split
+      · rename_i hacc
+        obtain ⟨h1, h2, h3, h4, h5, h6, h7⟩ := accept_spec hacc
+        have hcopy := copyGo_extract x dist h3 len i h5 h6 h7
+        have hrec := compressFrom_spec find x (i + len) h6
+        simp only [List.foldl_cons, ValidFrom, expandStep, Token.valid]
+        rw [hcopy]
+        refine ⟨hrec.1, ⟨h1, h2, h3, h4, ?_⟩, hrec.2⟩
+        simp; omega
+      · exact hlit'
+    · exact hlit'
+  · rename_i hge
+    have : i = x.size := by omega
+    subst this
+    simp [ValidFrom]
+termination_by x.size - i
+decreasing_by
+  all_goals first
+    | omega
+    | (have := accept_len_pos hacc; omega)
+
+theorem expand_compressTokens (find : Finder) (x : Array UInt8) :
+    expand (compressTokens find x) = x := by
+  have h := (compressFrom_spec find x 0 (Nat.zero_le _)).1
+  simpa [expand, compressTokens] using h
+
+theorem compressTokens_valid (find : Finder) (x : Array UInt8) :
+    Valid (compressTokens find x) := by
+  have h := (compressFrom_spec find x 0 (Nat.zero_le _)).2
+  simpa [Valid, compressTokens] using h
+
+
+theorem validFrom_iff (out : Array UInt8) (ts : List Token) :
+    ValidFrom out ts ↔
+      ∀ n (h : n < ts.length), ts[n].valid ((ts.take n).foldl expandStep out).size := by
+  induction ts generalizing out with
+  | nil => simp [ValidFrom]
+  | cons t ts ih =>
+    simp only [ValidFrom, ih]
+    constructor
+    · rintro ⟨h0, hs⟩ n hn
+      cases n with
+      | zero => simpa using h0
+      | succ n => simpa using hs n (by simpa using hn)
+    · intro h
+      refine ⟨by simpa using h 0 (by simp), fun n hn => ?_⟩
+      simpa using h (n + 1) (by simpa using hn)
+
+/-- `Valid` is the prefix reading of spec §3.1: token `n` is valid against
+    the size of `expand` of the first `n` tokens. -/
+theorem valid_iff_prefix (ts : List Token) :
+    Valid ts ↔ ∀ n (h : n < ts.length), ts[n].valid (expand (ts.take n)).size :=
+  validFrom_iff #[] ts
 
 end Deflate

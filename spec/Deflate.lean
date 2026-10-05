@@ -5,6 +5,8 @@ import Deflate.Block
 import Deflate.Huffman
 import Deflate.HuffmanTable
 import Deflate.LZ77
+import Deflate.Tokens
+import Deflate.Match
 import Deflate.Decode
 import Deflate.Encode
 import Deflate.Properties
