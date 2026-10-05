@@ -15,8 +15,9 @@ These theorems are statements about **the Lean model in `spec/Deflate/`**.
 ## What is not proved
 
 - **The Rust code.** No refinement proof connects `crates/deflate-core` to
-  the Lean model. What connects them is the differential harness in
-  `oracles/`, which is test evidence over a finite corpus. It says nothing
+  the Lean model for milestones M1–M8. Following the M0 Charon/Aeneas spike
+  outcome (ADR 0003), the differential harness in `oracles/` is the primary
+  bridge, providing test evidence over a finite corpus. It says nothing
   about streams the corpus does not contain.
 - **The executable.** File I/O, argument parsing, process startup, the
   allocator, the linker and the compiler are all outside the boundary

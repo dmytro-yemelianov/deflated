@@ -756,7 +756,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: nothing from earlier tasks — the spike function is deliberately standalone.
 - Produces: the recorded decision on whether later milestones add Charon/Aeneas translation steps. **Time-boxed to one working day.** If it is not working by then, record why and move on; the plan does not depend on success.
 
-- [ ] **Step 1: Write the spike function**
+- [x] **Step 1: Write the spike function**
 
 The smallest thing that is still a real DEFLATE state transition: reading one bit and advancing. Concrete types only, no generics, no traits, no slices-of-slices — exactly the shape spec §7 demands and exactly what Aeneas's monomorphization requirement needs.
 
@@ -786,7 +786,7 @@ pub fn read_bit(r: &Reader) -> Option<(bool, u32)> {
 }
 ```
 
-- [ ] **Step 2: Install and run Charon, then Aeneas**
+- [x] **Step 2: Install and run Charon, then Aeneas**
 
 ```bash
 # Record every version. Spec §19.3: pin toolchain revisions.
@@ -804,7 +804,7 @@ aeneas -backend lean spike.llbc -dest ../generated
 
 Expected on success: `verification/generated/Spike.lean` containing a `read_bit` returning `Result (Bool × U32)`.
 
-- [ ] **Step 3: Write the refinement proof against a hand specification**
+- [x] **Step 3: Write the refinement proof against a hand specification**
 
 `verification/proofs/Spike.lean`:
 
@@ -834,14 +834,14 @@ theorem read_bit_refines (r : spike.Reader)
 end Spike
 ```
 
-- [ ] **Step 4: Close the proof, or record the failure**
+- [x] **Step 4: Close the proof, or record the failure**
 
 Work the proof until it closes. **Do not commit a `sorry`** — Global Constraints and spec §19.7 forbid it, and CI fails on it. Two outcomes are acceptable:
 
 - **Success:** the theorem closes. Delete the `sorry` line, add `#print axioms Spike.read_bit_refines` to `spec/scripts/axioms.lean`, and record in the ADR that the bridge is viable.
 - **Failure within the time box:** delete `verification/proofs/Spike.lean` entirely, keep `verification/charon/spike.rs` and whatever Charon/Aeneas output was produced, and record in the ADR exactly where it broke — which tool, which message, which language feature.
 
-- [ ] **Step 5: Verify**
+- [x] **Step 5: Verify**
 
 On success, run: `lake env lean verification/proofs/Spike.lean`
 Expected: no errors, no `sorry` warning.
@@ -849,7 +849,7 @@ Expected: no errors, no `sorry` warning.
 On either outcome, run: `! grep -rnwE 'sorry|admit' spec/ verification/proofs/ --include='*.lean' 2>/dev/null`
 Expected: exit 0.
 
-- [ ] **Step 6: Write the ADR**
+- [x] **Step 6: Write the ADR**
 
 `docs/adr/0003-rust-lean-bridge.md`:
 
@@ -896,7 +896,7 @@ needs: either "a refinement proof connects `read_bit` and nothing else", or
 differential harness is the bridge" — maked's own wording.
 ```
 
-- [ ] **Step 7: Update the boundary document and commit**
+- [x] **Step 7: Update the boundary document and commit**
 
 Rewrite the "The Rust code" bullet in `docs/verification-boundary.md` to match the spike outcome, then:
 
