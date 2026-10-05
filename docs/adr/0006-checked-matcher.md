@@ -27,7 +27,8 @@ fiddly code (hash arithmetic, chain walking) inside the proof boundary.
   `decode_compress`: `x.size <= limit -> decode (compress find x) limit = .ok x`
   for every `find` and every `x`. An adversarial finder costs compression
   ratio, never correctness.
-- The Rust `matcher::accept` mirrors `accept` line for line, and the Rust
+- The Rust `matcher::accept` checks the same conditions as the Lean `accept`:
+  Rust uses a slice comparison where Lean uses `(List.range len).all`. The Rust
   hash-chain matcher passes its best candidate through it before it becomes
   a `Token::Match`.
 

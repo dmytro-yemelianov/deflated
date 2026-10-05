@@ -112,6 +112,7 @@ fn oracle_emit_bad_token_and_deflate() {
     assert_eq!(oracle("EMIT m:3\n"), "ERR badToken\n");
     assert_eq!(oracle("EMIT l:+f\n"), "ERR badToken\n");
     assert_eq!(oracle("EMIT m:+3:1\n"), "ERR badToken\n");
+    assert_eq!(oracle("EMIT l:41\u{a0}l:42\n"), "ERR badToken\n");
     assert!(oracle("DEFLATE 616161\n").starts_with("OK "));
     assert_eq!(oracle("DEFLATE zz\n"), "ERR badHex\n");
 }

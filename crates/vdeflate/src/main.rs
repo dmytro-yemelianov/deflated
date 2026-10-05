@@ -100,7 +100,7 @@ fn oracle() -> io::Result<()> {
             (Some("EMIT"), toks) => {
                 let parsed: Option<Vec<Token>> = toks
                     .unwrap_or("")
-                    .split_whitespace()
+                    .split_ascii_whitespace()
                     .map(parse_token)
                     .collect();
                 match parsed {

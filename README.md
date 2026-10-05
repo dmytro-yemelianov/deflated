@@ -9,7 +9,7 @@ runtime dependencies, beside an executable Lean 4 model of the same semantics.
   with no `sorry`, no `admit` and no `native_decide`.
 - `oracles/` — a differential harness running `deflate-core`, the Lean model,
   `zlib` and `lean-zip` over the same corpus.
-- `fuzz/` — three persistent `cargo-fuzz` targets.
+- `fuzz/` — four persistent `cargo-fuzz` targets: `inflate`, `dynamic_header`, `differential`, `roundtrip`.
 
 **What is proved, and what is not.** The theorems are statements about the
 Lean model, not about the Rust binary. Nothing is extracted from or to Rust.
