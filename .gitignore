@@ -1,0 +1,5 @@
+/target
+/.lake
+/fuzz/target
+/fuzz/corpus
+/oracles/__pycache__

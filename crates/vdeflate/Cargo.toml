@@ -1,0 +1,15 @@
+[package]
+name = "vdeflate"
+description = "Minimal DEFLATE CLI. Outside the verification boundary."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "vdeflate"
+path = "src/main.rs"
+
+[dependencies]
+deflate-core = { path = "../deflate-core" }

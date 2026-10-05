@@ -1,0 +1,13 @@
+[package]
+name = "deflate-core"
+description = "RFC 1951 DEFLATE core: no_std, zero dependencies, no unsafe"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+
+# Spec §4, Global Constraints: this list stays empty. Forever.
+[dependencies]
+
+[dev-dependencies]

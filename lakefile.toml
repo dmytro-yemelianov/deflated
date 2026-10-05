@@ -1,0 +1,12 @@
+name = "deflate_spec"
+version = "0.1.0"
+defaultTargets = ["deflate_spec"]
+
+[[lean_lib]]
+name = "Deflate"
+srcDir = "spec"
+
+[[lean_exe]]
+name = "deflate_spec"
+srcDir = "spec"
+root = "Main"
