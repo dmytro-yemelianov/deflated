@@ -2740,7 +2740,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `BitReader`, `Error`.
 - Produces: `huffman::MAX_CODE_LEN: usize = 15`, `huffman::Completeness` (`Complete` | `AllowDegenerate`), `huffman::HuffmanTable` with `from_lengths(&[u8], Completeness) -> Result<HuffmanTable, Error>` and `decode(&self, &mut BitReader) -> Result<u16, Error>`, `huffman::fixed_litlen() -> HuffmanTable`, `huffman::fixed_dist() -> HuffmanTable`. Tasks 14, 16 consume these.
 
-- [ ] **Step 1: Write the ADR that the tests encode**
+- [x] **Step 1: Write the ADR that the tests encode**
 
 `docs/adr/0004-incomplete-huffman-codes.md`:
 
@@ -2783,7 +2783,7 @@ yields the one defined symbol or returns `InvalidCode`; it never reads
 uninitialized table entries.
 ```
 
-- [ ] **Step 2: Write the failing tests**
+- [x] **Step 2: Write the failing tests**
 
 `crates/deflate-core/tests/huffman_tests.rs`:
 
@@ -2939,12 +2939,12 @@ fn length_above_fifteen_is_rejected() {
 
 Delete the stub `canonical_assignment_matches_rfc_example` before committing; `rfc_example_roundtrips` supersedes it.
 
-- [ ] **Step 3: Run to verify they fail**
+- [x] **Step 3: Run to verify they fail**
 
 Run: `cargo test -p deflate-core --test huffman_tests`
 Expected: FAIL — `unresolved import deflate_core::huffman`.
 
-- [ ] **Step 4: Write the implementation**
+- [x] **Step 4: Write the implementation**
 
 `crates/deflate-core/src/huffman.rs`:
 
@@ -3089,12 +3089,12 @@ pub fn fixed_dist() -> HuffmanTable {
 
 Add `pub mod huffman;` to `lib.rs`.
 
-- [ ] **Step 5: Run to verify they pass**
+- [x] **Step 5: Run to verify they pass**
 
 Run: `cargo test -p deflate-core --test huffman_tests`
 Expected: PASS — 9 tests.
 
-- [ ] **Step 6: Replace the silent fallback with a checked one**
+- [x] **Step 6: Replace the silent fallback with a checked one**
 
 The `unwrap_or_else` arms above silently produce a table that decodes nothing. That is safe but hides a bug. Add a test that pins the real behavior, so the fallback can never be reached unnoticed:
 
@@ -3114,7 +3114,7 @@ fn fixed_tables_are_actually_built() {
 Run: `cargo test -p deflate-core --test huffman_tests`
 Expected: PASS — 10 tests.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 cargo clippy --workspace --all-targets -- -D warnings && cargo fmt --all --check

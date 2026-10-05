@@ -15,6 +15,7 @@ extern crate alloc;
 pub mod bitstream;
 pub mod block;
 pub mod error;
+pub mod huffman;
 pub mod inflate;
 
 pub use error::Error;
