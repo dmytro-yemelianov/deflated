@@ -13,12 +13,14 @@
 extern crate alloc;
 
 pub mod bitstream;
+pub mod bitwriter;
 pub mod block;
 pub mod deflate;
 pub mod error;
 pub mod huffman;
 pub mod inflate;
 pub mod lz77;
+pub mod tokens;
 
 pub use deflate::{MAX_STORED, deflate_stored};
 pub use error::Error;

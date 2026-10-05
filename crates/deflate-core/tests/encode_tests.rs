@@ -1,3 +1,8 @@
+use deflate_core::bitstream::BitReader;
+use deflate_core::bitwriter::BitWriter;
+use deflate_core::error::Error;
+use deflate_core::huffman::fixed_litlen;
+use deflate_core::tokens::{Token, expand};
 use deflate_core::{MAX_STORED, deflate_stored, inflate};
 
 #[test]
@@ -63,4 +68,97 @@ fn output_is_bounded_by_input_plus_framing() {
         let blocks = n.div_ceil(MAX_STORED).max(1);
         assert_eq!(s.len(), n + 5 * blocks, "n = {n}");
     }
+}
+
+fn xorshift(state: &mut u64) -> u64 {
+    *state ^= *state << 13;
+    *state ^= *state >> 7;
+    *state ^= *state << 17;
+    *state
+}
+
+#[test]
+fn write_bits_roundtrips_every_width_and_offset() {
+    let mut rng = 0x9E37_79B9_7F4A_7C15u64;
+    for n in 0..=32u32 {
+        for offset in 0..=7u32 {
+            for _ in 0..20 {
+                let v = (xorshift(&mut rng) as u32) & if n == 32 { u32::MAX } else { (1 << n) - 1 };
+                let pre = (xorshift(&mut rng) as u32) & ((1 << offset) - 1);
+                let post = xorshift(&mut rng) as u32;
+                let mut w = BitWriter::new();
+                w.write_bits(pre, offset);
+                w.write_bits(v, n);
+                w.write_bits(post, 13);
+                assert_eq!(w.bit_len(), (offset + n + 13) as usize);
+                let bytes = w.finish();
+                let mut r = BitReader::new(&bytes);
+                assert_eq!(r.read_bits(offset).unwrap(), pre);
+                assert_eq!(r.read_bits(n).unwrap(), v, "n {n} offset {offset}");
+                assert_eq!(r.read_bits(13).unwrap(), post & 0x1FFF);
+            }
+        }
+    }
+}
+
+#[test]
+fn write_bits_masks_high_bits_and_finish_pads_with_zeros() {
+    let mut w = BitWriter::new();
+    w.write_bits(0xFF, 3);
+    assert_eq!(w.bit_len(), 3);
+    assert_eq!(w.finish(), vec![0b0000_0111]);
+    assert_eq!(BitWriter::new().finish(), Vec::<u8>::new());
+}
+
+fn fixed_code(sym: u32) -> (u32, u32) {
+    match sym {
+        0..=143 => (0x30 + sym, 8),
+        144..=255 => (0x190 + sym - 144, 9),
+        256..=279 => (sym - 256, 7),
+        _ => (0xC0 + sym - 280, 8),
+    }
+}
+
+#[test]
+fn write_code_matches_fixed_table() {
+    let table = fixed_litlen();
+    for sym in 0..288u32 {
+        let (code, len) = fixed_code(sym);
+        let mut w = BitWriter::new();
+        w.write_bits(0b101, 3);
+        w.write_code(code, len);
+        assert_eq!(w.bit_len(), 3 + len as usize);
+        let bytes = w.finish();
+        let mut r = BitReader::new(&bytes);
+        assert_eq!(r.read_bits(3).unwrap(), 0b101);
+        assert_eq!(table.decode(&mut r).unwrap(), sym as u16, "sym {sym}");
+    }
+}
+
+#[test]
+fn expand_literals_and_matches() {
+    let toks = [
+        Token::Literal(b'a'),
+        Token::Literal(b'b'),
+        Token::Match { len: 4, dist: 2 },
+        Token::Match { len: 3, dist: 6 },
+    ];
+    assert_eq!(expand(&toks).unwrap(), b"ababababa");
+    assert_eq!(
+        expand(&[Token::Literal(7), Token::Match { len: 258, dist: 1 }]).unwrap(),
+        vec![7u8; 259]
+    );
+    assert_eq!(expand(&[]).unwrap(), Vec::<u8>::new());
+}
+
+#[test]
+fn expand_rejects_distance_before_start() {
+    assert_eq!(
+        expand(&[Token::Literal(1), Token::Match { len: 3, dist: 2 }]),
+        Err(Error::InvalidDistance)
+    );
+    assert_eq!(
+        expand(&[Token::Match { len: 3, dist: 1 }]),
+        Err(Error::InvalidDistance)
+    );
 }
