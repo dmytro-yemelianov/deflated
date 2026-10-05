@@ -43,3 +43,44 @@ pub fn read_stored(r: &mut BitReader, out: &mut Vec<u8>, budget: usize) -> Resul
     }
     r.read_aligned_into(out, len)
 }
+
+use crate::huffman::HuffmanTable;
+use crate::lz77::{copy_back, read_distance, read_length};
+
+/// Decode one Huffman-coded block body. Serves both fixed and dynamic
+/// blocks; they differ only in where `lit` and `dist` come from.
+/// `limit` is the absolute ceiling on `out.len()`, checked *before* each
+/// append, so a bomb never allocates past it.
+/// Mirrors `spec/Deflate/Block.lean`'s `decodeHuffBlock`.
+pub fn decode_huff_block(
+    lit: &HuffmanTable,
+    dist: &HuffmanTable,
+    r: &mut BitReader,
+    out: &mut Vec<u8>,
+    limit: usize,
+) -> Result<(), Error> {
+    loop {
+        let sym = lit.decode(r)?;
+        if sym < 256 {
+            if out.len() >= limit {
+                return Err(Error::OutputLimitExceeded);
+            }
+            out.push(sym as u8);
+        } else if sym == 256 {
+            return Ok(());
+        } else {
+            let len = read_length(sym, r)?;
+            let dsym = dist.decode(r)?;
+            let d = read_distance(dsym, r)?;
+            if out.len().saturating_add(len) > limit {
+                return Err(Error::OutputLimitExceeded);
+            }
+            copy_back(out, d, len)?;
+        }
+        // No explicit fuel: `lit.decode` consumes at least one bit on every
+        // path that returns `Ok`, and the stream is finite, so the loop
+        // terminates with `UnexpectedEof` if nothing else stops it first.
+        // `spec/Deflate/Properties.lean`'s `decodeHuffBlock_progress` is the
+        // model's statement of that argument.
+    }
+}

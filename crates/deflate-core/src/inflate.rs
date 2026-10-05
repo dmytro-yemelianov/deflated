@@ -2,8 +2,9 @@
 //! Mirrors `spec/Deflate/Decode.lean`.
 
 use crate::bitstream::BitReader;
-use crate::block::{BlockType, read_block_header, read_stored};
+use crate::block::{BlockType, decode_huff_block, read_block_header, read_stored};
 use crate::error::Error;
+use crate::huffman::{fixed_dist, fixed_litlen};
 use alloc::vec::Vec;
 
 /// Decode with no output limit. Suitable only for input you produced
@@ -19,11 +20,17 @@ pub fn inflate_with_limit(input: &[u8], limit: usize) -> Result<Vec<u8>, Error> 
     let mut out: Vec<u8> = Vec::new();
     loop {
         let header = read_block_header(&mut r)?;
-        let budget = limit - out.len();
         match header.btype {
-            BlockType::Stored => read_stored(&mut r, &mut out, budget)?,
-            // Tasks 14 and 16 replace these.
-            BlockType::Fixed | BlockType::Dynamic => return Err(Error::InvalidBlockType),
+            BlockType::Stored => {
+                let budget = limit - out.len();
+                read_stored(&mut r, &mut out, budget)?;
+            }
+            BlockType::Fixed => {
+                let lit = fixed_litlen();
+                let dst = fixed_dist();
+                decode_huff_block(&lit, &dst, &mut r, &mut out, limit)?;
+            }
+            BlockType::Dynamic => return Err(Error::InvalidBlockType), // Task 16
         }
         if header.is_final {
             return Ok(out);

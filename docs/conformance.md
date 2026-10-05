@@ -8,7 +8,7 @@ proved, and it never counts a theorem from another project.
 | --- | --- | --- | --- |
 | Bit reader (LSB-first, EOF) | yes | yes | yes |
 | Stored blocks | yes | yes | yes |
-| Fixed Huffman | no | no | no |
+| Fixed Huffman | yes | yes | yes |
 | Dynamic Huffman | no | no | no |
 | Multi-block streams | yes | yes | no |
 | Overlapping back-reference | yes | yes | yes |

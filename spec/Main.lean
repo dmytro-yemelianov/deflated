@@ -47,6 +47,9 @@ partial def decodeStored (bs : ByteArray) (limit : Nat) :
         let (out', r₂) ← readStored r₁ out
         if out'.size > limit then .error .outputLimitExceeded
         else if h.isFinal then .ok ⟨out'⟩ else loop r₂ out'
+    | .fixed =>
+        let (out', r₂) ← decodeHuffBlock fixedLitLen fixedDist r₁ out limit (8 * bs.size + 1)
+        if h.isFinal then .ok ⟨out'⟩ else loop r₂ out'
     | _ => .error .invalidBlockType
   loop ⟨bs, 0⟩ #[]
 

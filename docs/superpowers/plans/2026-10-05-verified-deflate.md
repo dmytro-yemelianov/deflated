@@ -3855,7 +3855,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `huffman::{HuffmanTable, fixed_litlen, fixed_dist}`, `lz77::{read_length, read_distance, copy_back}`, `BitReader`.
 - Produces: `block::decode_huff_block(&HuffmanTable, &HuffmanTable, &mut BitReader, &mut Vec<u8>, usize) -> Result<(), Error>` (last argument is the absolute output limit). Task 16 calls it with dynamic tables.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `crates/deflate-core/tests/fixed_tests.rs`:
 
@@ -3919,12 +3919,12 @@ PY
 
 If a stream turns out to be a dynamic block rather than a fixed one — zlib chooses per block — move that case to Task 16's tests and pick a shorter payload here. Check with `(s[0] >> 1) & 3`: 1 is fixed, 2 is dynamic.
 
-- [ ] **Step 2: Run to verify they fail**
+- [x] **Step 2: Run to verify they fail**
 
 Run: `cargo test -p deflate-core --test fixed_tests`
 Expected: FAIL — `InvalidBlockType`, from the `Fixed | Dynamic` arm Task 7 left in place.
 
-- [ ] **Step 3: Write the block body decoder**
+- [x] **Step 3: Write the block body decoder**
 
 Append to `crates/deflate-core/src/block.rs`:
 
@@ -3971,7 +3971,7 @@ pub fn decode_huff_block(
 }
 ```
 
-- [ ] **Step 4: Wire fixed blocks into `inflate`**
+- [x] **Step 4: Wire fixed blocks into `inflate`**
 
 In `crates/deflate-core/src/inflate.rs`, replace the `Fixed | Dynamic` arm:
 
@@ -3990,12 +3990,12 @@ use crate::huffman::{fixed_dist, fixed_litlen};
 
 and delete the now-unused `budget` binding for that arm, keeping it for `Stored`.
 
-- [ ] **Step 5: Run to verify they pass**
+- [x] **Step 5: Run to verify they pass**
 
 Run: `cargo test -p deflate-core --test fixed_tests`
 Expected: PASS — 5 tests.
 
-- [ ] **Step 6: Run the differential harness**
+- [x] **Step 6: Run the differential harness**
 
 Run: `make all && python3 oracles/differential.py --no-zlib`
 Expected: Rust and Lean findings = 0. The Lean model does not yet drive fixed blocks from `Main.lean` — extend `decodeStored` there to call `decodeHuffBlock fixedLitLen fixedDist` on `.fixed`, with fuel `8 * bs.size + 1`, before running this.
@@ -4003,7 +4003,7 @@ Expected: Rust and Lean findings = 0. The Lean model does not yet drive fixed bl
 Run: `python3 oracles/differential.py`
 Expected: zlib findings now cover only dynamic blocks. Record the count in the commit message.
 
-- [ ] **Step 7: Update conformance and commit**
+- [x] **Step 7: Update conformance and commit**
 
 `docs/conformance.md`: `| Fixed Huffman | yes | yes | yes |`.
 
