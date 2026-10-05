@@ -45,8 +45,44 @@ def decodeAndFormat (limit : Nat) (hx : String) : String :=
     | .ok out => s!"OK {toHex out}"
     | .error e => s!"ERR {errName e}"
 
+/-- Strict decimal: digits only, at most 65535 (the Rust oracle parses `u16`). -/
+def decU16? (s : String) : Option Nat :=
+  if s.isEmpty ∨ !s.all Char.isDigit then none else
+  let n := s.foldl (fun acc c => acc * 10 + (c.toNat - '0'.toNat)) 0
+  if n ≤ 65535 then some n else none
+
+/-- One oracle token: `l:HH` (literal byte, two hex digits) or
+    `m:LEN:DIST` (decimal). Rust: `parse_token` in `vdeflate`. -/
+def parseToken? (s : String) : Option Token :=
+  match s.splitOn ":" with
+  | ["l", h] => if h.length = 2 then (ofHex h).bind (fun b => b.data[0]?.map .literal) else none
+  | ["m", l, d] => do
+    let len ← decU16? l
+    let dist ← decU16? d
+    pure (.match len dist)
+  | _ => none
+
+/-- `EMIT` body: whitespace-separated tokens, through `emitFixed` alone. -/
+def emitAndFormat (body : String) : String :=
+  let words := (body.split Char.isWhitespace).toList.map (·.toString) |>.filter (· ≠ "")
+  match words.mapM parseToken? with
+  | none => "ERR badToken"
+  | some ts => s!"OK {toHex (emitFixed ts)}"
+
+/-- `DEFLATE` uses the trivial finder, so the model emits only literals and
+    `compress` picks between that and stored. -/
+def deflateAndFormat (hx : String) : String :=
+  match ofHex hx with
+  | none => "ERR badHex"
+  | some bs => s!"OK {toHex (compress (fun _ _ => none) bs)}"
+
 def handle (limit : Nat) (line : String) : Nat × Option String :=
-  match (line.trimAscii.toString.splitOn " ") with
+  let t := line.trimAscii.toString
+  -- EMIT takes a token list, so split off only the command word (Rust: `splitn(2, ' ')`).
+  match t.splitOn " " with
+  | "EMIT" :: _ => (limit, some (emitAndFormat (t.drop 4).toString))
+  | _ =>
+  match (t.splitOn " ") with
   | ["LIMIT", n] => (n.toNat?.getD limit, none)
   | ["DECODE"] => (limit, some (decodeAndFormat limit ""))
   | ["DECODE", hx] => (limit, some (decodeAndFormat limit hx))
@@ -55,6 +91,8 @@ def handle (limit : Nat) (line : String) : Nat × Option String :=
     match ofHex hx with
     | none => (limit, some "ERR badHex")
     | some bs => (limit, some s!"OK {toHex (Deflate.encodeStored bs)}")
+  | ["DEFLATE"] => (limit, some (deflateAndFormat ""))
+  | ["DEFLATE", hx] => (limit, some (deflateAndFormat hx))
   | _ => (limit, none)
 
 def main (_args : List String) : IO Unit := do

@@ -13,6 +13,7 @@ import Deflate.BitWriter
 import Deflate.Decode
 import Deflate.Encode
 import Deflate.EncodeFixed
+import Deflate.Compress
 
 namespace Deflate
 open BitReader
@@ -2265,5 +2266,20 @@ example : (emitFixed [.literal 200, .literal 255, .literal 0, .match 227 24577,
   decide +kernel
 
 end EmitFixedProps
+
+/-! ### Model compressor (spec §3.6) -/
+
+/-- The headline round trip: whichever encoding `compress` keeps, the
+    decoder returns the input, for every finder. -/
+theorem decode_compress (find : Finder) (x : ByteArray) (limit : Nat) (h : x.size ≤ limit) :
+    decode (compress find x) limit = .ok x := by
+  unfold compress
+  dsimp only
+  split
+  · have he := expand_compressTokens find x.data
+    have hf := decode_emitFixed (compressTokens find x.data) limit
+      (compressTokens_valid find x.data) (by rw [he]; exact h)
+    rw [hf, he]
+  · exact decode_encodeStored x limit h
 
 end Deflate

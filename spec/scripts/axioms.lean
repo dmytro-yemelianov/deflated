@@ -56,3 +56,4 @@ open Deflate
 #print axioms Deflate.lengthSym_reads
 #print axioms Deflate.distSym_reads
 #print axioms Deflate.decode_emitFixed
+#print axioms Deflate.decode_compress

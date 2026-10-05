@@ -41,6 +41,7 @@ As of Milestone M5 (Task 18), the following headline theorems in `spec/Deflate/P
 - **P5 (Dynamic Huffman tables):** `clOrder_is_a_permutation`, `readDynamicCodes_valid`, `readDynamicCodes_pos`.
 - **P6 & P7 (LZ77 back-references):** `copyBack_size`, `copyBack_overlap`, `copyBack_rejects`, `readLength_range`, `readDistance_range`.
 - **P10 & P11 (Encoder validity and round trip):** `decode_encodeStored` (every input round-trips through the stored encoder, multi-block inputs over 65535 bytes included: `x.size ≤ limit → decode (encodeStored x) limit = .ok x`), with `encodeStored_empty` and `encodeStored_valid` as corollaries for empty input.
+- **P11 (Compressed encoder, M7a):** `decode_compress` (the model compressor round-trips every input for every finder: `x.size ≤ limit → decode (compress find x) limit = .ok x`), resting on `decode_emitFixed` (a valid token list emitted as one fixed-Huffman block decodes to its expansion), `expand_compressTokens` and `compressTokens_valid` (the matcher re-checks every finder candidate, so tokenization is lossless and valid even for an adversarial finder).
 - **P12 (Determinism & output limits):** `decode_deterministic`, `decode_within_limit`.
 
 ## Explicit verification gaps
@@ -50,4 +51,4 @@ As of Milestone M5 (Task 18), the following headline theorems in `spec/Deflate/P
 
 ## Status
 
-Milestones M0–M6, M8 complete (v1 milestone reached). Decoder, stored encoder, Lean formal model with 116 kernel-checked theorems, 4-way differential harness (20,197 streams, 0 findings), fuzz targets, size reports, and CLI all complete and passing CI gates.
+Milestones M0–M6, M8 complete (v1 milestone reached). Decoder, stored encoder, Lean formal model with 142 kernel-checked theorems, 4-way differential harness (20,197 streams, 0 findings), fuzz targets, size reports, and CLI all complete and passing CI gates.
