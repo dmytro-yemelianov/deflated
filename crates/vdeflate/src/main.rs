@@ -5,7 +5,7 @@
 //! adds the user-facing CLI.
 
 use deflate_core::bitwriter::BitWriter;
-use deflate_core::encode_dynamic::{emit_dynamic_block, lengths_for};
+use deflate_core::encode_dynamic::{BLOCK_TOKENS, emit_dynamic_block, lengths_for};
 use deflate_core::encode_fixed::{emit_fixed, emit_fixed_block};
 use deflate_core::huffman_build::{UsedSymbols, valid_lengths};
 use deflate_core::tokens::Token;
@@ -129,13 +129,31 @@ fn lengths_reply(toks: &str) -> String {
     }
 }
 
+/// `EMITBLOCKS <tok>*`: fixed blocks only (lengths forced to `None`), chunks
+/// of `BLOCK_TOKENS`, the last (or only, possibly empty) chunk final.
+fn emit_blocks_fixed_reply(toks: &str) -> String {
+    let parsed: Option<Vec<Token>> = toks.split_ascii_whitespace().map(parse_token).collect();
+    let Some(ts) = parsed else {
+        return "ERR badToken".to_string();
+    };
+    let mut w = BitWriter::new();
+    let mut chunks = ts.chunks(BLOCK_TOKENS).peekable();
+    if chunks.peek().is_none() {
+        emit_fixed_block(&mut w, true, std::iter::empty());
+    }
+    while let Some(c) = chunks.next() {
+        emit_fixed_block(&mut w, chunks.peek().is_none(), c.iter().copied());
+    }
+    format!("OK {}", to_hex(&w.finish()))
+}
+
 fn oracle() -> io::Result<()> {
     let stdin = io::stdin();
     let mut stdout = io::stdout().lock();
     let mut limit: usize = 1 << 26;
     for line in stdin.lock().lines() {
         let line = line?;
-        let mut parts = line.trim().splitn(2, ' ');
+        let mut parts = line.trim_ascii().splitn(2, ' ');
         match (parts.next(), parts.next()) {
             (Some("LIMIT"), Some(n)) => limit = n.parse().unwrap_or(limit),
             (Some("DECODE"), hx) => match from_hex(hx.unwrap_or("")) {
@@ -168,6 +186,9 @@ fn oracle() -> io::Result<()> {
                 }
             }
             (Some("EMITDYN"), args) => writeln!(stdout, "{}", emit_dyn_reply(args.unwrap_or("")))?,
+            (Some("EMITBLOCKS"), toks) => {
+                writeln!(stdout, "{}", emit_blocks_fixed_reply(toks.unwrap_or("")))?
+            }
             (Some("LENGTHS"), toks) => writeln!(stdout, "{}", lengths_reply(toks.unwrap_or("")))?,
             _ => {}
         }

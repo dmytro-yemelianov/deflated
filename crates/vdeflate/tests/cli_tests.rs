@@ -179,3 +179,35 @@ fn oracle_emitdyn_and_lengths_errors() {
     assert_eq!(oracle("LENGTHS x:1\n"), "ERR badToken\n");
     assert_eq!(oracle("LENGTHS l:+f\n"), "ERR badToken\n");
 }
+
+#[test]
+fn oracle_emit_is_ascii_whitespace_only() {
+    // Interior and edge Unicode whitespace are not separators: Rust and Lean agree.
+    for cmd in ["EMIT", "EMITBLOCKS"] {
+        assert_eq!(oracle(&format!("{cmd} l:41\u{a0}l:42\n")), "ERR badToken\n");
+        assert_eq!(
+            oracle(&format!("{cmd} l:41\u{2003}l:42\n")),
+            "ERR badToken\n"
+        );
+        assert_eq!(
+            oracle(&format!("{cmd} l:41\tl:42\n")),
+            oracle(&format!("{cmd} l:41 l:42\n"))
+        );
+    }
+    assert_eq!(oracle("EMIT l:41\u{a0}\n"), "ERR badToken\n");
+}
+
+#[test]
+fn oracle_emitblocks_matches_emit_when_one_block() {
+    assert_eq!(
+        oracle("EMITBLOCKS l:41 m:3:1\n"),
+        oracle("EMIT l:41 m:3:1\n")
+    );
+    assert_eq!(oracle("EMITBLOCKS\n"), oracle("EMIT\n"));
+    assert_eq!(oracle("EMITBLOCKS l:4\n"), "ERR badToken\n");
+    // Two blocks: the stream still decodes.
+    let toks = vec!["l:61"; 16385].join(" ");
+    let (ok, back, _) = run(&["-d"], &unhex(&oracle(&format!("EMITBLOCKS {toks}\n"))));
+    assert!(ok);
+    assert_eq!(back, vec![b'a'; 16385]);
+}

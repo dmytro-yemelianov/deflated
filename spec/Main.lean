@@ -69,6 +69,14 @@ def emitAndFormat (body : String) : String :=
   | none => "ERR badToken"
   | some ts => s!"OK {toHex (emitFixed ts)}"
 
+/-- `EMITBLOCKS` body: tokens through `emitBlocks` with no lengths (fixed
+    blocks only, chunks of 16384). Rust: `emit_blocks_fixed_reply`. -/
+def emitBlocksAndFormat (body : String) : String :=
+  let words := (body.split Char.isWhitespace).toList.map (·.toString) |>.filter (· ≠ "")
+  match words.mapM parseToken? with
+  | none => "ERR badToken"
+  | some ts => s!"OK {toHex (emitBlocks (fun _ => none) ts)}"
+
 /-- `EMITDYN` lengths: one hex digit per length, `lo`–`hi` digits.
     Rust: `parse_lengths` in `vdeflate`. -/
 def parseLengths? (s : String) (lo hi : Nat) : Option (Array Nat) :=
@@ -110,6 +118,7 @@ def handle (limit : Nat) (line : String) : Nat × Option String :=
   -- EMIT takes a token list, so split off only the command word (Rust: `splitn(2, ' ')`).
   match t.splitOn " " with
   | "EMIT" :: _ => (limit, some (emitAndFormat (t.drop 4).toString))
+  | "EMITBLOCKS" :: _ => (limit, some (emitBlocksAndFormat (t.drop 10).toString))
   | "EMITDYN" :: _ => (limit, some (emitDynAndFormat (t.drop 7).toString))
   | _ =>
   match (t.splitOn " ") with

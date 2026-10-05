@@ -225,6 +225,169 @@ def emit_phase(payloads, rust_emit_hook=None, count=300):
     return findings, len(reqs)
 
 
+def lengths_hex(lens):
+    return "".join(f"{x:x}" for x in lens)
+
+
+def canonical_random_lengths(rng, n, max_len, used):
+    """Complete length set over n symbols with every index in `used` nonzero,
+    built by repeatedly splitting a leaf (Kraft sum stays 1)."""
+    ls = [1, 1]
+    while len(ls) < max(2, len(used)):
+        cand = [i for i, l in enumerate(ls) if l < max_len]
+        i = rng.choice(cand)
+        ls[i] += 1
+        ls.append(ls[i])
+    for _ in range(rng.randrange(0, 20)):
+        cand = [i for i, l in enumerate(ls) if l < max_len]
+        if not cand or len(ls) >= n:
+            break
+        i = rng.choice(cand)
+        ls[i] += 1
+        ls.append(ls[i])
+    ls.sort()
+    pos = list(used) + [i for i in range(n) if i not in used]
+    rng.shuffle(pos[len(used):])
+    out = [0] * n
+    # shorter codes to a random subset; used symbols first
+    for sym, l in zip(pos, rng.sample(ls, len(ls))):
+        out[sym] = l
+    return out
+
+
+def emitdyn_phase(payloads, rust_hook=None, count=200):
+    """EMITDYN: Rust == Lean byte for byte on Rust-LENGTHS-derived lengths (Lean has no LENGTHS), random
+    valid length sets, and invalid ones (both must fall back identically).
+    Every OK stream must also decode under zlib to the tokens' expansion."""
+    import random
+    rng = random.Random(23)
+    lists = [greedy_tokens(p) for p in payloads] + [random_tokens(rng) for _ in range(count)]
+    # 1. lengths from LENGTHS (Rust's) for each list
+    lreq = ["LENGTHS " + " ".join(t) for t in lists]
+    raw = _raw_oracle([str(RUST), "--oracle"], lreq)
+    findings = []
+    reqs, toks_of = [], []
+    for t, line in zip(lists, raw):
+        args = line.partition(" ")[2]
+        if args and args != "none":
+            reqs.append(f"EMITDYN {args} " + " ".join(t))
+            toks_of.append(t)
+    # 2. random valid length sets for random token lists
+    for _ in range(count):
+        t = random_tokens(rng, 40)
+        used_lit, used_dist = {256}, set()
+        for x in t:
+            f = x.split(":")
+            if f[0] == "l":
+                used_lit.add(int(f[1], 16))
+            else:
+                used_lit.add(_len_sym(int(f[1])))
+                used_dist.add(_dist_sym(int(f[2])))
+        nlit = rng.randrange(max(used_lit) + 1, 287) if max(used_lit) + 1 < 287 else 286
+        nlit = max(nlit, 257)
+        ndist = rng.randrange(max([1] + [d + 1 for d in used_dist]), 31)
+        lit = canonical_random_lengths(rng, nlit, 15, used_lit)
+        dist = canonical_random_lengths(rng, ndist, 15, used_dist) if used_dist else \
+            ([1] + [0] * (ndist - 1) if rng.random() < 0.5 else [1, 1][:max(ndist, 1)] + [0] * max(0, ndist - 2))
+        cl = canonical_random_lengths(rng, 19, 7, set(range(19)) if rng.random() < 0.6 else {0, 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18})
+        reqs.append(f"EMITDYN {lengths_hex(lit)} {lengths_hex(dist)} {lengths_hex(cl)} " + " ".join(t))
+        toks_of.append(t)
+        # 3. invalid variants: incomplete lit, oversubscribed cl, over-long lit
+        bad = list(lit)
+        bad[rng.randrange(nlit)] = 0
+        reqs.append(f"EMITDYN {lengths_hex(bad)} {lengths_hex(dist)} {lengths_hex(cl)} " + " ".join(t))
+        toks_of.append(t)
+        reqs.append(f"EMITDYN {lengths_hex(lit)} {lengths_hex(dist)} {'7' * 19} " + " ".join(t))
+        toks_of.append(t)
+        reqs.append(f"EMITDYN {'f' * nlit} {lengths_hex(dist)} {lengths_hex(cl)} " + " ".join(t))
+        toks_of.append(t)
+    rust = run_oracle([str(RUST), "--oracle"], requests=reqs)
+    if rust_hook:
+        rust = rust_hook(rust)
+    lean = run_oracle([str(LEAN)], requests=reqs)
+    for r_, a, b, t in zip(reqs, rust, lean, toks_of):
+        if a.key() != b.key():
+            findings.append({"parties": ["rust-emitdyn", "lean-emitdyn"], "request": r_[:120],
+                             "outcomes": {"rust": repr(a), "lean": repr(b)}})
+        elif a.ok:
+            try:
+                got = zlib.decompress(a.data, -15)
+            except zlib.error as e:
+                got = repr(e).encode()
+            if got != expand(t):
+                findings.append({"parties": ["emitdyn->zlib"], "request": r_[:120],
+                                 "outcomes": {"rust": repr(a)}})
+    return findings, len(reqs)
+
+
+def _raw_oracle(cmd, requests):
+    p = subprocess.run(cmd, input="\n".join([f"LIMIT {LIMIT}"] + requests) + "\n",
+                       capture_output=True, text=True, timeout=600)
+    if p.returncode != 0:
+        raise SystemExit(f"oracle {cmd!r} exited {p.returncode}: {p.stderr[:400]}")
+    out = [ln for ln in p.stdout.splitlines() if ln]
+    if len(out) != len(requests):
+        raise SystemExit(f"oracle {cmd!r} gave {len(out)} answers for {len(requests)} requests")
+    return out
+
+
+_LEN_BASE = [3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31, 35, 43, 51, 59, 67, 83,
+             99, 115, 131, 163, 195, 227, 258]
+_DIST_BASE = [1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193, 257, 385, 513, 769,
+              1025, 1537, 2049, 3073, 4097, 6145, 8193, 12289, 16385, 24577]
+
+
+def _len_sym(n):
+    if n == 258:
+        return 285
+    return 257 + max(i for i, b in enumerate(_LEN_BASE[:28]) if b <= n)
+
+
+def _dist_sym(d):
+    return max(i for i, b in enumerate(_DIST_BASE) if b <= d)
+
+
+def emitblocks_phase(rust_hook=None):
+    """EMITBLOCKS (fixed blocks, chunks of 16384): Rust == Lean byte for byte
+    around the chunk boundary, and zlib expands to the tokens' expansion."""
+    import random
+    rng = random.Random(41)
+    reqs, lists = [], []
+    for n in (0, 16383, 16384, 16385, 40000):
+        t = random_tokens(rng, 1)
+        t = []
+        size = 0
+        while len(t) < n:
+            if size and rng.random() < 0.3:
+                l = rng.randrange(3, 259)
+                d = rng.randrange(1, min(size, 32768) + 1)
+                t.append(f"m:{l}:{d}")
+                size += l
+            else:
+                t.append(f"l:{rng.randrange(256):02x}")
+                size += 1
+        reqs.append("EMITBLOCKS " + " ".join(t))
+        lists.append(t)
+    rust = run_oracle([str(RUST), "--oracle"], requests=reqs)
+    if rust_hook:
+        rust = rust_hook(rust)
+    lean = run_oracle([str(LEAN)], requests=reqs)
+    findings = []
+    for r_, a, b, t in zip(reqs, rust, lean, lists):
+        if a.key() != b.key():
+            findings.append({"parties": ["rust-emitblocks", "lean-emitblocks"], "request": r_[:60],
+                             "outcomes": {"rust": repr(a), "lean": repr(b)}})
+        elif a.ok:
+            try:
+                got = zlib.decompress(a.data, -15)
+            except zlib.error as e:
+                got = repr(e).encode()
+            if got != expand(t):
+                findings.append({"parties": ["emitblocks->zlib"], "request": r_[:60],
+                                 "outcomes": {"rust": repr(a)}})
+    return findings, len(reqs)
+
+
 def deflate_phase(payloads):
     """Rust DEFLATE must decode to the payload under Rust, Lean, zlib and lean-zip."""
     rust_enc = run_oracle([str(RUST), "--oracle"],
@@ -294,7 +457,13 @@ def self_test() -> int:
         assert f, "self-test: a corrupted Rust EMIT was not reported"
         f, _ = emit_phase([b"hello hello hello"], count=0)
         assert not f, f"self-test: clean EMIT reported a finding: {f}"
-        print("self-test: 6/6")
+        f, _ = emitdyn_phase([b"hello hello hello"], rust_hook=flip_bit, count=3)
+        assert f, "self-test: a corrupted Rust EMITDYN was not reported"
+        f, _ = emitdyn_phase([b"hello hello hello"], count=3)
+        assert not f, f"self-test: clean EMITDYN reported a finding: {f}"
+        f, _ = emitblocks_phase(rust_hook=flip_bit)
+        assert f, "self-test: a corrupted Rust EMITBLOCKS was not reported"
+        print("self-test: 9/9")
     else:
         print("self-test: 4/4 (emit checks skipped, binaries missing)")
     return 0
@@ -360,9 +529,14 @@ def main() -> int:
 
     findings.extend(encode_phase(PAYLOADS))
     ef, n_emit = emit_phase(PAYLOADS)
+    dyf, n_dyn = emitdyn_phase(PAYLOADS)
+    bf, n_blk = emitblocks_phase()
     df, n_defl = deflate_phase(PAYLOADS)
+    findings.extend(dyf)
+    findings.extend(bf)
     findings.extend(ef)
     findings.extend(df)
+    print(f"emitdyn: {n_dyn} requests, {len(dyf)} findings; emitblocks: {n_blk} requests, {len(bf)} findings")
     print(f"emit: {n_emit} requests, {len(ef)} findings; deflate: {n_defl} payloads, {len(df)} findings")
 
     report = {"streams": len(streams), "parties": sorted(results), "findings": findings}
