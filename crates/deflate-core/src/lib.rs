@@ -21,6 +21,7 @@ pub mod error;
 pub mod huffman;
 pub mod inflate;
 pub mod lz77;
+pub mod matcher;
 pub mod tokens;
 
 pub use deflate::{MAX_STORED, deflate_stored};

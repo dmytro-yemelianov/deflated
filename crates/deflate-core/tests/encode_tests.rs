@@ -225,3 +225,87 @@ fn emit_fixed_match_bounds() {
         Token::Match { len: 100, dist: 2 },
     ]);
 }
+
+mod matcher_tests {
+    use deflate_core::matcher::{accept, tokens};
+    use deflate_core::tokens::{Token, expand};
+
+    fn check(x: &[u8]) -> Vec<Token> {
+        let ts: Vec<Token> = tokens(x).collect();
+        assert_eq!(expand(&ts).unwrap(), x);
+        let mut i = 0;
+        for t in &ts {
+            match *t {
+                Token::Literal(_) => i += 1,
+                Token::Match { len, dist } => {
+                    assert!(accept(x, i, len.into(), dist.into()), "at {i}");
+                    i += usize::from(len);
+                }
+            }
+        }
+        assert_eq!(i, x.len());
+        ts
+    }
+
+    #[test]
+    fn small_inputs() {
+        for n in 0..=3 {
+            check(&b"aaa"[..n]);
+        }
+        check(b"abcabc");
+    }
+
+    #[test]
+    fn random_64k() {
+        let mut s = 0x1234_5678u32;
+        let x: Vec<u8> = (0..65536)
+            .map(|_| {
+                s = s.wrapping_mul(1664525).wrapping_add(1013904223);
+                (s >> 24) as u8
+            })
+            .collect();
+        check(&x);
+    }
+
+    #[test]
+    fn zeros_1mib_is_fast_and_long_matches() {
+        let x = vec![0u8; 1 << 20];
+        let t = std::time::Instant::now();
+        let ts = check(&x);
+        assert!(t.elapsed().as_secs() < 1);
+        assert!(ts.contains(&Token::Match { len: 258, dist: 1 }));
+    }
+
+    #[test]
+    fn repeats_and_text() {
+        let abc: Vec<u8> = b"abc".iter().cycle().take(5000).copied().collect();
+        check(&abc);
+        let text = b"the quick brown fox jumps over the lazy dog. ".repeat(200);
+        let ts = check(&text);
+        assert!(ts.len() < text.len() / 5);
+    }
+
+    #[test]
+    fn far_distance() {
+        let mut x = b"xyzxyz!".to_vec();
+        x.extend(std::iter::repeat_n(7u8, 32768 - 7));
+        x.extend_from_slice(b"xyzxyz!");
+        check(&x);
+    }
+
+    #[test]
+    fn accept_rejects_each_bound() {
+        let x = b"abcabcabcabc";
+        assert!(accept(x, 3, 9, 3));
+        assert!(!accept(x, 3, 2, 3)); // len < 3
+        assert!(!accept(x, 3, 259, 3)); // len > 258
+        assert!(!accept(x, 3, 3, 0)); // dist 0
+        assert!(!accept(x, 3, 3, 4)); // dist > i
+        assert!(!accept(x, 3, 10, 3)); // runs past end
+        assert!(!accept(x, 4, 3, 2)); // mismatch
+        let big = vec![0u8; 40000];
+        assert!(accept(&big, 32768, 258, 32768));
+        assert!(!accept(&big, 32769, 258, 32769)); // dist > 32768
+        assert!(!accept(x, usize::MAX, 3, 1)); // overflow
+    }
+}
