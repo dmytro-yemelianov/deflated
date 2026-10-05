@@ -47,17 +47,17 @@ fn put_litlen(w: &mut BitWriter, sym: u16) {
     }
 }
 
-/// Emit one final fixed-Huffman block (Lean `emitFixed`).
-pub fn emit_fixed<I: IntoIterator<Item = Token>>(tokens: I) -> Vec<u8> {
-    let mut w = BitWriter::new();
-    w.write_bits(1, 1);
+/// Emit one fixed-Huffman block into `w` with the given BFINAL bit. Does not
+/// pad, so blocks can share a writer.
+pub fn emit_fixed_block<I: IntoIterator<Item = Token>>(w: &mut BitWriter, final_: bool, tokens: I) {
+    w.write_bits(u32::from(final_), 1);
     w.write_bits(1, 2);
     for t in tokens {
         match t {
-            Token::Literal(b) => put_litlen(&mut w, u16::from(b)),
+            Token::Literal(b) => put_litlen(w, u16::from(b)),
             Token::Match { len, dist } => {
                 let (ls, le, ln) = length_sym(len);
-                put_litlen(&mut w, ls);
+                put_litlen(w, ls);
                 w.write_bits(le, ln);
                 let (ds, de, dn) = dist_sym(dist);
                 w.write_code(u32::from(ds), 5);
@@ -65,6 +65,12 @@ pub fn emit_fixed<I: IntoIterator<Item = Token>>(tokens: I) -> Vec<u8> {
             }
         }
     }
-    put_litlen(&mut w, 256);
+    put_litlen(w, 256);
+}
+
+/// Emit one final fixed-Huffman block (Lean `emitFixed`).
+pub fn emit_fixed<I: IntoIterator<Item = Token>>(tokens: I) -> Vec<u8> {
+    let mut w = BitWriter::new();
+    emit_fixed_block(&mut w, true, tokens);
     w.finish()
 }
