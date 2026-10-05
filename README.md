@@ -1,0 +1,38 @@
+# verified-deflate
+
+A raw DEFLATE (RFC 1951) decoder and stored-block encoder in Rust, with zero
+runtime dependencies, beside an executable Lean 4 model of the same semantics.
+
+- `crates/deflate-core/` — the decoder and encoder. `no_std`, no runtime
+  dependencies, `#![forbid(unsafe_code)]`.
+- `spec/Deflate/` — the Lean 4 model and 64 theorems about it, kernel-checked,
+  with no `sorry`, no `admit` and no `native_decide`.
+- `oracles/` — a differential harness running `deflate-core`, the Lean model,
+  `zlib` and `lean-zip` over the same corpus.
+- `fuzz/` — three persistent `cargo-fuzz` targets.
+
+**What is proved, and what is not.** The theorems are statements about the
+Lean model, not about the Rust binary. Nothing is extracted from or to Rust.
+What connects them is the differential harness, which is test evidence over a
+finite corpus. `vdeflate` is never "formally verified". Read
+[docs/verification-boundary.md](docs/verification-boundary.md) before quoting
+any correctness claim, and [docs/conformance.md](docs/conformance.md) for
+feature-by-feature coverage.
+
+## Build
+
+    make          # cargo build --release + lake build
+    make test     # cargo test, Lean gate, differential harness
+    make fuzz     # 60s per fuzz target
+    make size     # reproducible binary-size measurement
+
+Needs Rust 1.88 (edition 2024), elan with Lean v4.30.0, and Python 3.
+
+## Known gaps
+
+- The encoder emits stored blocks only, so output is slightly larger than
+  input. LZ77 and Huffman encoding are a separate plan (spec §17 M7).
+- No gzip (RFC 1952) or ZIP framing (spec §17 M9, M10).
+- No refinement proof connects the Lean model and the Rust code. ADR 0003
+  records the Charon/Aeneas spike result.
+- Explicit verification gaps in the Lean model: P8 fuel non-exhaustion and multi-chunk/symbolic encoder round-trip induction are recorded in [docs/verification-boundary.md](docs/verification-boundary.md).

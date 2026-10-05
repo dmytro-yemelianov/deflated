@@ -49,4 +49,4 @@ As of Milestone M5 (Task 18), the following headline theorems in `spec/Deflate/P
 
 ## Status
 
-Milestone M6 in progress. Lean stored encoder and P10/P11 theorems complete; Rust stored encoder and round-trip verification next.
+Milestones M0–M6, M8 complete (v1 milestone reached). Decoder, stored encoder, Lean formal model with 64 kernel-checked theorems, 4-way differential harness (20,197 streams, 0 findings), fuzz targets, size reports, and CLI all complete and passing CI gates.

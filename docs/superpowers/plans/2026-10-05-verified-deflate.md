@@ -5957,7 +5957,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: the `vdeflate` binary.
 - Produces: `docs/size-report.md` and `scripts/reports/size.json`, satisfying spec §18.12.
 
-- [ ] **Step 1: Write the failing check**
+- [x] **Step 1: Write the failing check**
 
 `scripts/size_report.sh` must produce a JSON file with every field spec §15 asks for, and `docs/size-report.md` must contain no number that is not in that JSON. Write the check first:
 
@@ -5984,7 +5984,7 @@ chmod +x scripts/check_size_report.sh
 Run: `bash scripts/check_size_report.sh`
 Expected: FAIL — `missing scripts/reports/size.json`.
 
-- [ ] **Step 2: Add a size profile as an experiment, not an assumption**
+- [x] **Step 2: Add a size profile as an experiment, not an assumption**
 
 In the workspace `Cargo.toml`:
 
@@ -6003,7 +6003,7 @@ panic = "abort"
 strip = "symbols"
 ```
 
-- [ ] **Step 3: Write the measurement script**
+- [x] **Step 3: Write the measurement script**
 
 `scripts/size_report.sh`:
 
@@ -6053,7 +6053,7 @@ chmod +x scripts/size_report.sh
 bash scripts/size_report.sh
 ```
 
-- [ ] **Step 4: Measure peak memory and stack separately**
+- [x] **Step 4: Measure peak memory and stack separately**
 
 Spec §15 asks for maximum working memory and stack requirements as separate tracked quantities. Run:
 
@@ -6067,7 +6067,7 @@ grep -i 'maximum resident' /tmp/mem.txt
 
 Append `peak_rss_bytes` and the input size that produced it to `scripts/reports/size.json` by hand or by extending the script. A measured peak on a named input is a fact; a peak with no input named is not.
 
-- [ ] **Step 5: Write the report**
+- [x] **Step 5: Write the report**
 
 `docs/size-report.md`:
 
@@ -6093,7 +6093,7 @@ No byte target was set before measuring (spec §17 M8).
 ## Results
 
 | Profile | Total file | `.text` | read-only data | initialized data | BSS |
-| --- | ---: | ---: | ---: | ---: | ---: |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | `release` | `<n>` | `<n>` | `<n>` | `<n>` | `<n>` |
 | `min` | `<n>` | `<n>` | `<n>` | `<n>` | `<n>` |
 
@@ -6124,7 +6124,7 @@ Fill every `<n>` from the JSON, then:
 Run: `bash scripts/check_size_report.sh`
 Expected: PASS, exit 0.
 
-- [ ] **Step 6: Write `README.md` and `docs/architecture.md`**
+- [x] **Step 6: Write `README.md` and `docs/architecture.md`**
 
 `README.md` leads with the claim boundary, the way maked's does:
 
@@ -6171,14 +6171,14 @@ Needs Rust 1.88 (edition 2024), elan with Lean v4.30.0, and Python 3.
 
 `docs/architecture.md` describes the module pipeline, the Lean/Rust mirroring, and the oracle protocol. Keep it to what a new contributor needs to find their way; the proofs document themselves.
 
-- [ ] **Step 7: Final acceptance pass against spec §18**
+- [x] **Step 7: Final acceptance pass against spec §18**
 
 Walk the twelve v1 acceptance criteria and record the evidence for each in `docs/conformance.md` under a new "v1 acceptance" heading. Any criterion without evidence is a gap to fix now or to state plainly.
 
 Run: `make all && make test && make fuzz && make size && bash scripts/check_size_report.sh`
 Expected: every command exits 0.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add scripts/ docs/ README.md Cargo.toml

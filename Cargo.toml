@@ -11,3 +11,13 @@ authors = ["Yemelianov Dmytro"]
 
 [profile.release]
 opt-level = 3
+
+# Spec §15 calls this "a size-oriented profile as an experiment, not an
+# assumption". Task 24 measures it against `release` and records both.
+[profile.min]
+inherits = "release"
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = "symbols"
