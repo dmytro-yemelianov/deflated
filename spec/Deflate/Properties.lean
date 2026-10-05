@@ -1397,44 +1397,6 @@ theorem decode_within_limit {bs : ByteArray} {limit : Nat} {o : ByteArray}
 
 
 
-/-! ### P10, P11 — Encoder validity and round trip -/
-
-private def enc0 : ByteArray := encodeStored ⟨#[]⟩
-
-private theorem readStored_empty_block :
-    readStored ⟨enc0, 3⟩ #[] = .ok (#[], { bytes := enc0, pos := 40 }) := by
-  unfold readStored
-  have h_align : BitReader.alignToByte ⟨enc0, 3⟩ = ⟨enc0, 8⟩ := by rfl
-  rw [h_align]
-  dsimp only
-  have h_rb1 : BitReader.readBits ⟨enc0, 8⟩ 16 = some (0, { bytes := enc0, pos := 24 }) := by rfl
-  rw [h_rb1]
-  dsimp only
-  have h_rb2 : BitReader.readBits ⟨enc0, 24⟩ 16 = some (65535, { bytes := enc0, pos := 40 }) := by rfl
-  rw [h_rb2]
-  dsimp only
-  rfl
-
-/-- Empty input produces a valid stream: one final stored block with LEN = 0 that
-    the model's own decoder decodes back to the empty array. -/
-theorem encodeStored_empty (limit : Nat) : decode (encodeStored ⟨#[]⟩) limit = .ok ⟨#[]⟩ := by
-  unfold decode decodeFuel
-  change decodeFuelLoop enc0 limit ⟨enc0, 0⟩ #[] (8 * enc0.size + 1) = Except.ok ⟨#[]⟩
-  have henc_size : enc0.size = 5 := by rfl
-  rw [henc_size]
-  change decodeFuelLoop enc0 limit ⟨enc0, 0⟩ #[] (40 + 1) = Except.ok ⟨#[]⟩
-  rw [decodeFuelLoop.eq_2]
-  have h_rh : readHeader ⟨enc0, 0⟩ = .ok (⟨true, .stored⟩, ⟨enc0, 3⟩) := by rfl
-  rw [h_rh]
-  dsimp only [bind, Except.bind, decodeBlockBody]
-  rw [readStored_empty_block]
-  dsimp only
-  rfl
-
-/-- P10, stated on its own: encoding is a stream the decoder accepts. -/
-theorem encodeStored_valid : (decode (encodeStored ⟨#[]⟩) 0).isOk = true := by
-  rw [encodeStored_empty 0]; rfl
-
 /-! ### M7a — Tokens and the matcher (spec §3.1–3.2)
 
   The matcher re-checks every finder candidate, so both headline theorems
@@ -1727,5 +1689,216 @@ theorem decodeSym_writeCode {c : Code} {w : BitWriter} {code len s : Nat} {r' : 
 example : (BitWriter.empty.writeBits 1 1 |>.writeBits 1 2 |>.writeCode 0x30 8).toBytes.data = #[99, 0] := by decide +kernel
 
 end BitWriterProps
+
+/-! ### P10, P11 — Encoder validity and round trip -/
+
+/-- A byte of a stream laid out as `pre ++ mid ++ post`, read at offset `i`
+    into `mid`. -/
+theorem byteAt_mid {bs : ByteArray} {pre mid post : Array UInt8}
+    (h : bs.data = pre ++ mid ++ post) (i : Nat) (hi : i < mid.size) :
+    byteAt bs (pre.size + i) = mid[i] := by
+  have hs : pre.size + i < bs.size := by
+    simp only [ByteArray.size, h, Array.size_append]; omega
+  unfold byteAt; rw [dif_pos hs]
+  simp only [ByteArray.getElem_eq_getElem_data]
+  have : bs.data[pre.size + i] = (pre ++ mid ++ post)[pre.size + i]'(by rw [← h]; exact hs) := by
+    simp only [h]
+  rw [this, Array.getElem_append_left (by simp; omega), Array.getElem_append_right (by omega)]
+  simp
+
+/-- Sixteen bits read from a byte boundary are the two bytes there,
+    little-endian: how LEN and NLEN are read (RFC 1951 §3.2.4). -/
+theorem readBits16_aligned (bs : ByteArray) (p : Nat) (hp : p + 1 < bs.size) :
+    readBits ⟨bs, 8 * p⟩ 16 =
+      some ((byteAt bs p).toNat + 256 * (byteAt bs (p + 1)).toNat, ⟨bs, 8 * p + 16⟩) := by
+  have h0 := (byteAt bs p).toNat_lt
+  have h1 := (byteAt bs (p + 1)).toNat_lt
+  have hv : (byteAt bs p).toNat + 256 * (byteAt bs (p + 1)).toNat
+      = 2 ^ 8 * (byteAt bs (p + 1)).toNat + (byteAt bs p).toNat := by omega
+  rw [hv]
+  apply readBits_of_bits
+  · omega
+  · intro i hi
+    refine ⟨show 8 * p + i < bs.size * 8 by omega, ?_⟩
+    rw [bitAt_eq_testBit, Nat.testBit_two_pow_mul_add _ (by omega)]
+    by_cases h8 : i < 8
+    · rw [if_pos h8, show (8 * p + i) / 8 = p by omega, show (8 * p + i) % 8 = i by omega]
+    · rw [if_neg h8, show (8 * p + i) / 8 = p + 1 by omega, show (8 * p + i) % 8 = i - 8 by omega]
+
+/-- A header byte of 0 or 1 (`encodeBlock`'s) reads as a stored block with
+    that BFINAL. -/
+theorem readHeader_storedByte (bs : ByteArray) (p : Nat) (f : Bool) (hp : p < bs.size)
+    (hb : byteAt bs p = (if f then 1 else 0)) :
+    readHeader ⟨bs, 8 * p⟩ = .ok (⟨f, .stored⟩, ⟨bs, 8 * p + 3⟩) := by
+  have h2 : readBits ⟨bs, 8 * p + 1⟩ 2 = some (0, ⟨bs, 8 * p + 1 + 2⟩) := by
+    apply readBits_of_bits 2 _ 0 (by decide)
+    intro i hi
+    refine ⟨show 8 * p + 1 + i < bs.size * 8 by omega, ?_⟩
+    rw [bitAt_eq_testBit, show (8 * p + 1 + i) / 8 = p by omega,
+      show (8 * p + 1 + i) % 8 = i + 1 by omega, hb]
+    have : i = 0 ∨ i = 1 := by omega
+    rcases this with rfl | rfl <;> cases f <;> decide
+  have h0 : bitAt bs (8 * p) = f := by
+    rw [bitAt_eq_testBit, show 8 * p / 8 = p by omega, show 8 * p % 8 = 0 by omega, hb]
+    cases f <;> decide
+  have h1 := readBit_of_lt (r := ⟨bs, 8 * p⟩) (show 8 * p < bs.size * 8 by omega)
+  unfold readHeader
+  rw [h1]
+  dsimp only
+  rw [h0, h2]
+  simp
+
+/-- One `encodeBlock` anywhere in a stream reads back exactly: header, then
+    the payload, leaving the reader at the next byte after the block. -/
+theorem storedBlock_reads {bs : ByteArray} {pre post payload : Array UInt8} {f : Bool}
+    (hn : payload.size ≤ maxStored) (h : bs.data = pre ++ encodeBlock f payload ++ post)
+    (out : Array UInt8) :
+    readHeader ⟨bs, 8 * pre.size⟩ = .ok (⟨f, .stored⟩, ⟨bs, 8 * pre.size + 3⟩) ∧
+    readStored ⟨bs, 8 * pre.size + 3⟩ out =
+      .ok (out ++ payload, ⟨bs, 8 * (pre.size + 5 + payload.size)⟩) := by
+  unfold maxStored at hn
+  have hsz : (encodeBlock f payload).size = 5 + payload.size := by
+    simp [encodeBlock]
+  have hbs : bs.size = pre.size + (5 + payload.size) + post.size := by
+    simp only [ByteArray.size, h, Array.size_append, hsz]
+  have hB := byteAt_mid h
+  have b0 := hB 0 (by omega)
+  have b1 := hB 1 (by omega)
+  have b2 := hB 2 (by omega)
+  have b3 := hB 3 (by omega)
+  have b4 := hB 4 (by omega)
+  simp only [encodeBlock] at b0 b1 b2 b3 b4
+  simp at b0 b1 b2 b3 b4
+  refine ⟨readHeader_storedByte bs pre.size f (by omega) b0, ?_⟩
+  have hpay : ∀ k (hk : k < payload.size), byteAt bs (pre.size + 5 + k) = payload[k] := by
+    intro k hk
+    rw [show pre.size + 5 + k = pre.size + (5 + k) by omega, hB (5 + k) (by omega)]
+    simp only [encodeBlock]
+    rw [Array.getElem_append_right (by simp)]
+    simp
+  have hal : alignToByte ⟨bs, 8 * pre.size + 3⟩ = ⟨bs, 8 * (pre.size + 1)⟩ := by
+    show (⟨bs, (8 * pre.size + 3 + 7) / 8 * 8⟩ : BitReader) = _
+    congr 1; dsimp only [BitPos]; omega
+  have hlen := readBits16_aligned bs (pre.size + 1) (by omega)
+  rw [show pre.size + 1 + 1 = pre.size + 2 by omega, b1, b2] at hlen
+  have hnlen := readBits16_aligned bs (pre.size + 3) (by omega)
+  rw [show pre.size + 3 + 1 = pre.size + 4 by omega, b3, b4] at hnlen
+  simp only [UInt8.toNat_ofNat'] at hlen hnlen
+  rw [show payload.size % 256 % 2 ^ 8 + 256 * (payload.size / 256 % 2 ^ 8) = payload.size by omega,
+    show 8 * (pre.size + 1) + 16 = 8 * (pre.size + 3) by omega] at hlen
+  rw [show (65535 - payload.size) % 256 % 2 ^ 8 + 256 * ((65535 - payload.size) / 256 % 2 ^ 8)
+      = 65535 - payload.size by omega] at hnlen
+  unfold readStored
+  rw [hal]
+  dsimp only
+  rw [hlen]
+  dsimp only
+  rw [hnlen]
+  dsimp only
+  rw [if_neg (by omega)]
+  simp only [BitReader.size]
+  rw [if_neg (show ¬ (bs.size * 8 < 8 * (pre.size + 3) + 16 + 8 * payload.size) by omega)]
+  have hl : (List.map (fun k => byteAt bs ((8 * (pre.size + 3) + 16) / 8 + k))
+      (List.range payload.size)).toArray = payload := by
+    apply Array.ext
+    · simp
+    · intro k h1 h2
+      simp only [List.getElem_toArray, List.getElem_map, List.getElem_range]
+      rw [show (8 * (pre.size + 3) + 16) / 8 = pre.size + 5 by omega]
+      exact hpay k h2
+  rw [hl, show 8 * (pre.size + 3) + 16 + 8 * payload.size = 8 * (pre.size + 5 + payload.size) by omega]
+
+/-- `encodeStored.go` only appends to its accumulator. -/
+theorem encodeStored_go_prefix : ∀ (rest acc : Array UInt8),
+    ∃ t, encodeStored.go rest acc = acc ++ t := by
+  intro rest acc
+  induction rest, acc using encodeStored.go.induct with
+  | case1 rest acc h =>
+    exact ⟨_, by rw [encodeStored.go, if_pos h]⟩
+  | case2 rest acc h ih =>
+    obtain ⟨t, ht⟩ := ih
+    exact ⟨_, by rw [encodeStored.go, if_neg h, ht, Array.append_assoc]⟩
+
+/-- The single-block branch of `encodeStored` is `go`'s base case. -/
+theorem encodeStored_eq_go (x : ByteArray) : encodeStored x = ⟨encodeStored.go x.data #[]⟩ := by
+  unfold encodeStored
+  split
+  · rename_i h
+    rw [encodeStored.go, if_pos (show x.data.size ≤ maxStored from h), Array.empty_append]
+  · rfl
+
+/-- The induction behind `decode_encodeStored`, over `go`'s chunks: started
+    at the end of the bytes already emitted (`acc`), the loop decodes the
+    rest. Every block is at least 5 bytes, so one unit of fuel per byte
+    still to read is enough. -/
+theorem decodeFuelLoop_go (bs : ByteArray) (limit : Nat) : ∀ (rest acc : Array UInt8),
+    bs.data = encodeStored.go rest acc → ∀ (out : Array UInt8) (fuel : Nat),
+    out.size + rest.size ≤ limit → bs.size - acc.size < fuel →
+    decodeFuelLoop bs limit ⟨bs, 8 * acc.size⟩ out fuel = .ok ⟨out ++ rest⟩ := by
+  intro rest acc
+  induction rest, acc using encodeStored.go.induct with
+  | case1 rest acc h =>
+    intro hbs out fuel hlim hfuel
+    rw [encodeStored.go, if_pos h] at hbs
+    have hbs' : bs.data = acc ++ encodeBlock true rest ++ #[] := by rw [hbs, Array.append_empty]
+    obtain ⟨hh, hs⟩ := storedBlock_reads h hbs' out
+    obtain ⟨fuel, rfl⟩ : ∃ k, fuel = k + 1 := ⟨fuel - 1, by omega⟩
+    rw [decodeFuelLoop.eq_2, hh]
+    simp only [bind, Except.bind, decodeBlockBody]
+    rw [hs]
+    dsimp only
+    simp only [Array.size_append]
+    rw [if_neg (by omega), if_pos trivial]
+  | case2 rest acc h ih =>
+    intro hbs out fuel hlim hfuel
+    rw [encodeStored.go, if_neg h] at hbs
+    obtain ⟨t, ht⟩ := encodeStored_go_prefix (rest.extract maxStored)
+      (acc ++ encodeBlock false (rest.extract 0 maxStored))
+    have hc : (rest.extract 0 maxStored).size = maxStored := by
+      simp [Array.size_extract]; omega
+    obtain ⟨hh, hs⟩ := storedBlock_reads (by omega) (ht ▸ hbs) out
+    have hsz : (encodeBlock false (rest.extract 0 maxStored)).size = 5 + maxStored := by
+      simp [encodeBlock, hc]
+    obtain ⟨fuel, rfl⟩ : ∃ k, fuel = k + 1 := ⟨fuel - 1, by omega⟩
+    rw [decodeFuelLoop.eq_2, hh]
+    simp only [bind, Except.bind, decodeBlockBody]
+    rw [hs]
+    have hrest : rest.extract 0 maxStored ++ rest.extract maxStored = rest := by
+      rw [Array.extract_append_extract]; simp; omega
+    have hlim' : (out ++ rest.extract 0 maxStored).size ≤ limit := by
+      simp only [Array.size_append]; rw [hc]; unfold maxStored at *; omega
+    dsimp only
+    rw [if_neg (by omega)]
+    simp only [Bool.false_eq_true, if_false]
+    have hbsz : bs.size = acc.size + (5 + maxStored) + t.size := by
+      simp only [ByteArray.size, hbs, ht, Array.size_append, hsz]
+    have := ih hbs (out ++ rest.extract 0 maxStored) fuel
+      (by simp only [Array.size_append, Array.size_extract] at hlim' ⊢; omega)
+      (by simp only [Array.size_append, hsz]; omega)
+    simp only [Array.size_append, hsz] at this
+    rw [hc, show acc.size + 5 + maxStored = acc.size + (5 + maxStored) by omega, this,
+      Array.append_assoc, hrest]
+
+/-- P11: the stored encoder round-trips every input, at any limit that
+    admits it. This covers multi-block inputs (over 65535 bytes); Rust's
+    `deflate_stored` is the counterpart, tested by the differential harness. -/
+theorem decode_encodeStored (x : ByteArray) (limit : Nat) (h : x.size ≤ limit) :
+    decode (encodeStored x) limit = .ok x := by
+  rw [encodeStored_eq_go]
+  have := decodeFuelLoop_go ⟨encodeStored.go x.data #[]⟩ limit x.data #[] rfl #[]
+    (8 * (⟨encodeStored.go x.data #[]⟩ : ByteArray).size + 1)
+    (by rw [Array.size_empty, Nat.zero_add]; exact h) (by omega)
+  unfold decode decodeFuel
+  change decodeFuelLoop _ limit ⟨_, 8 * (#[] : Array UInt8).size⟩ #[] _ = _
+  rw [this, Array.empty_append]
+
+/-- Empty input produces a valid stream: one final stored block with LEN = 0
+    that the model's own decoder decodes back to the empty array. -/
+theorem encodeStored_empty (limit : Nat) : decode (encodeStored ⟨#[]⟩) limit = .ok ⟨#[]⟩ :=
+  decode_encodeStored _ limit (Nat.zero_le _)
+
+/-- P10, stated on its own: encoding is a stream the decoder accepts. -/
+theorem encodeStored_valid : (decode (encodeStored ⟨#[]⟩) 0).isOk = true := by
+  rw [encodeStored_empty 0]; rfl
 
 end Deflate
