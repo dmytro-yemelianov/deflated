@@ -16,6 +16,7 @@
 import Deflate.BitWriter
 import Deflate.Block
 import Deflate.Canonical
+import Deflate.EncodeFixed
 
 namespace Deflate
 
@@ -123,5 +124,100 @@ def writeCLLens (cl : Array Nat) (w : BitWriter) : BitWriter :=
 def emitHeader (w : BitWriter) (lit dist cl : Array Nat) : BitWriter :=
   let w := ((w.writeBits (lit.size - 257) 5).writeBits (dist.size - 1) 5).writeBits (hclenOf cl) 4
   (rleLengths (lit ++ dist)).foldl (writeClSym cl) (writeCLLens cl w)
+
+/-! ### Dynamic blocks and the block stream (M7b spec §3.3) -/
+
+/-- Emit one token under the codes `lc` (literal/length) and `dc`
+    (distance), each giving a symbol's `(code, length)`: a literal's code, or
+    a match's length symbol, length extra bits, distance symbol and distance
+    extra bits. With `lc := fixedLitCode` and `dc := (·, 5)` this is M7a's
+    `emitToken` (`Properties.emitToken_eq_with`). -/
+def emitTokenWith (lc dc : Nat → Nat × Nat) (w : BitWriter) : Token → BitWriter
+  | .literal b => w.writeCode (lc b.toNat).1 (lc b.toNat).2
+  | .match len dist =>
+    let l := lengthSym len   -- (symbol, extra value, extra bits)
+    let d := distSym dist
+    (((w.writeCode (lc l.1).1 (lc l.1).2).writeBits l.2.1 l.2.2).writeCode
+      (dc d.1).1 (dc d.1).2).writeBits d.2.1 d.2.2
+
+/-- Every symbol a token needs has a nonzero length: a literal's byte, or a
+    match's length symbol (in `lit`) and distance symbol (in `dist`). An
+    index past the end reads as 0, so this also bounds the symbol. -/
+def tokenCoded (lit dist : Array Nat) : Token → Bool
+  | .literal b => 0 < lit[b.toNat]!
+  | .match len d => 0 < lit[(lengthSym len).1]! && 0 < dist[(distSym d).1]!
+
+/-- The lengths are usable for a dynamic block over `ts` (spec "Shared
+    formats", Validity): sizes in range, lit/dist lengths ≤ 15 and CL
+    lengths ≤ 7, `lit` and `cl` complete, `dist` a valid distance code,
+    symbol 256 and every symbol `ts` uses coded, and every CL symbol the RLE
+    of `lit ++ dist` uses coded. Rust: `valid_lengths`. -/
+def validLengths (lit dist cl : Array Nat) (ts : List Token) : Bool :=
+  (257 ≤ lit.size && lit.size ≤ 286) && (1 ≤ dist.size && dist.size ≤ 30) && cl.size == 19 &&
+  lit.all (· ≤ 15) && dist.all (· ≤ 15) && cl.all (· ≤ 7) &&
+  (⟨lit⟩ : Code).isComplete && (⟨dist⟩ : Code).isValidDistance && (⟨cl⟩ : Code).isComplete &&
+  0 < lit[256]! && ts.all (tokenCoded lit dist) &&
+  (rleLengths (lit ++ dist)).all (fun s => 0 < cl[s.sym]!)
+
+/-- Per-block code lengths `(lit, dist, cl)`, `cl` indexed by CL symbol, or
+    `none` for a fixed block. Untrusted, like `Finder`: every result is
+    checked by `validLengths`. Rust: `lengths_for` (a heuristic). -/
+abbrev LengthsFor := List Token → Option (Array Nat × Array Nat × Array Nat)
+
+/-- One dynamic block appended to `w`: BFINAL = `final`, BTYPE = 10, the
+    header (`emitHeader`), the tokens under the canonical codes of `lit` and
+    `dist`, then symbol 256. Lengths are used as given; callers check
+    `validLengths`. Rust: `emit_dynamic_block`. -/
+def emitDynamicBlock (w : BitWriter) (final : Bool) (lit dist cl : Array Nat)
+    (ts : List Token) : BitWriter :=
+  let w := emitHeader ((w.writeBits (if final then 1 else 0) 1).writeBits 2 2) lit dist cl
+  let w := ts.foldl (emitTokenWith (canonicalCode lit) (canonicalCode dist)) w
+  w.writeCode (canonicalCode lit 256).1 (canonicalCode lit 256).2
+
+/-- Exact bit size of `emitFixedBlock` over `ts`. Rust: `fixed_bits`. -/
+def fixedBits (ts : List Token) : Nat :=
+  ts.foldl (fun n t => n + match t with
+    | .literal b => (fixedLitCode b.toNat).2
+    | .match len d =>
+      (fixedLitCode (lengthSym len).1).2 + (lengthSym len).2.2 + 5 + (distSym d).2.2)
+    (3 + (fixedLitCode 256).2)
+
+/-- Exact bit size of `emitDynamicBlock` with these lengths over `ts`.
+    Rust: `dynamic_bits`. -/
+def dynBits (lit dist cl : Array Nat) (ts : List Token) : Nat :=
+  let hdr := 3 + 14 + 3 * (hclenOf cl + 4)
+  let rle := (rleLengths (lit ++ dist)).foldl (fun n s => n + cl[s.sym]! + s.extra.2) 0
+  ts.foldl (fun n t => n + match t with
+    | .literal b => lit[b.toNat]!
+    | .match len d => lit[(lengthSym len).1]! + (lengthSym len).2.2 +
+        dist[(distSym d).1]! + (distSym d).2.2)
+    (hdr + rle + lit[256]!)
+
+/-- One block (spec "Shared formats", per-block choice): dynamic iff
+    `lf ts` gives lengths, they pass `validLengths`, and the dynamic block is
+    strictly smaller; fixed otherwise. Rust: `emit_block`. -/
+def emitBlock (lf : LengthsFor) (w : BitWriter) (final : Bool) (ts : List Token) : BitWriter :=
+  match lf ts with
+  | some (lit, dist, cl) =>
+    if validLengths lit dist cl ts && dynBits lit dist cl ts < fixedBits ts then
+      emitDynamicBlock w final lit dist cl ts
+    else emitFixedBlock w final ts
+  | none => emitFixedBlock w final ts
+
+/-- Tokens per block (spec §3.3). Rust: `BLOCK_TOKENS`. -/
+def blockTokens : Nat := 16384
+
+/-- The blocks for `ts`, appended to `w`: chunks of `blockTokens`, the last
+    (or only, possibly empty) chunk final. -/
+def emitBlocksGo (lf : LengthsFor) (w : BitWriter) (ts : List Token) : BitWriter :=
+  if ts.length ≤ blockTokens then emitBlock lf w true ts
+  else emitBlocksGo lf (emitBlock lf w false (ts.take blockTokens)) (ts.drop blockTokens)
+termination_by ts.length
+decreasing_by simp [blockTokens] at *; omega
+
+/-- The block stream for `ts`: blocks share one writer, and only the end is
+    padded to a byte. Rust: `emit_blocks`. -/
+def emitBlocks (lf : LengthsFor) (ts : List Token) : ByteArray :=
+  (emitBlocksGo lf BitWriter.empty ts).toBytes
 
 end Deflate

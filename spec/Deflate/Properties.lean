@@ -3072,6 +3072,495 @@ theorem readDynamicCodes_emitHeader {lit dist cl : Array Nat} {w : BitWriter} {R
 
 end EncodeDynamicProps
 
+/-! ### M7b — Dynamic blocks and the multi-block stream (spec §3.3)
+
+  One generic block-body lemma, `huffLoop`, covers both kinds of block: it
+  is `emitFixed_loop` with the codes abstracted (`emitTokenWith lc dc`) and
+  any bits after the block. Fixed codes discharge its symbol hypotheses by
+  `fixedLit_code_decodes` / `fixedDist_code_decodes`, dynamic codes by
+  `decodeSym_canonical` under `validLengths`. `decodeBlock_emitBlock` is
+  one block at any position; `decodeFuelLoop_emitBlocksGo` inducts over the
+  chunks with the output so far carried along, so matches may reach back
+  across blocks. Fuel: one unit per block, and each block is at least 3
+  bits. -/
+
+section EmitBlocksProps
+open BitWriter
+
+/-- `validLengths` unpacked into the hypotheses the read-back lemmas take
+    (`readDynamicCodes_emitHeader`, `decodeSym_canonical`). -/
+theorem validLengths_spec {lit dist cl : Array Nat} {ts : List Token}
+    (h : validLengths lit dist cl ts = true) :
+    (257 ≤ lit.size ∧ lit.size ≤ 286) ∧ (1 ≤ dist.size ∧ dist.size ≤ 30) ∧ cl.size = 19 ∧
+    (∀ x ∈ lit, x ≤ 15) ∧ (∀ x ∈ dist, x ≤ 15) ∧ (∀ x ∈ cl, x ≤ 7) ∧
+    (⟨lit⟩ : Code).isComplete = true ∧ (⟨dist⟩ : Code).isValidDistance = true ∧
+    (⟨cl⟩ : Code).isComplete = true ∧ 0 < lit[256]! ∧ (∀ t ∈ ts, tokenCoded lit dist t = true) ∧
+    (∀ s ∈ rleLengths (lit ++ dist), 0 < cl[s.sym]!) := by
+  simp only [validLengths, Bool.and_eq_true, decide_eq_true_eq, beq_iff_eq, Array.all_eq_true',
+    List.all_eq_true] at h
+  obtain ⟨⟨⟨⟨⟨⟨⟨⟨⟨⟨⟨a, b⟩, c⟩, d⟩, e⟩, f⟩, g⟩, i⟩, j⟩, k⟩, l⟩, m⟩ := h
+  exact ⟨a, b, c, d, e, f, g, i, j, k, l, m⟩
+
+/-- M7a's `emitFixed` is one final `emitFixedBlock`, packed. -/
+theorem emitFixed_eq_block (ts : List Token) :
+    emitFixed ts = (emitFixedBlock BitWriter.empty true ts).toBytes := rfl
+
+/-- M7a's fixed `emitToken` is `emitTokenWith` under the fixed codes. -/
+theorem emitToken_eq_with (w : BitWriter) (t : Token) :
+    emitToken w t = emitTokenWith fixedLitCode (fun s => (s, 5)) w t := by
+  cases t <;> rfl
+
+theorem foldl_emitToken_eq_with (ts : List Token) (w : BitWriter) :
+    ts.foldl emitToken w = ts.foldl (emitTokenWith fixedLitCode (fun s => (s, 5))) w := by
+  have : emitToken = emitTokenWith fixedLitCode (fun s => (s, 5)) := by
+    funext w t; exact emitToken_eq_with w t
+  rw [this]
+
+/-- The symbols a token makes the decoder read are all decodable: `UL` for
+    the literal/length symbol, `UD` for the distance symbol. -/
+def TokOk (UL UD : Nat → Prop) : Token → Prop
+  | .literal b => UL b.toNat
+  | .match len d => UL (lengthSym len).1 ∧ UD (distSym d).1
+
+/-- A token appends bits, at least one when its literal/length code is
+    nonempty. -/
+theorem emitTokenWith_bits (lc dc : Nat → Nat × Nat) (UL UD : Nat → Prop)
+    (hpos : ∀ s, UL s → 1 ≤ (lc s).2) (w : BitWriter) (t : Token) :
+    ∃ T, (emitTokenWith lc dc w t).bits = w.bits ++ T ∧ (TokOk UL UD t → 1 ≤ T.size) := by
+  cases t with
+  | literal b =>
+    refine ⟨_, writeBits_bits _ _ _, fun h => ?_⟩
+    simp only [lsbBits_size]; exact hpos _ h
+  | «match» len dist =>
+    refine ⟨lsbBits (reverseBits (lc (lengthSym len).1).1 (lc (lengthSym len).1).2)
+        (lc (lengthSym len).1).2 ++ lsbBits (lengthSym len).2.1 (lengthSym len).2.2 ++
+        lsbBits (reverseBits (dc (distSym dist).1).1 (dc (distSym dist).1).2) (dc (distSym dist).1).2 ++
+        lsbBits (distSym dist).2.1 (distSym dist).2.2, ?_, fun h => ?_⟩
+    · simp only [emitTokenWith, writeBits_bits, writeCode_eq, Array.append_assoc]
+    · have := hpos _ h.1
+      simp only [Array.size_append, lsbBits_size]; omega
+
+/-- The token loop appends bits, at least one per token when every
+    symbol used has a nonempty code. -/
+theorem foldl_emitTokenWith_bits (lc dc : Nat → Nat × Nat) (UL UD : Nat → Prop)
+    (hpos : ∀ s, UL s → 1 ≤ (lc s).2) : ∀ (ts : List Token) (w : BitWriter),
+    ∃ T, (ts.foldl (emitTokenWith lc dc) w).bits = w.bits ++ T ∧
+      ((∀ t ∈ ts, TokOk UL UD t) → ts.length ≤ T.size) := by
+  intro ts
+  induction ts with
+  | nil => intro w; exact ⟨#[], by simp, by simp⟩
+  | cons t ts ih =>
+    intro w
+    obtain ⟨T1, h1, s1⟩ := emitTokenWith_bits lc dc UL UD hpos w t
+    obtain ⟨T2, h2, s2⟩ := ih (emitTokenWith lc dc w t)
+    refine ⟨T1 ++ T2, ?_, ?_⟩
+    · simp only [List.foldl_cons, h2, h1, Array.append_assoc]
+    · intro hu
+      have := s1 (hu t (by simp))
+      have := s2 (fun t' h' => hu t' (by simp [h']))
+      simp only [List.length_cons, Array.size_append]; omega
+
+/-- The block-body loop for any pair of codes (generalizes
+    `emitFixed_loop`): if every symbol the tokens use decodes where its code
+    is written (`hlc`, `hdc`), then from the first token's bits, with any
+    output `out` before and any bits `R` after, `decodeHuffBlock` appends
+    the tokens' expansion and stops right after symbol 256. -/
+theorem huffLoop (bs : ByteArray) (limit : Nat) (litC distC : Code) (lc dc : Nat → Nat × Nat)
+    (UL UD : Nat → Prop)
+    (hlc : ∀ s (w : BitWriter) (R : Array Bool), UL s →
+      bs = (BitWriter.mk ((w.writeCode (lc s).1 (lc s).2).bits ++ R)).toBytes →
+      decodeSym litC ⟨bs, w.bits.size⟩ = .ok (s, ⟨bs, (w.writeCode (lc s).1 (lc s).2).bits.size⟩))
+    (hdc : ∀ s (w : BitWriter) (R : Array Bool), UD s →
+      bs = (BitWriter.mk ((w.writeCode (dc s).1 (dc s).2).bits ++ R)).toBytes →
+      decodeSym distC ⟨bs, w.bits.size⟩ = .ok (s, ⟨bs, (w.writeCode (dc s).1 (dc s).2).bits.size⟩))
+    (h256 : UL 256) :
+    ∀ (ts : List Token) (w : BitWriter) (R : Array Bool) (out : Array UInt8) (fuel : Nat),
+    bs = (BitWriter.mk (((ts.foldl (emitTokenWith lc dc) w).writeCode (lc 256).1 (lc 256).2).bits
+      ++ R)).toBytes →
+    ValidFrom out ts → (∀ t ∈ ts, TokOk UL UD t) → (ts.foldl expandStep out).size ≤ limit →
+    ts.length < fuel →
+    decodeHuffBlock litC distC ⟨bs, w.bits.size⟩ out limit fuel
+      = .ok (ts.foldl expandStep out,
+          ⟨bs, ((ts.foldl (emitTokenWith lc dc) w).writeCode (lc 256).1 (lc 256).2).bits.size⟩) := by
+  intro ts
+  induction ts with
+  | nil =>
+    intro w R out fuel hbs _ _ _ hf
+    obtain ⟨k, rfl⟩ : ∃ k, fuel = k + 1 := ⟨fuel - 1, by simp at hf; omega⟩
+    have hd := hlc 256 w R h256 hbs
+    simp only [List.foldl_nil] at hd ⊢
+    simp only [decodeHuffBlock, hd, bind, Except.bind]
+    rw [if_neg (by decide), if_pos trivial]
+  | cons t ts ih =>
+    intro w R out fuel hbs hv hu hlim hf
+    obtain ⟨k, rfl⟩ : ∃ k, fuel = k + 1 := ⟨fuel - 1, by simp at hf; omega⟩
+    obtain ⟨T, hT, _⟩ := foldl_emitTokenWith_bits lc dc (fun _ => False) (fun _ => False)
+      (fun _ h => h.elim) ts (emitTokenWith lc dc w t)
+    have hbs' : bs = (BitWriter.mk ((emitTokenWith lc dc w t).bits ++
+        (T ++ lsbBits (reverseBits (lc 256).1 (lc 256).2) (lc 256).2 ++ R))).toBytes := by
+      rw [hbs, List.foldl_cons, writeCode_eq, writeBits_bits, hT]; simp only [Array.append_assoc]
+    obtain ⟨hvt, hvs⟩ := hv
+    have hut := hu t (by simp)
+    have hus : ∀ t' ∈ ts, TokOk UL UD t' := fun t' h' => hu t' (by simp [h'])
+    simp only [List.foldl_cons] at hlim ⊢
+    have hgrow := foldl_expandStep_size ts (expandStep out t)
+    have ih' := ih (emitTokenWith lc dc w t) R (expandStep out t) k
+      (by rw [hbs, List.foldl_cons]) hvs hus hlim (by simp at hf; omega)
+    cases t with
+    | literal b =>
+      have hd := hlc b.toNat w _ hut hbs'
+      simp only [decodeHuffBlock, hd, bind, Except.bind]
+      simp only [expandStep, Array.size_push] at hgrow hlim
+      rw [if_pos b.toNat_lt, if_neg (by omega), UInt8.ofNat_toNat]
+      exact ih'
+    | «match» len dist =>
+      obtain ⟨h1, h2, h3, h4, h5⟩ := hvt
+      have hls := lengthSym_spec len h1 h2
+      have hds := distSym_spec dist h3 h4
+      have hd1 := hlc (lengthSym len).1 w
+        (lsbBits (lengthSym len).2.1 (lengthSym len).2.2 ++
+          lsbBits (reverseBits (dc (distSym dist).1).1 (dc (distSym dist).1).2) (dc (distSym dist).1).2 ++
+          lsbBits (distSym dist).2.1 (distSym dist).2.2 ++
+          (T ++ lsbBits (reverseBits (lc 256).1 (lc 256).2) (lc 256).2 ++ R)) hut.1
+        (by rw [hbs']; simp only [emitTokenWith, writeBits_bits, writeCode_eq, Array.append_assoc])
+      have hd2 := lengthSym_reads (bs := bs) (w := w.writeCode (lc (lengthSym len).1).1 (lc (lengthSym len).1).2)
+        (R := lsbBits (reverseBits (dc (distSym dist).1).1 (dc (distSym dist).1).2) (dc (distSym dist).1).2 ++
+          lsbBits (distSym dist).2.1 (distSym dist).2.2 ++
+          (T ++ lsbBits (reverseBits (lc 256).1 (lc 256).2) (lc 256).2 ++ R)) len h1 h2
+        (by rw [hbs']; simp only [emitTokenWith, writeBits_bits, writeCode_eq, Array.append_assoc])
+      have hd3 := hdc (distSym dist).1
+        ((w.writeCode (lc (lengthSym len).1).1 (lc (lengthSym len).1).2).writeBits
+          (lengthSym len).2.1 (lengthSym len).2.2)
+        (lsbBits (distSym dist).2.1 (distSym dist).2.2 ++
+          (T ++ lsbBits (reverseBits (lc 256).1 (lc 256).2) (lc 256).2 ++ R)) hut.2
+        (by rw [hbs']; simp only [emitTokenWith, writeBits_bits, writeCode_eq, Array.append_assoc])
+      have hd4 := distSym_reads (bs := bs)
+        (w := ((w.writeCode (lc (lengthSym len).1).1 (lc (lengthSym len).1).2).writeBits
+          (lengthSym len).2.1 (lengthSym len).2.2).writeCode (dc (distSym dist).1).1 (dc (distSym dist).1).2)
+        (R := T ++ lsbBits (reverseBits (lc 256).1 (lc 256).2) (lc 256).2 ++ R) dist h3 h4
+        (by rw [hbs']; simp only [emitTokenWith, writeBits_bits, writeCode_eq, Array.append_assoc])
+      simp only [expandStep, copyGo_size] at hgrow hlim
+      simp only [decodeHuffBlock, hd1, hd2, hd3, hd4, bind, Except.bind]
+      rw [if_neg (by omega), if_neg (by omega), if_neg (by omega)]
+      have hcb : copyBack out dist len = .ok (copyGo dist out len) := by
+        unfold copyBack; rw [if_neg (by omega)]
+      rw [hcb]
+      exact ih'
+
+/-- BFINAL then a 2-bit BTYPE of 1 (fixed) or 2 (dynamic), anywhere in a
+    stream, read back by `readHeader`. -/
+theorem readHeader_written {bs : ByteArray} {w : BitWriter} {R : Array Bool} (final : Bool)
+    (t : Nat) (bt : BlockType) (ht : (t = 1 ∧ bt = .fixed) ∨ (t = 2 ∧ bt = .dynamic))
+    (hB : bs = (BitWriter.mk (((w.writeBits (if final then 1 else 0) 1).writeBits t 2).bits
+      ++ R)).toBytes) :
+    readHeader ⟨bs, w.bits.size⟩ = .ok (⟨final, bt⟩, ⟨bs, w.bits.size + 3⟩) := by
+  have ht4 : t < 2 ^ 2 := by omega
+  have e1 : bs = (BitWriter.mk ((w.writeBits (if final then 1 else 0) 1).bits ++
+      (BitWriter.mk (lsbBits t 2 ++ R)).bits)).toBytes := by
+    rw [hB]; simp only [writeBits_bits, Array.append_assoc]
+  have e2 : bs = (BitWriter.mk (((w.writeBits (if final then 1 else 0) 1).writeBits t 2).bits ++
+      (BitWriter.mk R).bits)).toBytes := hB
+  have hb0 := written_bits w (if final then 1 else 0) 1 ⟨lsbBits t 2 ++ R⟩ 0 (by omega)
+  rw [← e1, Nat.add_zero] at hb0
+  obtain ⟨hlt, hbit⟩ := hb0
+  have hr2 := readBits_written (w.writeBits (if final then 1 else 0) 1) t 2 ⟨R⟩ ht4
+  rw [← e2, writeBits_size] at hr2
+  unfold readHeader
+  rw [readBit_of_lt (r := ⟨bs, w.bits.size⟩) hlt]
+  dsimp only
+  rw [hbit, hr2]
+  have hf : (if final then 1 else 0 : Nat).testBit 0 = final := by cases final <;> rfl
+  rw [hf]
+  rcases ht with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;> simp [Nat.add_assoc]
+
+/-- Valid tokens use only fixed-code symbols. -/
+theorem validFrom_tokOk_fixed : ∀ (ts : List Token) (out : Array UInt8), ValidFrom out ts →
+    ∀ t ∈ ts, TokOk (· < 288) (· < 30) t := by
+  intro ts
+  induction ts with
+  | nil => intro _ _ t ht; simp at ht
+  | cons t ts ih =>
+    intro out hv t' ht'
+    obtain ⟨hvt, hvs⟩ := hv
+    rcases List.mem_cons.mp ht' with rfl | h
+    · cases t' with
+      | literal b => show b.toNat < 288; have := b.toNat_lt; omega
+      | «match» len d =>
+        obtain ⟨h1, h2, h3, h4, _⟩ := hvt
+        have := lengthSym_spec len h1 h2
+        have := distSym_spec d h3 h4
+        exact ⟨by show _ < 288; omega, by show _ < 30; omega⟩
+    · exact ih _ hvs t' h
+
+theorem bits_le_toBytes (w : BitWriter) : w.bits.size ≤ 8 * w.toBytes.size := by
+  rw [toBytes_size]; omega
+
+/-- `emitHeader` only appends. -/
+theorem emitHeader_bits (w : BitWriter) (lit dist cl : Array Nat) :
+    ∃ T, (emitHeader w lit dist cl).bits = w.bits ++ T := by
+  obtain ⟨T1, hT1, _⟩ := writeCLLensFrom_bits cl (hclenOf cl + 4) 0
+    (((w.writeBits (lit.size - 257) 5).writeBits (dist.size - 1) 5).writeBits (hclenOf cl) 4)
+  obtain ⟨T2, hT2⟩ := foldl_writeClSym_bits cl (rleLengths (lit ++ dist))
+    (writeCLLens cl (((w.writeBits (lit.size - 257) 5).writeBits (dist.size - 1) 5).writeBits
+      (hclenOf cl) 4))
+  refine ⟨lsbBits (lit.size - 257) 5 ++ lsbBits (dist.size - 1) 5 ++ lsbBits (hclenOf cl) 4 ++
+    T1 ++ T2, ?_⟩
+  simp only [emitHeader]
+  rw [hT2, writeCLLens, hT1]
+  simp only [writeBits_bits, Array.append_assoc]
+
+/-- **Fixed block.** A fixed block anywhere in a stream reads back: the
+    header gives BFINAL = `final` and BTYPE = fixed, and the body appends the
+    tokens' expansion and stops at the block's end. -/
+theorem decodeBlock_emitFixedBlock {bs : ByteArray} {limit : Nat} {w : BitWriter} {final : Bool}
+    {ts : List Token} {R : Array Bool} {out : Array UInt8}
+    (hB : bs = (BitWriter.mk ((emitFixedBlock w final ts).bits ++ R)).toBytes)
+    (hv : ValidFrom out ts) (hl : (ts.foldl expandStep out).size ≤ limit) :
+    readHeader ⟨bs, w.bits.size⟩ = .ok (⟨final, .fixed⟩, ⟨bs, w.bits.size + 3⟩) ∧
+    decodeBlockBody bs limit .fixed ⟨bs, w.bits.size + 3⟩ out
+      = .ok (ts.foldl expandStep out, ⟨bs, (emitFixedBlock w final ts).bits.size⟩) := by
+  generalize hh0 : (w.writeBits (if final then 1 else 0) 1).writeBits 1 2 = h0
+  have hE : emitFixedBlock w final ts = (ts.foldl (emitTokenWith fixedLitCode (fun s => (s, 5))) h0).writeCode
+      (fixedLitCode 256).1 (fixedLitCode 256).2 := by
+    rw [← hh0, ← foldl_emitToken_eq_with]; rfl
+  have hu := validFrom_tokOk_fixed ts out hv
+  obtain ⟨T, hT, hTs⟩ := foldl_emitTokenWith_bits fixedLitCode (fun s => (s, 5)) (· < 288) (· < 30)
+    (fun s _ => by have := fixedLitCode_len s; omega) ts h0
+  have hTs := hTs hu
+  have h0s : h0.bits.size = w.bits.size + 3 := by rw [← hh0]; simp only [writeBits_size]
+  rw [hE] at hB ⊢
+  refine ⟨readHeader_written final 1 .fixed (Or.inl ⟨rfl, rfl⟩) (R := T ++
+      lsbBits (reverseBits (fixedLitCode 256).1 (fixedLitCode 256).2) (fixedLitCode 256).2 ++ R) ?_, ?_⟩
+  · rw [hB, writeCode_eq, writeBits_bits, hT, ← hh0]; simp only [Array.append_assoc]
+  · rw [← h0s]
+    have hfuel : ts.length < 8 * bs.size + 1 := by
+      have := bits_le_toBytes ⟨((ts.foldl (emitTokenWith fixedLitCode (fun s => (s, 5))) h0).writeCode
+        (fixedLitCode 256).1 (fixedLitCode 256).2).bits ++ R⟩
+      rw [← hB] at this
+      simp only [Array.size_append, writeCode_eq, writeBits_size, hT] at this
+      omega
+    exact huffLoop bs limit fixedLitLen fixedDist fixedLitCode (fun s => (s, 5)) (· < 288) (· < 30)
+      (fun s w R hs hB => fixedLit_code_decodes hs hB) (fun s w R hs hB => fixedDist_code_decodes hs hB)
+      (by decide) ts h0 R out _ hB hv hu hl hfuel
+
+/-- A nonzero `ls[s]!` is in bounds. -/
+theorem pos_of_getElem! {ls : Array Nat} {s : Nat} (h : 0 < ls[s]!) :
+    ∃ hs : s < ls.size, 0 < ls[s] := by
+  by_cases hs : s < ls.size
+  · exact ⟨hs, by rw [getElem!_pos ls s hs] at h; exact h⟩
+  · rw [getElem!_neg ls s hs] at h; exact absurd h (by decide)
+
+theorem tokOk_of_tokenCoded {lit dist : Array Nat} {t : Token} (h : tokenCoded lit dist t = true) :
+    TokOk (fun s => 0 < lit[s]!) (fun s => 0 < dist[s]!) t := by
+  cases t with
+  | literal b => simpa [tokenCoded, TokOk] using h
+  | «match» len d => simpa [tokenCoded, TokOk] using h
+
+/-- **Dynamic block.** With lengths passing `validLengths`, a dynamic block
+    anywhere in a stream reads back: the header gives BFINAL = `final` and
+    BTYPE = dynamic, `readDynamicCodes` recovers `⟨lit⟩` and `⟨dist⟩`, and
+    the body appends the tokens' expansion and stops at the block's end. -/
+theorem decodeBlock_emitDynamicBlock {bs : ByteArray} {limit : Nat} {w : BitWriter}
+    {final : Bool} {lit dist cl : Array Nat} {ts : List Token} {R : Array Bool}
+    {out : Array UInt8} (hvl : validLengths lit dist cl ts = true)
+    (hB : bs = (BitWriter.mk ((emitDynamicBlock w final lit dist cl ts).bits ++ R)).toBytes)
+    (hv : ValidFrom out ts) (hl : (ts.foldl expandStep out).size ≤ limit) :
+    readHeader ⟨bs, w.bits.size⟩ = .ok (⟨final, .dynamic⟩, ⟨bs, w.bits.size + 3⟩) ∧
+    decodeBlockBody bs limit .dynamic ⟨bs, w.bits.size + 3⟩ out
+      = .ok (ts.foldl expandStep out, ⟨bs, (emitDynamicBlock w final lit dist cl ts).bits.size⟩) := by
+  obtain ⟨hlit, hdist, hcl, hl15, hd15, hc7, hlc, hdc, hcc, h256, htok, hused⟩ :=
+    validLengths_spec hvl
+  generalize hh0 : (w.writeBits (if final then 1 else 0) 1).writeBits 2 2 = h0
+  generalize hH : emitHeader h0 lit dist cl = H
+  have hE : emitDynamicBlock w final lit dist cl ts =
+      (ts.foldl (emitTokenWith (canonicalCode lit) (canonicalCode dist)) H).writeCode
+        (canonicalCode lit 256).1 (canonicalCode lit 256).2 := by
+    rw [← hH, ← hh0]; rfl
+  have hu : ∀ t ∈ ts, TokOk (fun s => 0 < lit[s]!) (fun s => 0 < dist[s]!) t :=
+    fun t ht => tokOk_of_tokenCoded (htok t ht)
+  obtain ⟨T, hT, hTs⟩ := foldl_emitTokenWith_bits (canonicalCode lit) (canonicalCode dist)
+    (fun s => 0 < lit[s]!) (fun s => 0 < dist[s]!) (fun s hs => hs) ts H
+  have hTs := hTs hu
+  obtain ⟨TH, hTH⟩ := emitHeader_bits h0 lit dist cl
+  rw [hH] at hTH
+  have h0s : h0.bits.size = w.bits.size + 3 := by rw [← hh0]; simp only [writeBits_size]
+  rw [hE] at hB ⊢
+  have hB' : bs = (BitWriter.mk (H.bits ++ (T ++ lsbBits (reverseBits (canonicalCode lit 256).1
+      (canonicalCode lit 256).2) (canonicalCode lit 256).2 ++ R))).toBytes := by
+    rw [hB, writeCode_eq, writeBits_bits, hT]; simp only [Array.append_assoc]
+  refine ⟨readHeader_written final 2 .dynamic (Or.inr ⟨rfl, rfl⟩) (R := TH ++ (T ++
+      lsbBits (reverseBits (canonicalCode lit 256).1 (canonicalCode lit 256).2)
+        (canonicalCode lit 256).2 ++ R)) ?_, ?_⟩
+  · rw [hB', hTH, ← hh0]; simp only [Array.append_assoc]
+  · rw [← h0s]
+    have hrd := readDynamicCodes_emitHeader (w := h0) (bs := bs) hlit hdist hcl hl15 hd15 hc7
+      hlc hdc hcc hused (by rw [hH]; exact hB')
+    rw [hH] at hrd
+    have hfuel : ts.length < 8 * bs.size + 1 := by
+      have := bits_le_toBytes ⟨((ts.foldl (emitTokenWith (canonicalCode lit) (canonicalCode dist))
+        H).writeCode (canonicalCode lit 256).1 (canonicalCode lit 256).2).bits ++ R⟩
+      rw [← hB] at this
+      simp only [Array.size_append, writeCode_eq, writeBits_size, hT] at this
+      omega
+    have hloop := huffLoop bs limit ⟨lit⟩ ⟨dist⟩ (canonicalCode lit) (canonicalCode dist)
+      (fun s => 0 < lit[s]!) (fun s => 0 < dist[s]!)
+      (fun s w R hs hB => by
+        obtain ⟨hs', h0'⟩ := pos_of_getElem! hs
+        exact decodeSym_canonical hs' h0' (hl15 _ (Array.getElem_mem hs')) (Or.inl hlc) hB)
+      (fun s w R hs hB => by
+        obtain ⟨hs', h0'⟩ := pos_of_getElem! hs
+        exact decodeSym_canonical hs' h0' (hd15 _ (Array.getElem_mem hs')) (Or.inr hdc) hB)
+      h256 ts H R out _ hB hv hu hl hfuel
+    simp only [decodeBlockBody, hrd, bind, Except.bind]
+    exact hloop
+
+/-- Each kind of block appends at least its 3 header bits. -/
+theorem emitFixedBlock_bits (w : BitWriter) (final : Bool) (ts : List Token) :
+    ∃ T, (emitFixedBlock w final ts).bits = w.bits ++ T ∧ 3 ≤ T.size := by
+  obtain ⟨T, hT, _⟩ := foldl_emitToken_bits ts ((w.writeBits (if final then 1 else 0) 1).writeBits 1 2)
+  refine ⟨lsbBits (if final then 1 else 0) 1 ++ lsbBits 1 2 ++ T ++
+    lsbBits (reverseBits (fixedLitCode 256).1 (fixedLitCode 256).2) (fixedLitCode 256).2, ?_, ?_⟩
+  · simp only [emitFixedBlock, writeLit_bits, hT, writeBits_bits, Array.append_assoc]
+  · simp only [Array.size_append, lsbBits_size]; omega
+
+theorem emitDynamicBlock_bits (w : BitWriter) (final : Bool) (lit dist cl : Array Nat)
+    (ts : List Token) :
+    ∃ T, (emitDynamicBlock w final lit dist cl ts).bits = w.bits ++ T ∧ 3 ≤ T.size := by
+  obtain ⟨TH, hTH⟩ := emitHeader_bits ((w.writeBits (if final then 1 else 0) 1).writeBits 2 2)
+    lit dist cl
+  obtain ⟨T, hT, _⟩ := foldl_emitTokenWith_bits (canonicalCode lit) (canonicalCode dist)
+    (fun _ => False) (fun _ => False) (fun _ h => h.elim) ts
+    (emitHeader ((w.writeBits (if final then 1 else 0) 1).writeBits 2 2) lit dist cl)
+  refine ⟨lsbBits (if final then 1 else 0) 1 ++ lsbBits 2 2 ++ TH ++ T ++
+    lsbBits (reverseBits (canonicalCode lit 256).1 (canonicalCode lit 256).2)
+      (canonicalCode lit 256).2, ?_, ?_⟩
+  · simp only [emitDynamicBlock, writeCode_eq, writeBits_bits, hT, hTH, Array.append_assoc]
+  · simp only [Array.size_append, lsbBits_size]; omega
+
+theorem emitBlock_bits (lf : LengthsFor) (w : BitWriter) (final : Bool) (ts : List Token) :
+    ∃ T, (emitBlock lf w final ts).bits = w.bits ++ T ∧ 3 ≤ T.size := by
+  unfold emitBlock
+  split
+  · split
+    · exact emitDynamicBlock_bits _ _ _ _ _ _
+    · exact emitFixedBlock_bits _ _ _
+  · exact emitFixedBlock_bits _ _ _
+
+/-- **One block of the stream**, whichever kind `emitBlock` chose. -/
+theorem decodeBlock_emitBlock (lf : LengthsFor) {bs : ByteArray} {limit : Nat} {w : BitWriter}
+    {final : Bool} {ts : List Token} {R : Array Bool} {out : Array UInt8}
+    (hB : bs = (BitWriter.mk ((emitBlock lf w final ts).bits ++ R)).toBytes)
+    (hv : ValidFrom out ts) (hl : (ts.foldl expandStep out).size ≤ limit) :
+    ∃ bt, readHeader ⟨bs, w.bits.size⟩ = .ok (⟨final, bt⟩, ⟨bs, w.bits.size + 3⟩) ∧
+      decodeBlockBody bs limit bt ⟨bs, w.bits.size + 3⟩ out
+        = .ok (ts.foldl expandStep out, ⟨bs, (emitBlock lf w final ts).bits.size⟩) := by
+  unfold emitBlock at hB ⊢
+  split at hB
+  · rename_i lit dist cl _
+    split at hB
+    · rename_i hc
+      rw [if_pos hc]
+      simp only [Bool.and_eq_true] at hc
+      exact ⟨_, decodeBlock_emitDynamicBlock hc.1 hB hv hl⟩
+    · rename_i hc
+      rw [if_neg hc]
+      exact ⟨_, decodeBlock_emitFixedBlock hB hv hl⟩
+  · exact ⟨_, decodeBlock_emitFixedBlock hB hv hl⟩
+
+/-- Validity splits at a chunk boundary: the second part is valid against
+    the output the first part produces. -/
+theorem validFrom_append : ∀ (a b : List Token) (out : Array UInt8),
+    ValidFrom out (a ++ b) ↔ ValidFrom out a ∧ ValidFrom (a.foldl expandStep out) b := by
+  intro a b
+  induction a with
+  | nil => intro out; simp [ValidFrom]
+  | cons t a ih => intro out; simp only [List.cons_append, ValidFrom, ih, List.foldl_cons, and_assoc]
+
+/-- `emitBlocksGo` only appends. -/
+theorem emitBlocksGo_bits (lf : LengthsFor) (w : BitWriter) (ts : List Token) :
+    ∃ T, (emitBlocksGo lf w ts).bits = w.bits ++ T := by
+  induction w, ts using emitBlocksGo.induct lf with
+  | case1 w ts h =>
+    obtain ⟨T, hT, _⟩ := emitBlock_bits lf w true ts
+    exact ⟨T, by rw [emitBlocksGo.eq_1, if_pos h, hT]⟩
+  | case2 w ts h ih =>
+    obtain ⟨T1, hT1, _⟩ := emitBlock_bits lf w false (ts.take blockTokens)
+    obtain ⟨T2, hT2⟩ := ih
+    exact ⟨T1 ++ T2, by rw [emitBlocksGo.eq_1, if_neg h, hT2, hT1, Array.append_assoc]⟩
+
+/-- The induction behind `decode_emitBlocks`, over `emitBlocksGo`'s chunks:
+    started at the end of the blocks already written (`w`), with any output
+    `out` before them (matches may reach back into it), the decoder loop
+    decodes the rest. Every block is at least 3 bits, so one unit of fuel
+    per bit still to read is enough. -/
+theorem decodeFuelLoop_emitBlocksGo (lf : LengthsFor) (bs : ByteArray) (limit : Nat) :
+    ∀ (w : BitWriter) (ts : List Token), bs = (emitBlocksGo lf w ts).toBytes →
+    ∀ (out : Array UInt8) (fuel : Nat), ValidFrom out ts →
+    (ts.foldl expandStep out).size ≤ limit → 8 * bs.size - w.bits.size < fuel →
+    decodeFuelLoop bs limit ⟨bs, w.bits.size⟩ out fuel = .ok ⟨ts.foldl expandStep out⟩ := by
+  intro w ts
+  induction w, ts using emitBlocksGo.induct lf with
+  | case1 w ts h =>
+    intro hbs out fuel hv hl hf
+    rw [emitBlocksGo.eq_1, if_pos h] at hbs
+    obtain ⟨bt, hh, hbody⟩ := decodeBlock_emitBlock lf (bs := bs) (w := w) (final := true) (R := #[])
+      (by rw [hbs, Array.append_empty]) hv hl
+    obtain ⟨k, rfl⟩ : ∃ k, fuel = k + 1 := ⟨fuel - 1, by omega⟩
+    rw [decodeFuelLoop.eq_2, hh]
+    simp only [bind, Except.bind]
+    rw [hbody]
+    dsimp only
+    rw [if_neg (by omega), if_pos trivial]
+  | case2 w ts h ih =>
+    intro hbs out fuel hv hl hf
+    rw [emitBlocksGo.eq_1, if_neg h] at hbs
+    have hsplit := List.take_append_drop blockTokens ts
+    rw [← hsplit, validFrom_append] at hv
+    rw [← hsplit, List.foldl_append] at hl
+    obtain ⟨T, hT⟩ := emitBlocksGo_bits lf (emitBlock lf w false (ts.take blockTokens))
+      (ts.drop blockTokens)
+    obtain ⟨T1, hT1, hT1s⟩ := emitBlock_bits lf w false (ts.take blockTokens)
+    have hgrow := foldl_expandStep_size (ts.drop blockTokens)
+      ((ts.take blockTokens).foldl expandStep out)
+    obtain ⟨bt, hh, hbody⟩ := decodeBlock_emitBlock lf (bs := bs) (limit := limit) (w := w) (final := false) (R := T)
+      (by rw [hbs, ← hT]) hv.1 (by omega)
+    have htot := bits_le_toBytes (emitBlocksGo lf (emitBlock lf w false (ts.take blockTokens))
+      (ts.drop blockTokens))
+    rw [← hbs, hT, Array.size_append, hT1, Array.size_append] at htot
+    obtain ⟨k, rfl⟩ : ∃ k, fuel = k + 1 := ⟨fuel - 1, by omega⟩
+    rw [decodeFuelLoop.eq_2, hh]
+    simp only [bind, Except.bind]
+    rw [hbody]
+    dsimp only
+    rw [if_neg (by omega)]
+    simp only [Bool.false_eq_true, if_false]
+    have := ih hbs ((ts.take blockTokens).foldl expandStep out) k hv.2 hl
+      (by rw [hT1, Array.size_append]; omega)
+    rw [this, ← List.foldl_append, hsplit]
+
+/-- **Multi-block round trip** (spec §3.3). For every `LengthsFor`, a
+    valid token list whose expansion fits the limit decodes back to that
+    expansion, whatever mix of fixed and dynamic blocks `emitBlocks` chose.
+    `Valid` is about the whole list, so a match may reach back into an
+    earlier block, as RFC 1951 allows. -/
+theorem decode_emitBlocks (lf : LengthsFor) (ts : List Token) (limit : Nat) (hv : Valid ts)
+    (hl : (expand ts).size ≤ limit) :
+    decode (emitBlocks lf ts) limit = .ok ⟨expand ts⟩ := by
+  unfold decode decodeFuel
+  have := decodeFuelLoop_emitBlocksGo lf (emitBlocks lf ts) limit BitWriter.empty ts rfl #[]
+    (8 * (emitBlocks lf ts).size + 1) hv hl (by omega)
+  exact this
+
+/-- Below `blockTokens` tokens, with no dynamic lengths, the block stream is
+    M7a's single fixed block, byte for byte. -/
+theorem emitBlocks_none (ts : List Token) (h : ts.length ≤ blockTokens) :
+    emitBlocks (fun _ => none) ts = emitFixed ts := by
+  unfold emitBlocks
+  rw [emitBlocksGo.eq_1, if_pos h]
+  rfl
+
+end EmitBlocksProps
+
 /-! ### Model compressor (spec §3.6) -/
 
 /-- The headline round trip: whichever encoding `compress` keeps, the

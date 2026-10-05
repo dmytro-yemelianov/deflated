@@ -66,3 +66,12 @@ open Deflate
 #print axioms Deflate.readCodeLengths_go_emit
 #print axioms Deflate.readCLLens_go_emit
 #print axioms Deflate.readDynamicCodes_emitHeader
+#print axioms Deflate.validLengths_spec
+#print axioms Deflate.huffLoop
+#print axioms Deflate.readHeader_written
+#print axioms Deflate.decodeBlock_emitFixedBlock
+#print axioms Deflate.decodeBlock_emitDynamicBlock
+#print axioms Deflate.decodeBlock_emitBlock
+#print axioms Deflate.decodeFuelLoop_emitBlocksGo
+#print axioms Deflate.decode_emitBlocks
+#print axioms Deflate.emitBlocks_none

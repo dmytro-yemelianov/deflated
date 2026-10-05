@@ -63,4 +63,11 @@ def fixedHeader : BitWriter := (BitWriter.empty.writeBits 1 1).writeBits 1 2
 def emitFixed (ts : List Token) : ByteArray :=
   (writeLit (ts.foldl emitToken fixedHeader) 256).toBytes
 
+/-- One fixed-Huffman block appended to `w`, with BFINAL = `final`: the
+    header bits, the tokens, symbol 256, and no padding, so blocks can share
+    one writer (M7b spec §3.3). `emitFixed ts` is `emitFixedBlock empty true
+    ts` packed (`Properties.emitFixed_eq_block`). Rust: `emit_fixed_block`. -/
+def emitFixedBlock (w : BitWriter) (final : Bool) (ts : List Token) : BitWriter :=
+  writeLit (ts.foldl emitToken ((w.writeBits (if final then 1 else 0) 1).writeBits 1 2)) 256
+
 end Deflate
