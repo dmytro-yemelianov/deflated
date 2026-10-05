@@ -4,7 +4,7 @@
 //! `--oracle` speaks the differential line protocol on stdin/stdout. Task 23
 //! adds the user-facing CLI.
 
-use deflate_core::{Error, inflate_with_limit};
+use deflate_core::{Error, deflate_stored, inflate_with_limit};
 use std::io::{self, BufRead, Write};
 
 fn err_name(e: Error) -> &'static str {
@@ -48,6 +48,13 @@ fn oracle() -> io::Result<()> {
                     Ok(out) => writeln!(stdout, "OK {}", to_hex(&out))?,
                     Err(e) => writeln!(stdout, "ERR {}", err_name(e))?,
                 },
+            },
+            (Some("ENCODE"), hx) => match from_hex(hx.unwrap_or("")) {
+                None => writeln!(stdout, "ERR badHex")?,
+                Some(bytes) => {
+                    let out = deflate_stored(&bytes);
+                    writeln!(stdout, "OK {}", to_hex(&out))?;
+                }
             },
             _ => {}
         }

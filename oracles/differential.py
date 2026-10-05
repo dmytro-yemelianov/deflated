@@ -13,7 +13,7 @@ import sys
 import zlib
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from corpus import handmade, mutations, zlib_streams
+from corpus import PAYLOADS, handmade, mutations, zlib_streams
 import leanzip
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -69,17 +69,22 @@ def make_stored_stream(payload: bytes) -> bytes:
     return bytes([0x01]) + n.to_bytes(2, "little") + (n ^ 0xFFFF).to_bytes(2, "little") + payload
 
 
-def run_oracle(cmd, streams):
-    """Feed every stream to one oracle process and read back one line each."""
-    lines = [f"LIMIT {LIMIT}"] + [f"DECODE {s.hex()}" for s in streams]
+def run_oracle(cmd, streams=(), requests=None):
+    """Feed every stream/request to one oracle process and read back one line each."""
+    if requests is not None:
+        lines = [f"LIMIT {LIMIT}"] + requests
+        expected_len = len(requests)
+    else:
+        lines = [f"LIMIT {LIMIT}"] + [f"DECODE {s.hex()}" for s in streams]
+        expected_len = len(streams)
     p = subprocess.run(
         cmd, input="\n".join(lines) + "\n", capture_output=True, text=True, timeout=600
     )
     if p.returncode != 0:
         raise SystemExit(f"oracle {cmd!r} exited {p.returncode}: {p.stderr[:400]}")
     out = [ln for ln in p.stdout.splitlines() if ln]
-    if len(out) != len(streams):
-        raise SystemExit(f"oracle {cmd!r} gave {len(out)} answers for {len(streams)} streams")
+    if len(out) != expected_len:
+        raise SystemExit(f"oracle {cmd!r} gave {len(out)} answers for {expected_len} requests")
     res = []
     for ln in out:
         tag, _, rest = ln.partition(" ")
@@ -95,6 +100,47 @@ def run_zlib(streams):
         except zlib.error as e:
             res.append(Outcome.err(str(e)))
     return res
+
+
+def encode_phase(payloads):
+    """Spec §18.9: a minimal encoder emits valid DEFLATE and round-trips.
+
+    Three checks per payload, in increasing strength:
+      1. our decoder accepts our encoder  — necessary, and weak (spec §2)
+      2. the Lean model's decoder accepts our encoder — Rust encoder vs the
+         definition the theorems are about
+      3. zlib accepts our encoder — an independent decoder, which is what
+         makes this an RFC-conformance signal rather than a shared
+         misunderstanding
+    """
+    rust_enc = run_oracle([str(RUST), "--oracle"],
+                          requests=[f"ENCODE {p.hex()}" for p in payloads])
+    findings = []
+    streams = []
+    valid_payloads = []
+    for p, e in zip(payloads, rust_enc):
+        if not e.ok:
+            findings.append({"parties": ["rust-encode"], "payload": p.hex(), "err": e.err})
+        else:
+            streams.append(e.data)
+            valid_payloads.append(p)
+    if not streams:
+        return findings
+
+    rust_dec = run_oracle([str(RUST), "--oracle"], streams)
+    lean_dec = run_oracle([str(LEAN)], streams)
+    zlib_dec = run_zlib(streams)
+
+    for p, s, r, l, z in zip(valid_payloads, streams, rust_dec, lean_dec, zlib_dec):
+        for name, o in (("rust", r), ("lean", l), ("zlib", z)):
+            if not o.ok or o.data != p:
+                findings.append({
+                    "parties": [f"encode->{name}"],
+                    "payload": p.hex()[:64],
+                    "stream": s.hex()[:64],
+                    "outcome": repr(o),
+                })
+    return findings
 
 
 def compare(outcomes, stream):
@@ -182,6 +228,8 @@ def main() -> int:
                 "stream": s.hex(),
                 "outcomes": {"rust": repr(o["rust"]), "expected": expected[s][:64].hex()},
             })
+
+    findings.extend(encode_phase(PAYLOADS))
 
     report = {"streams": len(streams), "parties": sorted(results), "findings": findings}
     if "leanzip" in results:

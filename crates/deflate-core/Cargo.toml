@@ -12,3 +12,4 @@ authors.workspace = true
 
 [dev-dependencies]
 flate2 = "1"
+miniz_oxide = "0.8"

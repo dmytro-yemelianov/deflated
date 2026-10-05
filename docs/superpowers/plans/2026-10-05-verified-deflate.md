@@ -5557,7 +5557,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: nothing from `deflate-core` beyond `alloc`.
 - Produces: `deflate::MAX_STORED: usize = 65535`, `deflate::deflate_stored(&[u8]) -> Vec<u8>`. Task 23 uses it.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `crates/deflate-core/tests/encode_tests.rs`:
 
@@ -5621,12 +5621,12 @@ fn output_is_bounded_by_input_plus_framing() {
 
 Add `miniz_oxide = "0.8"` to `crates/deflate-core`'s `[dev-dependencies]`.
 
-- [ ] **Step 2: Run to verify they fail**
+- [x] **Step 2: Run to verify they fail**
 
 Run: `cargo test -p deflate-core --test encode_tests`
 Expected: FAIL — `unresolved import deflate_core::deflate_stored`.
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 `crates/deflate-core/src/deflate.rs`:
 
@@ -5671,12 +5671,12 @@ pub fn deflate_stored(input: &[u8]) -> Vec<u8> {
 
 Add `pub mod deflate;` and `pub use deflate::{deflate_stored, MAX_STORED};` to `lib.rs`.
 
-- [ ] **Step 4: Run to verify they pass**
+- [x] **Step 4: Run to verify they pass**
 
 Run: `cargo test -p deflate-core --test encode_tests`
 Expected: PASS — 5 tests.
 
-- [ ] **Step 5: Add encoding to the differential harness**
+- [x] **Step 5: Add encoding to the differential harness**
 
 In `crates/vdeflate/src/main.rs`, add an `ENCODE <hex>` request to the oracle mode returning `OK <hex>` from `deflate_stored`.
 
@@ -5715,12 +5715,12 @@ def encode_phase(streams_unused, payloads):
 
 Generalize `run_oracle` to take explicit `requests` so the encode phase can reuse it.
 
-- [ ] **Step 6: Run the full harness**
+- [x] **Step 6: Run the full harness**
 
 Run: `make all && python3 oracles/differential.py`
 Expected: 0 findings, decode and encode phases both.
 
-- [ ] **Step 7: Update conformance and commit**
+- [x] **Step 7: Update conformance and commit**
 
 `docs/conformance.md`: `| Encoder validity | yes | yes | yes |`, `| Round trip | yes | yes | yes |`.
 
