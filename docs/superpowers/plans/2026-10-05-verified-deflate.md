@@ -927,7 +927,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `Deflate.byteAt`, `Deflate.BitPos`, `Deflate.DecErr` (Task 1).
 - Produces: `Deflate.BitReader` (fields `bytes : ByteArray`, `pos : Nat`), `BitReader.readBit`, `BitReader.readBits`, `BitReader.alignToByte`, `BitReader.size`. Tasks 6, 9, 11, 13, 15, 18, 21 all build on these exact names.
 
-- [ ] **Step 1: Write the failing theorem file**
+- [x] **Step 1: Write the failing theorem file**
 
 `spec/Deflate/Properties.lean`:
 
@@ -957,12 +957,12 @@ theorem readBit_bytes {r r' : BitReader} {b : Bool} (h : readBit r = some (b, r'
 end Deflate
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `lake build`
 Expected: FAIL — `unknown module prefix 'Deflate.Bitstream'`.
 
-- [ ] **Step 3: Write the model**
+- [x] **Step 3: Write the model**
 
 `spec/Deflate/Bitstream.lean`:
 
@@ -1023,12 +1023,12 @@ end Deflate
 
 Add `import Deflate.Bitstream` and `import Deflate.Properties` to `spec/Deflate.lean`.
 
-- [ ] **Step 4: Run to verify the two theorems pass**
+- [x] **Step 4: Run to verify the two theorems pass**
 
 Run: `lake build`
 Expected: PASS.
 
-- [ ] **Step 5: Add the remaining P1 theorems**
+- [x] **Step 5: Add the remaining P1 theorems**
 
 Append to `spec/Deflate/Properties.lean`, inside `namespace Deflate`:
 
@@ -1143,14 +1143,14 @@ theorem alignToByte_idem (r : BitReader) :
 theorem alignToByte_bytes (r : BitReader) : (alignToByte r).bytes = r.bytes := rfl
 ```
 
-- [ ] **Step 6: Run to verify all P1 theorems pass**
+- [x] **Step 6: Run to verify all P1 theorems pass**
 
 Run: `lake build`
 Expected: PASS, with no `sorry` warning on any line.
 
 If a tactic does not close a goal, fix it there. Do not insert `sorry`: CI fails on it (Global Constraints, spec §19.7). If a proof genuinely resists, weaken the *statement* to something true and provable, and say in the file comment what was weakened and why.
 
-- [ ] **Step 7: Register the theorems with the axiom gate**
+- [x] **Step 7: Register the theorems with the axiom gate**
 
 Replace the body of `spec/scripts/axioms.lean`:
 
@@ -1164,12 +1164,12 @@ open Deflate
 #print axioms Deflate.alignToByte_idem
 ```
 
-- [ ] **Step 8: Run the Lean gate**
+- [x] **Step 8: Run the Lean gate**
 
 Run: `make test-lean`
 Expected: PASS — no `sorry`/`admit`, and the axiom log contains no `sorryAx`.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add spec/ 

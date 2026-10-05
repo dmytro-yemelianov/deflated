@@ -4,3 +4,8 @@
 import Deflate
 open Deflate
 #print axioms Deflate.byteAt_oob
+#print axioms Deflate.readBits_pos
+#print axioms Deflate.readBits_bytes
+#print axioms Deflate.readBits_lt
+#print axioms Deflate.readBits_eof
+#print axioms Deflate.alignToByte_idem
