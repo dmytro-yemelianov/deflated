@@ -5410,7 +5410,7 @@ property and is really constructor injectivity. The real content is
 `encodeStored_roundtrip` below: the model's decoder, the one the theorems are
 about, returns the input. Nothing decorative is added around it.
 
-- [ ] **Step 1: Write the failing theorem**
+- [x] **Step 1: Write the failing theorem**
 
 Append to `spec/Deflate/Properties.lean`:
 
@@ -5432,12 +5432,12 @@ theorem encodeStored_roundtrip_small (bs : ByteArray) (limit : Nat)
   omega
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `lake build`
 Expected: FAIL — `unknown identifier 'encodeStored'`.
 
-- [ ] **Step 3: Write the model**
+- [x] **Step 3: Write the model**
 
 `spec/Deflate/Encode.lean`:
 
@@ -5488,12 +5488,12 @@ end Deflate
 
 Add `import Deflate.Encode` to `spec/Deflate.lean` and `spec/Deflate/Properties.lean`.
 
-- [ ] **Step 4: Run to verify the theorem passes**
+- [x] **Step 4: Run to verify the theorem passes**
 
 Run: `lake build`
 Expected: PASS. The `simp` set in Step 1 has to unfold a chain of definitions; if it stalls, prove it in two steps — first that `readHeader ⟨encodeStored bs, 0⟩` yields `⟨true, .stored⟩` at bit 3, then that `readStored` from there returns `bs` — and chain them. Keep the statement; refine the proof.
 
-- [ ] **Step 5: Extend to the multi-chunk case**
+- [x] **Step 5: Extend to the multi-chunk case**
 
 ```lean
 /-- The general round trip, over any number of chunks. -/
@@ -5516,11 +5516,11 @@ theorem encodeStored_empty : decode (encodeStored ⟨#[]⟩) 0 = .ok ⟨#[]⟩ :
 
 The `sorry` above is a placeholder **in this plan only**, marking where the induction goes; it must not reach a commit. Close it in this step. If the multi-chunk induction will not close within a day, keep `encodeStored_roundtrip_small`, delete `encodeStored_roundtrip` and restate `encodeStored_valid` with the `bs.size ≤ 65535` hypothesis, then record in `docs/verification-boundary.md` that the round-trip theorem covers single-chunk inputs only. An honest narrower theorem beats a broad one propped up by an assumption.
 
-- [ ] **Step 6: Add the encoder to the oracle driver**
+- [x] **Step 6: Add the encoder to the oracle driver**
 
 In `spec/Main.lean`, add an `ENCODE <hex>` request returning `OK <hex>`, calling `encodeStored`.
 
-- [ ] **Step 7: Run, register, commit**
+- [x] **Step 7: Run, register, commit**
 
 Run: `lake build && make test-lean`
 Expected: PASS, with no `sorry` anywhere in `spec/`.

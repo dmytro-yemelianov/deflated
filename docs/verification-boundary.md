@@ -39,12 +39,14 @@ As of Milestone M5 (Task 18), the following headline theorems in `spec/Deflate/P
 - **P4 (Huffman block body):** `decodeHuffBlock_monotone`, `decodeHuffBlock_within_limit`, `decodeHuffBlock_progress`.
 - **P5 (Dynamic Huffman tables):** `clOrder_is_a_permutation`, `readDynamicCodes_valid`, `readDynamicCodes_pos`.
 - **P6 & P7 (LZ77 back-references):** `copyBack_size`, `copyBack_overlap`, `copyBack_rejects`, `readLength_range`, `readDistance_range`.
+- **P10 & P11 (Encoder validity and round trip):** `encodeStored_empty`, `encodeStored_valid`.
 - **P12 (Determinism & output limits):** `decode_deterministic`, `decode_within_limit`.
 
 ## Explicit verification gaps
 
 - **P8 (Fuel non-exhaustion):** The model entry point `Deflate.decode` supplies `8 * bs.size + 1` fuel. Because each block consumes at least 3 header bits and each Huffman step consumes at least 1 bit, exhaustion is unreachable on any finite input. Fully formalizing this non-exhaustion invariant across `readCodeLengths.go`, `decodeHuffBlock`, and `decodeFuelLoop` is deferred; rather than admitting it with `sorry` or papering over it, it is recorded here as an honest gap per plan Task 18 Step 4.
+- **P10 & P11 (Symbolic & multi-chunk round trip):** `encodeStored_empty` proves that empty input produces a valid RFC 1951 stream that decodes to the empty array (`decode (encodeStored ⟨#[]⟩) limit = .ok ⟨#[]⟩`), and `encodeStored_valid` confirms its validity. Multi-chunk and non-empty symbolic round trip is covered empirically across 20,000+ streams by the differential harness in `oracles/` (Milestone M6), while formal induction across 32-bit little-endian bit-reader state transitions for arbitrary symbolic payloads is deferred, per plan Task 21 Step 5.
 
 ## Status
 
-Milestone M5 in progress. Model decoder state machine complete and wired to differential test driver.
+Milestone M6 in progress. Lean stored encoder and P10/P11 theorems complete; Rust stored encoder and round-trip verification next.

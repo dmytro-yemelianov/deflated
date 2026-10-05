@@ -31,3 +31,5 @@ open Deflate
 #print axioms Deflate.readDynamicCodes_pos
 #print axioms Deflate.decode_deterministic
 #print axioms Deflate.decode_within_limit
+#print axioms Deflate.encodeStored_empty
+#print axioms Deflate.encodeStored_valid

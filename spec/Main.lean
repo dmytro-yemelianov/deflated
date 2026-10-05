@@ -50,6 +50,11 @@ def handle (limit : Nat) (line : String) : Nat × Option String :=
   | ["LIMIT", n] => (n.toNat?.getD limit, none)
   | ["DECODE"] => (limit, some (decodeAndFormat limit ""))
   | ["DECODE", hx] => (limit, some (decodeAndFormat limit hx))
+  | ["ENCODE"] => (limit, some s!"OK {toHex (Deflate.encodeStored ⟨#[]⟩)}")
+  | ["ENCODE", hx] =>
+    match ofHex hx with
+    | none => (limit, some "ERR badHex")
+    | some bs => (limit, some s!"OK {toHex (Deflate.encodeStored bs)}")
   | _ => (limit, none)
 
 def main (_args : List String) : IO Unit := do

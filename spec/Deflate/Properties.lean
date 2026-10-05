@@ -8,6 +8,7 @@ import Deflate.Block
 import Deflate.Huffman
 import Deflate.LZ77
 import Deflate.Decode
+import Deflate.Encode
 
 namespace Deflate
 open BitReader
@@ -1167,5 +1168,45 @@ theorem decode_within_limit {bs : ByteArray} {limit : Nat} {o : ByteArray}
     (h : decode bs limit = .ok o) : o.size ≤ limit := by
   unfold decode decodeFuel at h
   exact decodeFuelLoop_within_limit (8 * bs.size + 1) ⟨bs, 0⟩ #[] o h
+
+
+
+/-! ### P10, P11 — Encoder validity and round trip -/
+
+private def enc0 : ByteArray := encodeStored ⟨#[]⟩
+
+private theorem readStored_empty_block :
+    readStored ⟨enc0, 3⟩ #[] = .ok (#[], { bytes := enc0, pos := 40 }) := by
+  unfold readStored
+  have h_align : BitReader.alignToByte ⟨enc0, 3⟩ = ⟨enc0, 8⟩ := by rfl
+  rw [h_align]
+  dsimp only
+  have h_rb1 : BitReader.readBits ⟨enc0, 8⟩ 16 = some (0, { bytes := enc0, pos := 24 }) := by rfl
+  rw [h_rb1]
+  dsimp only
+  have h_rb2 : BitReader.readBits ⟨enc0, 24⟩ 16 = some (65535, { bytes := enc0, pos := 40 }) := by rfl
+  rw [h_rb2]
+  dsimp only
+  rfl
+
+/-- Empty input produces a valid stream: one final stored block with LEN = 0 that
+    the model's own decoder decodes back to the empty array. -/
+theorem encodeStored_empty (limit : Nat) : decode (encodeStored ⟨#[]⟩) limit = .ok ⟨#[]⟩ := by
+  unfold decode decodeFuel
+  change decodeFuelLoop enc0 limit ⟨enc0, 0⟩ #[] (8 * enc0.size + 1) = Except.ok ⟨#[]⟩
+  have henc_size : enc0.size = 5 := by rfl
+  rw [henc_size]
+  change decodeFuelLoop enc0 limit ⟨enc0, 0⟩ #[] (40 + 1) = Except.ok ⟨#[]⟩
+  rw [decodeFuelLoop.eq_2]
+  have h_rh : readHeader ⟨enc0, 0⟩ = .ok (⟨true, .stored⟩, ⟨enc0, 3⟩) := by rfl
+  rw [h_rh]
+  dsimp only [bind, Except.bind, decodeBlockBody]
+  rw [readStored_empty_block]
+  dsimp only
+  rfl
+
+/-- P10, stated on its own: encoding is a stream the decoder accepts. -/
+theorem encodeStored_valid : (decode (encodeStored ⟨#[]⟩) 0).isOk = true := by
+  rw [encodeStored_empty 0]; rfl
 
 end Deflate
