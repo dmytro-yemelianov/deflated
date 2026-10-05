@@ -35,6 +35,7 @@ As of Milestone M5 (Task 18), the following headline theorems in `spec/Deflate/P
 
 - **P1 (Bit reader):** `byteAt_oob`, `readBits_pos`, `readBits_bytes`, `readBits_lt`, `readBits_eof`, `alignToByte_idem`.
 - **P2 (Canonical Huffman):** `fixedLitLen_complete`, `fixedDist_complete`, `decodeSym_pos`, `decodeSym_bytes`, `decodeSym_in_range`.
+- **P2 (Table-driven Huffman, ADR 0005):** `decodeSymFast_eq` (the table fast path equals `decodeSym` on every reader, results and errors alike), `decodeSym_local`, `buildTable_size`, `tableEntry_some`, `readBits_some`, `fixedLitLen_table_total`, `fixedDist_table_total`.
 - **P3 (Block headers & stored blocks):** `readHeader_pos`, `readStored_aligned`, `readStored_consumes`, `readStored_rejects_bad_nlen`.
 - **P4 (Huffman block body):** `decodeHuffBlock_monotone`, `decodeHuffBlock_within_limit`, `decodeHuffBlock_progress`.
 - **P5 (Dynamic Huffman tables):** `clOrder_is_a_permutation`, `readDynamicCodes_valid`, `readDynamicCodes_pos`.
@@ -47,6 +48,8 @@ As of Milestone M5 (Task 18), the following headline theorems in `spec/Deflate/P
 - **P8 (Fuel non-exhaustion):** The model entry point `Deflate.decode` supplies `8 * bs.size + 1` fuel. Because each block consumes at least 3 header bits and each Huffman step consumes at least 1 bit, exhaustion is unreachable on any finite input. Fully formalizing this non-exhaustion invariant across `readCodeLengths.go`, `decodeHuffBlock`, and `decodeFuelLoop` is deferred; rather than admitting it with `sorry` or papering over it, it is recorded here as an honest gap per plan Task 18 Step 4.
 - **P10 & P11 (Symbolic & multi-chunk round trip):** `encodeStored_empty` proves that empty input produces a valid RFC 1951 stream that decodes to the empty array (`decode (encodeStored ⟨#[]⟩) limit = .ok ⟨#[]⟩`), and `encodeStored_valid` confirms its validity. Multi-chunk and non-empty symbolic round trip is covered empirically across 20,000+ streams by the differential harness in `oracles/` (Milestone M6), while formal induction across 32-bit little-endian bit-reader state transitions for arbitrary symbolic payloads is deferred, per plan Task 21 Step 5.
 
+- **Table-driven Huffman decoding (ADR 0005):** no gap in the Lean model: `decodeSymFast_eq` is the full equivalence, with no hypothesis on the code or the reader. The model's block decoder still calls `decodeSym`, and `decodeSymFast` is a separate definition proved equal to it. What is not proved is that the Rust table and peek mirror `buildTable` and `decodeSymFast`. Like the rest of the Rust, that rests on tests and the differential harness (ADR 0003), plus the unit test ADR 0005 asks for, which compares the Rust table against the by-evaluation construction.
+
 ## Status
 
-Milestones M0–M6, M8 complete (v1 milestone reached). Decoder, stored encoder, Lean formal model with 64 kernel-checked theorems, 4-way differential harness (20,197 streams, 0 findings), fuzz targets, size reports, and CLI all complete and passing CI gates.
+Milestones M0–M6, M8 complete (v1 milestone reached). Decoder, stored encoder, Lean formal model with 80 kernel-checked theorems, 4-way differential harness (20,197 streams, 0 findings), fuzz targets, size reports, and CLI all complete and passing CI gates.

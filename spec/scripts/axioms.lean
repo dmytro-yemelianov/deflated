@@ -18,6 +18,13 @@ open Deflate
 #print axioms Deflate.decodeSym_pos
 #print axioms Deflate.decodeSym_bytes
 #print axioms Deflate.decodeSym_in_range
+#print axioms Deflate.decodeSym_local
+#print axioms Deflate.decodeSymFast_eq
+#print axioms Deflate.buildTable_size
+#print axioms Deflate.tableEntry_some
+#print axioms Deflate.readBits_some
+#print axioms Deflate.fixedLitLen_table_total
+#print axioms Deflate.fixedDist_table_total
 #print axioms Deflate.copyBack_size
 #print axioms Deflate.copyBack_overlap
 #print axioms Deflate.copyBack_rejects

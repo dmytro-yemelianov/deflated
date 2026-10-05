@@ -154,7 +154,7 @@ then the test and differential suites, then a new run of this report and of
 | --- | --- | --- | --- |
 | 1 | `copy_back`: matches of 16 bytes or more copied with `extend_from_within` in chunks that only read bytes already written; shorter ones byte by byte | Done | None on semantics. Lean `copyGo` stays byte-at-a-time; `copy_back_matches_byte_at_a_time_reference` pins equivalence for every `dist` and every `len` past the RFC maximum |
 | 2 | `read_bits`: one little-endian window of up to 5 bytes, shifted and masked | Done | None: same LSB-first value, same all-or-nothing EOF check (P1); `read_bits_matches_bit_by_bit_reference_everywhere` pins it |
-| 3 | Table-driven Huffman decode with a peeked bit window and the canonical walk as the fallback for long codes | Next | Changes the decode algorithm. Needs an ADR and a Lean lemma that table lookup equals the canonical decode, or an explicit statement that differential testing alone covers it. Costs binary size |
+| 3 | Table-driven Huffman decode with a peeked bit window and the canonical walk as the fallback for long codes | Lean side done, Rust next | Changes the decode algorithm. ADR on table-driven Huffman decoding; Lean `decodeSymFast_eq` proves table lookup equals the canonical decode on every reader. Costs binary size |
 | 4 | Reserve output capacity for stored blocks, bounded by the limit | Open | None, but must keep the bomb rule: never reserve past `limit` |
 
 ## What is not in this report

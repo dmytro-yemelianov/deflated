@@ -6,6 +6,7 @@
 import Deflate.Bitstream
 import Deflate.Block
 import Deflate.Huffman
+import Deflate.HuffmanTable
 import Deflate.LZ77
 import Deflate.Decode
 import Deflate.Encode
@@ -443,6 +444,229 @@ theorem oversubscribed_not_complete (c : Code) (h : c.kraft > 2 ^ maxCodeLen) :
 theorem oversubscribed_not_valid_distance (c : Code) (h : c.kraft > 2 ^ maxCodeLen) :
     Code.isValidDistance c = false := by
   simp [Code.isValidDistance, Code.isComplete]; omega
+
+/-! ### P2 — Table-driven Huffman decoding (ADR 0005) -/
+
+private theorem and_one_beq_testBit (x j : Nat) : ((x >>> j) &&& 1 == 1) = x.testBit j := by
+  rw [Nat.testBit, Nat.and_one_is_mod, Nat.one_and_eq_mod_two]
+  rcases Nat.mod_two_eq_zero_or_one (x >>> j) with h | h <;> simp [h]
+
+/-- `bitAt` is a `testBit` on the byte holding the bit. -/
+theorem bitAt_eq_testBit (bs : ByteArray) (i : Nat) :
+    bitAt bs i = (byteAt bs (i / 8)).toNat.testBit (i % 8) := by
+  unfold bitAt; exact and_one_beq_testBit _ _
+
+/-- What `readBits` returns, bit by bit: value bit `i` is stream bit
+    `pos + i`, and that bit lies inside the stream. This is the sense in which
+    the fast path's peeked pattern is "the next `tableBits` bits". -/
+theorem readBits_bit : ∀ (n : Nat) (r : BitReader) (v : Nat) (r' : BitReader),
+    readBits r n = some (v, r') →
+    ∀ i < n, r.pos + i < r.size ∧ bitAt r.bytes (r.pos + i) = v.testBit i := by
+  intro n
+  induction n with
+  | zero => intro _ _ _ _ i hi; omega
+  | succ n ih =>
+    intro r v r' h i hi
+    simp only [readBits, Option.bind_eq_bind, Option.bind_eq_some_iff] at h
+    obtain ⟨⟨b, r₁⟩, hb, ⟨rest, r₂⟩, hrest, hv⟩ := h
+    simp only [Option.pure_def, Option.some.injEq, Prod.mk.injEq] at hv
+    obtain ⟨rfl, rfl⟩ := hv
+    have hp := readBit_pos hb
+    have hbs := readBit_bytes hb
+    have hlt := readBit_lt hb
+    have hbit : b = bitAt r.bytes r.pos := by
+      unfold readBit at hb; split at hb
+      · cases hb; rfl
+      · contradiction
+    have hsz : r₁.size = r.size := by simp [BitReader.size, hbs]
+    cases i with
+    | zero => subst hbit; cases hb' : bitAt r.bytes r.pos <;> simp_all
+    | succ j =>
+      have := ih r₁ rest r₂ hrest j (by omega)
+      rw [hsz, hbs, hp] at this
+      obtain ⟨h1, h2⟩ := this
+      dsimp only [BitPos] at *
+      refine ⟨by omega, ?_⟩
+      rw [show (r.pos : Nat) + (j + 1) = r.pos + 1 + j by rw [Nat.add_assoc, Nat.add_comm 1 j], h2, Nat.testBit_succ]
+      congr 1
+      cases b <;> simp <;> omega
+
+/-- The pattern stream holds 16 bits, more than `tableBits`. -/
+theorem patternReader_size (p : Nat) : (patternReader p).size = 16 := rfl
+
+theorem patternBytes_byte0 (p : Nat) : byteAt (patternBytes p) 0 = UInt8.ofNat p := rfl
+theorem patternBytes_byte1 (p : Nat) : byteAt (patternBytes p) 1 = UInt8.ofNat (p / 256) := rfl
+
+private theorem toNat_ofNat_mod (n : Nat) : (UInt8.ofNat n).toNat = n % 2 ^ 8 := by simp
+
+/-- Stream bit `i` of the pattern reader is bit `i` of the pattern. -/
+theorem patternReader_bit (p i : Nat) (hi : i < 16) :
+    bitAt (patternReader p).bytes i = p.testBit i := by
+  rw [bitAt_eq_testBit]
+  by_cases h8 : i < 8
+  · rw [show i / 8 = 0 by omega, show i % 8 = i by omega]
+    show (byteAt (patternBytes p) 0).toNat.testBit i = _
+    rw [patternBytes_byte0, toNat_ofNat_mod, Nat.testBit_mod_two_pow]
+    simp [h8]
+  · rw [show i / 8 = 1 by omega]
+    show (byteAt (patternBytes p) 1).toNat.testBit (i % 8) = _
+    rw [patternBytes_byte1, toNat_ofNat_mod, Nat.testBit_mod_two_pow,
+      show (256 : Nat) = 2 ^ 8 from rfl, Nat.testBit_div_two_pow]
+    simp only [Nat.mod_lt _ (show 8 > 0 by decide), decide_true, Bool.true_and]
+    congr 1; omega
+
+/-- `r` and `q` both have at least `n` bits left, and their next `n` bits
+    are the same. -/
+def Agree (r q : BitReader) (n : Nat) : Prop :=
+  ∀ i < n, r.pos + i < r.size ∧ q.pos + i < q.size ∧
+    bitAt r.bytes (r.pos + i) = bitAt q.bytes (q.pos + i)
+
+/-- `readBit` inside the stream, in closed form. -/
+theorem readBit_of_lt {r : BitReader} (h : r.pos < r.size) :
+    readBit r = some (bitAt r.bytes r.pos, ⟨r.bytes, r.pos + 1⟩) := by
+  simp [readBit, h]
+
+/-- Locality: `decodeGo` reads its input one bit at a time and looks at
+    nothing else, so a run that succeeds consuming `l` bits succeeds the
+    same way on any reader with the same next `l` bits. -/
+theorem decodeGo_local (c : Code) : ∀ (fuel len code first : Nat) (r q : BitReader)
+    (s : Nat) (r' : BitReader),
+    decodeGo c len code first r fuel = .ok (s, r') →
+    Agree r q (r'.pos - r.pos) →
+    decodeGo c len code first q fuel = .ok (s, ⟨q.bytes, q.pos + (r'.pos - r.pos)⟩) := by
+  intro fuel
+  induction fuel with
+  | zero => intro _ _ _ _ _ _ _ h; simp [decodeGo] at h
+  | succ n ih =>
+    intro len code first r q s r' h hag
+    have hpos := decodeGo_pos c (n + 1) len code first r s r' h
+    obtain ⟨hr, hq, hbit⟩ := hag 0 (by dsimp only [BitPos] at *; omega)
+    simp only [Nat.add_zero] at hr hq hbit
+    unfold decodeGo at h ⊢
+    rw [readBit_of_lt hr] at h
+    rw [readBit_of_lt hq, ← hbit]
+    generalize bitAt r.bytes r.pos = b at h ⊢
+    have hag' : Agree ⟨r.bytes, r.pos + 1⟩ ⟨q.bytes, q.pos + 1⟩ (r'.pos - (r.pos + 1)) := by
+      intro i hi
+      obtain ⟨a, b, e⟩ := hag (i + 1) (by dsimp only [BitPos] at *; omega)
+      dsimp only [BitPos] at *
+      refine ⟨show r.pos + 1 + i < r.size by dsimp only [BitPos] at *; omega, show q.pos + 1 + i < q.size by dsimp only [BitPos] at *; omega, ?_⟩
+      rw [show r.pos + 1 + i = r.pos + (i + 1) by dsimp only [BitPos] at *; omega, show q.pos + 1 + i = q.pos + (i + 1) by dsimp only [BitPos] at *; omega]
+      exact e
+    cases b <;> {
+      simp only [Bool.false_eq_true, ↓reduceIte] at h ⊢
+      split at h
+      · rename_i hcond
+        rw [if_pos hcond]
+        revert h
+        split
+        · intro h
+          cases h
+          dsimp only [BitPos] at *
+          rw [show r.pos + 1 - r.pos = 1 by dsimp only [BitPos] at *; omega]
+        · intro h; contradiction
+      · rename_i hcond
+        rw [if_neg hcond]
+        have hpos' := decodeGo_pos c n (len + 1) _ _ _ s r' h
+        rw [ih (len + 1) _ _ _ _ s r' h hag']
+        dsimp only [BitPos] at *
+        congr 3
+        exact (fun (a b c : Nat) (h : b + 1 < c) =>
+          (by omega : a + 1 + (c - (b + 1)) = a + (c - b))) q.pos r.pos r'.pos hpos'.1
+    }
+
+/-- Locality of the canonical decoder (ADR 0005). -/
+theorem decodeSym_local {c : Code} {r q r' : BitReader} {s : Nat}
+    (h : decodeSym c r = .ok (s, r')) (hag : Agree r q (r'.pos - r.pos)) :
+    decodeSym c q = .ok (s, ⟨q.bytes, q.pos + (r'.pos - r.pos)⟩) :=
+  decodeGo_local c maxCodeLen 1 0 0 r q s r' h hag
+
+/-- The primary table has exactly `2 ^ tableBits = 512` entries. -/
+theorem buildTable_size (c : Code) : (buildTable c).size = 2 ^ tableBits := by
+  simp [buildTable]
+
+/-- Looking up an in-range pattern returns its entry, as defined. -/
+theorem buildTable_getD (c : Code) {p : Nat} (hp : p < 2 ^ tableBits) :
+    (buildTable c).getD p none = tableEntry c p := by
+  simp [buildTable, Array.getD, hp]
+
+/-- **Table-driven decoding is the canonical decoding** (ADR 0005). On every
+    reader, the fast path returns exactly what `decodeSym` returns: the same
+    symbol and reader on success, the same error on failure. Every theorem
+    about `decodeSym` therefore holds of `decodeSymFast` too. -/
+theorem decodeSymFast_eq (c : Code) (r : BitReader) :
+    decodeSymFast c (buildTable c) r = decodeSym c r := by
+  unfold decodeSymFast
+  split
+  · rfl
+  · rename_i p r₂ hp
+    have hlt : p < 2 ^ tableBits := readBits_lt _ _ _ _ hp
+    rw [buildTable_getD c hlt]
+    unfold tableEntry
+    rcases hdec : decodeSym c (patternReader p) with e | ⟨s, r''⟩
+    · rfl
+    · dsimp only
+      by_cases hl : r''.pos ≤ tableBits
+      · rw [if_pos hl]
+        dsimp only
+        have hag : Agree (patternReader p) r (r''.pos - (patternReader p).pos) := by
+          intro i hi
+          have hi9 : i < tableBits := by
+            simp only [patternReader] at hi; dsimp only [BitPos] at *; omega
+          obtain ⟨hsz, hbit⟩ := readBits_bit _ _ _ _ hp i hi9
+          refine ⟨?_, hsz, ?_⟩
+          · show 0 + i < 16
+            simp only [tableBits] at hi9; omega
+          · rw [hbit]
+            show bitAt (patternReader p).bytes (0 + i) = _
+            rw [Nat.zero_add, patternReader_bit p i (by simp only [tableBits] at hi9; omega)]
+        rw [decodeSym_local hdec hag]
+        rfl
+      · rw [if_neg hl]
+
+/-- The peek succeeds whenever `n` bits remain. With `readBits_eof` (fewer
+    than `n` bits remain, so it fails), this pins the fast path's guard:
+    it looks up the table exactly when `pos + tableBits ≤ size`. -/
+theorem readBits_some : ∀ (n : Nat) (r : BitReader), r.pos + n ≤ r.size →
+    ∃ v r', readBits r n = some (v, r') := by
+  intro n
+  induction n with
+  | zero => intro r _; exact ⟨0, r, rfl⟩
+  | succ n ih =>
+    intro r h
+    have hlt : r.pos < r.size := by dsimp only [BitPos] at *; omega
+    obtain ⟨v, r', hv⟩ := ih ⟨r.bytes, r.pos + 1⟩
+      (show r.pos + 1 + n ≤ r.size by dsimp only [BitPos] at *; omega)
+    exact ⟨(if bitAt r.bytes r.pos then 1 else 0) + 2 * v, r',
+      by simp [readBits, readBit_of_lt hlt, hv]⟩
+
+/-- A hit consumes between 1 and `tableBits` bits and names a symbol of the
+    code. This is what lets the Rust pack an entry into a `u16` with length 0
+    reserved for "fall back". -/
+theorem tableEntry_some {c : Code} {p s l : Nat} (h : tableEntry c p = some (s, l)) :
+    0 < l ∧ l ≤ tableBits ∧ s < c.lengths.size := by
+  unfold tableEntry at h
+  split at h
+  · rename_i s' r' hdec
+    split at h
+    · rename_i hl
+      cases h
+      have hp := decodeSym_pos hdec
+      exact ⟨hp.1, hl, decodeSym_in_range hdec⟩
+    · contradiction
+  · contradiction
+
+/-- Every 9-bit pattern resolves in the fixed literal/length table: its codes
+    are 7 to 9 bits long and complete, so the fast path never falls back on a
+    fixed block while 9 bits remain. Checked by kernel evaluation. -/
+theorem fixedLitLen_table_total :
+    ∀ p, p < 2 ^ tableBits → (tableEntry fixedLitLen p).isSome = true := by
+  decide +kernel
+
+/-- Likewise every pattern resolves in the fixed (5-bit) distance table. -/
+theorem fixedDist_table_total :
+    ∀ p, p < 2 ^ tableBits → (tableEntry fixedDist p).isSome = true := by
+  decide +kernel
 
 /-! ### P6 — LZ77 copies -/
 
