@@ -1,6 +1,6 @@
 # ADR 0005: Table-driven Huffman decoding
 
-**Status:** accepted (Lean side done; Rust side pending) · **Date:** 2026-10-05
+**Status:** accepted, implemented (Lean and Rust) · **Date:** 2026-10-05
 
 ## Context
 

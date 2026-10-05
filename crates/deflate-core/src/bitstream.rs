@@ -51,6 +51,16 @@ impl<'a> BitReader<'a> {
     /// truncating silently. All-or-nothing: on `UnexpectedEof` the position
     /// is unchanged.
     pub fn read_bits(&mut self, n: u32) -> Result<u32, Error> {
+        let v = self.peek_bits(n)?;
+        // `peek_bits` succeeded, so pos + n <= bit_len: no overflow.
+        self.pos += n as usize;
+        Ok(v)
+    }
+
+    /// What `read_bits(n)` would return, without consuming anything. Fails
+    /// exactly when `read_bits(n)` would, so it never zero-pads past the end
+    /// (ADR 0005; Lean `readBits_some`, `readBits_eof`).
+    pub fn peek_bits(&self, n: u32) -> Result<u32, Error> {
         if n > 32 {
             return Err(Error::InvalidCode);
         }
@@ -73,9 +83,14 @@ impl<'a> BitReader<'a> {
         }
         // n <= 32, so the shift cannot overflow a u64.
         let mask = (1u64 << n) - 1;
-        let v = ((window >> (self.pos % 8)) & mask) as u32;
-        self.pos += n as usize;
-        Ok(v)
+        Ok(((window >> (self.pos % 8)) & mask) as u32)
+    }
+
+    /// Consume `n` bits already examined with `peek_bits(m)`, `m >= n`.
+    /// Saturating, so a misuse cannot panic; it would only leave the
+    /// reader past the end, where every read is `UnexpectedEof`.
+    pub fn skip_bits(&mut self, n: usize) {
+        self.pos = self.pos.saturating_add(n);
     }
 
     /// Skip to the next byte boundary (RFC 1951 §3.2.4).

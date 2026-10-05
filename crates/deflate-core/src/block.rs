@@ -51,7 +51,9 @@ use crate::lz77::{copy_back, read_distance, read_length};
 /// blocks; they differ only in where `lit` and `dist` come from.
 /// `limit` is the absolute ceiling on `out.len()`, checked *before* each
 /// append, so a bomb never allocates past it.
-/// Mirrors `spec/Deflate/Block.lean`'s `decodeHuffBlock`.
+/// Mirrors `spec/Deflate/Block.lean`'s `decodeHuffBlock`. Symbols are read
+/// with `decode_fast` (Lean `decodeSymFast`) where the model calls
+/// `decodeSym`; `decodeSymFast_eq` says the two agree on every reader.
 pub fn decode_huff_block(
     lit: &HuffmanTable,
     dist: &HuffmanTable,
@@ -60,7 +62,7 @@ pub fn decode_huff_block(
     limit: usize,
 ) -> Result<(), Error> {
     loop {
-        let sym = lit.decode(r)?;
+        let sym = lit.decode_fast(r)?;
         if sym < 256 {
             if out.len() >= limit {
                 return Err(Error::OutputLimitExceeded);
@@ -70,14 +72,14 @@ pub fn decode_huff_block(
             return Ok(());
         } else {
             let len = read_length(sym, r)?;
-            let dsym = dist.decode(r)?;
+            let dsym = dist.decode_fast(r)?;
             let d = read_distance(dsym, r)?;
             if out.len().saturating_add(len) > limit {
                 return Err(Error::OutputLimitExceeded);
             }
             copy_back(out, d, len)?;
         }
-        // No explicit fuel: `lit.decode` consumes at least one bit on every
+        // No explicit fuel: `lit.decode_fast` consumes at least one bit on every
         // path that returns `Ok`, and the stream is finite, so the loop
         // terminates with `UnexpectedEof` if nothing else stops it first.
         // `spec/Deflate/Properties.lean`'s `decodeHuffBlock_progress` is the
@@ -117,7 +119,8 @@ pub fn read_dynamic_tables(r: &mut BitReader) -> Result<(HuffmanTable, HuffmanTa
     let mut lengths = alloc::vec![0u8; 0];
     lengths.reserve(total);
     while lengths.len() < total {
-        let sym = cl.decode(r)?;
+        // The table is built anyway; `decodeSymFast_eq` holds for every code.
+        let sym = cl.decode_fast(r)?;
         match sym {
             0..=15 => lengths.push(sym as u8),
             16 => {

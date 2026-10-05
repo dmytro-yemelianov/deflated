@@ -9,5 +9,6 @@ test -s "$md" || { echo "missing $md"; exit 1; }
 missing=0
 while read -r n; do
   grep -qF -- "$n" <<<"$data" || { echo "number in prose but not in data: $n"; missing=1; }
-done < <(grep -oE '\b[0-9]+\.[0-9]+\b|\b[0-9]{3,}\b' "$md" | sort -u)
+# ADR numbers are names, not measurements.
+done < <(sed -E 's/ADR [0-9]{4}//g' "$md" | grep -oE '\b[0-9]+\.[0-9]+\b|\b[0-9]{3,}\b' | sort -u)
 exit $missing
