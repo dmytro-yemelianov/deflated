@@ -7,6 +7,7 @@ import Deflate.Bitstream
 import Deflate.Block
 import Deflate.Huffman
 import Deflate.LZ77
+import Deflate.Decode
 
 namespace Deflate
 open BitReader
@@ -1122,5 +1123,49 @@ theorem readDynamicCodes_pos {r r' : BitReader} {lit dst : Code}
                     have hbytes : r'.bytes = r.bytes := by
                       rw [hb5, hb4, hb3, hb2, hb1]
                     exact ⟨htrans, hbytes⟩
+
+/-! ### P12 — Deterministic malformed-input behavior -/
+
+/-- Decoding is a function: the same input and limit always give the same
+    answer. Trivial in Lean, stated because P12 is a claim about determinism
+    and the Rust side's version of it is not trivial — it is tested in
+    `oracles/differential.py`, which runs each stream through both. -/
+theorem decode_deterministic (bs : ByteArray) (limit : Nat) :
+    decode bs limit = decode bs limit := rfl
+
+theorem decodeFuelLoop_within_limit {bs : ByteArray} {limit : Nat} :
+    ∀ (fuel : Nat) (r : BitReader) (out : Array UInt8) (o : ByteArray),
+      decodeFuelLoop bs limit r out fuel = .ok o → o.size ≤ limit := by
+  intro fuel
+  induction fuel with
+  | zero => intro r out o h; simp [decodeFuelLoop] at h
+  | succ fuel ih =>
+    intro r out o h
+    unfold decodeFuelLoop at h
+    cases hr : readHeader r with
+    | error _ => rw [hr] at h; simp [Bind.bind, Except.bind] at h
+    | ok p =>
+      obtain ⟨hhdr, r₁⟩ := p
+      rw [hr] at h
+      simp only [Bind.bind, Except.bind] at h
+      cases hb : decodeBlockBody bs limit hhdr.btype r₁ out with
+      | error _ => rw [hb] at h; simp at h
+      | ok pb =>
+        obtain ⟨out', r₂⟩ := pb
+        rw [hb] at h
+        dsimp only at h
+        split at h
+        · contradiction
+        · split at h
+          · cases h
+            dsimp [ByteArray.size]
+            omega
+          · exact ih r₂ out' o h
+
+/-- A successful decode respects the limit. -/
+theorem decode_within_limit {bs : ByteArray} {limit : Nat} {o : ByteArray}
+    (h : decode bs limit = .ok o) : o.size ≤ limit := by
+  unfold decode decodeFuel at h
+  exact decodeFuelLoop_within_limit (8 * bs.size + 1) ⟨bs, 0⟩ #[] o h
 
 end Deflate

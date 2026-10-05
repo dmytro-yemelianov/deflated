@@ -12,7 +12,7 @@ proved, and it never counts a theorem from another project.
 | Dynamic Huffman | yes | yes | yes |
 | Multi-block streams | yes | yes | yes |
 | Overlapping back-reference | yes | yes | yes |
-| Malformed input rejection | yes | yes | no |
+| Malformed input rejection | yes | yes | yes |
 | Output limit | yes | yes | yes |
 | Encoder validity | no | no | no |
 | Round trip | no | no | no |

@@ -4,5 +4,6 @@ import Deflate.Bitstream
 import Deflate.Block
 import Deflate.Huffman
 import Deflate.LZ77
+import Deflate.Decode
 import Deflate.Properties
 

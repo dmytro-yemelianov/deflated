@@ -29,7 +29,22 @@ These theorems are statements about **the Lean model in `spec/Deflate/`**.
 - **Hash and arithmetic idealizations.** Where the model represents a
   quantity more abstractly than the Rust does, this document names it.
 
+## Proved theorems in the Lean model
+
+As of Milestone M5 (Task 18), the following headline theorems in `spec/Deflate/Properties.lean` are kernel-checked with zero custom axioms:
+
+- **P1 (Bit reader):** `byteAt_oob`, `readBits_pos`, `readBits_bytes`, `readBits_lt`, `readBits_eof`, `alignToByte_idem`.
+- **P2 (Canonical Huffman):** `fixedLitLen_complete`, `fixedDist_complete`, `decodeSym_pos`, `decodeSym_bytes`, `decodeSym_in_range`.
+- **P3 (Block headers & stored blocks):** `readHeader_pos`, `readStored_aligned`, `readStored_consumes`, `readStored_rejects_bad_nlen`.
+- **P4 (Huffman block body):** `decodeHuffBlock_monotone`, `decodeHuffBlock_within_limit`, `decodeHuffBlock_progress`.
+- **P5 (Dynamic Huffman tables):** `clOrder_is_a_permutation`, `readDynamicCodes_valid`, `readDynamicCodes_pos`.
+- **P6 & P7 (LZ77 back-references):** `copyBack_size`, `copyBack_overlap`, `copyBack_rejects`, `readLength_range`, `readDistance_range`.
+- **P12 (Determinism & output limits):** `decode_deterministic`, `decode_within_limit`.
+
+## Explicit verification gaps
+
+- **P8 (Fuel non-exhaustion):** The model entry point `Deflate.decode` supplies `8 * bs.size + 1` fuel. Because each block consumes at least 3 header bits and each Huffman step consumes at least 1 bit, exhaustion is unreachable on any finite input. Fully formalizing this non-exhaustion invariant across `readCodeLengths.go`, `decodeHuffBlock`, and `decodeFuelLoop` is deferred; rather than admitting it with `sorry` or papering over it, it is recorded here as an honest gap per plan Task 18 Step 4.
+
 ## Status
 
-Updated at the end of every milestone. Current: M0 in progress; nothing
-beyond `Deflate.byteAt_oob` is proved yet.
+Milestone M5 in progress. Model decoder state machine complete and wired to differential test driver.

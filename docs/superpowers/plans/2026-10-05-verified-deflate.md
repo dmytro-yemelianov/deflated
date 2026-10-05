@@ -4764,7 +4764,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `readHeader`, `readStored`, `readDynamicCodes`, `decodeHuffBlock`, `fixedLitLen`, `fixedDist`.
 - Produces: `Deflate.decodeFuel (bs : ByteArray) (limit fuel : Nat) : Except DecErr ByteArray` and `Deflate.decode (bs : ByteArray) (limit : Nat) : Except DecErr ByteArray`, the model's entry point. Tasks 20 and 21 use `decode`.
 
-- [ ] **Step 1: Write the failing theorems**
+- [x] **Step 1: Write the failing theorems**
 
 Append to `spec/Deflate/Properties.lean`:
 
@@ -4784,12 +4784,12 @@ theorem decode_never_exhausts (bs : ByteArray) (limit : Nat) :
   exact decodeFuel_no_exhaust bs limit (8 * bs.size + 1) (by omega)
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `lake build`
 Expected: FAIL — `unknown identifier 'decode'`.
 
-- [ ] **Step 3: Write the model**
+- [x] **Step 3: Write the model**
 
 `spec/Deflate/Decode.lean`:
 
@@ -4832,7 +4832,7 @@ def decode (bs : ByteArray) (limit : Nat) : Except DecErr ByteArray :=
 end Deflate
 ```
 
-- [ ] **Step 4: Prove the progress lemma, then the theorem**
+- [x] **Step 4: Prove the progress lemma, then the theorem**
 
 Add to `spec/Deflate/Properties.lean`, before `decode_never_exhausts`:
 
@@ -4895,7 +4895,7 @@ theorem decodeFuel_no_exhaust (bs : ByteArray) (limit : Nat) :
 
 These two proofs are the hardest in the plan. If `decodeFuel_no_exhaust` will not close in the shape above, restructure `decodeFuel` to carry a decreasing measure explicitly — `loop` taking `r` with a proof that `r.size - r.pos` strictly decreases — and use well-founded recursion with no fuel at all. That is more work up front and removes the `fuelExhausted` constructor entirely, which is a better outcome. **Do not weaken `decode_never_exhausts` to a `sorry` or drop it.** If neither route closes within a day, keep the fuel, delete the theorem, and write the gap into `docs/verification-boundary.md` under its own heading — an honest gap is the only acceptable third option.
 
-- [ ] **Step 5: Add the P12 theorems**
+- [x] **Step 5: Add the P12 theorems**
 
 ```lean
 /-! ### P12 — Deterministic malformed-input behavior -/
@@ -4929,16 +4929,16 @@ theorem decode_ok_implies_final (bs : ByteArray) (limit : Nat) (o : ByteArray)
 
 The third statement as written is vacuous. Either prove the real one — that `.ok` is reached only through the `h.isFinal` branch — or delete it. Do not keep a theorem whose name claims more than its body. This is the `recipe_tamper_invalidates_key` lesson from maked's own write-up: a theorem named for a security property that is really constructor injectivity. Deleting it is the right call unless the real statement closes.
 
-- [ ] **Step 6: Point the oracle driver at `decode`**
+- [x] **Step 6: Point the oracle driver at `decode`**
 
 In `spec/Main.lean`, delete `decodeStored` and call `Deflate.decode bs limit` directly. The driver and the theorems now share one definition, which is the whole point: diffing Rust against the model means diffing against *the thing the theorems are about*.
 
-- [ ] **Step 7: Run the whole gate**
+- [x] **Step 7: Run the whole gate**
 
 Run: `make all && make test-lean && python3 oracles/differential.py`
 Expected: `lake build` passes with no `sorry`, and the harness reports 0 findings over the full corpus.
 
-- [ ] **Step 8: Register, document, commit**
+- [x] **Step 8: Register, document, commit**
 
 Add `decode_never_exhausts`, `decode_within_limit` to `spec/scripts/axioms.lean`. In `docs/verification-boundary.md`, replace the "Status" section with the list of proved theorems and any gap recorded in Step 4.
 

@@ -37,30 +37,11 @@ def errName : DecErr → String
   | .outputLimitExceeded => "outputLimitExceeded"
   | .fuelExhausted       => "fuelExhausted"
 
-/-- Until Task 18 provides `Deflate.decode`, drive blocks here directly. -/
-partial def decodeStored (bs : ByteArray) (limit : Nat) :
-    Except DecErr ByteArray := do
-  let rec loop (r : BitReader) (out : Array UInt8) : Except DecErr ByteArray := do
-    let (h, r₁) ← readHeader r
-    match h.btype with
-    | .stored =>
-        let (out', r₂) ← readStored r₁ out
-        if out'.size > limit then .error .outputLimitExceeded
-        else if h.isFinal then .ok ⟨out'⟩ else loop r₂ out'
-    | .fixed =>
-        let (out', r₂) ← decodeHuffBlock fixedLitLen fixedDist r₁ out limit (8 * bs.size + 1)
-        if h.isFinal then .ok ⟨out'⟩ else loop r₂ out'
-    | .dynamic =>
-        let ((lit, dst), r₂) ← readDynamicCodes r₁
-        let (out', r₃) ← decodeHuffBlock lit dst r₂ out limit (8 * bs.size + 1)
-        if h.isFinal then .ok ⟨out'⟩ else loop r₃ out'
-  loop ⟨bs, 0⟩ #[]
-
 def decodeAndFormat (limit : Nat) (hx : String) : String :=
   match ofHex hx with
   | none => "ERR badHex"
   | some bs =>
-    match decodeStored bs limit with
+    match Deflate.decode bs limit with
     | .ok out => s!"OK {toHex out}"
     | .error e => s!"ERR {errName e}"
 

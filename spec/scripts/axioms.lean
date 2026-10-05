@@ -29,3 +29,5 @@ open Deflate
 #print axioms Deflate.clOrder_is_a_permutation
 #print axioms Deflate.readDynamicCodes_valid
 #print axioms Deflate.readDynamicCodes_pos
+#print axioms Deflate.decode_deterministic
+#print axioms Deflate.decode_within_limit
