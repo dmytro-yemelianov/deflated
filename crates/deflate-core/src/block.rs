@@ -41,6 +41,14 @@ pub fn read_stored(r: &mut BitReader, out: &mut Vec<u8>, budget: usize) -> Resul
     if len > budget {
         return Err(Error::OutputLimitExceeded);
     }
+    // A stored block usually has more stored blocks after it, so make room
+    // for the rest of the input at once rather than doubling up to it: that
+    // growth was most of the stored-block time (docs/perf-report.md). Capped
+    // by the input already in memory and by `budget`, so a bomb cannot use
+    // this to allocate (spec §11). Only grows, never shrinks capacity.
+    if out.capacity() - out.len() < len {
+        out.reserve(r.remaining_bytes().min(budget));
+    }
     r.read_aligned_into(out, len)
 }
 

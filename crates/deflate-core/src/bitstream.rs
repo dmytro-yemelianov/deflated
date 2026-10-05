@@ -93,6 +93,11 @@ impl<'a> BitReader<'a> {
         self.pos = self.pos.saturating_add(n);
     }
 
+    /// Whole bytes not yet started. A hint for sizing output, not a read.
+    pub fn remaining_bytes(&self) -> usize {
+        self.bytes.len().saturating_sub(self.pos.div_ceil(8))
+    }
+
     /// Skip to the next byte boundary (RFC 1951 §3.2.4).
     pub fn align_to_byte(&mut self) {
         self.pos = self.pos.div_ceil(8) * 8;

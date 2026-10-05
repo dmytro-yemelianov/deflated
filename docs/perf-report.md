@@ -17,14 +17,19 @@ This is the baseline the next optimization is judged against (spec §16).
 | --- | --- |
 | v1, commit `bcc7d19` | As shipped: no optimization (plan, "Gaps found and accepted") |
 | commit `99bbd9d` | Candidates 1 (`copy_back` in chunks) and 2 (`read_bits` from one byte window) applied |
-| Current | Also candidate 3: table-driven Huffman decode (ADR 0005) |
+| commit `496e31a` | Also candidate 3: table-driven Huffman decode (ADR 0005) |
+| Current | Also candidate 4: stored blocks reserve room for the rest of the input |
 
 `git show <commit>:scripts/reports/perf.json` has each earlier baseline.
 Candidates 1 and 2 brought match-heavy inputs to roughly miniz_oxide's speed
 or better and cut the text gap by about a sixth, without touching the Lean
-model. Candidate 3 cut the remaining text gap by about a third more; its Lean
+model. Candidate 3 cut the remaining text gap by roughly a quarter more; its Lean
 side adds definitions and a proof of equivalence and leaves the model's
-decoder as it was.
+decoder as it was. The text figure recorded at `496e31a` was a fast run:
+interleaved runs of that commit later measured about the same slowdown on both text inputs as the current table,
+which is the number to trust. Candidate 4 took stored inputs from about
+2.5 times slower than miniz_oxide to about twice as fast, and left the other
+inputs where they were (interleaved runs against `496e31a`).
 
 ## Method
 
@@ -57,16 +62,16 @@ decompressed output (8388608 bytes for every input).
 <!-- perf:throughput -->
 | Input | Compressed bytes | deflate-core MB/s | miniz_oxide MB/s | Slowdown |
 | --- | ---: | ---: | ---: | ---: |
-| `random.stored.deflate` | 8389258 | 14605.8 | 35938.3 | 2.46× |
-| `repetitive.dyn.deflate` | 16280 | 8287.4 | 2491.3 | 0.3× |
-| `repetitive.fixed.deflate` | 60974 | 6642.7 | 2532.3 | 0.38× |
-| `repetitive.stored.deflate` | 8389258 | 13202.6 | 33266.1 | 2.52× |
-| `text.dyn.deflate` | 3050677 | 289.5 | 335.0 | 1.16× |
-| `text.fixed.deflate` | 3854367 | 277.4 | 329.1 | 1.19× |
-| `text.stored.deflate` | 8389258 | 13031.7 | 30873.6 | 2.37× |
-| `zeros.dyn.deflate` | 8144 | 5598.0 | 5460.0 | 0.98× |
-| `zeros.fixed.deflate` | 52840 | 4705.0 | 6573.9 | 1.4× |
-| `zeros.stored.deflate` | 8389258 | 10883.1 | 29729.3 | 2.73× |
+| `random.stored.deflate` | 8389258 | 68176.8 | 36314.3 | 0.53× |
+| `repetitive.dyn.deflate` | 16280 | 8571.8 | 3073.7 | 0.36× |
+| `repetitive.fixed.deflate` | 60974 | 8045.3 | 3133.8 | 0.39× |
+| `repetitive.stored.deflate` | 8389258 | 61605.3 | 36745.2 | 0.6× |
+| `text.dyn.deflate` | 3050677 | 352.5 | 456.0 | 1.29× |
+| `text.fixed.deflate` | 3854367 | 347.7 | 446.9 | 1.29× |
+| `text.stored.deflate` | 8389258 | 62426.9 | 35043.8 | 0.56× |
+| `zeros.dyn.deflate` | 8144 | 8103.0 | 7444.4 | 0.92× |
+| `zeros.fixed.deflate` | 52840 | 6097.3 | 8576.6 | 1.41× |
+| `zeros.stored.deflate` | 8389258 | 59865.2 | 35246.3 | 0.59× |
 <!-- /perf:throughput -->
 
 Back-to-back runs on the same machine moved the slowdown by up to about 5% on
@@ -77,63 +82,59 @@ than that as noise.
 ## Where the time goes
 
 <!-- perf:profile -->
-`text.dyn.deflate` (3999 samples)
+`text.dyn.deflate` (3365 samples)
 
 | Function | Inclusive % |
 | --- | ---: |
-| `block::decode_huff_block` | 40.9 |
-| `lz77::copy_back` | 27.2 |
-| `bitstream::peek_bits` | 15.5 |
-| `huffman::decode_fast` | 13.6 |
-| `bitstream::read_bits` | 8.7 |
-| `lz77::read_distance` | 6.1 |
+| `block::decode_huff_block` | 43.2 |
+| `lz77::copy_back` | 30.0 |
+| `bitstream::peek_bits` | 19.0 |
+| `huffman::decode_fast` | 15.5 |
+| `bitstream::read_bits` | 10.1 |
+| `lz77::read_distance` | 8.4 |
 | `lz77::read_length` | 4.7 |
-| `bitstream::skip_bits` | 2.1 |
-| `lz77::{closure#0}` | 0.8 |
-| `bitstream::{closure#0}` | 0.7 |
-| `huffman::decode` | 0.5 |
-| perf (outside deflate-core) | 30.8 |
-| libsystem_platform.dylib | 0.6 |
+| `bitstream::skip_bits` | 1.9 |
+| `lz77::{closure#0}` | 1.8 |
+| perf (outside deflate-core) | 25.3 |
+| libsystem_platform.dylib | 0.8 |
 
-`zeros.fixed.deflate` (3841 samples)
+`zeros.fixed.deflate` (3964 samples)
 
 | Function | Inclusive % |
 | --- | ---: |
 | `lz77::copy_back` | 19.4 |
-| `block::decode_huff_block` | 11.7 |
-| `bitstream::peek_bits` | 6.3 |
-| `huffman::decode_fast` | 6.2 |
-| `bitstream::read_bits` | 3.3 |
-| `lz77::read_length` | 2.2 |
+| `block::decode_huff_block` | 11.4 |
+| `bitstream::peek_bits` | 6.1 |
+| `huffman::decode_fast` | 5.8 |
+| `bitstream::read_bits` | 3.4 |
+| `lz77::read_length` | 2.4 |
 | `lz77::read_distance` | 2.0 |
+| `bitstream::skip_bits` | 0.8 |
+| libsystem_platform.dylib | 59.2 |
+| libsystem_kernel.dylib | 5.6 |
+| perf (outside deflate-core) | 4.0 |
+
+`repetitive.dyn.deflate` (3997 samples)
+
+| Function | Inclusive % |
+| --- | ---: |
+| `lz77::copy_back` | 15.8 |
+| `block::decode_huff_block` | 13.7 |
+| `bitstream::peek_bits` | 7.2 |
+| `huffman::decode_fast` | 6.7 |
+| `bitstream::read_bits` | 3.7 |
+| `lz77::read_length` | 2.7 |
+| `lz77::read_distance` | 2.3 |
 | `bitstream::skip_bits` | 0.9 |
-| libsystem_platform.dylib | 58.7 |
-| libsystem_kernel.dylib | 6.5 |
-| perf (outside deflate-core) | 3.2 |
-| libsystem_malloc.dylib | 0.5 |
+| libsystem_platform.dylib | 59.1 |
+| libsystem_kernel.dylib | 8.6 |
+| perf (outside deflate-core) | 2.4 |
 
-`repetitive.dyn.deflate` (3993 samples)
-
-| Function | Inclusive % |
-| --- | ---: |
-| `lz77::copy_back` | 17.0 |
-| `block::decode_huff_block` | 12.4 |
-| `bitstream::peek_bits` | 6.9 |
-| `huffman::decode_fast` | 5.6 |
-| `bitstream::read_bits` | 3.9 |
-| `lz77::read_length` | 2.6 |
-| `lz77::read_distance` | 2.1 |
-| `bitstream::skip_bits` | 0.6 |
-| libsystem_platform.dylib | 61.3 |
-| libsystem_kernel.dylib | 6.8 |
-| perf (outside deflate-core) | 2.3 |
-
-`text.stored.deflate` (4001 samples)
+`text.stored.deflate` (4000 samples)
 
 | Function | Inclusive % |
 | --- | ---: |
-| libsystem_platform.dylib | 87.8 |
-| libsystem_kernel.dylib | 11.7 |
+| libsystem_platform.dylib | 99.3 |
 <!-- /perf:profile -->
 
 ## Findings
@@ -148,9 +149,9 @@ than that as noise.
    `copy_back` hands long matches to `extend_from_within`, so the remaining
    cost is the copying itself and page faults from `Vec` growth, outside
    `deflate-core`'s own logic.
-3. **Stored blocks do no work in deflate-core.** The time is all `memmove` and
-   kernel page faults from `Vec` growth. The output is never sized ahead, so
-   growing it repeatedly reallocates and copies.
+3. **Stored blocks are now bound by copying the bytes.** The first stored
+   block reserves room for the rest of the input, capped by the limit, so the
+   output no longer grows by doubling and copying.
 4. **Building tables costs nothing measurable.** `from_lengths` and
    `read_dynamic_tables` do not appear in any profile above, even for dynamic
    streams; `profile_attrib.py` drops shares under half a percent.
@@ -166,7 +167,7 @@ then the test and differential suites, then a new run of this report and of
 | 1 | `copy_back`: matches of 16 bytes or more copied with `extend_from_within` in chunks that only read bytes already written; shorter ones byte by byte | Done | None on semantics. Lean `copyGo` stays byte-at-a-time; `copy_back_matches_byte_at_a_time_reference` pins equivalence for every `dist` and every `len` past the RFC maximum |
 | 2 | `read_bits`: one little-endian window of up to 5 bytes, shifted and masked | Done | None: same LSB-first value, same all-or-nothing EOF check (P1); `read_bits_matches_bit_by_bit_reference_everywhere` pins it |
 | 3 | Table-driven Huffman decode with a peeked bit window and the canonical walk as the fallback for long codes | Done | Changes the decode algorithm. ADR on table-driven Huffman decoding; Lean `decodeSymFast_eq` proves table lookup equals the canonical decode on every reader. Costs binary size |
-| 4 | Reserve output capacity for stored blocks, bounded by the limit | Open | None, but must keep the bomb rule: never reserve past `limit` |
+| 4 | Reserve output capacity for stored blocks, bounded by the limit | Done | None, but must keep the bomb rule: never reserve past `limit` |
 
 ## What is not in this report
 

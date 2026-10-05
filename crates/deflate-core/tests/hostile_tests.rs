@@ -129,3 +129,26 @@ fn empty_and_single_byte_inputs_error() {
         assert!(r.is_err(), "single byte {b:#04x} decoded to {r:?}");
     }
 }
+
+/// The stored-block pre-reservation (perf candidate 4) is bounded by the
+/// limit and by the input: it can never be the allocation a bomb exploits.
+#[test]
+fn stored_reservation_is_bounded_by_limit_and_input() {
+    let data = vec![7u8; 300_000];
+    let stream = deflate_core::deflate_stored(&data);
+
+    // Limit below the output: refused, whatever was reserved on the way.
+    assert_eq!(
+        inflate_with_limit(&stream, 1000),
+        Err(Error::OutputLimitExceeded)
+    );
+
+    // Limit exactly the output: the buffer never grew past the input size.
+    let out = inflate_with_limit(&stream, data.len()).unwrap();
+    assert_eq!(out, data);
+    assert!(
+        out.capacity() <= stream.len(),
+        "capacity {}",
+        out.capacity()
+    );
+}
