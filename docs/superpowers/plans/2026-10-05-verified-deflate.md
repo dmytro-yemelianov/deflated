@@ -3143,7 +3143,7 @@ Claude-Session: https://claude.ai/code/session_013C91sthFvJGeMNSzLb8fuY"
 - Consumes: `BitReader`, `readBits`, `DecErr`.
 - Produces: `Deflate.lengthBase`, `lengthExtra`, `distBase`, `distExtra` (all `Array Nat`), `Deflate.readLength`, `Deflate.readDistance`, `Deflate.copyGo`, `Deflate.copyBack`. Tasks 13, 15, 18, 21 consume these.
 
-- [ ] **Step 1: Write the failing theorems**
+- [x] **Step 1: Write the failing theorems**
 
 Append to `spec/Deflate/Properties.lean`:
 
@@ -3166,12 +3166,12 @@ theorem copyBack_size {out o : Array UInt8} {dist len : Nat}
   · simp at h; subst h; exact copyGo_size dist len out
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `lake build`
 Expected: FAIL — `unknown identifier 'copyGo'`.
 
-- [ ] **Step 3: Write the model**
+- [x] **Step 3: Write the model**
 
 `spec/Deflate/LZ77.lean`:
 
@@ -3245,12 +3245,12 @@ end Deflate
 
 Add `import Deflate.LZ77` to `spec/Deflate.lean` and `spec/Deflate/Properties.lean`.
 
-- [ ] **Step 4: Run to verify the two theorems pass**
+- [x] **Step 4: Run to verify the two theorems pass**
 
 Run: `lake build`
 Expected: PASS.
 
-- [ ] **Step 5: Add the remaining P6 theorems**
+- [x] **Step 5: Add the remaining P6 theorems**
 
 ```lean
 /-- A copy never disturbs what was already produced. -/
@@ -3359,7 +3359,7 @@ theorem readDistance_range {sym : Nat} {r r' : BitReader} {d : Nat}
 
 `interval_cases` on 29 and 30 cases each is slow but finite; if `lake build` times out, split each into two lemmas by range rather than weakening the statement.
 
-- [ ] **Step 6: Run, register, commit**
+- [x] **Step 6: Run, register, commit**
 
 Run: `lake build && ! grep -rnwE 'sorry|admit|native_decide' spec/ --include='*.lean'`
 Expected: PASS, exit 0.

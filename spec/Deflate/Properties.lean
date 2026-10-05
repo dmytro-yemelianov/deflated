@@ -6,6 +6,7 @@
 import Deflate.Bitstream
 import Deflate.Block
 import Deflate.Huffman
+import Deflate.LZ77
 
 namespace Deflate
 open BitReader
@@ -433,5 +434,166 @@ theorem decodeSym_in_range {c : Code} {r r' : BitReader} {s : Nat}
 /-- An over-subscribed code is rejected, with no appeal to the decoder. -/
 theorem oversubscribed_invalid (c : Code) (h : c.kraft > 2 ^ maxCodeLen) :
     Code.isValid c = false := by simp [Code.isValid, h]
+
+/-! ### P6 — LZ77 copies -/
+
+theorem Array.getElem!_push_lt {α : Type} [Inhabited α] (xs : Array α) (x : α) (i : Nat) (hi : i < xs.size) :
+    (xs.push x)[i]! = xs[i]! := by
+  have h1 : i < (xs.push x).size := by simp; omega
+  rw [getElem!_pos (xs.push x) i h1]
+  rw [getElem!_pos xs i hi]
+  exact Array.getElem_push_lt hi
+
+theorem Array.getElem!_push_eq {α : Type} [Inhabited α] (xs : Array α) (x : α) :
+    (xs.push x)[xs.size]! = x := by
+  have h1 : xs.size < (xs.push x).size := by simp
+  rw [getElem!_pos (xs.push x) xs.size h1]
+  exact Array.getElem_push_eq
+
+/-- A copy appends exactly `len` bytes. -/
+theorem copyGo_size (dist : Nat) : ∀ (k : Nat) (acc : Array UInt8),
+    (copyGo dist acc k).size = acc.size + k := by
+  intro k
+  induction k with
+  | zero => intro acc; simp [copyGo]
+  | succ n ih => intro acc; simp [copyGo, ih]; omega
+
+theorem copyBack_size {out o : Array UInt8} {dist len : Nat}
+    (h : copyBack out dist len = .ok o) : o.size = out.size + len := by
+  unfold copyBack at h
+  split at h
+  · simp at h
+  · simp at h; subst h; exact copyGo_size dist len out
+
+/-- A copy never disturbs what was already produced. -/
+theorem copyGo_prefix (dist : Nat) : ∀ (k i : Nat) (acc : Array UInt8),
+    i < acc.size → (copyGo dist acc k)[i]! = acc[i]! := by
+  intro k
+  induction k with
+  | zero => intro i acc _; simp [copyGo]
+  | succ n ih =>
+    intro i acc hi
+    simp only [copyGo]
+    have hpush : i < (acc.push (acc[acc.size - dist]!)).size := by
+      simp [Array.size_push]; omega
+    rw [ih i _ hpush]
+    simp [Array.getElem!_push_lt, hi]
+
+/-- Each copied byte equals the byte `dist` positions before it, *in the
+    array as it stands when that byte is written*. This is what makes an
+    overlapping copy (`len > dist`) correct: the source of byte `k` may be a
+    byte this same copy produced. -/
+theorem copyGo_overlap (dist : Nat) (hd : 0 < dist) :
+    ∀ (k : Nat) (acc : Array UInt8), dist ≤ acc.size →
+      ∀ j, j < k →
+        (copyGo dist acc k)[acc.size + j]! = (copyGo dist acc k)[acc.size + j - dist]! := by
+  intro k
+  induction k with
+  | zero => intro acc _ j hj; omega
+  | succ n ih =>
+    intro acc hda j hj
+    simp only [copyGo]
+    generalize hacc' : acc.push (acc[acc.size - dist]!) = acc'
+    have hsz : acc'.size = acc.size + 1 := by simp [← hacc', Array.size_push]
+    have hda' : dist ≤ acc'.size := by omega
+    cases j with
+    | zero =>
+      rw [Nat.add_zero]
+      have h0 : (copyGo dist acc' n)[acc.size]! = acc'[acc.size]! := by
+        exact copyGo_prefix dist n acc.size acc' (by omega)
+      have h1 : (copyGo dist acc' n)[acc.size - dist]! = acc'[acc.size - dist]! := by
+        exact copyGo_prefix dist n (acc.size - dist) acc' (by omega)
+      rw [h0, h1, ← hacc']
+      rw [Array.getElem!_push_eq]
+      rw [Array.getElem!_push_lt acc _ (acc.size - dist) (by omega)]
+    | succ j =>
+      have hrec := ih acc' hda' j (by omega)
+      have hidx1 : acc.size + (j + 1) = acc'.size + j := by omega
+      rw [hidx1]
+      exact hrec
+
+theorem copyBack_prefix {out o : Array UInt8} {dist len : Nat}
+    (h : copyBack out dist len = .ok o) (i : Nat) (hi : i < out.size) :
+    o[i]! = out[i]! := by
+  unfold copyBack at h
+  split at h
+  · simp at h
+  · simp at h; subst h; exact copyGo_prefix dist len i out hi
+
+theorem copyBack_overlap {out o : Array UInt8} {dist len : Nat}
+    (h : copyBack out dist len = .ok o) (j : Nat) (hj : j < len) :
+    o[out.size + j]! = o[out.size + j - dist]! := by
+  unfold copyBack at h
+  split at h
+  · simp at h
+  · rename_i hne
+    simp at h hne
+    subst h
+    exact copyGo_overlap dist (by omega) len out (by omega) j hj
+
+/-- A distance of zero, or one reaching before the start of output, is
+    rejected. P7: no accepted copy can read out of range. -/
+theorem copyBack_rejects (out : Array UInt8) (dist len : Nat)
+    (h : dist = 0 ∨ dist > out.size) :
+    copyBack out dist len = .error .invalidDistance := by
+  unfold copyBack; simp [h]
+
+/-- Accepted lengths lie in RFC 1951's range. -/
+theorem readLength_range {sym : Nat} {r r' : BitReader} {l : Nat}
+    (h : readLength sym r = .ok (l, r')) : 3 ≤ l ∧ l ≤ 258 := by
+  unfold readLength at h
+  split at h
+  · rename_i hs
+    cases hb : BitReader.readBits r (lengthExtra[sym - 257]!) with
+    | none => simp [hb] at h
+    | some p =>
+      obtain ⟨e, r₂⟩ := p
+      simp [hb] at h
+      obtain ⟨hl, _⟩ := h
+      subst hl
+      have he := readBits_lt (lengthExtra[sym - 257]!) r e r₂ hb
+      have hsym : sym = 257 ∨ sym = 258 ∨ sym = 259 ∨ sym = 260 ∨ sym = 261 ∨
+                  sym = 262 ∨ sym = 263 ∨ sym = 264 ∨ sym = 265 ∨ sym = 266 ∨
+                  sym = 267 ∨ sym = 268 ∨ sym = 269 ∨ sym = 270 ∨ sym = 271 ∨
+                  sym = 272 ∨ sym = 273 ∨ sym = 274 ∨ sym = 275 ∨ sym = 276 ∨
+                  sym = 277 ∨ sym = 278 ∨ sym = 279 ∨ sym = 280 ∨ sym = 281 ∨
+                  sym = 282 ∨ sym = 283 ∨ sym = 284 ∨ sym = 285 := by omega
+      rcases hsym with rfl | rfl | rfl | rfl | rfl |
+                       rfl | rfl | rfl | rfl | rfl |
+                       rfl | rfl | rfl | rfl | rfl |
+                       rfl | rfl | rfl | rfl | rfl |
+                       rfl | rfl | rfl | rfl | rfl |
+                       rfl | rfl | rfl | rfl
+      <;> { simp [lengthBase, lengthExtra] at he ⊢; omega }
+  · contradiction
+
+/-- Accepted distances lie in RFC 1951's range. -/
+theorem readDistance_range {sym : Nat} {r r' : BitReader} {d : Nat}
+    (h : readDistance sym r = .ok (d, r')) : 1 ≤ d ∧ d ≤ 32768 := by
+  unfold readDistance at h
+  split at h
+  · rename_i hs
+    cases hb : BitReader.readBits r (distExtra[sym]!) with
+    | none => simp [hb] at h
+    | some p =>
+      obtain ⟨e, r₂⟩ := p
+      simp [hb] at h
+      obtain ⟨hd, _⟩ := h
+      subst hd
+      have he := readBits_lt (distExtra[sym]!) r e r₂ hb
+      have hsym : sym = 0 ∨ sym = 1 ∨ sym = 2 ∨ sym = 3 ∨ sym = 4 ∨
+                  sym = 5 ∨ sym = 6 ∨ sym = 7 ∨ sym = 8 ∨ sym = 9 ∨
+                  sym = 10 ∨ sym = 11 ∨ sym = 12 ∨ sym = 13 ∨ sym = 14 ∨
+                  sym = 15 ∨ sym = 16 ∨ sym = 17 ∨ sym = 18 ∨ sym = 19 ∨
+                  sym = 20 ∨ sym = 21 ∨ sym = 22 ∨ sym = 23 ∨ sym = 24 ∨
+                  sym = 25 ∨ sym = 26 ∨ sym = 27 ∨ sym = 28 ∨ sym = 29 := by omega
+      rcases hsym with rfl | rfl | rfl | rfl | rfl |
+                       rfl | rfl | rfl | rfl | rfl |
+                       rfl | rfl | rfl | rfl | rfl |
+                       rfl | rfl | rfl | rfl | rfl |
+                       rfl | rfl | rfl | rfl | rfl |
+                       rfl | rfl | rfl | rfl | rfl
+      <;> { simp [distBase, distExtra] at he ⊢; omega }
+  · contradiction
 
 end Deflate

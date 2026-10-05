@@ -18,3 +18,8 @@ open Deflate
 #print axioms Deflate.decodeSym_pos
 #print axioms Deflate.decodeSym_bytes
 #print axioms Deflate.decodeSym_in_range
+#print axioms Deflate.copyBack_size
+#print axioms Deflate.copyBack_overlap
+#print axioms Deflate.copyBack_rejects
+#print axioms Deflate.readLength_range
+#print axioms Deflate.readDistance_range
