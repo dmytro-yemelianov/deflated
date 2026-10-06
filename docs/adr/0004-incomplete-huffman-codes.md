@@ -24,7 +24,12 @@ tree decodes to arbitrary symbols instead of being reported.
   The literal/length tree and the code-length tree always pass
   `Completeness::Complete`; only the distance tree passes `AllowDegenerate`.
 
-This is zlib's rule. `lean-zip`'s reading is recorded in ADR 0002; where it
+This is the decoder's rule, and it is more lenient than zlib's: zlib
+accepts an incomplete distance code only when no length exceeds 1 (one
+symbol of length 1, or none), so it rejects a lone distance code of length
+2..15 that we read. Leniency is fine for a decoder; the encoder's check
+(`valid_lengths` / `validLengths`, ADR 0007) demands zlib's stricter rule.
+`lean-zip`'s reading is recorded in ADR 0002; where it
 differs, the difference is noted there and the harness reports it as a
 finding rather than a failure.
 

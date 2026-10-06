@@ -197,6 +197,31 @@ fn oracle_emit_is_ascii_whitespace_only() {
     assert_eq!(oracle("EMIT l:41\u{a0}\n"), "ERR badToken\n");
 }
 
+/// Form feed is ASCII whitespace (`u8::is_ascii_whitespace`, Lean
+/// `isAsciiWs`): it separates words and is trimmed, for EMIT, EMITBLOCKS and
+/// EMITDYN alike. Vertical tab is not.
+#[test]
+fn oracle_form_feed_is_whitespace() {
+    for cmd in ["EMIT", "EMITBLOCKS"] {
+        let want = oracle(&format!("{cmd} l:41 l:42\n"));
+        assert!(want.starts_with("OK "), "{want}");
+        assert_eq!(oracle(&format!("{cmd} l:41\x0cl:42\n")), want);
+        assert_eq!(oracle(&format!("\x0c{cmd} l:41 l:42\x0c\n")), want);
+        assert_eq!(oracle(&format!("{cmd} l:41 \x0c\t\r l:42\n")), want);
+        assert_eq!(oracle(&format!("{cmd} l:41\x0bl:42\n")), "ERR badToken\n");
+        // No reply: VT is not trimmed, so the command word is not matched.
+        assert_eq!(oracle(&format!("\x0b{cmd} l:41\n")), "");
+    }
+    let lit = "8".repeat(144) + &"9".repeat(112) + &"7".repeat(24) + &"8".repeat(6);
+    let cl = "4".repeat(19);
+    let want = oracle(&format!("EMITDYN {lit} 1 {cl} l:41 m:3:1\n"));
+    assert!(want.starts_with("OK "), "{want}");
+    assert_eq!(
+        oracle(&format!("EMITDYN {lit}\x0c1\x0c{cl}\x0cl:41\x0cm:3:1\n")),
+        want
+    );
+}
+
 #[test]
 fn oracle_emitblocks_matches_emit_when_one_block() {
     assert_eq!(

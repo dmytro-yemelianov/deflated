@@ -293,6 +293,73 @@ fn valid_lengths_cases() {
     assert!(!valid_lengths(&lit, &dist, &cl3, &used));
 }
 
+/// zlib accepts an incomplete distance code only when no length exceeds 1
+/// (one used symbol of length 1, or none). `valid_lengths` must not accept
+/// a lone distance code of length 2..=15, which our decoder would read but
+/// zlib rejects ("invalid distances set").
+#[test]
+fn valid_lengths_lone_distance_code_must_have_length_one() {
+    let lf: Vec<u32> = (0..286)
+        .map(|i| u32::from(i < 100 || i == 256 || i == 258))
+        .collect();
+    let lit = build_lengths(&lf, 15);
+    let lit_only = used_for(&[Token::Literal(b'a')]);
+    let with_match = used_for(&[Token::Literal(b'a'), Token::Match { len: 4, dist: 1 }]);
+    let cl_for = |dist: &[u8]| {
+        let mut all = lit.clone();
+        all.extend(dist);
+        let mut cf = [0u32; 19];
+        for s in rle_lengths(&all) {
+            cf[usize::from(s.symbol())] += 1;
+        }
+        let mut cl = build_lengths(&cf, 7);
+        if cf.iter().filter(|&&n| n > 0).count() == 1 {
+            let only = cf.iter().position(|&n| n > 0).unwrap();
+            cl[usize::from(only == 0)] = 1;
+        }
+        cl
+    };
+    for l in 1..=15u8 {
+        let dist = [l];
+        let cl = cl_for(&dist);
+        assert_eq!(
+            valid_lengths(&lit, &dist, &cl, &with_match),
+            l == 1,
+            "len {l}"
+        );
+        assert_eq!(
+            valid_lengths(&lit, &dist, &cl, &lit_only),
+            l == 1,
+            "len {l}"
+        );
+        let mut dist = vec![0u8; 30];
+        dist[0] = l;
+        let cl = cl_for(&dist);
+        assert_eq!(
+            valid_lengths(&lit, &dist, &cl, &with_match),
+            l == 1,
+            "len {l}, 30"
+        );
+    }
+    // No distance code at all: zlib accepts it, and so do we when no match
+    // needs one.
+    let dist = [0u8];
+    let cl = cl_for(&dist);
+    assert!(valid_lengths(&lit, &dist, &cl, &lit_only));
+    assert!(!valid_lengths(&lit, &dist, &cl, &with_match));
+    // Complete codes are unaffected.
+    let dist = [1u8, 1];
+    let cl = cl_for(&dist);
+    assert!(valid_lengths(&lit, &dist, &cl, &with_match));
+    let dist = [1u8, 2, 2];
+    let cl = cl_for(&dist);
+    assert!(valid_lengths(&lit, &dist, &cl, &with_match));
+    // Incomplete with two used symbols stays invalid.
+    let dist = [2u8, 2];
+    let cl = cl_for(&dist);
+    assert!(!valid_lengths(&lit, &dist, &cl, &with_match));
+}
+
 #[test]
 fn used_symbols_marks() {
     let u = used_for(&[

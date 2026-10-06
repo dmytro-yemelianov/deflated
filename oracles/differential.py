@@ -268,8 +268,15 @@ def emitdyn_phase(payloads, rust_hook=None, count=200):
     findings = []
     reqs, toks_of = [], []
     for t, line in zip(lists, raw):
+        # A non-OK LENGTHS reply would otherwise be fed on as lengths, fail
+        # on both sides alike and silently shrink coverage.
+        if not line.startswith("OK "):
+            findings.append({"parties": ["rust-lengths"],
+                             "request": ("LENGTHS " + " ".join(t))[:120],
+                             "outcomes": {"rust": line[:120]}})
+            continue
         args = line.partition(" ")[2]
-        if args and args != "none":
+        if args != "none":
             reqs.append(f"EMITDYN {args} " + " ".join(t))
             toks_of.append(t)
     # 2. random valid length sets for random token lists
@@ -347,6 +354,100 @@ def _dist_sym(d):
     return max(i for i, b in enumerate(_DIST_BASE) if b <= d)
 
 
+def lone_distance_phase(rust_hook=None):
+    """EMITDYN with a distance code of one used symbol (M7b final review,
+    finding 2). Our decoder reads a lone distance code of any length, but
+    zlib accepts an incomplete distance code only when no length exceeds 1,
+    so `valid_lengths`/`validLengths` must refuse lengths 2..15. Checks:
+    Rust == Lean byte for byte; lengths 2..15 give exactly the fixed block
+    (the `EMIT` reply); length 1, and an all-zero code with no matches, stay
+    dynamic; and every stream decodes under zlib to the tokens' expansion."""
+    import random
+    rng = random.Random(59)
+    reqs, lists, expect = [], [], []
+    for L in range(16):
+        for j in (0, 3, 17):
+            for with_match in (True, False):
+                if with_match and j == 17:
+                    continue
+                t = [f"l:{rng.randrange(256):02x}" for _ in range(8)]
+                if with_match:
+                    for _ in range(rng.randrange(1, 6)):
+                        t.append(f"m:{rng.randrange(3, 259)}:{_DIST_BASE[j]}")
+                        t.append(f"l:{rng.randrange(256):02x}")
+                used_lit = {256} | {int(x[2:], 16) for x in t if x[0] == "l"}
+                used_lit |= {_len_sym(int(x.split(":")[1])) for x in t if x[0] == "m"}
+                for ndist in (j + 1, 30):
+                    dist = [0] * ndist
+                    dist[j] = L
+                    nlit = rng.choice([max(used_lit) + 1, 286])
+                    lit = canonical_random_lengths(rng, max(nlit, 257), 15, used_lit)
+                    cl = canonical_random_lengths(rng, 19, 7, set(range(19)))
+                    reqs.append(f"EMITDYN {lengths_hex(lit)} {lengths_hex(dist)} "
+                                f"{lengths_hex(cl)} " + " ".join(t))
+                    lists.append(t)
+                    expect.append("dynamic" if L == 1 or (L == 0 and not with_match) else "fixed")
+    rust = run_oracle([str(RUST), "--oracle"], requests=reqs)
+    if rust_hook:
+        rust = rust_hook(rust)
+    lean = run_oracle([str(LEAN)], requests=reqs)
+    fixed = run_oracle([str(RUST), "--oracle"], requests=["EMIT " + " ".join(t) for t in lists])
+    findings = []
+    for r_, a, b, f, t, e in zip(reqs, rust, lean, fixed, lists, expect):
+        if a.key() != b.key():
+            findings.append({"parties": ["rust-emitdyn", "lean-emitdyn"], "request": r_[-160:],
+                             "outcomes": {"rust": repr(a), "lean": repr(b)}})
+            continue
+        if not a.ok:
+            findings.append({"parties": ["lone-distance"], "request": r_[-160:],
+                             "outcomes": {"rust": repr(a)}})
+            continue
+        got_kind = "dynamic" if a.data and a.data[0] & 7 == 0b101 else "fixed"
+        if got_kind != e or (e == "fixed" and a.key() != f.key()):
+            findings.append({"parties": ["lone-distance"], "request": r_[-160:],
+                             "outcomes": {"rust": repr(a), "expected": e}})
+        try:
+            got = zlib.decompress(a.data, -15)
+        except zlib.error as ex:
+            got = repr(ex).encode()
+        if got != expand(t):
+            findings.append({"parties": ["lone-distance->zlib"], "request": r_[-160:],
+                             "outcomes": {"rust": repr(a), "zlib": got[:60].decode("latin1")}})
+    return findings, len(reqs)
+
+
+def whitespace_phase():
+    """Oracle word splitting: Rust (`split_ascii_whitespace`, `trim_ascii`)
+    and Lean (`isAsciiWs`) treat exactly space, tab, LF, FF and CR as
+    whitespace, for EMIT, EMITBLOCKS and EMITDYN. Raw reply lines must match."""
+    lit = "8" * 144 + "9" * 112 + "7" * 24 + "8" * 6
+    cl = "4" * 19
+    bodies = ["l:41\x0cl:42", "l:41 \x0c\t\r l:42\x0c", "l:41\x0bl:42", "l:41\tm:3:1",
+              "l:41\u00a0l:42", "\x0c"]
+    reqs = []
+    for b in bodies:
+        for cmd in ("EMIT", "EMITBLOCKS"):
+            reqs += [f"{cmd} {b}", f"\x0c{cmd} {b}\x0c", f"\t{cmd}\x0c{b}", f"\x0b{cmd} {b}"]
+        reqs += [f"EMITDYN {lit}\x0c1\x0c{cl}\x0c{b}", f"\x0cEMITDYN {lit} 1 {cl} {b}",
+                 f"EMITDYN {lit}\x0b1 {cl} {b}"]
+    reqs.append("EMIT")  # every request above may or may not reply; this one always does
+
+    def raw(cmd):
+        p = subprocess.run(cmd, input="\n".join(reqs) + "\n", capture_output=True,
+                           text=True, timeout=600)
+        if p.returncode != 0:
+            raise SystemExit(f"oracle {cmd!r} exited {p.returncode}: {p.stderr[:400]}")
+        return p.stdout.splitlines()
+
+    r, l = raw([str(RUST), "--oracle"]), raw([str(LEAN)])
+    findings = []
+    if r != l:
+        findings.append({"parties": ["rust-whitespace", "lean-whitespace"],
+                         "request": f"{len(reqs)} whitespace requests",
+                         "outcomes": {"rust": r[:20], "lean": l[:20]}})
+    return findings, len(reqs)
+
+
 def emitblocks_phase(rust_hook=None):
     """EMITBLOCKS (fixed blocks, chunks of 16384): Rust == Lean byte for byte
     around the chunk boundary, and zlib expands to the tokens' expansion."""
@@ -354,7 +455,6 @@ def emitblocks_phase(rust_hook=None):
     rng = random.Random(41)
     reqs, lists = [], []
     for n in (0, 16383, 16384, 16385, 40000):
-        t = random_tokens(rng, 1)
         t = []
         size = 0
         while len(t) < n:
@@ -463,7 +563,9 @@ def self_test() -> int:
         assert not f, f"self-test: clean EMITDYN reported a finding: {f}"
         f, _ = emitblocks_phase(rust_hook=flip_bit)
         assert f, "self-test: a corrupted Rust EMITBLOCKS was not reported"
-        print("self-test: 9/9")
+        f, _ = lone_distance_phase(rust_hook=flip_bit)
+        assert f, "self-test: a corrupted Rust lone-distance EMITDYN was not reported"
+        print("self-test: 10/10")
     else:
         print("self-test: 4/4 (emit checks skipped, binaries missing)")
     return 0
@@ -531,6 +633,12 @@ def main() -> int:
     ef, n_emit = emit_phase(PAYLOADS)
     dyf, n_dyn = emitdyn_phase(PAYLOADS)
     bf, n_blk = emitblocks_phase()
+    lf, n_lone = lone_distance_phase()
+    wf, n_ws = whitespace_phase()
+    findings.extend(lf)
+    findings.extend(wf)
+    print(f"lone-distance emitdyn: {n_lone} requests, {len(lf)} findings; "
+          f"whitespace: {n_ws} requests, {len(wf)} findings")
     df, n_defl = deflate_phase(PAYLOADS)
     findings.extend(dyf)
     findings.extend(bf)

@@ -9,6 +9,7 @@ use crate::encode_fixed::{dist_sym, emit_fixed_block, length_sym};
 use crate::huffman_build::{
     ClSym, UsedSymbols, build_lengths, canonical_codes, rle_lengths, valid_lengths,
 };
+use crate::lz77::{DIST_EXTRA, LENGTH_EXTRA};
 use crate::tokens::Token;
 use alloc::vec::Vec;
 
@@ -23,36 +24,146 @@ fn trim(ls: &mut Vec<u8>, min: usize) {
     ls.truncate(n.max(min));
 }
 
+/// Symbol frequencies of one block: lit/len (end of block, 256, counted
+/// once) and distance. Everything `emit_block` decides (the lengths, the
+/// used set, both bit sizes) is derived from these, so each block's tokens
+/// are walked once for analysis and once to emit.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Freqs {
+    pub lit: [u32; 286],
+    pub dist: [u32; 30],
+}
+
+/// `f * n` as `usize`, saturating (only reachable past `u32::MAX` tokens).
+fn mul(f: u32, n: usize) -> usize {
+    (f as usize).saturating_mul(n)
+}
+
+impl Freqs {
+    /// One pass over `tokens`. `length_sym` is at most 285 and `dist_sym`
+    /// at most 29 for every `u16`, so no token is lost.
+    pub fn from_tokens(tokens: &[Token]) -> Self {
+        let mut f = Freqs {
+            lit: [0; 286],
+            dist: [0; 30],
+        };
+        if let Some(x) = f.lit.get_mut(256) {
+            *x = 1;
+        }
+        for t in tokens {
+            let (l, d) = match *t {
+                Token::Literal(b) => (usize::from(b), None),
+                Token::Match { len, dist } => (
+                    usize::from(length_sym(len).0),
+                    Some(usize::from(dist_sym(dist).0)),
+                ),
+            };
+            if let Some(x) = f.lit.get_mut(l) {
+                *x = x.saturating_add(1);
+            }
+            if let Some(x) = d.and_then(|d| f.dist.get_mut(d)) {
+                *x = x.saturating_add(1);
+            }
+        }
+        f
+    }
+
+    /// The symbols the block uses: those with a nonzero count (256 always).
+    pub fn used(&self) -> UsedSymbols {
+        let mut u = UsedSymbols::new();
+        for (s, &n) in self.lit.iter().enumerate() {
+            if n > 0 {
+                u.mark_lit(s as u16);
+            }
+        }
+        for (s, &n) in self.dist.iter().enumerate() {
+            if n > 0 {
+                u.mark_dist(s as u16);
+            }
+        }
+        u
+    }
+
+    /// Extra bits of all length and distance codes: they depend on the
+    /// symbol only.
+    fn extra_bits(&self) -> usize {
+        let le: usize = self
+            .lit
+            .iter()
+            .skip(257)
+            .zip(LENGTH_EXTRA.iter())
+            .map(|(&f, &e)| mul(f, usize::from(e)))
+            .sum();
+        let de: usize = self
+            .dist
+            .iter()
+            .zip(DIST_EXTRA.iter())
+            .map(|(&f, &e)| mul(f, usize::from(e)))
+            .sum();
+        le + de
+    }
+
+    /// Exact bit size of a fixed block (Lean `fixedBits`): Σ freq·len plus
+    /// extra bits.
+    pub fn fixed_bits(&self) -> usize {
+        let lit: usize = self
+            .lit
+            .iter()
+            .enumerate()
+            .map(|(s, &f)| mul(f, fixed_lit_len(s)))
+            .sum();
+        let dist: usize = self.dist.iter().map(|&f| mul(f, 5)).sum();
+        3 + lit + dist + self.extra_bits()
+    }
+
+    /// Exact bit size of a dynamic block with these lengths (Lean
+    /// `dynBits`): header, RLE, then Σ freq·len plus extra bits.
+    pub fn dynamic_bits(&self, lit: &[u8], dist: &[u8], cl: &[u8]) -> usize {
+        let at = |ls: &[u8], s: usize| usize::from(ls.get(s).copied().unwrap_or(0));
+        let mut n = 3 + 14 + 3 * (hclen(cl) + 4);
+        let mut all = lit.to_vec();
+        all.extend_from_slice(dist);
+        for s in rle_lengths(&all) {
+            n += at(cl, usize::from(s.symbol())) + extra(s).1 as usize;
+        }
+        let l: usize = self
+            .lit
+            .iter()
+            .enumerate()
+            .map(|(s, &f)| mul(f, at(lit, s)))
+            .sum();
+        let d: usize = self
+            .dist
+            .iter()
+            .enumerate()
+            .map(|(s, &f)| mul(f, at(dist, s)))
+            .sum();
+        n + l + d + self.extra_bits()
+    }
+}
+
+/// Fixed lit/len code length (RFC 1951 §3.2.6).
+fn fixed_lit_len(s: usize) -> usize {
+    match s {
+        0..=143 => 8,
+        144..=255 => 9,
+        256..=279 => 7,
+        _ => 8,
+    }
+}
+
 /// Heuristic lengths for a block over `tokens`, trimmed, or `None` when no
 /// valid dynamic code was found (the block is then fixed).
 pub fn lengths_for(tokens: &[Token]) -> Option<Lengths> {
-    let mut lf = [0u32; 286];
-    let mut df = [0u32; 30];
-    if let Some(f) = lf.get_mut(256) {
-        *f = 1;
-    }
-    let mut matches = false;
-    for t in tokens {
-        match *t {
-            Token::Literal(b) => {
-                if let Some(f) = lf.get_mut(usize::from(b)) {
-                    *f = f.saturating_add(1);
-                }
-            }
-            Token::Match { len, dist } => {
-                matches = true;
-                if let Some(f) = lf.get_mut(usize::from(length_sym(len).0)) {
-                    *f = f.saturating_add(1);
-                }
-                if let Some(f) = df.get_mut(usize::from(dist_sym(dist).0)) {
-                    *f = f.saturating_add(1);
-                }
-            }
-        }
-    }
-    let mut lit = build_lengths(&lf, 15);
+    lengths_for_freqs(&Freqs::from_tokens(tokens))
+}
+
+/// [`lengths_for`] from a block's frequencies.
+pub fn lengths_for_freqs(f: &Freqs) -> Option<Lengths> {
+    let matches = f.dist.iter().any(|&n| n > 0);
+    let mut lit = build_lengths(&f.lit, 15);
     let mut dist = if matches {
-        build_lengths(&df, 15)
+        build_lengths(&f.dist, 15)
     } else {
         let mut d = alloc::vec![0u8; 30];
         if let Some(x) = d.first_mut() {
@@ -81,7 +192,7 @@ pub fn lengths_for(tokens: &[Token]) -> Option<Lengths> {
             *l = 1;
         }
     }
-    if valid_lengths(&lit, &dist, &cl, &UsedSymbols::from_tokens(tokens)) {
+    if valid_lengths(&lit, &dist, &cl, &f.used()) {
         Some((lit, dist, cl))
     } else {
         None
@@ -165,53 +276,20 @@ pub fn emit_dynamic_block(
 
 /// Exact bit size of a fixed block over `tokens`.
 pub fn fixed_bits(tokens: &[Token]) -> usize {
-    let lit = |s: u16| match s {
-        0..=143 => 8,
-        144..=255 => 9,
-        256..=279 => 7,
-        _ => 8,
-    };
-    let mut n = 3 + lit(256);
-    for t in tokens {
-        n += match *t {
-            Token::Literal(b) => lit(u16::from(b)),
-            Token::Match { len, dist } => {
-                let (ls, _, ln) = length_sym(len);
-                let (_, _, dn) = dist_sym(dist);
-                lit(ls) + ln as usize + 5 + dn as usize
-            }
-        };
-    }
-    n
+    Freqs::from_tokens(tokens).fixed_bits()
 }
 
 /// Exact bit size of a dynamic block with these lengths.
 pub fn dynamic_bits(lit: &[u8], dist: &[u8], cl: &[u8], tokens: &[Token]) -> usize {
-    let at = |ls: &[u8], s: u16| usize::from(ls.get(usize::from(s)).copied().unwrap_or(0));
-    let mut n = 3 + 14 + 3 * (hclen(cl) + 4);
-    let mut all = lit.to_vec();
-    all.extend_from_slice(dist);
-    for s in rle_lengths(&all) {
-        n += at(cl, u16::from(s.symbol())) + extra(s).1 as usize;
-    }
-    n += at(lit, 256);
-    for t in tokens {
-        n += match *t {
-            Token::Literal(b) => at(lit, u16::from(b)),
-            Token::Match { len, dist: d } => {
-                let (ls, _, ln) = length_sym(len);
-                let (ds, _, dn) = dist_sym(d);
-                at(lit, ls) + ln as usize + at(dist, ds) + dn as usize
-            }
-        };
-    }
-    n
+    Freqs::from_tokens(tokens).dynamic_bits(lit, dist, cl)
 }
 
-/// One block: dynamic iff `lengths_for` is valid and strictly smaller.
+/// One block: dynamic iff `lengths_for` is valid and strictly smaller. One
+/// analysis pass (`Freqs`), then the emit.
 fn emit_block(w: &mut BitWriter, final_: bool, tokens: &[Token]) {
-    if let Some((lit, dist, cl)) = lengths_for(tokens)
-        && dynamic_bits(&lit, &dist, &cl, tokens) < fixed_bits(tokens)
+    let f = Freqs::from_tokens(tokens);
+    if let Some((lit, dist, cl)) = lengths_for_freqs(&f)
+        && f.dynamic_bits(&lit, &dist, &cl) < f.fixed_bits()
     {
         emit_dynamic_block(w, final_, &lit, &dist, &cl, tokens);
     } else {

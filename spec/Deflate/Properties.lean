@@ -3098,7 +3098,7 @@ theorem validLengths_spec {lit dist cl : Array Nat} {ts : List Token}
     (∀ s ∈ rleLengths (lit ++ dist), 0 < cl[s.sym]!) := by
   simp only [validLengths, Bool.and_eq_true, decide_eq_true_eq, beq_iff_eq, Array.all_eq_true',
     List.all_eq_true] at h
-  obtain ⟨⟨⟨⟨⟨⟨⟨⟨⟨⟨⟨a, b⟩, c⟩, d⟩, e⟩, f⟩, g⟩, i⟩, j⟩, k⟩, l⟩, m⟩ := h
+  obtain ⟨⟨⟨⟨⟨⟨⟨⟨⟨⟨⟨⟨a, b⟩, c⟩, d⟩, e⟩, f⟩, g⟩, i⟩, j⟩, k⟩, l⟩, m⟩, -⟩ := h
   exact ⟨a, b, c, d, e, f, g, i, j, k, l, m⟩
 
 /-- M7a's `emitFixed` is one final `emitFixedBlock`, packed. -/

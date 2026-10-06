@@ -292,8 +292,9 @@ pub fn rle_lengths(lengths: &[u8]) -> Vec<ClSym> {
     out
 }
 
-/// Lean `validLengths`: whether a decoder accepts these three codes and
-/// every symbol `used` (and every CL symbol the RLE needs) has a code.
+/// Lean `validLengths`: whether a decoder (ours and zlib) accepts these
+/// three codes and every symbol `used` (and every CL symbol the RLE needs)
+/// has a code. An incomplete distance code must have no length above 1.
 pub fn valid_lengths(lit: &[u8], dist: &[u8], cl: &[u8], used: &UsedSymbols) -> bool {
     if !(257..=286).contains(&lit.len()) || !(1..=30).contains(&dist.len()) || cl.len() != 19 {
         return false;
@@ -305,6 +306,15 @@ pub fn valid_lengths(lit: &[u8], dist: &[u8], cl: &[u8], used: &UsedSymbols) -> 
     if HuffmanTable::from_lengths(lit, Completeness::Complete).is_err()
         || HuffmanTable::from_lengths(dist, Completeness::AllowDegenerate).is_err()
         || HuffmanTable::from_lengths(cl, Completeness::Complete).is_err()
+    {
+        return false;
+    }
+    // The decoder (ADR 0004) also takes a lone distance code of any length,
+    // but zlib does not: an incomplete distance code is accepted only when
+    // no length exceeds 1 (inftrees.c, `max != 1`), i.e. one used symbol of
+    // length 1, or none at all. An encoder must only emit what zlib reads.
+    if HuffmanTable::from_lengths(dist, Completeness::Complete).is_err()
+        && dist.iter().any(|&l| l > 1)
     {
         return false;
     }

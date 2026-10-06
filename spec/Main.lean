@@ -62,9 +62,25 @@ def parseToken? (s : String) : Option Token :=
     pure (.match len dist)
   | _ => none
 
+/-- ASCII whitespace exactly as Rust's `u8::is_ascii_whitespace`: space,
+    tab, LF, FF (U+000C) and CR, but not VT (U+000B). Lean's
+    `Char.isWhitespace` misses FF and `String.trimAscii` also strips VT, so
+    the oracle uses this one predicate for trimming and splitting. -/
+def isAsciiWs (c : Char) : Bool :=
+  c = ' ' || c = '\t' || c = '\n' || c = '\x0c' || c = '\r'
+
+/-- Trim `isAsciiWs` from both ends. Rust: `str::trim_ascii`. -/
+def trimWs (s : String) : String :=
+  String.ofList ((s.toList.dropWhile isAsciiWs).reverse.dropWhile isAsciiWs).reverse
+
+/-- Split on runs of `isAsciiWs`, dropping empty words. Rust:
+    `str::split_ascii_whitespace`. -/
+def wordsWs (s : String) : List String :=
+  (s.split isAsciiWs).toList.map (·.toString) |>.filter (· ≠ "")
+
 /-- `EMIT` body: whitespace-separated tokens, through `emitFixed` alone. -/
 def emitAndFormat (body : String) : String :=
-  let words := (body.split Char.isWhitespace).toList.map (·.toString) |>.filter (· ≠ "")
+  let words := wordsWs body
   match words.mapM parseToken? with
   | none => "ERR badToken"
   | some ts => s!"OK {toHex (emitFixed ts)}"
@@ -72,7 +88,7 @@ def emitAndFormat (body : String) : String :=
 /-- `EMITBLOCKS` body: tokens through `emitBlocks` with no lengths (fixed
     blocks only, chunks of 16384). Rust: `emit_blocks_fixed_reply`. -/
 def emitBlocksAndFormat (body : String) : String :=
-  let words := (body.split Char.isWhitespace).toList.map (·.toString) |>.filter (· ≠ "")
+  let words := wordsWs body
   match words.mapM parseToken? with
   | none => "ERR badToken"
   | some ts => s!"OK {toHex (emitBlocks (fun _ => none) ts)}"
@@ -86,7 +102,7 @@ def parseLengths? (s : String) (lo hi : Nat) : Option (Array Nat) :=
     `validLengths` holds (no size comparison), fixed otherwise. Lengths are
     checked before tokens. Rust: `emit_dyn_reply` in `vdeflate`. -/
 def emitDynAndFormat (body : String) : String :=
-  let words := (body.split Char.isWhitespace).toList.map (·.toString) |>.filter (· ≠ "")
+  let words := wordsWs body
   let lens : Option (Array Nat × Array Nat × Array Nat × List String) :=
     match words with
     | l :: d :: c :: toks => do
@@ -114,7 +130,7 @@ def deflateAndFormat (hx : String) : String :=
   | some bs => s!"OK {toHex (compress (fun _ _ => none) (fun _ => none) bs)}"
 
 def handle (limit : Nat) (line : String) : Nat × Option String :=
-  let t := line.trimAscii.toString
+  let t := trimWs line
   -- EMIT takes a token list, so split off only the command word (Rust: `splitn(2, ' ')`).
   match t.splitOn " " with
   | "EMIT" :: _ => (limit, some (emitAndFormat (t.drop 4).toString))

@@ -8,13 +8,79 @@ use crate::tokens::Token;
 use alloc::vec::Vec;
 
 /// Largest `i` with `base[i] <= v`; 0 if none (out-of-contract input).
-fn slot(base: &[u16], v: u16) -> usize {
-    base.iter().rposition(|&b| b <= v).unwrap_or(0)
+/// Compile-time only: the tables below are built from it.
+const fn slot(base: &[u16], v: usize) -> u8 {
+    let mut i = 0;
+    let mut s = 0;
+    while i < base.len() {
+        if base[i] as usize <= v {
+            s = i;
+        }
+        i += 1;
+    }
+    s as u8
+}
+
+/// `LEN_SLOT[len]` is the length-code index for `len` in 0..=258.
+const LEN_SLOT: [u8; 259] = {
+    let mut t = [0u8; 259];
+    let mut v = 0;
+    while v < t.len() {
+        t[v] = slot(&LENGTH_BASE, v);
+        v += 1;
+    }
+    t
+};
+
+/// `DIST_LO[d]` is the distance-code index for `d` in 0..=256.
+const DIST_LO: [u8; 257] = {
+    let mut t = [0u8; 257];
+    let mut v = 0;
+    while v < t.len() {
+        t[v] = slot(&DIST_BASE, v);
+        v += 1;
+    }
+    t
+};
+
+/// `DIST_HI[(d - 1) >> 7]` is the distance-code index for `d >= 257`. Every
+/// base from 257 up is `128k + 1`, so a bucket `128k+1 ..= 128k+128` never
+/// straddles a base and one entry per bucket suffices (zlib's `_dist_code`
+/// trick). 512 buckets cover all of `u16`.
+const DIST_HI: [u8; 512] = {
+    let mut t = [0u8; 512];
+    let mut k = 0;
+    while k < t.len() {
+        t[k] = slot(&DIST_BASE, 128 * k + 1);
+        k += 1;
+    }
+    t
+};
+
+/// Length-code index for any `u16`; lengths past 258 take the last code,
+/// like the linear scan they replace.
+fn len_slot(len: u16) -> usize {
+    match LEN_SLOT.get(usize::from(len)) {
+        Some(&i) => usize::from(i),
+        None => LENGTH_BASE.len() - 1,
+    }
+}
+
+/// Distance-code index for any `u16` (0 for distance 0).
+fn dist_slot(dist: u16) -> usize {
+    let d = usize::from(dist);
+    let i = if d <= 256 {
+        DIST_LO.get(d)
+    } else {
+        DIST_HI.get((d - 1) >> 7)
+    };
+    usize::from(i.copied().unwrap_or(0))
 }
 
 /// `(symbol, extra value, extra bit count)` for a match length 3..=258.
+/// O(1): one table lookup.
 pub fn length_sym(len: u16) -> (u16, u32, u32) {
-    let i = slot(&LENGTH_BASE, len);
+    let i = len_slot(len);
     let base = LENGTH_BASE.get(i).copied().unwrap_or(0);
     let nb = LENGTH_EXTRA.get(i).copied().unwrap_or(0);
     (
@@ -25,8 +91,9 @@ pub fn length_sym(len: u16) -> (u16, u32, u32) {
 }
 
 /// `(symbol, extra value, extra bit count)` for a distance 1..=32768.
+/// O(1): one table lookup.
 pub fn dist_sym(dist: u16) -> (u16, u32, u32) {
-    let i = slot(&DIST_BASE, dist);
+    let i = dist_slot(dist);
     let base = DIST_BASE.get(i).copied().unwrap_or(0);
     let nb = DIST_EXTRA.get(i).copied().unwrap_or(0);
     (

@@ -59,9 +59,14 @@ not. The link is **mirroring plus differential testing, and nothing more**:
 - The harness sends `EMIT` token lists to Rust and Lean and requires
   byte-identical output (314 requests, 0 findings), `EMITDYN` requests
   (explicit lit, dist and CL lengths; 1010 requests, 593 of them dynamic,
-  0 findings) and `EMITBLOCKS` requests (up to 40000 tokens, 5 requests,
-  0 findings). Its self-test, which checks that a corrupted Rust reply is
-  detected, passes 9/9. It sends `DEFLATE`
+  0 findings, plus 160 requests with a one-symbol distance code of length
+  0 to 15, where lengths 2 to 15 must give exactly the fixed block, since
+  zlib rejects them, and every stream must decode under zlib; 0 findings)
+  and `EMITBLOCKS` requests (fixed blocks only, up to 40000 tokens, 5
+  requests, 0 findings). Its self-test, which checks that a corrupted Rust
+  reply is detected, passes 10/10. A stream with several dynamic blocks is
+  therefore checked by decoding only: no request compares its bytes with
+  Lean's. It sends `DEFLATE`
   payloads and requires that Rust, Lean and zlib each decode every produced
   stream back to the payload (14 payloads, 0 findings). The Lean `DEFLATE`
   finder always returns `none`, so the harness does not compare the two

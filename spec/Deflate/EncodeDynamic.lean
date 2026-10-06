@@ -151,13 +151,18 @@ def tokenCoded (lit dist : Array Nat) : Token → Bool
     formats", Validity): sizes in range, lit/dist lengths ≤ 15 and CL
     lengths ≤ 7, `lit` and `cl` complete, `dist` a valid distance code,
     symbol 256 and every symbol `ts` uses coded, and every CL symbol the RLE
-    of `lit ++ dist` uses coded. Rust: `valid_lengths`. -/
+    of `lit ++ dist` uses coded. Last, `dist` is complete or has no length
+    above 1: our decoder (`isValidDistance`, ADR 0004) also reads a lone
+    distance code of any length, but zlib accepts an incomplete distance
+    code only with `max ≤ 1` (inftrees.c), so the encoder demands that.
+    Rust: `valid_lengths`. -/
 def validLengths (lit dist cl : Array Nat) (ts : List Token) : Bool :=
   (257 ≤ lit.size && lit.size ≤ 286) && (1 ≤ dist.size && dist.size ≤ 30) && cl.size == 19 &&
   lit.all (· ≤ 15) && dist.all (· ≤ 15) && cl.all (· ≤ 7) &&
   (⟨lit⟩ : Code).isComplete && (⟨dist⟩ : Code).isValidDistance && (⟨cl⟩ : Code).isComplete &&
   0 < lit[256]! && ts.all (tokenCoded lit dist) &&
-  (rleLengths (lit ++ dist)).all (fun s => 0 < cl[s.sym]!)
+  (rleLengths (lit ++ dist)).all (fun s => 0 < cl[s.sym]!) &&
+  ((⟨dist⟩ : Code).isComplete || dist.all (· ≤ 1))
 
 /-- Per-block code lengths `(lit, dist, cl)`, `cl` indexed by CL symbol, or
     `none` for a fixed block. Untrusted, like `Finder`: every result is
