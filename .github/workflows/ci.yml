@@ -40,6 +40,7 @@ jobs:
           sh scripts/test_axiom_gate.sh
           cargo test --workspace
           python3 scripts/tuning_report.py --check
+          make research-check
 
       - name: No unsafe, no std in the core
         run: |

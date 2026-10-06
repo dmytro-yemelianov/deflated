@@ -33,8 +33,15 @@ checked policy, alongside initial gzip and ZIP framing proofs.
     make size     # reproducible binary-size measurement
     make perf     # decode and compress throughput against miniz_oxide
     make profile  # where decode and encode time go (macOS, needs samply)
+    make research-check # autotuning-tool integrity checks, no GPU dependency
+    make research-poc   # seeded synthetic corpus and finite tuning pilot
 
 Needs Rust 1.88 (edition 2024), elan with Lean v4.30.0, and Python 3.
+
+The next tuning investigation covers multidimensional parameter search,
+GPU-assisted proposals, synthetic generators and verification gates. Its
+bounded spikes and runnable PoC are in
+[docs/autotuning-investigation.md](docs/autotuning-investigation.md).
 
 The CLI supports raw streams (`-c`, `-d`) and gzip (`-zc`, `-zd`).
 `--stored` selects stored blocks for either compression mode; `--limit N`

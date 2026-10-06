@@ -1,0 +1,545 @@
+{
+  "schema_version": 1,
+  "purpose": "Phase-zero tooling evidence; no production change, optimizer convergence or compression-quality improvement claim",
+  "gpu_kernel": {
+    "strict": {
+      "schema_version": 1,
+      "purpose": "untrained kernel crossover; not an optimizer or compression benchmark",
+      "mlx_version": "0.32.1",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "source_sha256": "5a3fc6a29c850e9042999e9ff80f067267be56884514fba247868a8b78e99f24",
+      "device": {
+        "resource_limit": 499000,
+        "max_buffer_length": 14302248960,
+        "architecture": "applegpu_g17g",
+        "memory_size": 25769803776,
+        "max_recommended_working_set_size": 19069665280,
+        "device_name": "Apple M5"
+      },
+      "dtype": "float32",
+      "seed": 195107,
+      "precision": "strict",
+      "MLX_ENABLE_TF32": "0",
+      "max_scaled_error_tolerance": 0.0001,
+      "input_axes": 24,
+      "hidden_width": 128,
+      "ensemble_members": 4,
+      "objective_axes": 3,
+      "rounds": 7,
+      "timing": "materialized float32 inputs/weights; two warmups; rotated CPU/GPU; includes scoring and top32 sort; eval and synchronize before stopping clock; excludes model fitting and input generation",
+      "rows": [
+        {
+          "batch": 16,
+          "samples_ns": {
+            "cpu": [
+              50500,
+              63042,
+              45834,
+              53542,
+              39625,
+              52750,
+              43042
+            ],
+            "gpu": [
+              468750,
+              622042,
+              501291,
+              720667,
+              276458,
+              268875,
+              317750
+            ]
+          },
+          "cpu_median_ns": 50500,
+          "gpu_median_ns": 468750,
+          "gpu_speedup": 0.10773333333333333,
+          "max_scaled_error": 1.694070590474439e-07,
+          "top32_overlap": 1.0,
+          "top32_order_agreement": 1.0,
+          "top1_agreement": true
+        },
+        {
+          "batch": 256,
+          "samples_ns": {
+            "cpu": [
+              61709,
+              67000,
+              55083,
+              56167,
+              50167,
+              55083,
+              47417
+            ],
+            "gpu": [
+              350083,
+              420208,
+              481583,
+              431625,
+              332167,
+              444708,
+              340417
+            ]
+          },
+          "cpu_median_ns": 55083,
+          "gpu_median_ns": 420208,
+          "gpu_speedup": 0.13108508167383773,
+          "max_scaled_error": 2.4529933284611616e-07,
+          "top32_overlap": 1.0,
+          "top32_order_agreement": 1.0,
+          "top1_agreement": true
+        },
+        {
+          "batch": 4096,
+          "samples_ns": {
+            "cpu": [
+              365583,
+              416500,
+              387667,
+              346125,
+              350500,
+              328000,
+              328459
+            ],
+            "gpu": [
+              840958,
+              730458,
+              631375,
+              740250,
+              649583,
+              722583,
+              775834
+            ]
+          },
+          "cpu_median_ns": 350500,
+          "gpu_median_ns": 730458,
+          "gpu_speedup": 0.47983593854814377,
+          "max_scaled_error": 2.8180807021271903e-07,
+          "top32_overlap": 1.0,
+          "top32_order_agreement": 1.0,
+          "top1_agreement": true
+        },
+        {
+          "batch": 65536,
+          "samples_ns": {
+            "cpu": [
+              7782875,
+              7478042,
+              7527542,
+              7583875,
+              7613084,
+              8644208,
+              8017750
+            ],
+            "gpu": [
+              5333250,
+              5229417,
+              5556792,
+              4435375,
+              3647500,
+              3219292,
+              3743667
+            ]
+          },
+          "cpu_median_ns": 7613084,
+          "gpu_median_ns": 4435375,
+          "gpu_speedup": 1.7164465236873996,
+          "max_scaled_error": 3.820809411081427e-07,
+          "top32_overlap": 1.0,
+          "top32_order_agreement": 1.0,
+          "top1_agreement": true
+        }
+      ]
+    },
+    "reduced": {
+      "schema_version": 1,
+      "purpose": "untrained kernel crossover; not an optimizer or compression benchmark",
+      "mlx_version": "0.32.1",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "source_sha256": "5a3fc6a29c850e9042999e9ff80f067267be56884514fba247868a8b78e99f24",
+      "device": {
+        "resource_limit": 499000,
+        "max_buffer_length": 14302248960,
+        "architecture": "applegpu_g17g",
+        "memory_size": 25769803776,
+        "max_recommended_working_set_size": 19069665280,
+        "device_name": "Apple M5"
+      },
+      "dtype": "float32",
+      "seed": 195107,
+      "precision": "reduced",
+      "MLX_ENABLE_TF32": "1",
+      "max_scaled_error_tolerance": 0.01,
+      "input_axes": 24,
+      "hidden_width": 128,
+      "ensemble_members": 4,
+      "objective_axes": 3,
+      "rounds": 7,
+      "timing": "materialized float32 inputs/weights; two warmups; rotated CPU/GPU; includes scoring and top32 sort; eval and synchronize before stopping clock; excludes model fitting and input generation",
+      "rows": [
+        {
+          "batch": 16,
+          "samples_ns": {
+            "cpu": [
+              50458,
+              48042,
+              41541,
+              55500,
+              47417,
+              41791,
+              53375
+            ],
+            "gpu": [
+              393416,
+              286417,
+              307167,
+              618958,
+              343083,
+              595958,
+              316041
+            ]
+          },
+          "cpu_median_ns": 48042,
+          "gpu_median_ns": 343083,
+          "gpu_speedup": 0.14003025506947298,
+          "max_scaled_error": 0.0008179691503755748,
+          "top32_overlap": 1.0,
+          "top32_order_agreement": 1.0,
+          "top1_agreement": true
+        },
+        {
+          "batch": 256,
+          "samples_ns": {
+            "cpu": [
+              50375,
+              64750,
+              55750,
+              53208,
+              53209,
+              52792,
+              51625
+            ],
+            "gpu": [
+              336208,
+              417666,
+              308250,
+              444584,
+              324416,
+              414958,
+              321875
+            ]
+          },
+          "cpu_median_ns": 53208,
+          "gpu_median_ns": 336208,
+          "gpu_speedup": 0.158259172892971,
+          "max_scaled_error": 0.0009278240031562746,
+          "top32_overlap": 1.0,
+          "top32_order_agreement": 0.9375,
+          "top1_agreement": true
+        },
+        {
+          "batch": 4096,
+          "samples_ns": {
+            "cpu": [
+              377875,
+              401042,
+              371125,
+              346833,
+              342833,
+              328792,
+              319250
+            ],
+            "gpu": [
+              726583,
+              867208,
+              530667,
+              675708,
+              632917,
+              618833,
+              718750
+            ]
+          },
+          "cpu_median_ns": 346833,
+          "gpu_median_ns": 675708,
+          "gpu_speedup": 0.5132882842884796,
+          "max_scaled_error": 0.0010275786044076085,
+          "top32_overlap": 1.0,
+          "top32_order_agreement": 0.9375,
+          "top1_agreement": true
+        },
+        {
+          "batch": 65536,
+          "samples_ns": {
+            "cpu": [
+              7822459,
+              7828666,
+              7815416,
+              8705417,
+              8595833,
+              8096834,
+              9302750
+            ],
+            "gpu": [
+              4533458,
+              3849250,
+              4608125,
+              3817708,
+              3181167,
+              3005958,
+              3667084
+            ]
+          },
+          "cpu_median_ns": 8096834,
+          "gpu_median_ns": 3817708,
+          "gpu_speedup": 2.1208625698979597,
+          "max_scaled_error": 0.0011526683811098337,
+          "top32_overlap": 1.0,
+          "top32_order_agreement": 0.9375,
+          "top1_agreement": true
+        }
+      ]
+    }
+  },
+  "cpu_pilots": [
+    {
+      "partition": "train",
+      "cpu": "Apple M5",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)",
+      "rounds": 5,
+      "minimum_batch_ms": 10,
+      "manifest_sha256": "4b0202ea617da20295ede7011799ec70555b86324af2b47918e83ad650700b1d",
+      "source_sha256": {
+        "Cargo.toml": "d8e747c012cba553ad19cdba4436e5c43dd30a10adce9e89933c3d538c4f4a39",
+        "Cargo.lock": "8ce82932f19c583ec37870d2f01dc9e72cb492b0aa02dde7e14b43142857a15d",
+        "crates/deflate-core/examples/search.rs": "ebfcd2605e60115895ed93f611fb45c5380223867919312d4d003f1442831e85",
+        "scripts/search_corpus.py": "ff99039e63e31f41805a433777ba454a8e6276706e4357d2f6273febe78f03c3",
+        "scripts/search_poc.py": "bde8f0bb0976f0197281eaa7e9c03445a6b628a28b04f5ab315d7a319d0e1763",
+        "crates/deflate-core/src/bitstream.rs": "95e941fcc379cafd8ae920f12ed4f6327e12062edfe39015f66eb43a9b094186",
+        "crates/deflate-core/src/bitwriter.rs": "0b6ff21ba48422ed34557f9b5e56dd89cd91315cac9a498f9bed306b3cd96588",
+        "crates/deflate-core/src/block.rs": "b99d28faf70ea823b251544f2040f0c4850b9871bcbd9e331742661545310eee",
+        "crates/deflate-core/src/compress.rs": "a81a628998057cd56851ab68022f64a78572aea30d21958c8d642b93cc4d2e4e",
+        "crates/deflate-core/src/crc32.rs": "3166b0a90dc6cded7a07e5beae9b5cee0c843349123e80dd2e7cc898f71e7fad",
+        "crates/deflate-core/src/deflate.rs": "419e757fa99e22675f77628fc652badcfeb0817852835f790eb584aaebc67507",
+        "crates/deflate-core/src/encode_dynamic.rs": "0a10d270561609bcb1c9b883992880734c6395dfd532ad9ecd2bed54bc4a52ec",
+        "crates/deflate-core/src/encode_fixed.rs": "b4459d0cc109c2f50ebd28467ad1923fbf96a527480dd3f64399601cfa459fd1",
+        "crates/deflate-core/src/error.rs": "fe3ac5fc29296fd8e7e0539dc76c615717fe8a72bb3456608edd18efbb21fecd",
+        "crates/deflate-core/src/gzip.rs": "44a8044d6fd55a5f78fab74f75ba5815b004a4e83ffcbf08ae8254909021b5bd",
+        "crates/deflate-core/src/huffman.rs": "326b31f0fda785d2418f24c7348490520f7f869082fed3316f9f870bfe0fd964",
+        "crates/deflate-core/src/huffman_build.rs": "c2eef9c5c7d53eaf435b65cbc2eb6ad19f28e3df1aef87f6952024c8879ccc58",
+        "crates/deflate-core/src/inflate.rs": "ae4c905a7da364c4b05f4f8c4754ca01ad513b695ea82c28a06c2375dfcde272",
+        "crates/deflate-core/src/lib.rs": "b3222c5cda31d020c866f364aef47a1eb9a328a4b6c9f8b835165157460d8ef8",
+        "crates/deflate-core/src/lz77.rs": "67991a3fb79ef37a65accdff089b3c34d90157e8eed43745fcbba60f432589c1",
+        "crates/deflate-core/src/matcher.rs": "ed6d951a8e436410f869703e9df2db44567fe0f9ca676583dc8135b3b03ba57c",
+        "crates/deflate-core/src/matcher_flat.rs": "2cb9257a6b93edce133891c4292690ef78e5edf87ccdbce976667d0d6d587890",
+        "crates/deflate-core/src/tokens.rs": "5e2f16a94e1a8a35400be25e04280ecae25dd550ad7bd92e398715f16f84f839",
+        "crates/deflate-core/src/zip.rs": "e92492d2c4d61be74e8f6f73da43725992ca0c6be807d8da0d104e2e3a6ae731"
+      },
+      "binary_sha256": "b5f5d5764235078599a9c9068dede9bcdeb49730c15c2c30fcafc504010ffd66",
+      "candidate_space": {
+        "presets": [
+          "fast",
+          "balanced",
+          "best"
+        ],
+        "method": [
+          "stored",
+          "matched"
+        ],
+        "custom_splits": {
+          "level": "balanced",
+          "block_tokens": [
+            256,
+            1024,
+            4096,
+            16384
+          ]
+        },
+        "reference": "miniz_oxide 0.8.9 levels 1, 6, 9"
+      },
+      "control": "split16384 is byte-equivalent to balanced and excluded from selection; timing differences may reflect API/compiler overhead or noise, not different policy settings",
+      "verification": {
+        "streams": 220,
+        "decoders": [
+          "deflate-core",
+          "miniz_oxide",
+          "zlib"
+        ],
+        "zlib_exact_consumption": true,
+        "balanced_split16384_byte_equality": true
+      },
+      "provisional_frontier": [
+        "stored",
+        "fast",
+        "balanced",
+        "best"
+      ],
+      "memory": "not measured; frontier has only time and size axes",
+      "purpose": "tooling pilot; no encoder promotion or universal performance claim",
+      "measured_cases": 20,
+      "raw_artifact": "target/search/pilot-train-recorded/result.json",
+      "raw_artifact_sha256": "edf11387e87e577d2d523594f940d98852875df767164237bff3168389ea0751"
+    },
+    {
+      "partition": "validation",
+      "cpu": "Apple M5",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)",
+      "rounds": 5,
+      "minimum_batch_ms": 10,
+      "manifest_sha256": "4b0202ea617da20295ede7011799ec70555b86324af2b47918e83ad650700b1d",
+      "source_sha256": {
+        "Cargo.toml": "d8e747c012cba553ad19cdba4436e5c43dd30a10adce9e89933c3d538c4f4a39",
+        "Cargo.lock": "8ce82932f19c583ec37870d2f01dc9e72cb492b0aa02dde7e14b43142857a15d",
+        "crates/deflate-core/examples/search.rs": "ebfcd2605e60115895ed93f611fb45c5380223867919312d4d003f1442831e85",
+        "scripts/search_corpus.py": "ff99039e63e31f41805a433777ba454a8e6276706e4357d2f6273febe78f03c3",
+        "scripts/search_poc.py": "bde8f0bb0976f0197281eaa7e9c03445a6b628a28b04f5ab315d7a319d0e1763",
+        "crates/deflate-core/src/bitstream.rs": "95e941fcc379cafd8ae920f12ed4f6327e12062edfe39015f66eb43a9b094186",
+        "crates/deflate-core/src/bitwriter.rs": "0b6ff21ba48422ed34557f9b5e56dd89cd91315cac9a498f9bed306b3cd96588",
+        "crates/deflate-core/src/block.rs": "b99d28faf70ea823b251544f2040f0c4850b9871bcbd9e331742661545310eee",
+        "crates/deflate-core/src/compress.rs": "a81a628998057cd56851ab68022f64a78572aea30d21958c8d642b93cc4d2e4e",
+        "crates/deflate-core/src/crc32.rs": "3166b0a90dc6cded7a07e5beae9b5cee0c843349123e80dd2e7cc898f71e7fad",
+        "crates/deflate-core/src/deflate.rs": "419e757fa99e22675f77628fc652badcfeb0817852835f790eb584aaebc67507",
+        "crates/deflate-core/src/encode_dynamic.rs": "0a10d270561609bcb1c9b883992880734c6395dfd532ad9ecd2bed54bc4a52ec",
+        "crates/deflate-core/src/encode_fixed.rs": "b4459d0cc109c2f50ebd28467ad1923fbf96a527480dd3f64399601cfa459fd1",
+        "crates/deflate-core/src/error.rs": "fe3ac5fc29296fd8e7e0539dc76c615717fe8a72bb3456608edd18efbb21fecd",
+        "crates/deflate-core/src/gzip.rs": "44a8044d6fd55a5f78fab74f75ba5815b004a4e83ffcbf08ae8254909021b5bd",
+        "crates/deflate-core/src/huffman.rs": "326b31f0fda785d2418f24c7348490520f7f869082fed3316f9f870bfe0fd964",
+        "crates/deflate-core/src/huffman_build.rs": "c2eef9c5c7d53eaf435b65cbc2eb6ad19f28e3df1aef87f6952024c8879ccc58",
+        "crates/deflate-core/src/inflate.rs": "ae4c905a7da364c4b05f4f8c4754ca01ad513b695ea82c28a06c2375dfcde272",
+        "crates/deflate-core/src/lib.rs": "b3222c5cda31d020c866f364aef47a1eb9a328a4b6c9f8b835165157460d8ef8",
+        "crates/deflate-core/src/lz77.rs": "67991a3fb79ef37a65accdff089b3c34d90157e8eed43745fcbba60f432589c1",
+        "crates/deflate-core/src/matcher.rs": "ed6d951a8e436410f869703e9df2db44567fe0f9ca676583dc8135b3b03ba57c",
+        "crates/deflate-core/src/matcher_flat.rs": "2cb9257a6b93edce133891c4292690ef78e5edf87ccdbce976667d0d6d587890",
+        "crates/deflate-core/src/tokens.rs": "5e2f16a94e1a8a35400be25e04280ecae25dd550ad7bd92e398715f16f84f839",
+        "crates/deflate-core/src/zip.rs": "e92492d2c4d61be74e8f6f73da43725992ca0c6be807d8da0d104e2e3a6ae731"
+      },
+      "binary_sha256": "b5f5d5764235078599a9c9068dede9bcdeb49730c15c2c30fcafc504010ffd66",
+      "candidate_space": {
+        "presets": [
+          "fast",
+          "balanced",
+          "best"
+        ],
+        "method": [
+          "stored",
+          "matched"
+        ],
+        "custom_splits": {
+          "level": "balanced",
+          "block_tokens": [
+            256,
+            1024,
+            4096,
+            16384
+          ]
+        },
+        "reference": "miniz_oxide 0.8.9 levels 1, 6, 9"
+      },
+      "control": "split16384 is byte-equivalent to balanced and excluded from selection; timing differences may reflect API/compiler overhead or noise, not different policy settings",
+      "verification": {
+        "streams": 143,
+        "decoders": [
+          "deflate-core",
+          "miniz_oxide",
+          "zlib"
+        ],
+        "zlib_exact_consumption": true,
+        "balanced_split16384_byte_equality": true
+      },
+      "provisional_frontier": [
+        "stored",
+        "fast",
+        "balanced",
+        "best"
+      ],
+      "memory": "not measured; frontier has only time and size axes",
+      "purpose": "tooling pilot; no encoder promotion or universal performance claim",
+      "measured_cases": 13,
+      "raw_artifact": "target/search/pilot-validation-recorded/result.json",
+      "raw_artifact_sha256": "61e98554b603a7636f6e42f5fe6cee84182c320ee71ef79a0c363f1675cc6961"
+    },
+    {
+      "partition": "stress",
+      "cpu": "Apple M5",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)",
+      "rounds": 3,
+      "minimum_batch_ms": 1,
+      "manifest_sha256": "4b0202ea617da20295ede7011799ec70555b86324af2b47918e83ad650700b1d",
+      "source_sha256": {
+        "Cargo.toml": "d8e747c012cba553ad19cdba4436e5c43dd30a10adce9e89933c3d538c4f4a39",
+        "Cargo.lock": "8ce82932f19c583ec37870d2f01dc9e72cb492b0aa02dde7e14b43142857a15d",
+        "crates/deflate-core/examples/search.rs": "ebfcd2605e60115895ed93f611fb45c5380223867919312d4d003f1442831e85",
+        "scripts/search_corpus.py": "ff99039e63e31f41805a433777ba454a8e6276706e4357d2f6273febe78f03c3",
+        "scripts/search_poc.py": "bde8f0bb0976f0197281eaa7e9c03445a6b628a28b04f5ab315d7a319d0e1763",
+        "crates/deflate-core/src/bitstream.rs": "95e941fcc379cafd8ae920f12ed4f6327e12062edfe39015f66eb43a9b094186",
+        "crates/deflate-core/src/bitwriter.rs": "0b6ff21ba48422ed34557f9b5e56dd89cd91315cac9a498f9bed306b3cd96588",
+        "crates/deflate-core/src/block.rs": "b99d28faf70ea823b251544f2040f0c4850b9871bcbd9e331742661545310eee",
+        "crates/deflate-core/src/compress.rs": "a81a628998057cd56851ab68022f64a78572aea30d21958c8d642b93cc4d2e4e",
+        "crates/deflate-core/src/crc32.rs": "3166b0a90dc6cded7a07e5beae9b5cee0c843349123e80dd2e7cc898f71e7fad",
+        "crates/deflate-core/src/deflate.rs": "419e757fa99e22675f77628fc652badcfeb0817852835f790eb584aaebc67507",
+        "crates/deflate-core/src/encode_dynamic.rs": "0a10d270561609bcb1c9b883992880734c6395dfd532ad9ecd2bed54bc4a52ec",
+        "crates/deflate-core/src/encode_fixed.rs": "b4459d0cc109c2f50ebd28467ad1923fbf96a527480dd3f64399601cfa459fd1",
+        "crates/deflate-core/src/error.rs": "fe3ac5fc29296fd8e7e0539dc76c615717fe8a72bb3456608edd18efbb21fecd",
+        "crates/deflate-core/src/gzip.rs": "44a8044d6fd55a5f78fab74f75ba5815b004a4e83ffcbf08ae8254909021b5bd",
+        "crates/deflate-core/src/huffman.rs": "326b31f0fda785d2418f24c7348490520f7f869082fed3316f9f870bfe0fd964",
+        "crates/deflate-core/src/huffman_build.rs": "c2eef9c5c7d53eaf435b65cbc2eb6ad19f28e3df1aef87f6952024c8879ccc58",
+        "crates/deflate-core/src/inflate.rs": "ae4c905a7da364c4b05f4f8c4754ca01ad513b695ea82c28a06c2375dfcde272",
+        "crates/deflate-core/src/lib.rs": "b3222c5cda31d020c866f364aef47a1eb9a328a4b6c9f8b835165157460d8ef8",
+        "crates/deflate-core/src/lz77.rs": "67991a3fb79ef37a65accdff089b3c34d90157e8eed43745fcbba60f432589c1",
+        "crates/deflate-core/src/matcher.rs": "ed6d951a8e436410f869703e9df2db44567fe0f9ca676583dc8135b3b03ba57c",
+        "crates/deflate-core/src/matcher_flat.rs": "2cb9257a6b93edce133891c4292690ef78e5edf87ccdbce976667d0d6d587890",
+        "crates/deflate-core/src/tokens.rs": "5e2f16a94e1a8a35400be25e04280ecae25dd550ad7bd92e398715f16f84f839",
+        "crates/deflate-core/src/zip.rs": "e92492d2c4d61be74e8f6f73da43725992ca0c6be807d8da0d104e2e3a6ae731"
+      },
+      "binary_sha256": "b5f5d5764235078599a9c9068dede9bcdeb49730c15c2c30fcafc504010ffd66",
+      "candidate_space": {
+        "presets": [
+          "fast",
+          "balanced",
+          "best"
+        ],
+        "method": [
+          "stored",
+          "matched"
+        ],
+        "custom_splits": {
+          "level": "balanced",
+          "block_tokens": [
+            256,
+            1024,
+            4096,
+            16384
+          ]
+        },
+        "reference": "miniz_oxide 0.8.9 levels 1, 6, 9"
+      },
+      "control": "split16384 is byte-equivalent to balanced and excluded from selection; timing differences may reflect API/compiler overhead or noise, not different policy settings",
+      "verification": {
+        "streams": 275,
+        "decoders": [
+          "deflate-core",
+          "miniz_oxide",
+          "zlib"
+        ],
+        "zlib_exact_consumption": true,
+        "balanced_split16384_byte_equality": true
+      },
+      "provisional_frontier": [
+        "stored",
+        "balanced"
+      ],
+      "memory": "not measured; frontier has only time and size axes",
+      "purpose": "tooling pilot; no encoder promotion or universal performance claim",
+      "measured_cases": 25,
+      "raw_artifact": "target/search/pilot-stress-recorded/result.json",
+      "raw_artifact_sha256": "e207ae73a5766102031c9cc3dec60fb7bc8e92ac5411424ba114726dd3e436d0"
+    }
+  ],
+  "reserved_test_measured": false,
+  "measurement_ledger": {
+    "path": "scripts/reports/search-measurements.jsonl",
+    "sha256": "2e249d645862a091d0751eb12aab2b7dcb01b83be67214e85495dc536e15970d",
+    "rows": 638
+  }
+}

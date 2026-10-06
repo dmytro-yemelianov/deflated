@@ -3,3 +3,4 @@
 /fuzz/target
 /fuzz/corpus
 /oracles/__pycache__
+/scripts/__pycache__
