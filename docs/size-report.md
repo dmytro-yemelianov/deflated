@@ -20,10 +20,10 @@ No byte target was set before measuring (spec §17 M8).
 
 | Profile | Total file | `.text` |
 | --- | ---: | ---: |
-| `release` | 540464 | 299308 |
-| `min` | 336096 | 232672 |
+| `release` | 542320 | 310348 |
+| `min` | 352672 | 239092 |
 
-These figures include the current lazy matcher, the twelve-bit Huffman table,
+These figures include the adaptive matcher and retained flat-data path, the twelve-bit Huffman table,
 gzip/ZIP framing, and the dynamic-Huffman encoder (`deflate`, M7b), which `vdeflate -c` links; the M7a baseline, in git history, had fixed-Huffman blocks only. The `min` total file moved by far less than its `.text` did; section padding is the likely reason and was not investigated. `scripts/reports/size.json` is the current measurement.
 
 **The total file size is the first column.** `.text` is one section of it and
@@ -32,7 +32,7 @@ is never the number to quote (spec §15).
 ## Working memory
 
 Decoding `big.deflate` (4390 bytes compressed, 1048576 decompressed) with
-`--limit 16777216`: peak RSS 3112960 bytes.
+`--limit 16777216`: peak RSS 3129344 bytes.
 
 ## External runtime assumptions
 

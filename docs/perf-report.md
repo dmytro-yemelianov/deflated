@@ -21,7 +21,8 @@ This is the baseline the next optimization is judged against (spec §16).
 | commit `496e31a` | Also candidate 3: table-driven Huffman decode (ADR 0005) |
 | Stored capacity | Also candidate 4: stored blocks reserve room for the rest of the input |
 | Lazy matching | Look ahead one position; widen the Huffman table to twelve bits |
-| Current | Threshold lookahead, candidate rejection, portable word comparison, and batched hash insertion |
+| Threshold search | Threshold lookahead, candidate rejection, portable word comparison, and batched hash insertion |
+| Current | Four-byte chains, compact links, search presets, and uniform-run insertion; see [corpus tuning](tuning-report.md) |
 
 `git show <commit>:scripts/reports/perf.json` has each earlier baseline.
 Candidates 1 and 2 brought match-heavy inputs to roughly miniz_oxide's speed
@@ -65,16 +66,16 @@ decompressed output (8388608 bytes for every input).
 <!-- perf:throughput -->
 | Input | Compressed bytes | deflate-core MB/s | miniz_oxide MB/s | Slowdown |
 | --- | ---: | ---: | ---: | ---: |
-| `random.stored.deflate` | 8389258 | 28122.2 | 37042.5 | 1.32× |
-| `repetitive.dyn.deflate` | 16280 | 8425.1 | 3118.2 | 0.37× |
-| `repetitive.fixed.deflate` | 60974 | 8765.5 | 3188.0 | 0.36× |
-| `repetitive.stored.deflate` | 8389258 | 67019.3 | 37729.8 | 0.56× |
-| `text.dyn.deflate` | 3050677 | 376.1 | 493.8 | 1.31× |
-| `text.fixed.deflate` | 3854367 | 379.3 | 490.6 | 1.29× |
-| `text.stored.deflate` | 8389258 | 59599.3 | 35153.9 | 0.59× |
-| `zeros.dyn.deflate` | 8144 | 8626.6 | 7933.4 | 0.92× |
-| `zeros.fixed.deflate` | 52840 | 6660.9 | 9348.8 | 1.4× |
-| `zeros.stored.deflate` | 8389258 | 61737.7 | 36380.0 | 0.59× |
+| `random.stored.deflate` | 8389258 | 32901.9 | 16545.6 | 0.5× |
+| `repetitive.dyn.deflate` | 16280 | 7303.2 | 3121.3 | 0.43× |
+| `repetitive.fixed.deflate` | 60974 | 8377.8 | 3309.0 | 0.39× |
+| `repetitive.stored.deflate` | 8389258 | 66400.2 | 37575.0 | 0.57× |
+| `text.dyn.deflate` | 3050677 | 376.5 | 501.6 | 1.33× |
+| `text.fixed.deflate` | 3854367 | 378.0 | 501.6 | 1.33× |
+| `text.stored.deflate` | 8389258 | 67265.5 | 37220.7 | 0.55× |
+| `zeros.dyn.deflate` | 8144 | 8973.0 | 8107.9 | 0.9× |
+| `zeros.fixed.deflate` | 52840 | 6997.8 | 9719.8 | 1.39× |
+| `zeros.stored.deflate` | 8389258 | 66269.1 | 36798.9 | 0.56× |
 <!-- /perf:throughput -->
 
 Back-to-back runs on the same machine moved the slowdown by up to about 5% on
@@ -96,10 +97,10 @@ before it is timed.
 <!-- perf:compression -->
 | Input | Ratio ours | Ratio level 1 | Ratio level 6 | MB/s ours | MB/s level 1 | MB/s level 6 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| `random.raw` | 1.0001 | 1.0009 | 1.0002 | 62.7 | 411.7 | 80.8 |
-| `repetitive.raw` | 0.0019 | 0.0091 | 0.0019 | 1465.2 | 10986.4 | 1637.0 |
-| `text.raw` | 0.3628 | 0.5698 | 0.3633 | 53.7 | 237.4 | 110.9 |
-| `zeros.raw` | 0.001 | 0.0046 | 0.001 | 1677.0 | 19192.3 | 1732.0 |
+| `random.raw` | 1.0001 | 1.0009 | 1.0002 | 64.0 | 411.4 | 79.3 |
+| `repetitive.raw` | 0.0019 | 0.0091 | 0.0019 | 1780.5 | 10955.9 | 1623.6 |
+| `text.raw` | 0.3628 | 0.5698 | 0.3633 | 76.1 | 236.9 | 111.5 |
+| `zeros.raw` | 0.001 | 0.0046 | 0.001 | 6770.5 | 18601.8 | 1733.5 |
 <!-- /perf:compression -->
 
 What the table says:
@@ -109,28 +110,24 @@ What the table says:
 - **Random bytes.** Output uses stored blocks; most work is unsuccessful
   match search followed by a discarded Huffman encoding.
 - **Zeros and repeating bytes.** Ratios match level 6 at the displayed
-  precision. Hash-table insertion now limits speed after eliminating
-  redundant lookahead and comparing long runs in word chunks.
+  precision. Uniform and periodic runs batch their exact chain links; the remaining
+  costs include matching and Huffman emission.
 - **Noise and load.** Compare optimizations in alternating runs of the
   old and new binaries. Absolute throughput changes with machine load.
 
-The current matcher preserves the old token stream. `better_next` tests
-only the prefix needed to beat the current match, using
-`better_match_iff_threshold` and `accept_prefix` in Lean. Older candidates
-that disagree at the first byte beyond the best match are skipped; longer
-comparisons use portable little-endian word loads and a byte tail. Reference
-tests cover token equality, overlaps, window wrap, and comparison boundaries.
-Long insertion runs iterate over bounded three-byte windows; short advances
-keep the scalar path to avoid setup overhead on text. A separate reference
-test compares every hash head, chain link, and insertion cursor across short
-inputs and window boundaries. The finder remains checked by `accept` before
-any match is emitted.
+The default selects four-byte chains, a compact trigram path for short
+periods, or the retained matcher for flat byte samples. It uses separate
+short-match coverage and lazy threshold checks. Fast and Best expose different
+search budgets, with the broader measurements and methodology in
+[the corpus tuning report](tuning-report.md). Every emitted match passes
+`accept`. Scalar reference tests compare each preset's token stream and
+hash-table insertion, including overlaps and window wrap.
 
-Matched measurements against the pre-optimization binary are in
+The following is the **historical threshold-search improvement**, measured
+before the preset tuning pass. Raw paired measurements remain in
 `scripts/reports/matcher.json`: three alternating pairs, best of five per
-input, then the median throughput per binary. The comparison keeps our own
-build, test, and fuzz processes idle during timing. A separate encoder check compares complete
-output bytes, and both timed binaries check round trips before timing.
+input, then the median throughput per binary. It preserved encoder bytes;
+the newer preset tuning deliberately changes search coverage and output.
 
 <!-- perf:matcher -->
 | Input | Before MB/s | After MB/s | Speedup | Bytes identical |
@@ -149,146 +146,165 @@ unproved and is checked per block (ADR 0007).
 ## Where the time goes
 
 <!-- perf:profile -->
-`text.dyn.deflate` (4021 samples)
+`text.dyn.deflate` (4005 samples)
 
 | Function | Inclusive % |
 | --- | ---: |
-| `block::decode_huff_block` | 37.7 |
-| `lz77::copy_back` | 25.7 |
-| `huffman::decode_fast` | 12.9 |
-| `bitstream::peek_bits` | 12.4 |
-| `bitstream::read_bits` | 6.8 |
-| `lz77::read_length` | 5.3 |
-| `lz77::read_distance` | 3.5 |
-| `bitstream::skip_bits` | 2.7 |
-| `huffman::from_lengths` | 0.7 |
+| `block::decode_huff_block` | 36.3 |
+| `lz77::copy_back` | 26.2 |
+| `huffman::decode_fast` | 12.2 |
+| `bitstream::peek_bits` | 12.1 |
+| `bitstream::read_bits` | 6.3 |
+| `lz77::read_length` | 4.1 |
+| `lz77::read_distance` | 3.6 |
+| `bitstream::skip_bits` | 2.4 |
+| `huffman::from_lengths` | 0.9 |
+| `huffman::build_fast` | 0.8 |
 | `bitstream::{closure#0}` | 0.7 |
-| `huffman::build_fast` | 0.5 |
-| perf (outside deflate-core) | 34.7 |
+| perf (outside deflate-core) | 35.5 |
 | libsystem_platform.dylib | 0.7 |
 
 `zeros.fixed.deflate` (3996 samples)
 
 | Function | Inclusive % |
 | --- | ---: |
-| `lz77::copy_back` | 19.4 |
-| `block::decode_huff_block` | 10.7 |
-| `bitstream::peek_bits` | 5.7 |
-| `huffman::decode_fast` | 5.6 |
-| `bitstream::read_bits` | 2.7 |
-| `lz77::read_length` | 2.1 |
-| `lz77::read_distance` | 1.4 |
-| `bitstream::skip_bits` | 1.0 |
-| libsystem_platform.dylib | 60.6 |
-| libsystem_kernel.dylib | 5.7 |
-| perf (outside deflate-core) | 3.0 |
+| `lz77::copy_back` | 20.1 |
+| `block::decode_huff_block` | 10.9 |
+| `bitstream::peek_bits` | 6.0 |
+| `huffman::decode_fast` | 5.3 |
+| `bitstream::read_bits` | 3.0 |
+| `lz77::read_length` | 2.2 |
+| `lz77::read_distance` | 1.7 |
+| `bitstream::skip_bits` | 0.8 |
+| libsystem_platform.dylib | 59.5 |
+| libsystem_kernel.dylib | 5.9 |
+| perf (outside deflate-core) | 3.1 |
 
-`repetitive.dyn.deflate` (3991 samples)
-
-| Function | Inclusive % |
-| --- | ---: |
-| `lz77::copy_back` | 17.0 |
-| `block::decode_huff_block` | 13.4 |
-| `bitstream::peek_bits` | 7.3 |
-| `huffman::decode_fast` | 6.4 |
-| `bitstream::read_bits` | 3.8 |
-| `lz77::read_length` | 2.5 |
-| `lz77::read_distance` | 2.1 |
-| `bitstream::skip_bits` | 0.5 |
-| libsystem_platform.dylib | 61.0 |
-| libsystem_kernel.dylib | 5.5 |
-| perf (outside deflate-core) | 2.5 |
-
-`text.stored.deflate` (3973 samples)
+`repetitive.dyn.deflate` (3993 samples)
 
 | Function | Inclusive % |
 | --- | ---: |
-| libsystem_platform.dylib | 99.1 |
+| `lz77::copy_back` | 16.3 |
+| `block::decode_huff_block` | 12.8 |
+| `bitstream::peek_bits` | 6.9 |
+| `huffman::decode_fast` | 6.6 |
+| `bitstream::read_bits` | 3.3 |
+| `lz77::read_length` | 2.2 |
+| `lz77::read_distance` | 1.8 |
+| `bitstream::skip_bits` | 0.9 |
+| `huffman::from_lengths` | 0.5 |
+| `bitstream::{closure#0}` | 0.5 |
+| libsystem_platform.dylib | 60.4 |
+| libsystem_kernel.dylib | 7.5 |
+| perf (outside deflate-core) | 2.2 |
 
-`text.raw` (3896 samples)
+`text.stored.deflate` (3975 samples)
 
 | Function | Inclusive % |
 | --- | ---: |
-| `matcher::next` | 78.7 |
-| `matcher::find_best` | 41.2 |
-| `matcher::better_next` | 24.4 |
-| `encode_dynamic::emit_dynamic_block` | 10.6 |
-| `matcher::common` | 9.5 |
-| `bitwriter::write_code` | 6.1 |
-| `matcher::accept` | 5.4 |
-| `matcher::{closure#0}` | 5.2 |
-| `matcher::insert_up_to` | 4.6 |
-| `bitwriter::write_bits` | 3.8 |
-| `matcher::insert` | 3.3 |
-| `encode_dynamic::emit_block` | 1.5 |
-| `encode_dynamic::from_tokens` | 1.4 |
-| `matcher::hash_at` | 1.3 |
-| `encode_dynamic::emit_blocks_iter` | 1.1 |
-| `matcher::{closure#2}` | 0.7 |
+| `block::read_stored` | 0.5 |
+| libsystem_platform.dylib | 98.8 |
+
+`text.raw` (4080 samples)
+
+| Function | Inclusive % |
+| --- | ---: |
+| `matcher::next` | 64.4 |
+| `matcher::find_best` | 24.1 |
+| `encode_dynamic::emit_dynamic_block` | 15.0 |
+| `matcher::insert_up_to` | 14.4 |
+| `matcher::better_next` | 13.1 |
+| `bitwriter::write_code` | 9.3 |
+| `matcher::insert` | 7.7 |
+| `matcher::{closure#0}` | 6.9 |
+| `matcher::common` | 6.3 |
+| `bitwriter::write_bits` | 4.8 |
+| `matcher::accept` | 4.7 |
+| `encode_dynamic::emit_block` | 2.5 |
+| `encode_dynamic::from_tokens` | 2.5 |
+| `matcher::{closure#5}` | 1.1 |
+| `encode_dynamic::emit_blocks_iter` | 1.0 |
+| `matcher::{closure#3}` | 0.9 |
 | `encode_fixed::dist_sym` | 0.7 |
-| `encode_fixed::dist_slot` | 0.5 |
-| libsystem_platform.dylib | 4.9 |
+| `matcher::candidates` | 0.5 |
+| libsystem_platform.dylib | 6.1 |
+| perf (outside deflate-core) | 3.4 |
+
+`random.raw` (4172 samples)
+
+| Function | Inclusive % |
+| --- | ---: |
+| `matcher_flat::next` | 71.3 |
+| `matcher_flat::find_best` | 59.1 |
+| `encode_dynamic::emit_dynamic_block` | 14.8 |
+| `bitwriter::write_code` | 10.8 |
+| `matcher_flat::insert_up_to` | 6.9 |
+| `bitwriter::write_bits` | 4.9 |
+| `encode_dynamic::emit_blocks_iter` | 3.9 |
+| `matcher_flat::common` | 3.9 |
+| `encode_dynamic::emit_block` | 3.9 |
+| `encode_dynamic::from_tokens` | 3.9 |
+| `matcher_flat::insert` | 3.1 |
+| `huffman::from_lengths` | 2.2 |
+| `huffman::build_fast` | 1.8 |
+| `encode_dynamic::len_at` | 0.9 |
+| `huffman_build::build_lengths` | 0.7 |
+| libsystem_platform.dylib | 1.0 |
+| perf (outside deflate-core) | 1.0 |
+| libsystem_malloc.dylib | 0.5 |
+
+`zeros.raw` (3909 samples)
+
+| Function | Inclusive % |
+| --- | ---: |
+| `matcher::next` | 35.7 |
+| `matcher::common` | 28.0 |
+| `matcher::insert_up_to` | 24.3 |
+| `encode_dynamic::emit_dynamic_block` | 8.8 |
+| `matcher::find_best` | 8.2 |
+| `matcher::{closure#0}` | 6.1 |
+| `matcher::insert_run` | 5.6 |
+| `bitwriter::write_bits` | 3.5 |
+| `bitwriter::write_code` | 3.4 |
+| `matcher::{closure#2}` | 1.9 |
+| `matcher::accept` | 1.9 |
+| `encode_dynamic::from_tokens` | 1.9 |
+| `encode_dynamic::emit_block` | 1.9 |
+| `encode_fixed::dist_sym` | 1.7 |
+| `encode_dynamic::emit_blocks_iter` | 1.5 |
+| `encode_fixed::dist_slot` | 1.3 |
+| `matcher::better_next` | 1.2 |
+| `matcher::insert` | 1.0 |
+| `matcher::candidates` | 0.8 |
+| `matcher::eq` | 0.8 |
+| `encode_fixed::length_sym` | 0.7 |
+| `encode_dynamic::len_at` | 0.5 |
+| libsystem_platform.dylib | 16.2 |
+| perf (outside deflate-core) | 1.3 |
+
+`repetitive.raw` (4016 samples)
+
+| Function | Inclusive % |
+| --- | ---: |
+| `matcher::insert_periodic` | 68.1 |
+| `matcher::next` | 13.1 |
+| `matcher::common` | 9.1 |
+| `matcher::insert_up_to` | 8.3 |
+| `matcher::{closure#1}` | 4.1 |
+| `encode_dynamic::emit_dynamic_block` | 2.5 |
+| `matcher::find_best` | 2.3 |
+| `matcher::better_next` | 2.0 |
+| `matcher::insert` | 1.9 |
+| `matcher::{closure#0}` | 1.4 |
+| `bitwriter::write_bits` | 1.1 |
+| `bitwriter::write_code` | 1.0 |
+| `matcher::accept` | 0.7 |
+| `encode_dynamic::emit_blocks_iter` | 0.6 |
+| `matcher::{closure#2}` | 0.5 |
+| `encode_dynamic::from_tokens` | 0.5 |
+| `encode_dynamic::emit_block` | 0.5 |
+| libsystem_platform.dylib | 3.5 |
 | perf (outside deflate-core) | 2.1 |
-
-`random.raw` (4209 samples)
-
-| Function | Inclusive % |
-| --- | ---: |
-| `matcher::next` | 68.7 |
-| `matcher::find_best` | 56.7 |
-| `encode_dynamic::emit_dynamic_block` | 15.7 |
-| `bitwriter::write_code` | 11.5 |
-| `matcher::insert_up_to` | 6.9 |
-| `encode_dynamic::emit_blocks_iter` | 5.2 |
-| `bitwriter::write_bits` | 4.7 |
-| `matcher::common` | 3.7 |
-| `encode_dynamic::emit_block` | 3.7 |
-| `encode_dynamic::from_tokens` | 3.7 |
-| `matcher::insert` | 3.2 |
-| `huffman::from_lengths` | 1.9 |
-| `huffman::build_fast` | 1.5 |
-| `matcher::hash_at` | 1.0 |
-| `encode_dynamic::len_at` | 0.7 |
-| `huffman_build::build_lengths` | 0.5 |
-| `huffman_build::canonical_codes` | 0.5 |
-| perf (outside deflate-core) | 1.5 |
-| libsystem_malloc.dylib | 0.7 |
-| libsystem_platform.dylib | 0.6 |
-
-`zeros.raw` (4009 samples)
-
-| Function | Inclusive % |
-| --- | ---: |
-| `matcher::next` | 92.7 |
-| `matcher::insert_up_to` | 56.6 |
-| `matcher::find_best` | 7.5 |
-| `matcher::common` | 6.1 |
-| `encode_dynamic::emit_dynamic_block` | 2.3 |
-| `matcher::hash` | 2.1 |
-| `encode_dynamic::from_tokens` | 1.4 |
-| `encode_dynamic::emit_block` | 1.4 |
-| `bitwriter::write_code` | 1.1 |
-| `bitwriter::write_bits` | 0.8 |
-| `matcher::accept` | 0.6 |
-| `matcher::{closure#2}` | 0.6 |
-| `encode_fixed::dist_sym` | 0.6 |
-| `encode_dynamic::emit_blocks_iter` | 0.5 |
-| libsystem_platform.dylib | 2.7 |
-
-`repetitive.raw` (3995 samples)
-
-| Function | Inclusive % |
-| --- | ---: |
-| `matcher::next` | 94.2 |
-| `matcher::insert_up_to` | 55.9 |
-| `matcher::find_best` | 10.4 |
-| `matcher::common` | 8.8 |
-| `encode_dynamic::emit_dynamic_block` | 1.8 |
-| `matcher::better_next` | 1.3 |
-| `bitwriter::write_bits` | 0.8 |
-| `bitwriter::write_code` | 0.7 |
-| `matcher::accept` | 0.5 |
-| libsystem_platform.dylib | 2.8 |
 <!-- /perf:profile -->
 
 ## Findings
@@ -326,7 +342,8 @@ then the test and differential suites, then a new run of this report and of
 | 2 | `read_bits`: one little-endian window of up to 5 bytes, shifted and masked | Done | None: same LSB-first value, same all-or-nothing EOF check (P1); `read_bits_matches_bit_by_bit_reference_everywhere` pins it |
 | 3 | Table-driven Huffman decode with a peeked bit window and the canonical walk as the fallback for long codes | Done | Changes the decode algorithm. ADR on table-driven Huffman decoding; Lean `decodeSymFast_eq` proves table lookup equals the canonical decode on every reader. Costs binary size |
 | 4 | Reserve output capacity for stored blocks, bounded by the limit | Done | None, but must keep the bomb rule: never reserve past `limit` |
-| 5 | Lazy threshold search, candidate pruning, word comparisons, and batched insertion | Done | Lean proves the threshold predicate; reference tests preserve Rust tokens and hash tables, and the arbitrary-finder round-trip theorem still applies |
+| 5 | Lazy threshold search, candidate pruning, word comparisons, and batched insertion | Done | Lean proves the threshold predicate; scalar reference tests cover the optimized search and insertion |
+| 6 | Four-byte chains, compact links, search presets, and size-focused splitting | Done | Every finder candidate and split remains checked; corpus tuning measures speed and size separately |
 
 ## What is not in this report
 

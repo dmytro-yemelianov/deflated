@@ -60,7 +60,9 @@ are named below.
   Rust's twelve-bit table, with a regression test guarding the shared
   constant. `accept_prefix` and `better_match_iff_threshold` justify
   checking only the prefix required to improve a lazy match. Rust token
-  equality with the original matcher is checked by finite reference tests.
+  equality with a scalar search over each preset's candidate sets is checked
+  by finite reference tests. The presets change heuristic search coverage;
+  they preserve accepted-token validity rather than the previous token stream.
 - **P3 (Block headers & stored blocks):** `readHeader_pos`, `readStored_aligned`, `readStored_consumes`, `readStored_rejects_bad_nlen`.
 - **P4 (Huffman block body):** `decodeHuffBlock_monotone`, `decodeHuffBlock_within_limit`, `decodeHuffBlock_progress`.
 - **P5 (Dynamic Huffman tables):** `clOrder_is_a_permutation`, `readDynamicCodes_valid`, `readDynamicCodes_pos`.

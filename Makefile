@@ -1,6 +1,6 @@
 # Top-level driver for verified-deflate. Mirrors maked's Makefile.
 .PHONY: all build-rust build-lean test test-axiom-gate test-rust test-lean test-differential test-framing \
-        fmt lint fuzz size perf profile clean
+        fmt lint fuzz size perf profile tune clean
 
 all: build-rust build-lean
 
@@ -52,6 +52,11 @@ size: build-rust
 perf:
 	@bash scripts/perf_report.sh
 	@bash scripts/check_perf_report.sh
+	@python3 scripts/tuning_report.py --check
+
+tune:
+	@python3 scripts/tuning_corpus.py
+	@python3 scripts/tuning_report.py
 
 profile: perf
 	@bash scripts/profile_report.sh

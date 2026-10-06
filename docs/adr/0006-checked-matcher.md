@@ -68,24 +68,39 @@ that it is free; it is claimed to be small next to the chain walk it follows.
 
 ## Matcher tuning
 
-Rust uses one-position lazy matching. Searching the next position needs
-only a yes/no decision: a closer distance wins at equal length, and any
-other distance needs one extra byte. Lean `better_match_iff_threshold`,
-built on `accept_prefix`, proves that checking this threshold prefix is
-equivalent to the existence of an accepted better match at that distance.
-Rust checks those prefixes across the same bounded hash chain and stops at
-the first success. A maximal distance-one match cannot be improved.
+`CompressionLevel` chooses greedy Fast (four probes), lazy Balanced
+(sixty-four probes, the default), or lazy Best (512 probes). The finder uses
+four-byte hash chains for longer matches and falls back to a separate
+trigram chain for length-three matches. Chain heads are absolute positions;
+links are sixteen-bit backward distances. Balanced chooses a compact single
+trigram index with 128 probes for sampled short periods. For flat byte samples
+it retains the previous trigram matcher, which proved faster in the synthetic
+regression check. Both retain match search and avoid the second index.
+Sampling selects an arbitrary finder; it does not bypass compression. A distance of 32768 remains
+representable and zero terminates the chain. A reference test compares
+compact links with absolute predecessor chains across repeated window wrap.
 
-The current search also rejects older candidates that disagree at the
-first byte beyond the best match, and compares long runs in eight-byte
-chunks with explicit little-endian conversion. The original byte-by-byte
-search remains a test reference: token sequences must agree on seeded
-inputs, short tails, repeated patterns, overlapping matches, and window
-wrap. This is finite evidence for the Rust implementation, while Lean
-proves the threshold rule and correctness for every checked finder.
+Searching the next position needs only a yes/no decision: a closer distance
+wins at equal length, and any other distance needs one extra byte. Lean
+`better_match_iff_threshold`, built on `accept_prefix`, proves the threshold
+rule for accepted matches. Four-byte-chain candidates also require at least
+four bytes; equal-length-three lookahead uses the short chain. Rust stops
+at the first qualifying prefix, with a maximal distance-one match as the
+unimprovable case.
 
-Long advances insert hash entries through bounded three-byte windows,
-checking the input and stored-position limits once per run. Short advances
-keep the scalar path: bulk setup regressed text in the candidate measurement.
-`bulk_insertion_preserves_scalar_tables` compares all heads, links, and the
-cursor against the original inserter, including ring wrap and short tails.
+Older candidates that disagree beyond the best match are skipped, and
+portable little-endian word loads compare long runs. A scalar full-length
+search over each preset's candidate sets remains a test reference. Tests
+compare complete token sequences and check every emitted match with
+`accept`, including seeded inputs, short tails, overlaps and window wrap.
+The presets deliberately change the old search coverage and token stream.
+
+Balanced and Best insert every position. Uniform-byte runs and checked overlapping periodic matches fill predecessor
+links in batches, preserving all heads, links and insertion cursors. Periodic
+batching includes collisions between phases and leaves unchecked trailing
+hash windows on the scalar path. Fast
+indexes the start and final sixteen positions of long advances, accepting
+less search coverage for speed. Best also uses the existing checked split
+callback to compare encoded bit costs at quarter boundaries. The arbitrary
+finder and checked-split Lean theorems continue to apply; ratio and speed
+remain empirical properties measured in `docs/tuning-report.md`.

@@ -43,13 +43,14 @@ extraction are library APIs in `deflate_core::zip`.
 
 ## Known gaps
 
-- The encoder uses a hash-chain matcher with one-step lazy matching and
+- The default encoder uses a hash-chain matcher with one-step lazy matching and
   per-block dynamic or fixed Huffman codes (16384 tokens by default; stored
-  when smaller). The current measurements include threshold lookahead,
-  candidate pruning, and word comparisons. Text compression ratio is close
-  to miniz_oxide level 6, while speed remains below both reference levels.
-  See the Compression section of
-  [docs/perf-report.md](docs/perf-report.md). `decode (compress find lf x) = x`
+  when smaller). `deflate_with_level` exposes Fast, Balanced (the default),
+  and Best presets for different speed/size tradeoffs. They use four-byte
+  chains with separate short-match coverage; Best also tunes block splits.
+  See the corpus measurements in [docs/tuning-report.md](docs/tuning-report.md)
+  and the synthetic baseline in [docs/perf-report.md](docs/perf-report.md).
+  `decode (compress find lf x) = x`
   is proved in Lean for every finder, every length heuristic `lf` and every
   input; the Rust encoder is linked to it by mirroring and differential
   testing only, and the length heuristic is unproved but checked, with a fixed

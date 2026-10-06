@@ -27,10 +27,12 @@ pub mod huffman_build;
 pub mod inflate;
 pub mod lz77;
 pub mod matcher;
+mod matcher_flat;
 pub mod tokens;
 pub mod zip;
 
-pub use compress::{default_split_for, deflate};
+pub use compress::{default_split_for, deflate, deflate_with_level};
 pub use deflate::{MAX_STORED, deflate_stored};
 pub use error::Error;
 pub use inflate::{DEFAULT_LIMIT, inflate, inflate_with_limit};
+pub use matcher::CompressionLevel;

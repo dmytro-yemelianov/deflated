@@ -18,7 +18,7 @@ import sys
 
 CORE = (
     "huffman.rs", "bitstream.rs", "lz77.rs", "block.rs", "inflate.rs",
-    "matcher.rs", "tokens.rs", "compress.rs", "encode_dynamic.rs",
+    "matcher.rs", "matcher_flat.rs", "tokens.rs", "compress.rs", "encode_dynamic.rs",
     "encode_fixed.rs", "huffman_build.rs", "bitwriter.rs", "deflate.rs",
 )
 BASE = 0x100000000  # Mach-O __TEXT load address; samply addresses are relative
