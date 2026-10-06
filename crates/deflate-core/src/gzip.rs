@@ -1,9 +1,9 @@
 //! gzip framing (RFC 1952).
 //!
-//! This is outside the Lean verification boundary (spec §6). The Lean model
-//! in `spec/Deflate/` covers raw DEFLATE (RFC 1951) only. gzip adds a
-//! header, optional extra fields, the DEFLATE stream, and a trailer with
-//! CRC32 and ISIZE.
+//! `spec/Deflate/Gzip.lean` models minimal-header, single-member framing
+//! with CRC32/ISIZE checks. Optional headers and concatenated members are
+//! outside that model. Rust correspondence is tested, not proved; see
+//! `docs/verification-boundary.md`.
 //!
 //! The API mirrors the raw DEFLATE API but operates on gzip streams.
 

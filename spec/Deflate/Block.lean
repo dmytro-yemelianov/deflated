@@ -54,7 +54,7 @@ def readStored (r : BitReader) (out : Array UInt8) :
     distance codes. Covers both fixed (RFC 1951 §3.2.6) and dynamic (§3.2.7)
     blocks: they differ only in where the two codes come from.
 
-    `fuel` bounds the loop. `Properties.decodeHuffBlock_fuel_sufficient` shows
+    `fuel` bounds the loop. `decodeHuffBlock_fuel_sufficient` in `Deflate.Fuel` shows
     that the fuel the entry point supplies is never exhausted on a finite
     stream, because each iteration consumes at least one bit. Reporting
     exhaustion explicitly rather than guessing is deliberate: maked's cycle

@@ -1,12 +1,10 @@
 //! ZIP container (RFC 1951 DEFLATE + ZIP format).
 //!
-//! This is outside the Lean verification boundary (spec §6). The Lean model
-//! in `spec/Deflate/` covers raw DEFLATE (RFC 1951) only. ZIP adds a
-//! container format with local file headers, central directory, and
-//! end-of-central-directory record.
+//! `spec/Deflate/Zip.lean` models canonical single-entry STORED archives.
+//! DEFLATE entries, descriptors and general metadata are outside that model.
+//! Rust correspondence is tested, not proved; see `docs/verification-boundary.md`.
 //!
-//! Minimal implementation: extract single DEFLATE-compressed entry,
-//! create ZIP with single DEFLATE-compressed entry.
+//! Minimal implementation: extract or create one stored or DEFLATE entry.
 
 use crate::bitwriter::BitWriter;
 use crate::compress::deflate;

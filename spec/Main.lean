@@ -1,4 +1,6 @@
 import Deflate
+import Deflate.Gzip
+import Deflate.Zip
 
 open Deflate
 
@@ -129,8 +131,44 @@ def deflateAndFormat (hx : String) : String :=
   | none => "ERR badHex"
   | some bs => s!"OK {toHex (compress (fun _ _ => none) (fun _ => none) bs)}"
 
+/-- Framing byte arguments use `-` for empty, including the ZIP filename. -/
+def framingHex (s : String) : Option ByteArray := ofHex (if s = "-" then "" else s)
+
+def framingAndFormat (limit : Nat) (cmd : String) (args : List String) : String :=
+  if cmd = "ZIPSTORE" then
+    match args with
+    | [n, d] => match framingHex n, framingHex d with
+      | some name, some input => match NativeZip.zip name input with
+        | .ok wire => s!"OK {toHex wire}"
+        | .error _ => "ERR fields"
+      | _, _ => "ERR badHex"
+    | _ => "ERR arguments"
+  else
+    let hx := match args with | [] => some "-" | [h] => some h | _ => none
+    match hx.bind framingHex with
+    | none => "ERR badHex"
+    | some bs =>
+      if cmd = "CRC32" then s!"OK {(NativeCRC32.crc32 bs).toNat}"
+      else if cmd = "GZIP" then
+        s!"OK {toHex (NativeGzip.gzip (fun _ _ => none) (fun _ => none) bs)}"
+      else if cmd = "GUNZIP" then
+        match NativeGzip.gunzip bs limit with
+        | .ok out => s!"OK {toHex out}"
+        | .error _ => "ERR gzip"
+      else match NativeZip.unzip bs limit with
+        | .ok (name, input) => s!"OK {toHex name} {toHex input}"
+        | .error _ => "ERR zip"
+
 def handle (limit : Nat) (line : String) : Nat × Option String :=
   let t := trimWs line
+  match wordsWs t with
+  | cmd :: args =>
+    if cmd = "CRC32" ∨ cmd = "GZIP" ∨ cmd = "GUNZIP" ∨ cmd = "ZIPSTORE" ∨ cmd = "UNZIPSTORE" then
+      (limit, some (framingAndFormat limit cmd args))
+    else legacyHandle limit t
+  | [] => (limit, none)
+where
+  legacyHandle (limit : Nat) (t : String) : Nat × Option String :=
   -- EMIT takes a token list, so split off only the command word (Rust: `splitn(2, ' ')`).
   match t.splitOn " " with
   | "EMIT" :: _ => (limit, some (emitAndFormat (t.drop 4).toString))
@@ -152,6 +190,7 @@ def handle (limit : Nat) (line : String) : Nat × Option String :=
 
 def main (_args : List String) : IO Unit := do
   let stdin ← IO.getStdin
+  let stdout ← IO.getStdout
   let mut limit := 1 <<< 26
   repeat
     let line ← stdin.getLine
@@ -159,5 +198,7 @@ def main (_args : List String) : IO Unit := do
     let (lim, out) := handle limit line
     limit := lim
     match out with
-    | some s => IO.println s
+    | some s => do
+      stdout.putStrLn s
+      stdout.flush
     | none => pure ()

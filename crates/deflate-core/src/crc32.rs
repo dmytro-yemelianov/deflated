@@ -1,7 +1,7 @@
 //! CRC32 (RFC 1952 §8, polynomial 0xEDB88320).
 //!
-//! This is outside the Lean verification boundary (spec §6). The Lean model
-//! in `spec/Deflate/` does not cover gzip framing.
+//! `spec/Deflate/CRC32.lean` computes the same reflected checksum bit by bit.
+//! Rust correspondence is tested, not proved; no collision-freedom claim is made.
 //!
 //! Table-driven implementation for speed. The table is computed once at
 //! startup via `const` evaluation.

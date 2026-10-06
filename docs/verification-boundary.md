@@ -5,10 +5,10 @@ any correctness claim about this project.
 
 ## What is proved
 
-Named theorems in `spec/Deflate/Properties.lean`, kernel-checked by Lean
+Named theorems in `spec/Deflate/`, kernel-checked by Lean
 4.30.0 with no `sorry`, no `admit` and no project-defined axiom. CI fails if
 any of those appear, and fails if `#print axioms` shows a headline theorem
-depending on `sorryAx`.
+depending on `sorryAx` or `ofReduceBool`.
 
 These theorems are statements about **the Lean model in `spec/Deflate/`**.
 
@@ -28,20 +28,29 @@ These theorems are statements about **the Lean model in `spec/Deflate/`**.
   differential harness.
 - **Hash and arithmetic idealizations.** Where the model represents a
   quantity more abstractly than the Rust does, this document names it.
-- **gzip framing (RFC 1952, Milestone M9).** The Lean model covers raw DEFLATE
-  (RFC 1951) only. gzip adds a header, optional extra fields, the DEFLATE
-  stream, and a trailer with CRC32 and ISIZE. The Rust gzip implementation
-  in `crates/deflate-core/src/gzip.rs` and the CLI modes `-zc`/`-zd` in
-  `crates/vdeflate/src/main.rs` are tested against zlib (round-trip and
-  cross-decode) but have no corresponding Lean model or theorems.
-- **ZIP framing.** The single-entry Rust container supports stored and DEFLATE
-  entries and standard data descriptors. Regression tests use independently
-  generated Python zipfile fixtures; ZIP64 and encryption are unsupported.
-  The container has no corresponding Lean model or theorems.
+- **Full gzip framing (RFC 1952, Milestone M9).** `Deflate.Gzip` models a
+  single member with the canonical ten-byte header, raw DEFLATE body and
+  CRC32/ISIZE trailer. Optional headers, FHCRC and concatenated members are
+  tested in Rust but are outside this initial Lean model. Its body uses the
+  raw decoder, which tolerates unused trailing bytes; exact compressed-input
+  consumption is not proved.
+- **Full ZIP framing.** `Deflate.Zip` models canonical single-entry STORED
+  archives with fixed metadata, no extra fields or comments, and checked
+  field bounds excluding ZIP64 sentinels. The parser extracts the filename
+  and payload from bytes and validates the complete container against its
+  canonical encoding. General metadata, DEFLATE entries and data descriptors
+  are tested in Rust but are outside this strict model. ZIP64 and encryption
+  remain unsupported by Rust.
+- **CRC collision freedom.** `Deflate.CRC32` computes reflected CRC-32 with
+  polynomial `0xEDB88320` and checks the standard `123456789` vector by kernel
+  evaluation. Integrity theorems establish matching checksums and sizes,
+  not that CRC detects every corruption or uniquely identifies a payload.
 
 ## Proved theorems in the Lean model
 
-As of Milestone M7b, the following headline theorems in `spec/Deflate/Properties.lean` are kernel-checked with zero custom axioms:
+The following headline theorems are kernel-checked with zero custom axioms.
+The original core theorems are in `Properties.lean`; the additional modules
+are named below.
 
 - **P1 (Bit reader):** `byteAt_oob`, `readBits_pos`, `readBits_bytes`, `readBits_lt`, `readBits_eof`, `alignToByte_idem`.
 - **P2 (Canonical Huffman):** `fixedLitLen_complete`, `fixedDist_complete`, `decodeSym_pos`, `decodeSym_bytes`, `decodeSym_in_range`.
@@ -54,6 +63,27 @@ As of Milestone M7b, the following headline theorems in `spec/Deflate/Properties
 - **P11 (Compressed encoder, M7a/M7b):** `decode_compress` (the model compressor round-trips every input for every finder and every `lengthsFor`: `x.size ≤ limit → decode (compress find lengthsFor x) limit = .ok x`), resting on `decode_emitBlocks` (below), `decode_emitFixed` (a valid token list emitted as one fixed-Huffman block decodes to its expansion), `expand_compressTokens` and `compressTokens_valid` (the matcher re-checks every finder candidate, so tokenization is lossless and valid even for an adversarial finder).
 - **P11 (Dynamic-Huffman encoder, M7b):** `decode_emitBlocks` (a valid token list emitted as blocks of at most 16384 tokens, each dynamic or fixed as the untrusted `lengthsFor` and `validLengths` decide, decodes to its expansion: `Valid ts → (expand ts).size ≤ limit → decode (emitBlocks lf ts) limit = .ok ⟨expand ts⟩`). It rests on `decodeSym_canonical` and `decodeSym_of_canonical_bits` (the decoder reads back every canonical code `canonicalCode` writes), `canonicalCode_fixedLit` and `canonicalCode_fixedDist`, `rleLengths_expand` and `rleLengths_inRange` (the code-length RLE), `readCodeLengths_go_emit`, `readCLLens_go_emit` and `readDynamicCodes_emitHeader` (the decoder reads back the header `emitHeader` writes), `validLengths_spec`, `huffLoop`, `readHeader_written`, `decodeBlock_emitFixedBlock`, `decodeBlock_emitDynamicBlock`, `decodeBlock_emitBlock` and `decodeFuelLoop_emitBlocksGo`. `emitBlocks_none` and `compress_none` show that with `lengthsFor := fun _ => none` and at most 16384 tokens the output is M7a's single fixed block. The length heuristic is not proved and need not be: every length set it returns is checked by `validLengths`, and a rejected one falls back to fixed.
 - **P12 (Determinism & output limits):** `decode_deterministic`, `decode_within_limit`.
+- **P8 (Fuel non-exhaustion, `Fuel.lean`):** `decode_never_exhausts` states
+  `decode bs limit ≠ .error .fuelExhausted` for every byte array and every
+  limit, including malformed streams. It rests on fuel bounds for
+  `readCodeLengths.go`, `decodeHuffBlock` and `decodeFuelLoop`, without
+  changing any decoder definition or fuel constant.
+- **Custom splitting (`EncodeSplit.lean`):** `decode_emitSplitBlocks` and
+  `decode_compressSplit` hold for every split callback and length heuristic.
+  Callbacks see at most 16384 upcoming tokens; zero or oversized requests
+  fall back to the default. The proofs preserve cross-block back-references,
+  bound each chunk, and establish progress. `emitSplitBlocks_none` proves
+  byte equality with the existing default emitter for every length heuristic.
+- **Minimal gzip (`Gzip.lean`):** `NativeGzip.gunzip_gzip` gives a round trip
+  for every finder, length heuristic and payload within the limit.
+  `accepted_integrity`, `gunzip_within_limit`, `output_limit_rejection` and
+  `checksum_mismatch_rejection` establish header/body/trailer validation,
+  limits and rejection of a mismatching CRC field.
+- **Canonical STORED ZIP (`Zip.lean`):** `NativeZip.unzip_zip` gives a round
+  trip when `ValidFields` and the output limit hold. `zip_rejects_fields`
+  rejects overflowing fields; `accepted_integrity`, `unzip_within_limit`,
+  `output_limit_rejection` and `checksum_mismatch_rejection` cover the
+  canonical container, metadata, checksum and output limit.
 
 ## The encoder boundary
 
@@ -91,17 +121,24 @@ not. The link is **mirroring plus differential testing, and nothing more**:
   evidence above.
 - Custom Rust splitting (`deflate_with_split`, `SplitFor`) sees a bounded
   window of at most 16384 un-emitted tokens. Invalid counts fall back to the
-  default. Regression tests cover custom boundaries and cross-block matches,
-  but Lean's `emitBlocks` models only the default split; its theorem does not
-  establish correctness of custom Rust policies.
+  default. `emitSplitBlocks` mirrors these checks and proves round trips for
+  every policy. Regression tests cover Rust custom boundaries and cross-block
+  matches; no refinement proof connects the two implementations.
 - `lean-zip` was not installed in the run that recorded these numbers, so no
   `lean-zip` result is claimed for the encoder.
 
 ## Explicit verification gaps
 
-- **P8 (Fuel non-exhaustion):** Still open in general. The model entry point `Deflate.decode` supplies `8 * bs.size + 1` fuel. Because each block consumes at least 3 header bits and each Huffman step consumes at least 1 bit, exhaustion is unreachable on any finite input. Fully formalizing this non-exhaustion invariant across `readCodeLengths.go`, `decodeHuffBlock`, and `decodeFuelLoop` is deferred. The general decoder gap is recorded here as an honest gap per plan Task 18 Step 4; fuel sufficiency is proved for the encoder functions `emitFixed`, `encodeStored` and, in M7b, the block loop `emitBlocks` (`decodeFuelLoop_emitBlocksGo`).
+- **P8:** Closed by `decode_never_exhausts` in `Fuel.lean` for arbitrary
+  finite inputs, not only encoder-produced streams.
 - **Table-driven Huffman decoding (ADR 0005):** no gap in the Lean model: `decodeSymFast_eq` is the full equivalence, with no hypothesis on the code or the reader. The model's block decoder still calls `decodeSym`, and `decodeSymFast` is a separate definition proved equal to it. What is not proved is that the Rust table and peek mirror `buildTable` and `decodeSymFast`. Like the rest of the Rust, that rests on tests and the differential harness (ADR 0003), plus the unit test ADR 0005 asks for, which compares the Rust table against the by-evaluation construction.
 
 ## Status
 
-Milestones M0–M6, M7a, M8, M9 complete; M7b (dynamic-Huffman encoder) complete (ADR 0007). Decoder, stored encoder, compressing encoder (fixed + dynamic blocks), Lean formal model with 218 kernel-checked theorems (73 headline theorems registered in `spec/scripts/axioms.lean`), the compressing encoder with `decode_compress` (M7a fixed blocks, generalized in M7b to dynamic blocks through `decode_emitBlocks`), gzip framing (RFC 1952, outside Lean verification boundary, differential tested against zlib), 4-way differential harness (20,197 streams, 0 findings), fuzz targets, size reports, and CLI all complete and passing CI gates.
+The Lean model covers the raw decoder and stored/fixed/dynamic encoders,
+general fuel non-exhaustion, checked custom splitting, minimal single-member
+gzip and canonical single-entry STORED ZIP. Headline theorems are registered
+in `spec/scripts/axioms.lean`. Rust correspondence remains test evidence:
+the raw differential corpus has 20,197 streams and zero findings, with
+focused framing checks in `oracles/framing.py`. The framing exclusions above
+and the lack of a Rust refinement proof remain explicit boundaries.

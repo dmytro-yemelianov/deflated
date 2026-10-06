@@ -151,6 +151,50 @@ fn emit_blocks_fixed_reply(toks: &str) -> String {
     format!("OK {}", to_hex(&w.finish()))
 }
 
+// Framing commands use '-' for an empty byte argument (including ZIP names).
+fn framing_reply(command: &str, args: &str, limit: usize) -> String {
+    use deflate_core::crc32::Crc32;
+    use deflate_core::zip::{CompressionMethod, unzip_single, zip_single};
+    let fields: Vec<_> = args.split_ascii_whitespace().collect();
+    let parse = |s: &str| from_hex(if s == "-" { "" } else { s });
+    if command == "ZIPSTORE" {
+        if fields.len() != 2 {
+            return "ERR arguments".into();
+        }
+        let (Some(name), Some(data)) = (parse(fields[0]), parse(fields[1])) else {
+            return "ERR badHex".into();
+        };
+        return match zip_single(&name, &data, CompressionMethod::Stored) {
+            Ok(wire) => format!("OK {}", to_hex(&wire)),
+            Err(e) => format!("ERR {}", err_name(e)),
+        };
+    }
+    if fields.len() > 1 {
+        return "ERR arguments".into();
+    }
+    let Some(bytes) = parse(fields.first().copied().unwrap_or("-")) else {
+        return "ERR badHex".into();
+    };
+    if command == "CRC32" {
+        return format!("OK {}", Crc32::compute(&bytes));
+    }
+    if command == "UNZIPSTORE" {
+        return match unzip_single(&bytes, limit) {
+            Ok((data, name)) => format!("OK {} {}", to_hex(&name), to_hex(&data)),
+            Err(e) => format!("ERR {}", err_name(e)),
+        };
+    }
+    let result = if command == "GZIP" {
+        gzip(&bytes, limit)
+    } else {
+        gunzip(&bytes, limit)
+    };
+    match result {
+        Ok(out) => format!("OK {}", to_hex(&out)),
+        Err(e) => format!("ERR {}", err_name(e)),
+    }
+}
+
 fn oracle() -> io::Result<()> {
     let stdin = io::stdin();
     let mut stdout = io::stdout().lock();
@@ -160,6 +204,9 @@ fn oracle() -> io::Result<()> {
         let mut parts = line.trim_ascii().splitn(2, ' ');
         match (parts.next(), parts.next()) {
             (Some("LIMIT"), Some(n)) => limit = n.parse().unwrap_or(limit),
+            (Some(cmd @ ("CRC32" | "GZIP" | "GUNZIP" | "ZIPSTORE" | "UNZIPSTORE")), args) => {
+                writeln!(stdout, "{}", framing_reply(cmd, args.unwrap_or(""), limit))?
+            }
             (Some("DECODE"), hx) => match from_hex(hx.unwrap_or("")) {
                 None => writeln!(stdout, "ERR badHex")?,
                 Some(bytes) => match inflate_with_limit(&bytes, limit) {

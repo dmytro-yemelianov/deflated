@@ -76,3 +76,37 @@ open Deflate
 #print axioms Deflate.decodeFuelLoop_emitBlocksGo
 #print axioms Deflate.decode_emitBlocks
 #print axioms Deflate.emitBlocks_none
+
+-- General fuel sufficiency, including malformed input.
+#print axioms Deflate.readCodeLengths_go_fuel_sufficient
+#print axioms Deflate.readCodeLengths_never_exhausts
+#print axioms Deflate.readCLLens_never_exhausts
+#print axioms Deflate.readDynamicCodes_never_exhausts
+#print axioms Deflate.decodeHuffBlock_fuel_sufficient
+#print axioms Deflate.decodeBlockBody_never_exhausts
+#print axioms Deflate.decodeFuelLoop_fuel_sufficient
+#print axioms Deflate.decode_never_exhausts
+
+-- Checked custom block splitting for every callback and length heuristic.
+#print axioms Deflate.checkedSplit_bounds
+#print axioms Deflate.splitCount_progress
+#print axioms Deflate.splitCount_bounds
+#print axioms Deflate.decode_emitSplitBlocks
+#print axioms Deflate.decode_compressSplit
+#print axioms Deflate.emitSplitBlocks_none
+
+-- Native-byte framing: explicit minimal gzip and canonical STORED ZIP subsets.
+#print axioms Deflate.NativeFraming.readLE_le
+#print axioms Deflate.NativeCRC32.crc32_check
+#print axioms Deflate.NativeCRC32.crc32_empty
+#print axioms Deflate.NativeGzip.gunzip_gzip
+#print axioms Deflate.NativeGzip.accepted_integrity
+#print axioms Deflate.NativeGzip.gunzip_within_limit
+#print axioms Deflate.NativeGzip.output_limit_rejection
+#print axioms Deflate.NativeGzip.checksum_mismatch_rejection
+#print axioms Deflate.NativeZip.zip_rejects_fields
+#print axioms Deflate.NativeZip.unzip_zip
+#print axioms Deflate.NativeZip.accepted_integrity
+#print axioms Deflate.NativeZip.unzip_within_limit
+#print axioms Deflate.NativeZip.output_limit_rejection
+#print axioms Deflate.NativeZip.checksum_mismatch_rejection

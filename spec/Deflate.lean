@@ -15,4 +15,9 @@ import Deflate.EncodeFixed
 import Deflate.EncodeDynamic
 import Deflate.Compress
 import Deflate.Properties
-
+import Deflate.Fuel
+import Deflate.EncodeSplit
+import Deflate.Framing
+import Deflate.CRC32
+import Deflate.Gzip
+import Deflate.Zip

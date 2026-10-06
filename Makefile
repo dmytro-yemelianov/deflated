@@ -1,5 +1,5 @@
 # Top-level driver for verified-deflate. Mirrors maked's Makefile.
-.PHONY: all build-rust build-lean test test-axiom-gate test-rust test-lean test-differential \
+.PHONY: all build-rust build-lean test test-axiom-gate test-rust test-lean test-differential test-framing \
         fmt lint fuzz size perf profile clean
 
 all: build-rust build-lean
@@ -12,7 +12,7 @@ build-lean:
 	@echo "==> lake build (Lean model + theorems)"
 	@lake build
 
-test: test-axiom-gate test-rust test-lean test-differential
+test: test-axiom-gate test-rust test-lean test-differential test-framing
 
 test-axiom-gate:
 	@sh scripts/test_axiom_gate.sh
@@ -29,6 +29,9 @@ test-lean: build-lean
 test-differential: build-rust build-lean
 	@python3 oracles/differential.py --self-test
 	@python3 oracles/differential.py
+
+test-framing: build-rust build-lean
+	@python3 oracles/framing.py
 
 fmt:
 	@cargo fmt --all --check

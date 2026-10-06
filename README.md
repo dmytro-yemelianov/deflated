@@ -6,7 +6,8 @@ runtime dependencies, beside an executable Lean 4 model of the same semantics.
 
 - `crates/deflate-core/` — the decoder and encoder. `no_std`, no runtime
   dependencies, `#![forbid(unsafe_code)]`.
-- `spec/Deflate/` — the Lean 4 model and 218 theorems about it (73 of them headline theorems checked for standard axioms only), kernel-checked,
+- `spec/Deflate/` — the Lean 4 model and kernel-checked proofs, with headline
+  theorems checked for standard axioms only,
   with no `sorry`, no `admit` and no `native_decide`.
 - `oracles/` — a differential harness running `deflate-core`, the Lean model,
   `zlib` and `lean-zip` over the same corpus.
@@ -19,6 +20,10 @@ finite corpus. `vdeflate` is never "formally verified". Read
 [docs/verification-boundary.md](docs/verification-boundary.md) before quoting
 any correctness claim, and [docs/conformance.md](docs/conformance.md) for
 feature-by-feature coverage.
+
+Lean proves general decoder fuel non-exhaustion (`decode_never_exhausts`)
+and custom block-splitting round trips (`decode_compressSplit`) for every
+checked policy, alongside initial gzip and ZIP framing proofs.
 
 ## Build
 
@@ -54,8 +59,9 @@ extraction are library APIs in `deflate_core::zip`.
   measured. [docs/perf-report.md](docs/perf-report.md) has the
   baseline, the profile, and the ranked candidates.
 - ZIP supports one stored or DEFLATE entry on one disk, including standard
-  data descriptors. ZIP64 and encryption are unsupported. gzip and ZIP
-  framing, and custom block splitting, are outside the Lean model.
+  data descriptors. ZIP64 and encryption are unsupported. Lean proves
+  round trips for minimal single-member gzip and canonical single-entry
+  stored ZIP; optional gzip headers, concatenation, ZIP DEFLATE entries and
+  descriptors remain outside those framing models.
 - No refinement proof connects the Lean model and the Rust code. ADR 0003
   records the Charon/Aeneas spike result.
-- Explicit verification gaps in the Lean model: P8 fuel non-exhaustion is recorded in [docs/verification-boundary.md](docs/verification-boundary.md).

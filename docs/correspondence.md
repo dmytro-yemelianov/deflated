@@ -23,6 +23,18 @@ Findings: **0**. Raw results: `oracles/reports/differential.json`.
 
 Independently, five `cargo-fuzz` targets have run with no reproducible crash or hang, and `tests/malformed/` replays every minimized finding on every `cargo test`.
 
+The separate `oracles/framing.py` harness checks the initial native-byte Lean
+framing models against Rust and Python's `zlib`, `gzip` and `zipfile`. It
+compares CRC32 and canonical STORED ZIP bytes, cross-decodes Rust/Lean gzip
+and ZIP output, and checks limits, malformed headers, truncations and
+checksum/size corruption. It does not compare gzip compressed bodies for
+byte equality: Lean uses a trivial finder and Rust uses its hash-chain
+matcher. ZIP comparisons cover only the canonical stored subset; optional
+gzip headers, concatenation, general ZIP metadata and descriptors remain
+outside this model comparison. The run passed 1,654 oracle checks over ten
+payloads plus the 65,535/65,536-byte filename boundary. Run `make test-framing`
+to build and reproduce it.
+
 ## What was not demonstrated
 
 This is **test evidence over a finite corpus**, not a proof. It says nothing

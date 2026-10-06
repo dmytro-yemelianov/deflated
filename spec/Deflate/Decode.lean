@@ -2,7 +2,7 @@
   Deflate.Decode — the decoder state machine (RFC 1951 §3.2.3).
 
   Read blocks until BFINAL. The loop is fuel-bounded and reports exhaustion
-  as its own outcome rather than guessing; `Properties.decode_never_exhausts`
+  as its own outcome rather than guessing; `decode_never_exhausts` in `Deflate.Fuel`
   shows the fuel the entry point supplies is always enough.
 -/
 import Deflate.Block

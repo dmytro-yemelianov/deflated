@@ -21,7 +21,7 @@ inductive DecErr where
   | invalidDistance
   | invalidLength
   | outputLimitExceeded
-  /-- The decoder ran out of fuel. `Properties.decodeFuel_sufficient` shows
+  /-- The decoder ran out of fuel. `decode_never_exhausts` in `Deflate.Fuel` shows
       this is unreachable at the fuel the entry point supplies. Reported
       explicitly rather than folded into another error: maked's cycle
       detector once answered "acyclic" on fuel exhaustion, which was wrong. -/

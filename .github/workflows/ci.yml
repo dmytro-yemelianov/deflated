@@ -61,6 +61,7 @@ jobs:
           cargo build --release --workspace
           lake build
           python3 oracles/differential.py
+          python3 oracles/framing.py
 
       - name: Fuzz smoke (60s per target)
         run: |
