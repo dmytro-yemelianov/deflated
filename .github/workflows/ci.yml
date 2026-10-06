@@ -66,5 +66,5 @@ jobs:
       - name: Fuzz smoke (60s per target)
         run: |
           rustup toolchain install nightly --profile minimal
-          cargo install cargo-fuzz --locked
+          cargo +nightly install cargo-fuzz --locked
           make fuzz
