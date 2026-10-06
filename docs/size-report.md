@@ -20,10 +20,10 @@ No byte target was set before measuring (spec §17 M8).
 
 | Profile | Total file | `.text` |
 | --- | ---: | ---: |
-| `release` | 465888 | 247968 |
-| `min` | 319376 | 210276 |
+| `release` | 503360 | 278692 |
+| `min` | 319488 | 222340 |
 
-These figures include the compressing encoder (`deflate`, M7a), which `vdeflate -c` now links; the previous baseline, in git history, had the stored encoder only. `scripts/reports/size.json` is the current measurement.
+These figures include the dynamic-Huffman encoder (`deflate`, M7b), which `vdeflate -c` links; the M7a baseline, in git history, had fixed-Huffman blocks only. The `min` total file moved by far less than its `.text` did; section padding is the likely reason and was not investigated. `scripts/reports/size.json` is the current measurement.
 
 **The total file size is the first column.** `.text` is one section of it and
 is never the number to quote (spec §15).

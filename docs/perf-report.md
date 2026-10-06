@@ -63,16 +63,16 @@ decompressed output (8388608 bytes for every input).
 <!-- perf:throughput -->
 | Input | Compressed bytes | deflate-core MB/s | miniz_oxide MB/s | Slowdown |
 | --- | ---: | ---: | ---: | ---: |
-| `random.stored.deflate` | 8389258 | 71215.4 | 35944.8 | 0.5× |
-| `repetitive.dyn.deflate` | 16280 | 9035.8 | 3115.6 | 0.34× |
-| `repetitive.fixed.deflate` | 60974 | 8459.8 | 3186.9 | 0.38× |
-| `repetitive.stored.deflate` | 8389258 | 66030.2 | 37103.9 | 0.56× |
-| `text.dyn.deflate` | 3050677 | 371.3 | 482.1 | 1.3× |
-| `text.fixed.deflate` | 3854367 | 367.2 | 468.0 | 1.27× |
-| `text.stored.deflate` | 8389258 | 46907.5 | 31261.8 | 0.67× |
-| `zeros.dyn.deflate` | 8144 | 7101.2 | 7661.4 | 1.08× |
-| `zeros.fixed.deflate` | 52840 | 5928.5 | 9491.2 | 1.6× |
-| `zeros.stored.deflate` | 8389258 | 64506.9 | 36745.1 | 0.57× |
+| `random.stored.deflate` | 8389258 | 70764.9 | 31885.8 | 0.45× |
+| `repetitive.dyn.deflate` | 16280 | 4395.8 | 1980.6 | 0.45× |
+| `repetitive.fixed.deflate` | 60974 | 4850.9 | 1984.7 | 0.41× |
+| `repetitive.stored.deflate` | 8389258 | 49514.6 | 32864.3 | 0.66× |
+| `text.dyn.deflate` | 3050677 | 230.7 | 306.1 | 1.33× |
+| `text.fixed.deflate` | 3854367 | 234.1 | 275.7 | 1.18× |
+| `text.stored.deflate` | 8389258 | 62582.4 | 34580.2 | 0.55× |
+| `zeros.dyn.deflate` | 8144 | 3630.3 | 4905.6 | 1.35× |
+| `zeros.fixed.deflate` | 52840 | 4330.7 | 5244.4 | 1.21× |
+| `zeros.stored.deflate` | 8389258 | 59829.3 | 28719.9 | 0.48× |
 <!-- /perf:throughput -->
 
 Back-to-back runs on the same machine moved the slowdown by up to about 5% on
@@ -83,8 +83,8 @@ than that as noise.
 ## Compression
 
 Raw data: `scripts/reports/compress.json`. `deflate_core::deflate` (a greedy
-hash-chain matcher, then the smaller of fixed-Huffman and stored output; no
-dynamic Huffman block yet) against `miniz_oxide` levels 1 and 6, on the `.raw`
+hash-chain matcher, then blocks of a fixed token count (ADR 0007), each dynamic-Huffman,
+fixed-Huffman or the whole stream stored, whichever is smallest; M7b) against `miniz_oxide` levels 1 and 6, on the `.raw`
 payloads from the same corpus. Ratio is compressed size over input size, so
 lower is better; above 1 means the stream is larger than the input (stored
 framing). MB/s are of input, best of 5 runs. Each stream, ours and
@@ -94,33 +94,55 @@ before it is timed.
 <!-- perf:compression -->
 | Input | Ratio ours | Ratio level 1 | Ratio level 6 | MB/s ours | MB/s level 1 | MB/s level 6 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| `random.raw` | 1.0001 | 1.0009 | 1.0002 | 63.4 | 387.7 | 75.5 |
-| `repetitive.raw` | 0.0073 | 0.0091 | 0.0019 | 718.0 | 10172.1 | 1616.8 |
-| `text.raw` | 0.4744 | 0.5698 | 0.3633 | 71.2 | 222.3 | 105.1 |
-| `zeros.raw` | 0.0063 | 0.0046 | 0.001 | 763.1 | 17660.2 | 1689.3 |
+| `random.raw` | 1.0001 | 1.0009 | 1.0002 | 36.1 | 197.1 | 44.0 |
+| `repetitive.raw` | 0.0019 | 0.0091 | 0.0019 | 490.4 | 6478.5 | 947.3 |
+| `text.raw` | 0.3705 | 0.5698 | 0.3633 | 38.4 | 147.6 | 69.4 |
+| `zeros.raw` | 0.001 | 0.0046 | 0.001 | 499.7 | 12224.6 | 945.6 |
 <!-- /perf:compression -->
 
 What the table says, and no more:
 
-- **Text.** Our ratio is between the two miniz_oxide levels: better than
-  level 1, worse than level 6. We are slower than both. The gap to level 6 is
-  the missing dynamic Huffman block and lazy matching, which is the next
-  candidate, not a defect.
+- **Text.** Our ratio is far better than level 1 and about 2% worse than
+  level 6 (0.3705 against 0.3633), which is within what lazy matching would
+  recover and is the next candidate. M7a's fixed-only encoder, whose figures
+  are in git history at commit 63c9901, was between the two levels; the
+  dynamic block is what moved it. We are slower than both levels; the
+  encoder has no lazy matching and no early exit.
 - **Random bytes.** The output is stored blocks, so the ratio is the stored
   framing overhead and is slightly better than miniz_oxide's. The time
   is the matcher failing to find anything.
-- **Zeros and the 9-byte pattern.** Fixed Huffman codes cannot do better than
-  a few bits per 258-byte match. On the pattern we beat level 1 on size and
-  lose to level 6; on zeros we lose to both. The matcher is far slower than
-  miniz_oxide's run-length fast paths. These are
-  the worst cases for the encoder and are not tuned.
-- **Noise.** Back-to-back runs moved these figures by up to about 5%.
-  Differences smaller than that mean nothing. The encoder has not been
-  optimized; the verified claim is that it round-trips, not that it is fast.
+- **Zeros and the 9-byte pattern.** Dynamic codes let a run of 258-byte
+  matches cost a fraction of a bit each, and both ratios now equal level 6 to
+  the four digits shown (0.0019 and 0.001), where fixed codes could not
+  reach them. The matcher is far slower than miniz_oxide's run-length fast
+  paths, so speed on these is the worst gap.
+- **Speed against M7a, and what the first M7b recording got wrong.** The
+  first M7b recording put text well under half of M7a's speed and blamed
+  machine load. That was wrong. Measured back to back against M7a
+  (alternating runs of both binaries on the same corpus), the slowdown was
+  real, about 40% on text. The cause was per-token work repeated per block:
+  `emit_blocks` walked each block's tokens five times (frequency counting
+  in `lengths_for`, the used-symbol set, `fixed_bits`, `dynamic_bits`, then
+  the emit), and every walk mapped each match to its length and distance
+  symbols by a linear scan of the 29- and 30-entry base tables. Building
+  the Huffman codes, which is per block and linear in the alphabet, was
+  not the cost. The fix counts frequencies once per block, derives the used
+  set and both bit sizes from the counts (the sum of frequency times code
+  length, plus extra bits per symbol), and maps lengths and distances to
+  symbols through precomputed tables in constant time. Each block's tokens
+  are now walked once to analyse and once to emit, and the output bytes are
+  unchanged (`emit_blocks_equiv_tests.rs` compares them with the old code).
+  Measured back to back again, the encoder now matches M7a's speed on text
+  while keeping the dynamic blocks' ratio.
+- **Noise and load.** Absolute MB/s here move by tens of percent with
+  machine load, and this table was recorded under load, so compare MB/s
+  only between runs made back to back, and otherwise compare the ratios.
+  The verified claim is that the encoder round-trips, not that it is fast.
 
-The Lean side proves `decode (compress find input) = input` for every finder
-and every input (`decode_compress`); this table measures the Rust encoder
-only.
+The Lean side proves `decode (compress find input) = input` for every finder,
+every `lengthsFor` and every input (`decode_compress`); this table measures
+the Rust encoder only. The length heuristic behind the dynamic blocks is
+unproved and is checked per block (ADR 0007).
 
 ## Where the time goes
 

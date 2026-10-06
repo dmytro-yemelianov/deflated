@@ -8,12 +8,17 @@ Persistent fuzz targets using `libfuzzer-sys` and `cargo-fuzz`.
 2. **`dynamic_header`**: Fuzzes `read_dynamic_tables` directly to exercise the dynamic Huffman tree parser in isolation.
 3. **`differential`**: In-process differential testing against `miniz_oxide`. Compares output whenever both decoders accept a stream.
 
+4. **`roundtrip`**: `deflate` output must decode back to the input.
+5. **`dynamic_lengths`**: `build_lengths` must return a Kraft-valid length set, nonzero exactly where the frequency is, for any frequency vector.
+
 ## Running
 
 ```bash
 cargo +nightly fuzz run inflate        -- -max_total_time=60 -rss_limit_mb=4096
 cargo +nightly fuzz run dynamic_header -- -max_total_time=60 -rss_limit_mb=4096
 cargo +nightly fuzz run differential   -- -max_total_time=60 -rss_limit_mb=4096
+cargo +nightly fuzz run roundtrip      -- -max_total_time=60 -rss_limit_mb=4096
+cargo +nightly fuzz run dynamic_lengths -- -max_total_time=60 -rss_limit_mb=4096
 ```
 
 ## Minimized Findings

@@ -62,25 +62,80 @@ def parseToken? (s : String) : Option Token :=
     pure (.match len dist)
   | _ => none
 
+/-- ASCII whitespace exactly as Rust's `u8::is_ascii_whitespace`: space,
+    tab, LF, FF (U+000C) and CR, but not VT (U+000B). Lean's
+    `Char.isWhitespace` misses FF and `String.trimAscii` also strips VT, so
+    the oracle uses this one predicate for trimming and splitting. -/
+def isAsciiWs (c : Char) : Bool :=
+  c = ' ' || c = '\t' || c = '\n' || c = '\x0c' || c = '\r'
+
+/-- Trim `isAsciiWs` from both ends. Rust: `str::trim_ascii`. -/
+def trimWs (s : String) : String :=
+  String.ofList ((s.toList.dropWhile isAsciiWs).reverse.dropWhile isAsciiWs).reverse
+
+/-- Split on runs of `isAsciiWs`, dropping empty words. Rust:
+    `str::split_ascii_whitespace`. -/
+def wordsWs (s : String) : List String :=
+  (s.split isAsciiWs).toList.map (·.toString) |>.filter (· ≠ "")
+
 /-- `EMIT` body: whitespace-separated tokens, through `emitFixed` alone. -/
 def emitAndFormat (body : String) : String :=
-  let words := (body.split Char.isWhitespace).toList.map (·.toString) |>.filter (· ≠ "")
+  let words := wordsWs body
   match words.mapM parseToken? with
   | none => "ERR badToken"
   | some ts => s!"OK {toHex (emitFixed ts)}"
 
-/-- `DEFLATE` uses the trivial finder, so the model emits only literals and
-    `compress` picks between that and stored. -/
+/-- `EMITBLOCKS` body: tokens through `emitBlocks` with no lengths (fixed
+    blocks only, chunks of 16384). Rust: `emit_blocks_fixed_reply`. -/
+def emitBlocksAndFormat (body : String) : String :=
+  let words := wordsWs body
+  match words.mapM parseToken? with
+  | none => "ERR badToken"
+  | some ts => s!"OK {toHex (emitBlocks (fun _ => none) ts)}"
+
+/-- `EMITDYN` lengths: one hex digit per length, `lo`–`hi` digits.
+    Rust: `parse_lengths` in `vdeflate`. -/
+def parseLengths? (s : String) (lo hi : Nat) : Option (Array Nat) :=
+  if lo ≤ s.length ∧ s.length ≤ hi then (s.toList.mapM hexDigit?).map List.toArray else none
+
+/-- `EMITDYN <lit> <dist> <cl> <tok>*`: one final block, dynamic when
+    `validLengths` holds (no size comparison), fixed otherwise. Lengths are
+    checked before tokens. Rust: `emit_dyn_reply` in `vdeflate`. -/
+def emitDynAndFormat (body : String) : String :=
+  let words := wordsWs body
+  let lens : Option (Array Nat × Array Nat × Array Nat × List String) :=
+    match words with
+    | l :: d :: c :: toks => do
+      let lit ← parseLengths? l 257 286
+      let dist ← parseLengths? d 1 30
+      let cl ← parseLengths? c 19 19
+      pure (lit, dist, cl, toks)
+    | _ => none
+  match lens with
+  | none => "ERR badLengths"
+  | some (lit, dist, cl, toks) =>
+    match toks.mapM parseToken? with
+    | none => "ERR badToken"
+    | some ts =>
+      let w := if validLengths lit dist cl ts then emitDynamicBlock BitWriter.empty true lit dist cl ts
+        else emitFixedBlock BitWriter.empty true ts
+      s!"OK {toHex w.toBytes}"
+
+/-- `DEFLATE` uses the trivial finder and no dynamic lengths, so the model
+    emits literals in fixed blocks and `compress` picks between that and
+    stored. -/
 def deflateAndFormat (hx : String) : String :=
   match ofHex hx with
   | none => "ERR badHex"
-  | some bs => s!"OK {toHex (compress (fun _ _ => none) bs)}"
+  | some bs => s!"OK {toHex (compress (fun _ _ => none) (fun _ => none) bs)}"
 
 def handle (limit : Nat) (line : String) : Nat × Option String :=
-  let t := line.trimAscii.toString
+  let t := trimWs line
   -- EMIT takes a token list, so split off only the command word (Rust: `splitn(2, ' ')`).
   match t.splitOn " " with
   | "EMIT" :: _ => (limit, some (emitAndFormat (t.drop 4).toString))
+  | "EMITBLOCKS" :: _ => (limit, some (emitBlocksAndFormat (t.drop 10).toString))
+  | "EMITDYN" :: _ => (limit, some (emitDynAndFormat (t.drop 7).toString))
   | _ =>
   match (t.splitOn " ") with
   | ["LIMIT", n] => (n.toNat?.getD limit, none)
