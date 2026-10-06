@@ -1,0 +1,2182 @@
+{
+  "schema_version": 1,
+  "spikes": [
+    "S1",
+    "S3 baseline pilot"
+  ],
+  "decision": "validated adapter implemented; retain experimental finalists; widen CPU study before surrogate or promotion",
+  "default_bytes_check": {
+    "pre_adapter_commit": "232678d19a1e08c8382d8e1a7a28e1e4b18e3b14",
+    "script": "scripts/check_research_defaults.py",
+    "expected_ledger": "scripts/reports/search-measurements.jsonl",
+    "expected_ledger_sha256": "2e249d645862a091d0751eb12aab2b7dcb01b83be67214e85495dc536e15970d",
+    "streams": 232,
+    "presets": [
+      "fast",
+      "balanced",
+      "best",
+      "stored"
+    ],
+    "partitions": [
+      "train",
+      "validation",
+      "stress"
+    ],
+    "byte_mismatches": 0,
+    "decoders": [
+      "deflate-core",
+      "miniz_oxide",
+      "zlib"
+    ]
+  },
+  "raw_ledger": "scripts/reports/search-cpu-measurements.jsonl",
+  "raw_ledger_sha256": "ad9ebc35d6da011559cf294aaea98b1606c7993769a2e36dd1ef9ebed02a78f2",
+  "raw_rows": 852,
+  "studies": [
+    {
+      "schema_version": 1,
+      "run_id": "20261006T223453Z-c4034f9e",
+      "strategy": "random",
+      "seed": 195108,
+      "configured_trial_budget": 16,
+      "controls": [
+        {
+          "preset": "balanced"
+        },
+        {
+          "preset": "fast"
+        },
+        {
+          "preset": "best"
+        },
+        {
+          "preset": "stored"
+        }
+      ],
+      "axes": {
+        "probes": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          128,
+          256,
+          512,
+          1024
+        ],
+        "lazy": [
+          false,
+          true
+        ],
+        "insert_tail": [
+          0,
+          4,
+          8,
+          16,
+          32
+        ],
+        "index": [
+          "dual",
+          "trigram"
+        ],
+        "block_tokens": [
+          256,
+          1024,
+          4096,
+          16384
+        ]
+      },
+      "rounds": 5,
+      "minimum_batch_ms": 2,
+      "trial_timeout_seconds": 60,
+      "balanced_size_tolerance": 0.01,
+      "source_sha256": {
+        "Cargo.toml": "d8e747c012cba553ad19cdba4436e5c43dd30a10adce9e89933c3d538c4f4a39",
+        "Cargo.lock": "8ce82932f19c583ec37870d2f01dc9e72cb492b0aa02dde7e14b43142857a15d",
+        "crates/deflate-core/Cargo.toml": "27e824b076208ffe2864e6c1fae8b836429a393c26c62788e36f53acf1ff65e2",
+        "crates/deflate-core/examples/tune_config.rs": "b9da6ad443750f2b36c9a558e9d9e69fbd4d499f618972e52fdd31d9c7e0332e",
+        "scripts/search_cpu.py": "1861be8127aaa4670f9bed731fce339e91c3e52cd4a04c654fccc1533c5eaafb",
+        "scripts/search_corpus.py": "ff99039e63e31f41805a433777ba454a8e6276706e4357d2f6273febe78f03c3",
+        "scripts/search_poc.py": "bde8f0bb0976f0197281eaa7e9c03445a6b628a28b04f5ab315d7a319d0e1763",
+        "crates/deflate-core/src/bitstream.rs": "95e941fcc379cafd8ae920f12ed4f6327e12062edfe39015f66eb43a9b094186",
+        "crates/deflate-core/src/bitwriter.rs": "0b6ff21ba48422ed34557f9b5e56dd89cd91315cac9a498f9bed306b3cd96588",
+        "crates/deflate-core/src/block.rs": "b99d28faf70ea823b251544f2040f0c4850b9871bcbd9e331742661545310eee",
+        "crates/deflate-core/src/compress.rs": "3977afe7fd649bcf031c999f738fc890b12f6d637064af58e3efd2388c0e51d6",
+        "crates/deflate-core/src/crc32.rs": "3166b0a90dc6cded7a07e5beae9b5cee0c843349123e80dd2e7cc898f71e7fad",
+        "crates/deflate-core/src/deflate.rs": "419e757fa99e22675f77628fc652badcfeb0817852835f790eb584aaebc67507",
+        "crates/deflate-core/src/encode_dynamic.rs": "0a10d270561609bcb1c9b883992880734c6395dfd532ad9ecd2bed54bc4a52ec",
+        "crates/deflate-core/src/encode_fixed.rs": "b4459d0cc109c2f50ebd28467ad1923fbf96a527480dd3f64399601cfa459fd1",
+        "crates/deflate-core/src/error.rs": "fe3ac5fc29296fd8e7e0539dc76c615717fe8a72bb3456608edd18efbb21fecd",
+        "crates/deflate-core/src/gzip.rs": "44a8044d6fd55a5f78fab74f75ba5815b004a4e83ffcbf08ae8254909021b5bd",
+        "crates/deflate-core/src/huffman.rs": "326b31f0fda785d2418f24c7348490520f7f869082fed3316f9f870bfe0fd964",
+        "crates/deflate-core/src/huffman_build.rs": "c2eef9c5c7d53eaf435b65cbc2eb6ad19f28e3df1aef87f6952024c8879ccc58",
+        "crates/deflate-core/src/inflate.rs": "ae4c905a7da364c4b05f4f8c4754ca01ad513b695ea82c28a06c2375dfcde272",
+        "crates/deflate-core/src/lib.rs": "82e81c94fbdad579be6157b3f9cd6b73f3d51ec526c68fda8d731d7f23070d68",
+        "crates/deflate-core/src/lz77.rs": "67991a3fb79ef37a65accdff089b3c34d90157e8eed43745fcbba60f432589c1",
+        "crates/deflate-core/src/matcher.rs": "d6e8f531d34370fde2cc787fbcb2fcd29880163671145a5b632cf167427f1ffd",
+        "crates/deflate-core/src/matcher_flat.rs": "2cb9257a6b93edce133891c4292690ef78e5edf87ccdbce976667d0d6d587890",
+        "crates/deflate-core/src/research.rs": "9359cf4a62664fcbf124ca4b778c09a7c48a2d3e29bfd5fb2bbbec9b21f44ca5",
+        "crates/deflate-core/src/tokens.rs": "5e2f16a94e1a8a35400be25e04280ecae25dd550ad7bd92e398715f16f84f839",
+        "crates/deflate-core/src/zip.rs": "e92492d2c4d61be74e8f6f73da43725992ca0c6be807d8da0d104e2e3a6ae731"
+      },
+      "manifest_sha256": "4b0202ea617da20295ede7011799ec70555b86324af2b47918e83ad650700b1d",
+      "git_commit": "232678d19a1e08c8382d8e1a7a28e1e4b18e3b14",
+      "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)",
+      "cpu": "Apple M5",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "python": "3.14.7",
+      "features": [
+        "research-tuning"
+      ],
+      "build_overrides": {},
+      "objectives": [
+        "time_vs_paired_balanced",
+        "packed_bytes"
+      ],
+      "memory": "configured table capacities reported; peak memory unmeasured and not optimized",
+      "test_partition_measured": false,
+      "promotion": "none",
+      "binary_sha256": "bfc9a0c45d212adfc7224eaf4a81ab76fc309052d2729a0eeb40cdf173d9a4ea",
+      "build_seconds": 0.9909024160006084,
+      "training": [
+        {
+          "id": "80684c741c8e5989355f3579253b5eac9de0c59aadc73fc5543c7a9a443c06d6",
+          "config": {
+            "preset": "balanced"
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 260422,
+            "encode_ns": 9884042.597896745,
+            "baseline_encode_ns": 9927218.07849239,
+            "baseline_bytes": 260422,
+            "mb_s": 67.98857788644064,
+            "speed_vs_paired_balanced": 1.0043682005786612,
+            "time_vs_paired_balanced": 0.9956507976097366,
+            "size_vs_balanced": 1.0
+          },
+          "elapsed_seconds": 0.7269832079909975,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": null
+        },
+        {
+          "id": "9968a773b01cfd97acf8ac9e509753d5b8d73369db7e78b22cb1aaca27a4e349",
+          "config": {
+            "preset": "fast"
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 272696,
+            "encode_ns": 5333157.278871093,
+            "baseline_encode_ns": 8766667.901664663,
+            "baseline_bytes": 260422,
+            "mb_s": 126.00453443635313,
+            "speed_vs_paired_balanced": 1.643804493896412,
+            "time_vs_paired_balanced": 0.6083448510532039,
+            "size_vs_balanced": 1.0471311947531314
+          },
+          "elapsed_seconds": 0.49974187499901745,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": null
+        },
+        {
+          "id": "d36670129b94991d180e7461e3f55c6938320596a325e10509abcc9e40ae7ec4",
+          "config": {
+            "preset": "best"
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 259327,
+            "encode_ns": 21732142.778333332,
+            "baseline_encode_ns": 9145693.293703845,
+            "baseline_bytes": 260422,
+            "mb_s": 30.922031336457874,
+            "speed_vs_paired_balanced": 0.4208371621238373,
+            "time_vs_paired_balanced": 2.376216004673408,
+            "size_vs_balanced": 0.9957952861125404
+          },
+          "elapsed_seconds": 0.5889794169925153,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": null
+        },
+        {
+          "id": "59db09375f08c1969d0f0facdb6a50e4fc3d58f0551e4446d2aa3a292705197c",
+          "config": {
+            "preset": "stored"
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 672102,
+            "encode_ns": 8371.000913735714,
+            "baseline_encode_ns": 8669418.926911134,
+            "baseline_bytes": 260422,
+            "mb_s": 80277.37745164178,
+            "speed_vs_paired_balanced": 1035.6490240833393,
+            "time_vs_paired_balanced": 0.0009655780836419051,
+            "size_vs_balanced": 2.5808188248304673
+          },
+          "elapsed_seconds": 0.4422478750057053,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": null
+        },
+        {
+          "id": "80e3869dd8214edb0b84bfcea4b3295b62df742fbee066e15aecf254c336297c",
+          "config": {
+            "probes": 128,
+            "lazy": false,
+            "insert_tail": 32,
+            "index": "dual",
+            "block_tokens": 256
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 274160,
+            "encode_ns": 21616352.047203563,
+            "baseline_encode_ns": 8711624.865538694,
+            "baseline_bytes": 260422,
+            "mb_s": 31.08766911884814,
+            "speed_vs_paired_balanced": 0.403010870960796,
+            "time_vs_paired_balanced": 2.481322644265042,
+            "size_vs_balanced": 1.0527528396218446
+          },
+          "elapsed_seconds": 0.5350194170023315,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 393216
+        },
+        {
+          "id": "5264e4f10414b8d39fa256c52a2ae8fe9059205a945509ee410f9b0803c1eac8",
+          "config": {
+            "probes": 2,
+            "lazy": true,
+            "insert_tail": 16,
+            "index": "trigram",
+            "block_tokens": 16384
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 261992,
+            "encode_ns": 4380390.477838777,
+            "baseline_encode_ns": 8662391.635313822,
+            "baseline_bytes": 260422,
+            "mb_s": 153.41143749621983,
+            "speed_vs_paired_balanced": 1.9775386872787935,
+            "time_vs_paired_balanced": 0.505679108293986,
+            "size_vs_balanced": 1.0060286765327047
+          },
+          "elapsed_seconds": 0.4760662499902537,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "ca98ba5643beafbc8075863328d6459cf76e5e05ef8661f46719a7de92a2a5de",
+          "config": {
+            "probes": 16,
+            "lazy": false,
+            "insert_tail": 0,
+            "index": "trigram",
+            "block_tokens": 256
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 269782,
+            "encode_ns": 16602541.834859699,
+            "baseline_encode_ns": 8742381.844146624,
+            "baseline_bytes": 260422,
+            "mb_s": 40.475850426048865,
+            "speed_vs_paired_balanced": 0.526568879097211,
+            "time_vs_paired_balanced": 1.8990867855967384,
+            "size_vs_balanced": 1.035941663914723
+          },
+          "elapsed_seconds": 0.5557592080003815,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "456518a7f1a37a93e78aa8979f10440f76ec5c831c8544c4ccaf2a2db9826878",
+          "config": {
+            "probes": 1024,
+            "lazy": true,
+            "insert_tail": 0,
+            "index": "dual",
+            "block_tokens": 256
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 270608,
+            "encode_ns": 34802707.180526316,
+            "baseline_encode_ns": 8833756.206939578,
+            "baseline_bytes": 260422,
+            "mb_s": 19.308900210384074,
+            "speed_vs_paired_balanced": 0.2538238235640032,
+            "time_vs_paired_balanced": 3.9397405096131335,
+            "size_vs_balanced": 1.0391134389567702
+          },
+          "elapsed_seconds": 0.6378541250014678,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 393216
+        },
+        {
+          "id": "130ae38efe58a69401d6860a750866f563931d68df2721d09a38bca2d62402dd",
+          "config": {
+            "probes": 1,
+            "lazy": false,
+            "insert_tail": 4,
+            "index": "dual",
+            "block_tokens": 16384
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 275135,
+            "encode_ns": 4609433.757376374,
+            "baseline_encode_ns": 8640787.493517252,
+            "baseline_bytes": 260422,
+            "mb_s": 145.78840598904588,
+            "speed_vs_paired_balanced": 1.8745876279683145,
+            "time_vs_paired_balanced": 0.5334506560697854,
+            "size_vs_balanced": 1.056496762946295
+          },
+          "elapsed_seconds": 0.50219341700722,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 393216
+        },
+        {
+          "id": "13d54a72d44a841c4f5292cfbff548e336c45e7a2727dce75829bf160f5c48fa",
+          "config": {
+            "probes": 32,
+            "lazy": false,
+            "insert_tail": 8,
+            "index": "trigram",
+            "block_tokens": 1024
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 264642,
+            "encode_ns": 8884031.219364153,
+            "baseline_encode_ns": 8959524.697413757,
+            "baseline_bytes": 260422,
+            "mb_s": 75.64156219253994,
+            "speed_vs_paired_balanced": 1.008497660148363,
+            "time_vs_paired_balanced": 0.9915739416320382,
+            "size_vs_balanced": 1.0162044681324927
+          },
+          "elapsed_seconds": 0.5342427919968031,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "7679a79bfad8b201b5f7e7798f7f59861a6968e637fe56de77d2ac8ad7b1ed4e",
+          "config": {
+            "probes": 64,
+            "lazy": true,
+            "insert_tail": 32,
+            "index": "dual",
+            "block_tokens": 4096
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 266726,
+            "encode_ns": 10890674.4550553,
+            "baseline_encode_ns": 8848177.022266712,
+            "baseline_bytes": 260422,
+            "mb_s": 61.704351073322734,
+            "speed_vs_paired_balanced": 0.8124544589760931,
+            "time_vs_paired_balanced": 1.2308382198557488,
+            "size_vs_balanced": 1.0242068642434203
+          },
+          "elapsed_seconds": 0.49730299999646377,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 393216
+        },
+        {
+          "id": "6892e3b55e30eced64ce818f536305b47308819d0eb6b84468b2a6b53f582829",
+          "config": {
+            "probes": 1,
+            "lazy": true,
+            "insert_tail": 32,
+            "index": "trigram",
+            "block_tokens": 16384
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 262664,
+            "encode_ns": 4136293.887471547,
+            "baseline_encode_ns": 8545541.899058243,
+            "baseline_bytes": 260422,
+            "mb_s": 162.46476151886404,
+            "speed_vs_paired_balanced": 2.065990021874873,
+            "time_vs_paired_balanced": 0.484029443226694,
+            "size_vs_balanced": 1.0086091036855565
+          },
+          "elapsed_seconds": 0.4952183330024127,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "e4c8224602fd72f723b0a0db6c4beac8ddcf01321bf1c397ecc9325fe01125d3",
+          "config": {
+            "probes": 32,
+            "lazy": true,
+            "insert_tail": 4,
+            "index": "dual",
+            "block_tokens": 4096
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 269667,
+            "encode_ns": 8693887.628568936,
+            "baseline_encode_ns": 8599437.20833517,
+            "baseline_bytes": 260422,
+            "mb_s": 77.29591509691681,
+            "speed_vs_paired_balanced": 0.9891359971201614,
+            "time_vs_paired_balanced": 1.0109833257625531,
+            "size_vs_balanced": 1.0355000729585058
+          },
+          "elapsed_seconds": 0.4852203750051558,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 393216
+        },
+        {
+          "id": "fec8a9127eb8535044f9194519992e66a57b39f01616164c023a1ef04c1ccd87",
+          "config": {
+            "probes": 2,
+            "lazy": true,
+            "insert_tail": 0,
+            "index": "dual",
+            "block_tokens": 16384
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 270800,
+            "encode_ns": 5658446.739919799,
+            "baseline_encode_ns": 8638282.40741898,
+            "baseline_bytes": 260422,
+            "mb_s": 118.76085980611786,
+            "speed_vs_paired_balanced": 1.5266172510694012,
+            "time_vs_paired_balanced": 0.6550430366874842,
+            "size_vs_balanced": 1.039850703857585
+          },
+          "elapsed_seconds": 0.4958658329996979,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 393216
+        },
+        {
+          "id": "b4a4269ee9b509b57e31d4ade1c22fab164e9d8396ba4d42662e1601a01f6dd7",
+          "config": {
+            "probes": 32,
+            "lazy": false,
+            "insert_tail": 8,
+            "index": "dual",
+            "block_tokens": 1024
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 275656,
+            "encode_ns": 10103293.708578823,
+            "baseline_encode_ns": 8720308.923993817,
+            "baseline_bytes": 260422,
+            "mb_s": 66.51316089419387,
+            "speed_vs_paired_balanced": 0.8631154527943004,
+            "time_vs_paired_balanced": 1.1585935540402408,
+            "size_vs_balanced": 1.0584973619740268
+          },
+          "elapsed_seconds": 0.4855652080004802,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 393216
+        },
+        {
+          "id": "4a04752b58bb8421c44e183735edc70ee1803091c5826df65a80cab54223feea",
+          "config": {
+            "probes": 32,
+            "lazy": true,
+            "insert_tail": 0,
+            "index": "trigram",
+            "block_tokens": 1024
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 263520,
+            "encode_ns": 11384147.191338269,
+            "baseline_encode_ns": 8652274.066960895,
+            "baseline_bytes": 260422,
+            "mb_s": 59.02963030127534,
+            "speed_vs_paired_balanced": 0.7600283026509053,
+            "time_vs_paired_balanced": 1.315740475074542,
+            "size_vs_balanced": 1.011896076368356
+          },
+          "elapsed_seconds": 0.5456874170049559,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "5ae78c4f5ffecda4e40e712f59d5b640786a275c60783003feb30aac5eb2aae6",
+          "config": {
+            "probes": 128,
+            "lazy": false,
+            "insert_tail": 4,
+            "index": "dual",
+            "block_tokens": 256
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 275436,
+            "encode_ns": 21258535.008816183,
+            "baseline_encode_ns": 8601423.596360467,
+            "baseline_bytes": 260422,
+            "mb_s": 31.610927080408516,
+            "speed_vs_paired_balanced": 0.4046103643921535,
+            "time_vs_paired_balanced": 2.471513554780785,
+            "size_vs_balanced": 1.0576525792751765
+          },
+          "elapsed_seconds": 0.5359031670086551,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 393216
+        },
+        {
+          "id": "00ca116edaa4317f66b4b9dc4aec07d3be48550772586a2d643dccb2b5ec68f5",
+          "config": {
+            "probes": 2,
+            "lazy": false,
+            "insert_tail": 16,
+            "index": "trigram",
+            "block_tokens": 1024
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 268408,
+            "encode_ns": 7251899.80309604,
+            "baseline_encode_ns": 8642962.376900416,
+            "baseline_bytes": 260422,
+            "mb_s": 92.66564876049493,
+            "speed_vs_paired_balanced": 1.1918204348618402,
+            "time_vs_paired_balanced": 0.8390525709654604,
+            "size_vs_balanced": 1.030665611968267
+          },
+          "elapsed_seconds": 0.49892366700805724,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "2c48f14e53fa09d6c9fe0e13157e4093a5fb202a6c62f23dfc50cbfa7c0d103c",
+          "config": {
+            "probes": 4,
+            "lazy": false,
+            "insert_tail": 0,
+            "index": "dual",
+            "block_tokens": 256
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 285303,
+            "encode_ns": 17924494.139343824,
+            "baseline_encode_ns": 8718411.9481131,
+            "baseline_bytes": 260422,
+            "mb_s": 37.49070934866564,
+            "speed_vs_paired_balanced": 0.48639654097553586,
+            "time_vs_paired_balanced": 2.0559356733795044,
+            "size_vs_balanced": 1.0955410833186137
+          },
+          "elapsed_seconds": 0.5507043749967124,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 393216
+        },
+        {
+          "id": "0cc90a775ae4c6dce95e389b1cb1a11e4527a63fa4856acc2c078b8f46a33a93",
+          "config": {
+            "probes": 64,
+            "lazy": false,
+            "insert_tail": 0,
+            "index": "dual",
+            "block_tokens": 4096
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 267840,
+            "encode_ns": 8823184.976851266,
+            "baseline_encode_ns": 8609531.164715316,
+            "baseline_bytes": 260422,
+            "mb_s": 76.16319977004694,
+            "speed_vs_paired_balanced": 0.9757849560338475,
+            "time_vs_paired_balanced": 1.0248159636161809,
+            "size_vs_balanced": 1.0284845366366897
+          },
+          "elapsed_seconds": 0.5013642909907503,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 393216
+        }
+      ],
+      "provisional_frontier": [
+        "80684c741c8e5989355f3579253b5eac9de0c59aadc73fc5543c7a9a443c06d6",
+        "d36670129b94991d180e7461e3f55c6938320596a325e10509abcc9e40ae7ec4",
+        "59db09375f08c1969d0f0facdb6a50e4fc3d58f0551e4446d2aa3a292705197c",
+        "5264e4f10414b8d39fa256c52a2ae8fe9059205a945509ee410f9b0803c1eac8",
+        "6892e3b55e30eced64ce818f536305b47308819d0eb6b84468b2a6b53f582829"
+      ],
+      "finalists": {
+        "criteria": {
+          "speed": "minimum ratio of summed median ns to paired Balanced, excluding stored",
+          "size": "minimum summed compressed bytes, excluding stored; paired time breaks ties",
+          "balanced": "minimum paired time ratio with training size <= balanced * 1.01"
+        },
+        "roles": {
+          "speed": "6892e3b55e30eced64ce818f536305b47308819d0eb6b84468b2a6b53f582829",
+          "size": "d36670129b94991d180e7461e3f55c6938320596a325e10509abcc9e40ae7ec4",
+          "balanced": "6892e3b55e30eced64ce818f536305b47308819d0eb6b84468b2a6b53f582829"
+        },
+        "configs": {
+          "d36670129b94991d180e7461e3f55c6938320596a325e10509abcc9e40ae7ec4": {
+            "preset": "best"
+          },
+          "6892e3b55e30eced64ce818f536305b47308819d0eb6b84468b2a6b53f582829": {
+            "probes": 1,
+            "lazy": true,
+            "insert_tail": 32,
+            "index": "trigram",
+            "block_tokens": 16384
+          }
+        }
+      },
+      "finalists_sha256": "979a580c274e1b8a4b860940ae5cc52bf2e918d8b3d5adf0278fdd39ae2864d7",
+      "validation": [
+        {
+          "id": "6892e3b55e30eced64ce818f536305b47308819d0eb6b84468b2a6b53f582829",
+          "config": {
+            "probes": 1,
+            "lazy": true,
+            "insert_tail": 32,
+            "index": "trigram",
+            "block_tokens": 16384
+          },
+          "partition": "validation",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 459008,
+            "packed_bytes": 206259,
+            "encode_ns": 3170767.17198296,
+            "baseline_encode_ns": 5290393.648696206,
+            "baseline_bytes": 207257,
+            "mb_s": 144.7624423690945,
+            "speed_vs_paired_balanced": 1.6684901040487488,
+            "time_vs_paired_balanced": 0.5993442799411309,
+            "size_vs_balanced": 0.9951847223495467
+          },
+          "elapsed_seconds": 0.36439537499973085,
+          "verified_streams": 13,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "d36670129b94991d180e7461e3f55c6938320596a325e10509abcc9e40ae7ec4",
+          "config": {
+            "preset": "best"
+          },
+          "partition": "validation",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 459008,
+            "packed_bytes": 205040,
+            "encode_ns": 11881059.005330633,
+            "baseline_encode_ns": 5000365.633913145,
+            "baseline_bytes": 207257,
+            "mb_s": 38.63359316657366,
+            "speed_vs_paired_balanced": 0.4208686811225875,
+            "time_vs_paired_balanced": 2.3760380490481956,
+            "size_vs_balanced": 0.9893031357203858
+          },
+          "elapsed_seconds": 0.38269758300157264,
+          "verified_streams": 13,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": null
+        }
+      ],
+      "total_verified_streams": 426,
+      "total_seconds": 12.342230458001723,
+      "trial_events_sha256": "981832cd2cee206b84581f899b0d5e1cf8129c9b9ee8fc925e6f08f3ce040ec4"
+    },
+    {
+      "schema_version": 1,
+      "run_id": "20261006T223636Z-7cd1351e",
+      "strategy": "pareto-mutation",
+      "seed": 195108,
+      "configured_trial_budget": 16,
+      "controls": [
+        {
+          "preset": "balanced"
+        },
+        {
+          "preset": "fast"
+        },
+        {
+          "preset": "best"
+        },
+        {
+          "preset": "stored"
+        }
+      ],
+      "axes": {
+        "probes": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          128,
+          256,
+          512,
+          1024
+        ],
+        "lazy": [
+          false,
+          true
+        ],
+        "insert_tail": [
+          0,
+          4,
+          8,
+          16,
+          32
+        ],
+        "index": [
+          "dual",
+          "trigram"
+        ],
+        "block_tokens": [
+          256,
+          1024,
+          4096,
+          16384
+        ]
+      },
+      "rounds": 5,
+      "minimum_batch_ms": 2,
+      "trial_timeout_seconds": 60,
+      "balanced_size_tolerance": 0.01,
+      "source_sha256": {
+        "Cargo.toml": "d8e747c012cba553ad19cdba4436e5c43dd30a10adce9e89933c3d538c4f4a39",
+        "Cargo.lock": "8ce82932f19c583ec37870d2f01dc9e72cb492b0aa02dde7e14b43142857a15d",
+        "crates/deflate-core/Cargo.toml": "27e824b076208ffe2864e6c1fae8b836429a393c26c62788e36f53acf1ff65e2",
+        "crates/deflate-core/examples/tune_config.rs": "b9da6ad443750f2b36c9a558e9d9e69fbd4d499f618972e52fdd31d9c7e0332e",
+        "scripts/search_cpu.py": "1861be8127aaa4670f9bed731fce339e91c3e52cd4a04c654fccc1533c5eaafb",
+        "scripts/search_corpus.py": "ff99039e63e31f41805a433777ba454a8e6276706e4357d2f6273febe78f03c3",
+        "scripts/search_poc.py": "bde8f0bb0976f0197281eaa7e9c03445a6b628a28b04f5ab315d7a319d0e1763",
+        "crates/deflate-core/src/bitstream.rs": "95e941fcc379cafd8ae920f12ed4f6327e12062edfe39015f66eb43a9b094186",
+        "crates/deflate-core/src/bitwriter.rs": "0b6ff21ba48422ed34557f9b5e56dd89cd91315cac9a498f9bed306b3cd96588",
+        "crates/deflate-core/src/block.rs": "b99d28faf70ea823b251544f2040f0c4850b9871bcbd9e331742661545310eee",
+        "crates/deflate-core/src/compress.rs": "3977afe7fd649bcf031c999f738fc890b12f6d637064af58e3efd2388c0e51d6",
+        "crates/deflate-core/src/crc32.rs": "3166b0a90dc6cded7a07e5beae9b5cee0c843349123e80dd2e7cc898f71e7fad",
+        "crates/deflate-core/src/deflate.rs": "419e757fa99e22675f77628fc652badcfeb0817852835f790eb584aaebc67507",
+        "crates/deflate-core/src/encode_dynamic.rs": "0a10d270561609bcb1c9b883992880734c6395dfd532ad9ecd2bed54bc4a52ec",
+        "crates/deflate-core/src/encode_fixed.rs": "b4459d0cc109c2f50ebd28467ad1923fbf96a527480dd3f64399601cfa459fd1",
+        "crates/deflate-core/src/error.rs": "fe3ac5fc29296fd8e7e0539dc76c615717fe8a72bb3456608edd18efbb21fecd",
+        "crates/deflate-core/src/gzip.rs": "44a8044d6fd55a5f78fab74f75ba5815b004a4e83ffcbf08ae8254909021b5bd",
+        "crates/deflate-core/src/huffman.rs": "326b31f0fda785d2418f24c7348490520f7f869082fed3316f9f870bfe0fd964",
+        "crates/deflate-core/src/huffman_build.rs": "c2eef9c5c7d53eaf435b65cbc2eb6ad19f28e3df1aef87f6952024c8879ccc58",
+        "crates/deflate-core/src/inflate.rs": "ae4c905a7da364c4b05f4f8c4754ca01ad513b695ea82c28a06c2375dfcde272",
+        "crates/deflate-core/src/lib.rs": "82e81c94fbdad579be6157b3f9cd6b73f3d51ec526c68fda8d731d7f23070d68",
+        "crates/deflate-core/src/lz77.rs": "67991a3fb79ef37a65accdff089b3c34d90157e8eed43745fcbba60f432589c1",
+        "crates/deflate-core/src/matcher.rs": "d6e8f531d34370fde2cc787fbcb2fcd29880163671145a5b632cf167427f1ffd",
+        "crates/deflate-core/src/matcher_flat.rs": "2cb9257a6b93edce133891c4292690ef78e5edf87ccdbce976667d0d6d587890",
+        "crates/deflate-core/src/research.rs": "9359cf4a62664fcbf124ca4b778c09a7c48a2d3e29bfd5fb2bbbec9b21f44ca5",
+        "crates/deflate-core/src/tokens.rs": "5e2f16a94e1a8a35400be25e04280ecae25dd550ad7bd92e398715f16f84f839",
+        "crates/deflate-core/src/zip.rs": "e92492d2c4d61be74e8f6f73da43725992ca0c6be807d8da0d104e2e3a6ae731"
+      },
+      "manifest_sha256": "4b0202ea617da20295ede7011799ec70555b86324af2b47918e83ad650700b1d",
+      "git_commit": "232678d19a1e08c8382d8e1a7a28e1e4b18e3b14",
+      "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)",
+      "cpu": "Apple M5",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "python": "3.14.7",
+      "features": [
+        "research-tuning"
+      ],
+      "build_overrides": {},
+      "objectives": [
+        "time_vs_paired_balanced",
+        "packed_bytes"
+      ],
+      "memory": "configured table capacities reported; peak memory unmeasured and not optimized",
+      "test_partition_measured": false,
+      "promotion": "none",
+      "binary_sha256": "bfc9a0c45d212adfc7224eaf4a81ab76fc309052d2729a0eeb40cdf173d9a4ea",
+      "build_seconds": 0.026001375008490868,
+      "training": [
+        {
+          "id": "80684c741c8e5989355f3579253b5eac9de0c59aadc73fc5543c7a9a443c06d6",
+          "config": {
+            "preset": "balanced"
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 260422,
+            "encode_ns": 9796495.170865953,
+            "baseline_encode_ns": 9746625.587426314,
+            "baseline_bytes": 260422,
+            "mb_s": 68.5961650854975,
+            "speed_vs_paired_balanced": 0.9949094464326439,
+            "time_vs_paired_balanced": 1.0051165998931952,
+            "size_vs_balanced": 1.0
+          },
+          "elapsed_seconds": 0.7199500420101685,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": null
+        },
+        {
+          "id": "9968a773b01cfd97acf8ac9e509753d5b8d73369db7e78b22cb1aaca27a4e349",
+          "config": {
+            "preset": "fast"
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 272696,
+            "encode_ns": 5235788.331325045,
+            "baseline_encode_ns": 8505932.959738951,
+            "baseline_bytes": 260422,
+            "mb_s": 128.347816503486,
+            "speed_vs_paired_balanced": 1.624575407078444,
+            "time_vs_paired_balanced": 0.6155454499944392,
+            "size_vs_balanced": 1.0471311947531314
+          },
+          "elapsed_seconds": 0.4705812089960091,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": null
+        },
+        {
+          "id": "d36670129b94991d180e7461e3f55c6938320596a325e10509abcc9e40ae7ec4",
+          "config": {
+            "preset": "best"
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 259327,
+            "encode_ns": 21067843.654358976,
+            "baseline_encode_ns": 8432952.308147699,
+            "baseline_bytes": 260422,
+            "mb_s": 31.897047036466002,
+            "speed_vs_paired_balanced": 0.40027600576971745,
+            "time_vs_paired_balanced": 2.4982761534182725,
+            "size_vs_balanced": 0.9957952861125404
+          },
+          "elapsed_seconds": 0.5501682920003077,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": null
+        },
+        {
+          "id": "59db09375f08c1969d0f0facdb6a50e4fc3d58f0551e4446d2aa3a292705197c",
+          "config": {
+            "preset": "stored"
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 672102,
+            "encode_ns": 8221.443675595,
+            "baseline_encode_ns": 8397745.665815482,
+            "baseline_bytes": 260422,
+            "mb_s": 81737.71256194444,
+            "speed_vs_paired_balanced": 1021.4441644529935,
+            "time_vs_paired_balanced": 0.0009790060336146936,
+            "size_vs_balanced": 2.5808188248304673
+          },
+          "elapsed_seconds": 0.4373968749860069,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": null
+        },
+        {
+          "id": "80e3869dd8214edb0b84bfcea4b3295b62df742fbee066e15aecf254c336297c",
+          "config": {
+            "probes": 128,
+            "lazy": false,
+            "insert_tail": 32,
+            "index": "dual",
+            "block_tokens": 256
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 274160,
+            "encode_ns": 20889509.067045163,
+            "baseline_encode_ns": 8482562.836935531,
+            "baseline_bytes": 260422,
+            "mb_s": 32.16935342248592,
+            "speed_vs_paired_balanced": 0.4060680799012859,
+            "time_vs_paired_balanced": 2.4626412404616915,
+            "size_vs_balanced": 1.0527528396218446
+          },
+          "elapsed_seconds": 0.5415075000055367,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 393216
+        },
+        {
+          "id": "5264e4f10414b8d39fa256c52a2ae8fe9059205a945509ee410f9b0803c1eac8",
+          "config": {
+            "probes": 2,
+            "lazy": true,
+            "insert_tail": 16,
+            "index": "trigram",
+            "block_tokens": 16384
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 261992,
+            "encode_ns": 4399324.627666563,
+            "baseline_encode_ns": 8531517.7789103,
+            "baseline_bytes": 260422,
+            "mb_s": 152.7511736174003,
+            "speed_vs_paired_balanced": 1.9392789805183086,
+            "time_vs_paired_balanced": 0.5156555658292812,
+            "size_vs_balanced": 1.0060286765327047
+          },
+          "elapsed_seconds": 0.5058427920012036,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "ca98ba5643beafbc8075863328d6459cf76e5e05ef8661f46719a7de92a2a5de",
+          "config": {
+            "probes": 16,
+            "lazy": false,
+            "insert_tail": 0,
+            "index": "trigram",
+            "block_tokens": 256
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 269782,
+            "encode_ns": 16138843.079747083,
+            "baseline_encode_ns": 8460192.06416239,
+            "baseline_bytes": 260422,
+            "mb_s": 41.638796330036016,
+            "speed_vs_paired_balanced": 0.5242130444145178,
+            "time_vs_paired_balanced": 1.9076213586345956,
+            "size_vs_balanced": 1.035941663914723
+          },
+          "elapsed_seconds": 0.5466138329938985,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "e2857dd040da31fd611d325e0b6de799c2789bf56ce23ecfb6ca1790c6e481a2",
+          "config": {
+            "probes": 256,
+            "lazy": true,
+            "insert_tail": 16,
+            "index": "trigram",
+            "block_tokens": 16384
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 257395,
+            "encode_ns": 16552208.58791355,
+            "baseline_encode_ns": 8644164.601138119,
+            "baseline_bytes": 260422,
+            "mb_s": 40.598932549140116,
+            "speed_vs_paired_balanced": 0.522236326060445,
+            "time_vs_paired_balanced": 1.9148419022162342,
+            "size_vs_balanced": 0.9883765580480912
+          },
+          "elapsed_seconds": 0.5561891249963082,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "456518a7f1a37a93e78aa8979f10440f76ec5c831c8544c4ccaf2a2db9826878",
+          "config": {
+            "probes": 1024,
+            "lazy": true,
+            "insert_tail": 0,
+            "index": "dual",
+            "block_tokens": 256
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 270608,
+            "encode_ns": 34106742.54666667,
+            "baseline_encode_ns": 8576295.274705084,
+            "baseline_bytes": 260422,
+            "mb_s": 19.702907689895362,
+            "speed_vs_paired_balanced": 0.2514545404906534,
+            "time_vs_paired_balanced": 3.976861972938485,
+            "size_vs_balanced": 1.0391134389567702
+          },
+          "elapsed_seconds": 0.604811166995205,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 393216
+        },
+        {
+          "id": "730291169097be5cc7a1e673eb7e53d5692839eb644f58cf96d154fbacb5e929",
+          "config": {
+            "probes": 2,
+            "lazy": false,
+            "insert_tail": 16,
+            "index": "trigram",
+            "block_tokens": 16384
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 262433,
+            "encode_ns": 3949515.804672073,
+            "baseline_encode_ns": 8499989.459765537,
+            "baseline_bytes": 260422,
+            "mb_s": 170.14794552918522,
+            "speed_vs_paired_balanced": 2.152159879879576,
+            "time_vs_paired_balanced": 0.4646494943749044,
+            "size_vs_balanced": 1.0077220818517636
+          },
+          "elapsed_seconds": 0.5033478750119684,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "98c6708f6a25a5019b3e1a40bd0b23b6fa8e83407c8a6bd0a595ff71cdea47b8",
+          "config": {
+            "probes": 256,
+            "lazy": true,
+            "insert_tail": 16,
+            "index": "trigram",
+            "block_tokens": 256
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 267512,
+            "encode_ns": 28070399.00250583,
+            "baseline_encode_ns": 8579641.020157328,
+            "baseline_bytes": 260422,
+            "mb_s": 23.939880581676473,
+            "speed_vs_paired_balanced": 0.30564727702628763,
+            "time_vs_paired_balanced": 3.2717451623624103,
+            "size_vs_balanced": 1.027225042431131
+          },
+          "elapsed_seconds": 0.6018776249984512,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "9cd207ad544c86b805bbc771737d6367f536c268d57bbc7570e7e72c3ece5faf",
+          "config": {
+            "probes": 16,
+            "lazy": false,
+            "insert_tail": 16,
+            "index": "trigram",
+            "block_tokens": 256
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 270075,
+            "encode_ns": 16171807.865250971,
+            "baseline_encode_ns": 8608159.579850793,
+            "baseline_bytes": 260422,
+            "mb_s": 41.55391936383058,
+            "speed_vs_paired_balanced": 0.5322942030709813,
+            "time_vs_paired_balanced": 1.8786603239912614,
+            "size_vs_balanced": 1.0370667608727373
+          },
+          "elapsed_seconds": 0.5427003750082804,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "772abc81079081df89059615689d41ac00af3a0b632ab70eb821db5c900f950a",
+          "config": {
+            "probes": 256,
+            "lazy": true,
+            "insert_tail": 16,
+            "index": "trigram",
+            "block_tokens": 4096
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 258524,
+            "encode_ns": 17158355.05883635,
+            "baseline_encode_ns": 8579068.423666237,
+            "baseline_bytes": 260422,
+            "mb_s": 39.16471000254346,
+            "speed_vs_paired_balanced": 0.49999364124640366,
+            "time_vs_paired_balanced": 2.0000254353378595,
+            "size_vs_balanced": 0.9927118292617367
+          },
+          "elapsed_seconds": 0.5374598750058794,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "5d62c45cb697d75dda948e3c4db002bf5997e0a1a307cd96d3086b52249acffc",
+          "config": {
+            "probes": 256,
+            "lazy": true,
+            "insert_tail": 8,
+            "index": "trigram",
+            "block_tokens": 16384
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 257757,
+            "encode_ns": 15821104.192675946,
+            "baseline_encode_ns": 8512173.404676994,
+            "baseline_bytes": 260422,
+            "mb_s": 42.47503788712102,
+            "speed_vs_paired_balanced": 0.5380265056731963,
+            "time_vs_paired_balanced": 1.8586444895475316,
+            "size_vs_balanced": 0.9897666095798358
+          },
+          "elapsed_seconds": 0.5515762499999255,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "152d20ea5775121e7b445f81f6adf640e7412ad5b3abbe02800eea174708740c",
+          "config": {
+            "probes": 256,
+            "lazy": true,
+            "insert_tail": 0,
+            "index": "trigram",
+            "block_tokens": 16384
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 256924,
+            "encode_ns": 16640491.792204484,
+            "baseline_encode_ns": 8505733.94578531,
+            "baseline_bytes": 260422,
+            "mb_s": 40.38354204860763,
+            "speed_vs_paired_balanced": 0.5111467889290365,
+            "time_vs_paired_balanced": 1.9563851747855387,
+            "size_vs_balanced": 0.9865679550882798
+          },
+          "elapsed_seconds": 0.5462429579929449,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "9b7800ba6cc18763ac340f17738120174d430440f68bc0a475e678675b35e78f",
+          "config": {
+            "probes": 16,
+            "lazy": false,
+            "insert_tail": 0,
+            "index": "trigram",
+            "block_tokens": 4096
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 260865,
+            "encode_ns": 5522680.248248205,
+            "baseline_encode_ns": 8442069.264780078,
+            "baseline_bytes": 260422,
+            "mb_s": 121.6804105602817,
+            "speed_vs_paired_balanced": 1.5286181501197547,
+            "time_vs_paired_balanced": 0.6541856119670293,
+            "size_vs_balanced": 1.0017010851617758
+          },
+          "elapsed_seconds": 0.5082157500000903,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "4bd758099ada32bef5129c711b348c53d76c7dcb28541305959ef2d9f5e4f2d2",
+          "config": {
+            "probes": 1,
+            "lazy": true,
+            "insert_tail": 32,
+            "index": "dual",
+            "block_tokens": 1024
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 278718,
+            "encode_ns": 8675405.439806629,
+            "baseline_encode_ns": 8654189.929947482,
+            "baseline_bytes": 260422,
+            "mb_s": 77.4605872500846,
+            "speed_vs_paired_balanced": 0.9975545223786545,
+            "time_vs_paired_balanced": 1.0024514726428329,
+            "size_vs_balanced": 1.07025520117348
+          },
+          "elapsed_seconds": 0.4922702079929877,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 393216
+        },
+        {
+          "id": "8320406c83c7cab0c946992c3926fbd2aea00fb8337f5108db281d64cc7a19f6",
+          "config": {
+            "probes": 128,
+            "lazy": true,
+            "insert_tail": 8,
+            "index": "trigram",
+            "block_tokens": 16384
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 257767,
+            "encode_ns": 12433928.36234694,
+            "baseline_encode_ns": 8516332.414057402,
+            "baseline_bytes": 260422,
+            "mb_s": 54.04583172885176,
+            "speed_vs_paired_balanced": 0.6849269326536412,
+            "time_vs_paired_balanced": 1.4600097504206149,
+            "size_vs_balanced": 0.9898050087934199
+          },
+          "elapsed_seconds": 0.5341112919995794,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "bb32fd8f44db4bdda174659144c1502caa4965cd2e9e00d30f506de3366e947b",
+          "config": {
+            "probes": 256,
+            "lazy": false,
+            "insert_tail": 8,
+            "index": "trigram",
+            "block_tokens": 16384
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 259073,
+            "encode_ns": 8720764.226011192,
+            "baseline_encode_ns": 8410391.055371674,
+            "baseline_bytes": 260422,
+            "mb_s": 77.0576961587423,
+            "speed_vs_paired_balanced": 0.9644098656269393,
+            "time_vs_paired_balanced": 1.0369035361847159,
+            "size_vs_balanced": 0.9948199460875041
+          },
+          "elapsed_seconds": 0.49448333399777766,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "cdadccf88dd7c1cac11dbb373e41556c18939cdbc40e6c087c8e4b89fcf0d959",
+          "config": {
+            "probes": 8,
+            "lazy": true,
+            "insert_tail": 16,
+            "index": "trigram",
+            "block_tokens": 16384
+          },
+          "partition": "train",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 672002,
+            "packed_bytes": 260018,
+            "encode_ns": 5259870.416351932,
+            "baseline_encode_ns": 8489649.762102233,
+            "baseline_bytes": 260422,
+            "mb_s": 127.76018167878702,
+            "speed_vs_paired_balanced": 1.614041618916986,
+            "time_vs_paired_balanced": 0.6195627103289909,
+            "size_vs_balanced": 0.9984486717712021
+          },
+          "elapsed_seconds": 0.4792571669968311,
+          "verified_streams": 20,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        }
+      ],
+      "provisional_frontier": [
+        "59db09375f08c1969d0f0facdb6a50e4fc3d58f0551e4446d2aa3a292705197c",
+        "5264e4f10414b8d39fa256c52a2ae8fe9059205a945509ee410f9b0803c1eac8",
+        "e2857dd040da31fd611d325e0b6de799c2789bf56ce23ecfb6ca1790c6e481a2",
+        "730291169097be5cc7a1e673eb7e53d5692839eb644f58cf96d154fbacb5e929",
+        "5d62c45cb697d75dda948e3c4db002bf5997e0a1a307cd96d3086b52249acffc",
+        "152d20ea5775121e7b445f81f6adf640e7412ad5b3abbe02800eea174708740c",
+        "8320406c83c7cab0c946992c3926fbd2aea00fb8337f5108db281d64cc7a19f6",
+        "bb32fd8f44db4bdda174659144c1502caa4965cd2e9e00d30f506de3366e947b",
+        "cdadccf88dd7c1cac11dbb373e41556c18939cdbc40e6c087c8e4b89fcf0d959"
+      ],
+      "finalists": {
+        "criteria": {
+          "speed": "minimum ratio of summed median ns to paired Balanced, excluding stored",
+          "size": "minimum summed compressed bytes, excluding stored; paired time breaks ties",
+          "balanced": "minimum paired time ratio with training size <= balanced * 1.01"
+        },
+        "roles": {
+          "speed": "730291169097be5cc7a1e673eb7e53d5692839eb644f58cf96d154fbacb5e929",
+          "size": "152d20ea5775121e7b445f81f6adf640e7412ad5b3abbe02800eea174708740c",
+          "balanced": "730291169097be5cc7a1e673eb7e53d5692839eb644f58cf96d154fbacb5e929"
+        },
+        "configs": {
+          "730291169097be5cc7a1e673eb7e53d5692839eb644f58cf96d154fbacb5e929": {
+            "probes": 2,
+            "lazy": false,
+            "insert_tail": 16,
+            "index": "trigram",
+            "block_tokens": 16384
+          },
+          "152d20ea5775121e7b445f81f6adf640e7412ad5b3abbe02800eea174708740c": {
+            "probes": 256,
+            "lazy": true,
+            "insert_tail": 0,
+            "index": "trigram",
+            "block_tokens": 16384
+          }
+        }
+      },
+      "finalists_sha256": "9b7e2ff6c677dcdb41e3360a06e22f994382882ca13b18357dec31212200f502",
+      "validation": [
+        {
+          "id": "152d20ea5775121e7b445f81f6adf640e7412ad5b3abbe02800eea174708740c",
+          "config": {
+            "probes": 256,
+            "lazy": true,
+            "insert_tail": 0,
+            "index": "trigram",
+            "block_tokens": 16384
+          },
+          "partition": "validation",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 459008,
+            "packed_bytes": 203604,
+            "encode_ns": 7312471.628054741,
+            "baseline_encode_ns": 5093303.310604102,
+            "baseline_bytes": 207257,
+            "mb_s": 62.77056833136802,
+            "speed_vs_paired_balanced": 0.696522813307519,
+            "time_vs_paired_balanced": 1.4357031541456402,
+            "size_vs_balanced": 0.9823745398225392
+          },
+          "elapsed_seconds": 0.3808948340010829,
+          "verified_streams": 13,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        },
+        {
+          "id": "730291169097be5cc7a1e673eb7e53d5692839eb644f58cf96d154fbacb5e929",
+          "config": {
+            "probes": 2,
+            "lazy": false,
+            "insert_tail": 16,
+            "index": "trigram",
+            "block_tokens": 16384
+          },
+          "partition": "validation",
+          "status": "complete",
+          "aggregate": {
+            "raw_bytes": 459008,
+            "packed_bytes": 206180,
+            "encode_ns": 3215721.7954863016,
+            "baseline_encode_ns": 5127653.269794054,
+            "baseline_bytes": 207257,
+            "mb_s": 142.73871596861377,
+            "speed_vs_paired_balanced": 1.5945574884591713,
+            "time_vs_paired_balanced": 0.6271332374264567,
+            "size_vs_balanced": 0.994803553076615
+          },
+          "elapsed_seconds": 0.3141929579869611,
+          "verified_streams": 13,
+          "decoders": [
+            "deflate-core",
+            "miniz_oxide",
+            "zlib"
+          ],
+          "matcher_table_bytes": 196608
+        }
+      ],
+      "total_verified_streams": 426,
+      "total_seconds": 11.458082500001183,
+      "trial_events_sha256": "fed51a9600be88612087b855a2d329863b200e7fb95367ae96315151da7cc345"
+    }
+  ],
+  "limitations": [
+    "one seed and 16 configured trials per strategy",
+    "short warmed synthetic timings; no confidence intervals",
+    "validation previously visible in phase zero; reserved test not measured",
+    "peak memory not measured; reported table capacities only",
+    "no competitor encoder comparison or production promotion",
+    "no model fitting, GPU proposal or latent representation",
+    "no checkpoint resume"
+  ],
+  "provenance_note": "Study git_commit identifies the parent before the adapter was committed; source_sha256 maps identify the actual uncommitted measured sources.",
+  "local_verification": {
+    "default_rust_tests": 189,
+    "feature_rust_tests": 192,
+    "research_integrity_tests": 15,
+    "differential_streams": 20197,
+    "differential_oracles": 3,
+    "framing_checks": 1654,
+    "format_clippy": "passed, ordinary and all features",
+    "fuzz": {
+      "inflate": 566250,
+      "dynamic_header": 9460104,
+      "differential": 577529,
+      "roundtrip": 258647,
+      "dynamic_lengths": 2384996
+    },
+    "fuzz_seconds_per_target": 60,
+    "findings": 0,
+    "core_runtime_dependencies": 0,
+    "headline_theorems_axiom_checked": 104
+  },
+  "default_speed_regression_check": {
+    "baseline_commit": "232678d19a1e08c8382d8e1a7a28e1e4b18e3b14",
+    "feature_enabled": false,
+    "harness": "crates/deflate-core/examples/tune.rs",
+    "harness_sha256": "7be2230cc1ac39fd59ea613ad9c1e6a7919340bf12d2b771ad8621761186312c",
+    "binary_sha256": {
+      "before": "24eaf93b3029d5ef595b5423bd4ca7e82deaa32323633b5d4a8d88a8eccf1813",
+      "after": "de03458d5b8595525cedfc9fc523181b308dd3e56f0963d9d7738f9087adad21"
+    },
+    "corpus_sha256": {
+      "random.raw": "eeca286faea314a9b213d52cf963297681e4686d3876aa614adab4e573492f3f",
+      "repetitive.raw": "bea5be680b0b65e8f08f55d49ed56c91d5a2cde02f281e861f622320038e1072",
+      "text.raw": "2adcbe6cc1f9eaf9e3164fc18864f402edb46ae40a3425dfcc5add3ca78f115f",
+      "zeros.raw": "2daeb1f36095b44b318410b3f4e8b5d989dcc7bb023d1426c492dab0a3053e74"
+    },
+    "inner_rounds": 5,
+    "minimum_batch_ms": 20,
+    "outer_rounds": 3,
+    "method": "alternating before/after process order; each matching worker rotates encoder/reference order and reports inner median; synthetic regression check, not a confidence interval",
+    "runs": [
+      {
+        "outer_round": 0,
+        "version": "before",
+        "rows": [
+          {
+            "input": "random.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 8389253,
+            "deflate_core_ns": 135299584,
+            "deflate_core_mb_s": 62.0,
+            "miniz_l1_bytes": 8396378,
+            "miniz_l1_ns": 20577833,
+            "miniz_l1_mb_s": 407.653,
+            "miniz_l6_bytes": 8389933,
+            "miniz_l6_ns": 105210583,
+            "miniz_l6_mb_s": 79.732,
+            "miniz_l9_bytes": 8389933,
+            "miniz_l9_ns": 106747708,
+            "miniz_l9_mb_s": 78.583
+          },
+          {
+            "input": "repetitive.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 16293,
+            "deflate_core_ns": 4678650,
+            "deflate_core_mb_s": 1792.955,
+            "miniz_l1_bytes": 76665,
+            "miniz_l1_ns": 776970,
+            "miniz_l1_mb_s": 10796.572,
+            "miniz_l6_bytes": 16294,
+            "miniz_l6_ns": 5055979,
+            "miniz_l6_mb_s": 1659.146,
+            "miniz_l9_bytes": 16294,
+            "miniz_l9_ns": 5063583,
+            "miniz_l9_mb_s": 1656.655
+          },
+          {
+            "input": "text.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 3043353,
+            "deflate_core_ns": 111745542,
+            "deflate_core_mb_s": 75.069,
+            "miniz_l1_bytes": 4779962,
+            "miniz_l1_ns": 36019333,
+            "miniz_l1_mb_s": 232.892,
+            "miniz_l6_bytes": 3047954,
+            "miniz_l6_ns": 75954708,
+            "miniz_l6_mb_s": 110.442,
+            "miniz_l9_bytes": 3047954,
+            "miniz_l9_ns": 75597459,
+            "miniz_l9_mb_s": 110.964
+          },
+          {
+            "input": "zeros.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 8156,
+            "deflate_core_ns": 1254385,
+            "deflate_core_mb_s": 6687.425,
+            "miniz_l1_bytes": 38339,
+            "miniz_l1_ns": 460492,
+            "miniz_l1_mb_s": 18216.604,
+            "miniz_l6_bytes": 8156,
+            "miniz_l6_ns": 4873542,
+            "miniz_l6_mb_s": 1721.255,
+            "miniz_l9_bytes": 8156,
+            "miniz_l9_ns": 4874625,
+            "miniz_l9_mb_s": 1720.872
+          }
+        ]
+      },
+      {
+        "outer_round": 0,
+        "version": "after",
+        "rows": [
+          {
+            "input": "random.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 8389253,
+            "deflate_core_ns": 134884583,
+            "deflate_core_mb_s": 62.191,
+            "miniz_l1_bytes": 8396378,
+            "miniz_l1_ns": 20515667,
+            "miniz_l1_mb_s": 408.888,
+            "miniz_l6_bytes": 8389933,
+            "miniz_l6_ns": 106346083,
+            "miniz_l6_mb_s": 78.88,
+            "miniz_l9_bytes": 8389933,
+            "miniz_l9_ns": 106620042,
+            "miniz_l9_mb_s": 78.678
+          },
+          {
+            "input": "repetitive.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 16293,
+            "deflate_core_ns": 4607500,
+            "deflate_core_mb_s": 1820.642,
+            "miniz_l1_bytes": 76665,
+            "miniz_l1_ns": 770332,
+            "miniz_l1_mb_s": 10889.605,
+            "miniz_l6_bytes": 16294,
+            "miniz_l6_ns": 5075562,
+            "miniz_l6_mb_s": 1652.744,
+            "miniz_l9_bytes": 16294,
+            "miniz_l9_ns": 5093396,
+            "miniz_l9_mb_s": 1646.958
+          },
+          {
+            "input": "text.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 3043353,
+            "deflate_core_ns": 109269542,
+            "deflate_core_mb_s": 76.77,
+            "miniz_l1_bytes": 4779962,
+            "miniz_l1_ns": 36449167,
+            "miniz_l1_mb_s": 230.145,
+            "miniz_l6_bytes": 3047954,
+            "miniz_l6_ns": 75814125,
+            "miniz_l6_mb_s": 110.647,
+            "miniz_l9_bytes": 3047954,
+            "miniz_l9_ns": 75578250,
+            "miniz_l9_mb_s": 110.992
+          },
+          {
+            "input": "zeros.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 8156,
+            "deflate_core_ns": 1240255,
+            "deflate_core_mb_s": 6763.616,
+            "miniz_l1_bytes": 38339,
+            "miniz_l1_ns": 458627,
+            "miniz_l1_mb_s": 18290.703,
+            "miniz_l6_bytes": 8156,
+            "miniz_l6_ns": 4875725,
+            "miniz_l6_mb_s": 1720.484,
+            "miniz_l9_bytes": 8156,
+            "miniz_l9_ns": 4878008,
+            "miniz_l9_mb_s": 1719.679
+          }
+        ]
+      },
+      {
+        "outer_round": 1,
+        "version": "after",
+        "rows": [
+          {
+            "input": "random.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 8389253,
+            "deflate_core_ns": 136221459,
+            "deflate_core_mb_s": 61.581,
+            "miniz_l1_bytes": 8396378,
+            "miniz_l1_ns": 20460458,
+            "miniz_l1_mb_s": 409.991,
+            "miniz_l6_bytes": 8389933,
+            "miniz_l6_ns": 107189000,
+            "miniz_l6_mb_s": 78.26,
+            "miniz_l9_bytes": 8389933,
+            "miniz_l9_ns": 107325250,
+            "miniz_l9_mb_s": 78.161
+          },
+          {
+            "input": "repetitive.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 16293,
+            "deflate_core_ns": 4604517,
+            "deflate_core_mb_s": 1821.822,
+            "miniz_l1_bytes": 76665,
+            "miniz_l1_ns": 764923,
+            "miniz_l1_mb_s": 10966.607,
+            "miniz_l6_bytes": 16294,
+            "miniz_l6_ns": 5088698,
+            "miniz_l6_mb_s": 1648.478,
+            "miniz_l9_bytes": 16294,
+            "miniz_l9_ns": 5083844,
+            "miniz_l9_mb_s": 1650.052
+          },
+          {
+            "input": "text.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 3043353,
+            "deflate_core_ns": 109276208,
+            "deflate_core_mb_s": 76.765,
+            "miniz_l1_bytes": 4779962,
+            "miniz_l1_ns": 35923000,
+            "miniz_l1_mb_s": 233.516,
+            "miniz_l6_bytes": 3047954,
+            "miniz_l6_ns": 75945417,
+            "miniz_l6_mb_s": 110.456,
+            "miniz_l9_bytes": 3047954,
+            "miniz_l9_ns": 75543666,
+            "miniz_l9_mb_s": 111.043
+          },
+          {
+            "input": "zeros.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 8156,
+            "deflate_core_ns": 1275768,
+            "deflate_core_mb_s": 6575.338,
+            "miniz_l1_bytes": 38339,
+            "miniz_l1_ns": 458067,
+            "miniz_l1_mb_s": 18313.049,
+            "miniz_l6_bytes": 8156,
+            "miniz_l6_ns": 4870442,
+            "miniz_l6_mb_s": 1722.351,
+            "miniz_l9_bytes": 8156,
+            "miniz_l9_ns": 4873625,
+            "miniz_l9_mb_s": 1721.226
+          }
+        ]
+      },
+      {
+        "outer_round": 1,
+        "version": "before",
+        "rows": [
+          {
+            "input": "random.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 8389253,
+            "deflate_core_ns": 134058500,
+            "deflate_core_mb_s": 62.574,
+            "miniz_l1_bytes": 8396378,
+            "miniz_l1_ns": 20561542,
+            "miniz_l1_mb_s": 407.976,
+            "miniz_l6_bytes": 8389933,
+            "miniz_l6_ns": 107385417,
+            "miniz_l6_mb_s": 78.117,
+            "miniz_l9_bytes": 8389933,
+            "miniz_l9_ns": 107519625,
+            "miniz_l9_mb_s": 78.019
+          },
+          {
+            "input": "repetitive.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 16293,
+            "deflate_core_ns": 4741200,
+            "deflate_core_mb_s": 1769.301,
+            "miniz_l1_bytes": 76665,
+            "miniz_l1_ns": 767452,
+            "miniz_l1_mb_s": 10930.464,
+            "miniz_l6_bytes": 16294,
+            "miniz_l6_ns": 5054458,
+            "miniz_l6_mb_s": 1659.645,
+            "miniz_l9_bytes": 16294,
+            "miniz_l9_ns": 5054521,
+            "miniz_l9_mb_s": 1659.625
+          },
+          {
+            "input": "text.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 3043353,
+            "deflate_core_ns": 111844875,
+            "deflate_core_mb_s": 75.002,
+            "miniz_l1_bytes": 4779962,
+            "miniz_l1_ns": 36017792,
+            "miniz_l1_mb_s": 232.902,
+            "miniz_l6_bytes": 3047954,
+            "miniz_l6_ns": 76123792,
+            "miniz_l6_mb_s": 110.197,
+            "miniz_l9_bytes": 3047954,
+            "miniz_l9_ns": 75584209,
+            "miniz_l9_mb_s": 110.984
+          },
+          {
+            "input": "zeros.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 8156,
+            "deflate_core_ns": 1259385,
+            "deflate_core_mb_s": 6660.874,
+            "miniz_l1_bytes": 38339,
+            "miniz_l1_ns": 460767,
+            "miniz_l1_mb_s": 18205.746,
+            "miniz_l6_bytes": 8156,
+            "miniz_l6_ns": 4863942,
+            "miniz_l6_mb_s": 1724.652,
+            "miniz_l9_bytes": 8156,
+            "miniz_l9_ns": 4867658,
+            "miniz_l9_mb_s": 1723.335
+          }
+        ]
+      },
+      {
+        "outer_round": 2,
+        "version": "before",
+        "rows": [
+          {
+            "input": "random.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 8389253,
+            "deflate_core_ns": 134199458,
+            "deflate_core_mb_s": 62.509,
+            "miniz_l1_bytes": 8396378,
+            "miniz_l1_ns": 20555000,
+            "miniz_l1_mb_s": 408.105,
+            "miniz_l6_bytes": 8389933,
+            "miniz_l6_ns": 105979542,
+            "miniz_l6_mb_s": 79.153,
+            "miniz_l9_bytes": 8389933,
+            "miniz_l9_ns": 106408166,
+            "miniz_l9_mb_s": 78.834
+          },
+          {
+            "input": "repetitive.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 16293,
+            "deflate_core_ns": 4761300,
+            "deflate_core_mb_s": 1761.831,
+            "miniz_l1_bytes": 76665,
+            "miniz_l1_ns": 766236,
+            "miniz_l1_mb_s": 10947.811,
+            "miniz_l6_bytes": 16294,
+            "miniz_l6_ns": 5052750,
+            "miniz_l6_mb_s": 1660.206,
+            "miniz_l9_bytes": 16294,
+            "miniz_l9_ns": 5041177,
+            "miniz_l9_mb_s": 1664.018
+          },
+          {
+            "input": "text.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 3043353,
+            "deflate_core_ns": 111905083,
+            "deflate_core_mb_s": 74.962,
+            "miniz_l1_bytes": 4779962,
+            "miniz_l1_ns": 36056250,
+            "miniz_l1_mb_s": 232.653,
+            "miniz_l6_bytes": 3047954,
+            "miniz_l6_ns": 76120333,
+            "miniz_l6_mb_s": 110.202,
+            "miniz_l9_bytes": 3047954,
+            "miniz_l9_ns": 75822334,
+            "miniz_l9_mb_s": 110.635
+          },
+          {
+            "input": "zeros.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 8156,
+            "deflate_core_ns": 1256177,
+            "deflate_core_mb_s": 6677.886,
+            "miniz_l1_bytes": 38339,
+            "miniz_l1_ns": 457492,
+            "miniz_l1_mb_s": 18336.059,
+            "miniz_l6_bytes": 8156,
+            "miniz_l6_ns": 4881042,
+            "miniz_l6_mb_s": 1718.61,
+            "miniz_l9_bytes": 8156,
+            "miniz_l9_ns": 4873458,
+            "miniz_l9_mb_s": 1721.284
+          }
+        ]
+      },
+      {
+        "outer_round": 2,
+        "version": "after",
+        "rows": [
+          {
+            "input": "random.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 8389253,
+            "deflate_core_ns": 134811708,
+            "deflate_core_mb_s": 62.225,
+            "miniz_l1_bytes": 8396378,
+            "miniz_l1_ns": 20549625,
+            "miniz_l1_mb_s": 408.212,
+            "miniz_l6_bytes": 8389933,
+            "miniz_l6_ns": 106288750,
+            "miniz_l6_mb_s": 78.923,
+            "miniz_l9_bytes": 8389933,
+            "miniz_l9_ns": 106110666,
+            "miniz_l9_mb_s": 79.055
+          },
+          {
+            "input": "repetitive.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 16293,
+            "deflate_core_ns": 4608683,
+            "deflate_core_mb_s": 1820.174,
+            "miniz_l1_bytes": 76665,
+            "miniz_l1_ns": 767699,
+            "miniz_l1_mb_s": 10926.948,
+            "miniz_l6_bytes": 16294,
+            "miniz_l6_ns": 5116281,
+            "miniz_l6_mb_s": 1639.591,
+            "miniz_l9_bytes": 16294,
+            "miniz_l9_ns": 5060448,
+            "miniz_l9_mb_s": 1657.681
+          },
+          {
+            "input": "text.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 3043353,
+            "deflate_core_ns": 112298375,
+            "deflate_core_mb_s": 74.699,
+            "miniz_l1_bytes": 4779962,
+            "miniz_l1_ns": 36438167,
+            "miniz_l1_mb_s": 230.215,
+            "miniz_l6_bytes": 3047954,
+            "miniz_l6_ns": 76033916,
+            "miniz_l6_mb_s": 110.327,
+            "miniz_l9_bytes": 3047954,
+            "miniz_l9_ns": 75603583,
+            "miniz_l9_mb_s": 110.955
+          },
+          {
+            "input": "zeros.raw",
+            "raw_bytes": 8388608,
+            "deflate_core_bytes": 8156,
+            "deflate_core_ns": 1261247,
+            "deflate_core_mb_s": 6651.041,
+            "miniz_l1_bytes": 38339,
+            "miniz_l1_ns": 457777,
+            "miniz_l1_mb_s": 18324.642,
+            "miniz_l6_bytes": 8156,
+            "miniz_l6_ns": 4868708,
+            "miniz_l6_mb_s": 1722.964,
+            "miniz_l9_bytes": 8156,
+            "miniz_l9_ns": 4882167,
+            "miniz_l9_mb_s": 1718.214
+          }
+        ]
+      }
+    ],
+    "per_case_speed_vs_before": {
+      "random.raw": 0.9949206574631291,
+      "repetitive.raw": 1.029017905588714,
+      "text.raw": 1.0235061871839477,
+      "zeros.raw": 0.995980168832909
+    },
+    "aggregate_speed_vs_before": 1.008047737143761,
+    "sizes_equal": true,
+    "cpu": "Apple M5",
+    "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)",
+    "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+    "build_overrides": {},
+    "source_sha256": {
+      "Cargo.toml": "d8e747c012cba553ad19cdba4436e5c43dd30a10adce9e89933c3d538c4f4a39",
+      "Cargo.lock": "8ce82932f19c583ec37870d2f01dc9e72cb492b0aa02dde7e14b43142857a15d",
+      "crates/deflate-core/Cargo.toml": "27e824b076208ffe2864e6c1fae8b836429a393c26c62788e36f53acf1ff65e2",
+      "crates/deflate-core/examples/tune_config.rs": "b9da6ad443750f2b36c9a558e9d9e69fbd4d499f618972e52fdd31d9c7e0332e",
+      "scripts/search_cpu.py": "1861be8127aaa4670f9bed731fce339e91c3e52cd4a04c654fccc1533c5eaafb",
+      "scripts/search_corpus.py": "ff99039e63e31f41805a433777ba454a8e6276706e4357d2f6273febe78f03c3",
+      "scripts/search_poc.py": "bde8f0bb0976f0197281eaa7e9c03445a6b628a28b04f5ab315d7a319d0e1763",
+      "crates/deflate-core/src/bitstream.rs": "95e941fcc379cafd8ae920f12ed4f6327e12062edfe39015f66eb43a9b094186",
+      "crates/deflate-core/src/bitwriter.rs": "0b6ff21ba48422ed34557f9b5e56dd89cd91315cac9a498f9bed306b3cd96588",
+      "crates/deflate-core/src/block.rs": "b99d28faf70ea823b251544f2040f0c4850b9871bcbd9e331742661545310eee",
+      "crates/deflate-core/src/compress.rs": "3977afe7fd649bcf031c999f738fc890b12f6d637064af58e3efd2388c0e51d6",
+      "crates/deflate-core/src/crc32.rs": "3166b0a90dc6cded7a07e5beae9b5cee0c843349123e80dd2e7cc898f71e7fad",
+      "crates/deflate-core/src/deflate.rs": "419e757fa99e22675f77628fc652badcfeb0817852835f790eb584aaebc67507",
+      "crates/deflate-core/src/encode_dynamic.rs": "0a10d270561609bcb1c9b883992880734c6395dfd532ad9ecd2bed54bc4a52ec",
+      "crates/deflate-core/src/encode_fixed.rs": "b4459d0cc109c2f50ebd28467ad1923fbf96a527480dd3f64399601cfa459fd1",
+      "crates/deflate-core/src/error.rs": "fe3ac5fc29296fd8e7e0539dc76c615717fe8a72bb3456608edd18efbb21fecd",
+      "crates/deflate-core/src/gzip.rs": "44a8044d6fd55a5f78fab74f75ba5815b004a4e83ffcbf08ae8254909021b5bd",
+      "crates/deflate-core/src/huffman.rs": "326b31f0fda785d2418f24c7348490520f7f869082fed3316f9f870bfe0fd964",
+      "crates/deflate-core/src/huffman_build.rs": "c2eef9c5c7d53eaf435b65cbc2eb6ad19f28e3df1aef87f6952024c8879ccc58",
+      "crates/deflate-core/src/inflate.rs": "ae4c905a7da364c4b05f4f8c4754ca01ad513b695ea82c28a06c2375dfcde272",
+      "crates/deflate-core/src/lib.rs": "82e81c94fbdad579be6157b3f9cd6b73f3d51ec526c68fda8d731d7f23070d68",
+      "crates/deflate-core/src/lz77.rs": "67991a3fb79ef37a65accdff089b3c34d90157e8eed43745fcbba60f432589c1",
+      "crates/deflate-core/src/matcher.rs": "d6e8f531d34370fde2cc787fbcb2fcd29880163671145a5b632cf167427f1ffd",
+      "crates/deflate-core/src/matcher_flat.rs": "2cb9257a6b93edce133891c4292690ef78e5edf87ccdbce976667d0d6d587890",
+      "crates/deflate-core/src/research.rs": "9359cf4a62664fcbf124ca4b778c09a7c48a2d3e29bfd5fb2bbbec9b21f44ca5",
+      "crates/deflate-core/src/tokens.rs": "5e2f16a94e1a8a35400be25e04280ecae25dd550ad7bd92e398715f16f84f839",
+      "crates/deflate-core/src/zip.rs": "e92492d2c4d61be74e8f6f73da43725992ca0c6be807d8da0d104e2e3a6ae731"
+    }
+  }
+}

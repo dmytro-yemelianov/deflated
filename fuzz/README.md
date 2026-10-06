@@ -8,9 +8,10 @@ Persistent fuzz targets using `libfuzzer-sys` and `cargo-fuzz`.
 2. **`dynamic_header`**: Fuzzes `read_dynamic_tables` directly to exercise the dynamic Huffman tree parser in isolation.
 3. **`differential`**: In-process differential testing against `miniz_oxide`. Compares output whenever both decoders accept a stream.
 
-4. **`roundtrip`**: `deflate_with_level` output must decode back to the input.
-   The first input byte selects Fast, Balanced, or Best, exercising all
-   search presets and the size-focused splitter.
+4. **`roundtrip`**: compressed output must decode back to the input under
+   deflate-core and miniz. The first input byte selects Fast, Balanced, Best
+   or a research configuration. Further bytes vary probe budget, lazy mode,
+   insertion tail, index and checked block size within validated bounds.
 5. **`dynamic_lengths`**: `build_lengths` must return a Kraft-valid length set, nonzero exactly where the frequency is, for any frequency vector.
 
 ## Running

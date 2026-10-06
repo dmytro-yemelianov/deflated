@@ -28,6 +28,8 @@ pub mod inflate;
 pub mod lz77;
 pub mod matcher;
 mod matcher_flat;
+#[cfg(feature = "research-tuning")]
+pub mod research;
 pub mod tokens;
 pub mod zip;
 

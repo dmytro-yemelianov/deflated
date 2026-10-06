@@ -84,6 +84,24 @@ fn choose_stored(input: &[u8], blocks_out: Vec<u8>) -> Vec<u8> {
     }
 }
 
+#[cfg(feature = "research-tuning")]
+pub(crate) fn configured(input: &[u8], config: crate::research::Config) -> Vec<u8> {
+    fn split<const N: usize>(_: &[Token]) -> Option<usize> {
+        Some(N)
+    }
+    let split_for: SplitFor = match config.block_tokens() {
+        256 => split::<256>,
+        1024 => split::<1024>,
+        4096 => split::<4096>,
+        16384 => split::<16384>,
+        _ => unreachable!("validated research configuration"),
+    };
+    choose_stored(
+        input,
+        emit_blocks_iter(crate::matcher::tokens_with_config(input, config), split_for),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

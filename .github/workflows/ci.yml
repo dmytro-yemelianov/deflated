@@ -33,14 +33,18 @@ jobs:
         run: cargo fmt --all --check
 
       - name: Clippy
-        run: cargo clippy --workspace --all-targets -- -D warnings
+        run: |
+          cargo clippy --workspace --all-targets -- -D warnings
+          cargo clippy --workspace --all-targets --all-features -- -D warnings
 
       - name: Test
         run: |
           sh scripts/test_axiom_gate.sh
           cargo test --workspace
+          cargo test --workspace --all-features
           python3 scripts/tuning_report.py --check
           make research-check
+          make research-defaults
 
       - name: No unsafe, no std in the core
         run: |

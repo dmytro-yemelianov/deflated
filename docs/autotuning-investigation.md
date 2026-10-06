@@ -1,9 +1,10 @@
 # Investigation: automatic encoder tuning and GPU-assisted search
 
-Status: research design with a runnable phase-zero pilot. Production encoder
-behavior and the Lean model are unchanged. The pilot enumerates existing
-methods; it does not expose arbitrary matcher parameters, fit a surrogate,
-learn a latent space, or run Bayesian optimization yet.
+Status: runnable phase-zero pilot, validated parameter adapter and initial
+CPU search baseline. Production presets and the Lean model are unchanged.
+The adapter exposes five bounded axes behind `research-tuning`; model fitting,
+latent-space learning and Bayesian optimization remain future spikes. See
+[the CPU search report](cpu-search-report.md) for implementation and evidence.
 
 The aim is to discover useful speed/size/memory tradeoffs and then decide
 whether adaptive selection and GPU-assisted optimization are worth their
@@ -43,7 +44,9 @@ Use a versioned configuration manifest. Encode categorical methods as
 categories, not ordered floats; use log-scaled numeric search where useful.
 Conditional fields must be inactive when their method does not use them.
 Canonicalize configurations before hashing so inactive fields do not create
-duplicate trials. The following ranges are proposed, not implemented knobs.
+duplicate trials. The table describes the broader investigation; S1 currently
+implements probe caps, greedy/lazy parsing, insertion tails, trigram/dual
+indexes and four token split sizes. Other ranges remain proposed knobs.
 
 | Group | First candidate axes | Constraints and scope |
 | --- | --- | --- |
@@ -128,7 +131,10 @@ and choose the next action from the evidence.
 | S8: mixed-block emission | 1–2 days plus any required proof work | Header/alignment-aware stored/fixed/dynamic selection on regime changes; review Lean emitter scope before promotion |
 | S9: validation and portability | 1 day per finalist/hardware set | Paired repeated measurements, decode/framing/fuzz checks, memory and size results; only publish claims for measured hardware and references |
 
-S0 and the device-scoring part of S4 are implemented here. S1–S3 come next.
+S0, S1 and the device-scoring part of S4 are implemented here. S3 has a
+random-search baseline and a simple Pareto-mutation pilot; the planned
+three-seed comparison with stronger optimizers is still outstanding. S2
+sensitivity analysis comes next.
 S6 depends on S3 producing enough observations and on S5 establishing a
 simple prediction baseline. S7/S8 may introduce genuinely better methods;
 an optimizer cannot invent an algorithm absent from its candidate space.
@@ -210,7 +216,8 @@ encoder; heuristic changes may legitimately change compressed bytes.
 **Implementation evidence:** compare scalar and optimized matcher behavior
 when a spike promises equivalence. For new coverage policies, check every
 accepted token and complete input expansion. Add candidate-configuration
-boundary cases and fuzz the research adapter once arbitrary knobs exist.
+boundary cases. The roundtrip fuzz target now also samples the validated
+research adapter across its full integer bounds and all four split sizes.
 Preserve/reduce failures by trimming input chunks, minimizing parameters and
 retaining a reproducing seed, config and source hash.
 
@@ -358,8 +365,9 @@ exactly. The default-equivalent split control matched Balanced bytes on
 every case and was excluded from frontier selection. No reserved test
 performance was measured, and no candidate was promoted.
 
-Decision: proceed with S1 knob exposure and the CPU baseline in S3. Keep
-GPU scoring optional and batch it only if whole-loop measurements support
-it. Model fitting, prediction quality, latent-space learning, arbitrary
-parameter optimization, memory measurements and final-test evaluation remain
+Phase-zero decision: proceed with S1 knob exposure and the CPU baseline in
+S3. These are now available in [the CPU search report](cpu-search-report.md).
+Keep GPU scoring optional and batch it only if whole-loop measurements
+support it. Model fitting, prediction quality, latent-space learning, wider
+parameter spaces, memory measurements and final-test evaluation remain
 unimplemented research spikes.

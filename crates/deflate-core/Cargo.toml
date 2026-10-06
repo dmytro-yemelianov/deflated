@@ -10,6 +10,13 @@ authors.workspace = true
 # Spec §4, Global Constraints: this list stays empty. Forever.
 [dependencies]
 
+[features]
+research-tuning = []
+
+[[example]]
+name = "tune_config"
+required-features = ["research-tuning"]
+
 [dev-dependencies]
 flate2 = "1"
 miniz_oxide = "0.8"

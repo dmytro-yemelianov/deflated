@@ -32,6 +32,43 @@ impl CompressionLevel {
     }
 }
 
+// A monomorphic policy keeps experimental fields out of the normal matcher.
+// Both policies share insertion, search, acceptance and token progression.
+trait SearchPolicy: Copy {
+    fn probes(self, three_only: bool) -> usize;
+    fn lazy(self) -> bool;
+    fn insertion_tail(self) -> Option<usize>;
+}
+
+impl SearchPolicy for CompressionLevel {
+    fn probes(self, three_only: bool) -> usize {
+        if three_only { 128 } else { self.chain() }
+    }
+
+    fn lazy(self) -> bool {
+        self != Self::Fast
+    }
+
+    fn insertion_tail(self) -> Option<usize> {
+        (self == Self::Fast).then_some(16)
+    }
+}
+
+#[cfg(feature = "research-tuning")]
+impl SearchPolicy for crate::research::Config {
+    fn probes(self, _three_only: bool) -> usize {
+        self.probes()
+    }
+
+    fn lazy(self) -> bool {
+        self.lazy()
+    }
+
+    fn insertion_tail(self) -> Option<usize> {
+        (self.insert_tail() != 0).then_some(self.insert_tail())
+    }
+}
+
 /// Lean `accept`: the candidate `(len, dist)` at `i` is a legal match.
 pub fn accept(input: &[u8], i: usize, len: usize, dist: usize) -> bool {
     if !(MIN_MATCH..=MAX_MATCH).contains(&len) || !(1..=WINDOW).contains(&dist) || dist > i {
@@ -196,18 +233,18 @@ impl Chain {
     }
 }
 
-struct Matcher<'a> {
+struct Matcher<'a, P = CompressionLevel> {
     input: &'a [u8],
     i: usize,
     next_ins: usize,
     short: Chain,
     long: Chain,
-    level: CompressionLevel,
+    level: P,
     three_only: bool,
     pending: Option<(usize, usize, usize)>,
 }
 
-impl<'a> Matcher<'a> {
+impl<'a> Matcher<'a, CompressionLevel> {
     fn new(input: &'a [u8], level: CompressionLevel) -> Self {
         let three_only = level == CompressionLevel::Balanced
             && (short_period_sample(input) || flat_byte_sample(input));
@@ -229,7 +266,33 @@ impl<'a> Matcher<'a> {
             pending: None,
         }
     }
+}
 
+#[cfg(feature = "research-tuning")]
+impl<'a> Matcher<'a, crate::research::Config> {
+    fn configured(input: &'a [u8], config: crate::research::Config) -> Self {
+        let three_only = config.index() == crate::research::Index::Trigram;
+        Self {
+            input,
+            i: 0,
+            next_ins: 0,
+            short: Chain::new(),
+            long: if three_only {
+                Chain {
+                    head: Vec::new(),
+                    prev: Vec::new(),
+                }
+            } else {
+                Chain::new()
+            },
+            level: config,
+            three_only,
+            pending: None,
+        }
+    }
+}
+
+impl<P: SearchPolicy> Matcher<'_, P> {
     #[cfg(test)]
     fn insert(&mut self, p: usize) {
         let Some(bytes) = self.input.get(p..) else {
@@ -249,7 +312,8 @@ impl<'a> Matcher<'a> {
             .min(self.input.len().saturating_sub(MIN_MATCH - 1))
             .min(u32::MAX as usize);
         let mut start = self.next_ins;
-        if self.level == CompressionLevel::Fast && valid_end.saturating_sub(start) > 20 {
+        let tail = self.level.insertion_tail();
+        if tail.is_some_and(|tail| valid_end.saturating_sub(start) > tail + 4) {
             // Fast retains a match's start and trailing positions instead of
             // indexing its entire interior. Literal runs still index every
             // byte. This deliberately trades search coverage for throughput.
@@ -258,7 +322,7 @@ impl<'a> Matcher<'a> {
             if !self.three_only && bytes.len() >= 4 {
                 self.long.insert(start, hash4(bytes));
             }
-            start = valid_end - 16;
+            start = valid_end - tail.expect("sparse insertion tail");
         } else if valid_end.saturating_sub(start) >= 16 {
             let check_end = (valid_end + 3).min(self.input.len());
             let bytes = &self.input[start..check_end];
@@ -277,7 +341,7 @@ impl<'a> Matcher<'a> {
                 return;
             }
         }
-        if self.level != CompressionLevel::Fast {
+        if tail.is_none() {
             if let Some((match_start, match_end, period)) = self.pending.take() {
                 if start == match_start && end == match_end && period <= 16 && end - start >= 32 {
                     // `accept` checked the preceding match. Overlap therefore
@@ -337,7 +401,7 @@ impl<'a> Matcher<'a> {
         let mut best = None;
         if self.three_only {
             let h = hash(bytes[0], bytes[1], bytes[2]);
-            for c in self.short.candidates(i, h, 128) {
+            for c in self.short.candidates(i, h, self.level.probes(true)) {
                 if best.is_none_or(|(len, _)| self.input[c + len] == bytes[len]) {
                     let len = self.common(c, i, limit);
                     if len >= MIN_MATCH && best.is_none_or(|(bl, _)| len > bl) {
@@ -351,7 +415,10 @@ impl<'a> Matcher<'a> {
             return best.filter(|&(len, dist)| accept(self.input, i, len, dist));
         }
         if limit >= 4 {
-            for c in self.long.candidates(i, hash4(bytes), self.level.chain()) {
+            for c in self
+                .long
+                .candidates(i, hash4(bytes), self.level.probes(false))
+            {
                 if best.is_none_or(|(len, _)| self.input[c + len] == bytes[len]) {
                     let len = self.common(c, i, limit);
                     if len >= 4 && best.is_none_or(|(bl, _)| len > bl) {
@@ -365,7 +432,7 @@ impl<'a> Matcher<'a> {
         }
         if best.is_none() {
             let h = hash(bytes[0], bytes[1], bytes[2]);
-            for c in self.short.candidates(i, h, self.level.chain()) {
+            for c in self.short.candidates(i, h, self.level.probes(false)) {
                 if self.input[c..c + MIN_MATCH] == bytes[..MIN_MATCH] {
                     best = Some((MIN_MATCH, i - c));
                     break;
@@ -417,7 +484,7 @@ impl<'a> Matcher<'a> {
         }
         if self.three_only {
             let h = hash(bytes[0], bytes[1], bytes[2]);
-            for c in self.short.candidates(i, h, 128) {
+            for c in self.short.candidates(i, h, self.level.probes(true)) {
                 let next_dist = i - c;
                 let required = if next_dist < dist { len } else { len + 1 };
                 if required > limit {
@@ -433,7 +500,7 @@ impl<'a> Matcher<'a> {
         }
         if len == MIN_MATCH {
             let h = hash(bytes[0], bytes[1], bytes[2]);
-            for c in self.short.candidates(i, h, self.level.chain()) {
+            for c in self.short.candidates(i, h, self.level.probes(false)) {
                 if i - c >= dist {
                     break;
                 }
@@ -445,7 +512,10 @@ impl<'a> Matcher<'a> {
         if limit < 4 {
             return false;
         }
-        for c in self.long.candidates(i, hash4(bytes), self.level.chain()) {
+        for c in self
+            .long
+            .candidates(i, hash4(bytes), self.level.probes(false))
+        {
             let next_dist = i - c;
             let required = 4.max(if next_dist < dist { len } else { len + 1 });
             if required > limit {
@@ -472,7 +542,7 @@ impl<'a> Matcher<'a> {
     }
 }
 
-impl Iterator for Matcher<'_> {
+impl<P: SearchPolicy> Iterator for Matcher<'_, P> {
     type Item = Token;
 
     fn next(&mut self) -> Option<Token> {
@@ -487,7 +557,7 @@ impl Iterator for Matcher<'_> {
 
         // Lazy matching: check if next position has a better match
         if let Some((len, dist)) = current {
-            if self.level != CompressionLevel::Fast && self.better_next(len, dist) {
+            if self.level.lazy() && self.better_next(len, dist) {
                 // Emit literal instead, advance by 1
                 self.i = i.saturating_add(1);
                 self.pending = None;
@@ -521,6 +591,14 @@ pub fn tokens_with_level(
     level: CompressionLevel,
 ) -> impl Iterator<Item = Token> + '_ {
     Matcher::new(input, level)
+}
+
+#[cfg(feature = "research-tuning")]
+pub(crate) fn tokens_with_config(
+    input: &[u8],
+    config: crate::research::Config,
+) -> impl Iterator<Item = Token> + '_ {
+    Matcher::configured(input, config)
 }
 
 #[cfg(test)]
@@ -606,7 +684,7 @@ mod tests {
             let current = reference_find(&m, m.i);
             if let Some((len, dist)) = current {
                 if level == CompressionLevel::Fast
-                    || !Matcher::is_better(current, reference_find(&m, m.i + 1))
+                    || !Matcher::<CompressionLevel>::is_better(current, reference_find(&m, m.i + 1))
                 {
                     out.push(Token::Match {
                         len: len as u16,

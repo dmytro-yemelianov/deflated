@@ -11,7 +11,7 @@ cargo-fuzz = true
 
 [dependencies]
 libfuzzer-sys = "0.4"
-deflate-core = { path = "../crates/deflate-core" }
+deflate-core = { path = "../crates/deflate-core", features = ["research-tuning"] }
 miniz_oxide = "0.8"
 
 [[bin]]
