@@ -1,6 +1,7 @@
 //! M7b Task 6: lengths_for, emit_dynamic_block, emit_blocks, deflate.
 
 use deflate_core::bitwriter::BitWriter;
+use deflate_core::compress::default_split_for;
 use deflate_core::deflate;
 use deflate_core::encode_dynamic::{
     dynamic_bits, emit_blocks, emit_dynamic_block, fixed_bits, lengths_for,
@@ -51,7 +52,7 @@ fn check_stream(stream: &[u8], want: &[u8]) {
 
 fn check_tokens(ts: &[Token]) -> Vec<u8> {
     let want = expand(ts).unwrap();
-    let s = emit_blocks(ts);
+    let s = emit_blocks(ts, default_split_for);
     check_stream(&s, &want);
     s
 }
@@ -167,13 +168,16 @@ fn bit_counts_are_exact() {
 fn small_blocks_pick_fixed_and_large_pick_dynamic() {
     // Tiny: header overhead makes fixed win; output equals M7a's fixed block.
     let ts = [Token::Literal(b'a')];
-    assert_eq!(emit_blocks(&ts), emit_fixed(ts.iter().copied()));
+    assert_eq!(
+        emit_blocks(&ts, default_split_for),
+        emit_fixed(ts.iter().copied())
+    );
     // Skewed large input: dynamic must be strictly smaller than fixed.
     let t = english(20000);
     let ts: Vec<Token> = tokens(&t).collect();
     let (l, d, c) = lengths_for(&ts).unwrap();
     assert!(dynamic_bits(&l, &d, &c, &ts) < fixed_bits(&ts));
-    assert!(emit_blocks(&ts).len() < emit_fixed(ts.iter().copied()).len());
+    assert!(emit_blocks(&ts, default_split_for).len() < emit_fixed(ts.iter().copied()).len());
 }
 
 #[test]

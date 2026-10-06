@@ -1,5 +1,5 @@
 # Top-level driver for verified-deflate. Mirrors maked's Makefile.
-.PHONY: all build-rust build-lean test test-rust test-lean test-differential \
+.PHONY: all build-rust build-lean test test-axiom-gate test-rust test-lean test-differential \
         fmt lint fuzz size perf profile clean
 
 all: build-rust build-lean
@@ -12,7 +12,10 @@ build-lean:
 	@echo "==> lake build (Lean model + theorems)"
 	@lake build
 
-test: test-rust test-lean test-differential
+test: test-axiom-gate test-rust test-lean test-differential
+
+test-axiom-gate:
+	@sh scripts/test_axiom_gate.sh
 
 test-rust:
 	@cargo test --workspace
@@ -21,8 +24,7 @@ test-lean: build-lean
 	@echo "==> no sorry/admit/native_decide"
 	@! grep -rnwE 'sorry|admit|native_decide' spec/ --include='*.lean'
 	@echo "==> headline theorems rest on standard axioms only"
-	@lake env lean spec/scripts/axioms.lean | tee /tmp/axioms.log
-	@! grep -qE 'sorryAx|ofReduceBool' /tmp/axioms.log
+	@sh scripts/axiom_gate.sh
 
 test-differential: build-rust build-lean
 	@python3 oracles/differential.py --self-test

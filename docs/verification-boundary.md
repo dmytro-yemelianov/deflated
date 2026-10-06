@@ -28,6 +28,16 @@ These theorems are statements about **the Lean model in `spec/Deflate/`**.
   differential harness.
 - **Hash and arithmetic idealizations.** Where the model represents a
   quantity more abstractly than the Rust does, this document names it.
+- **gzip framing (RFC 1952, Milestone M9).** The Lean model covers raw DEFLATE
+  (RFC 1951) only. gzip adds a header, optional extra fields, the DEFLATE
+  stream, and a trailer with CRC32 and ISIZE. The Rust gzip implementation
+  in `crates/deflate-core/src/gzip.rs` and the CLI modes `-zc`/`-zd` in
+  `crates/vdeflate/src/main.rs` are tested against zlib (round-trip and
+  cross-decode) but have no corresponding Lean model or theorems.
+- **ZIP framing.** The single-entry Rust container supports stored and DEFLATE
+  entries and standard data descriptors. Regression tests use independently
+  generated Python zipfile fixtures; ZIP64 and encryption are unsupported.
+  The container has no corresponding Lean model or theorems.
 
 ## Proved theorems in the Lean model
 
@@ -79,6 +89,11 @@ not. The link is **mirroring plus differential testing, and nothing more**:
   back to fixed (ADR 0007), so a wrong heuristic costs ratio. That the Rust
   `valid_lengths` and emitter mirror the Lean ones rests on the differential
   evidence above.
+- Custom Rust splitting (`deflate_with_split`, `SplitFor`) sees a bounded
+  window of at most 16384 un-emitted tokens. Invalid counts fall back to the
+  default. Regression tests cover custom boundaries and cross-block matches,
+  but Lean's `emitBlocks` models only the default split; its theorem does not
+  establish correctness of custom Rust policies.
 - `lean-zip` was not installed in the run that recorded these numbers, so no
   `lean-zip` result is claimed for the encoder.
 
@@ -89,4 +104,4 @@ not. The link is **mirroring plus differential testing, and nothing more**:
 
 ## Status
 
-Milestones M0–M6, M7a, M8 complete (v1 milestone reached); M7b (dynamic-Huffman encoder) complete (ADR 0007). Decoder, stored encoder, Lean formal model with 218 kernel-checked theorems (73 headline theorems registered in `spec/scripts/axioms.lean`), the compressing encoder with `decode_compress` (M7a fixed blocks, generalized in M7b to dynamic blocks through `decode_emitBlocks`), 4-way differential harness (20,197 streams, 0 findings), fuzz targets, size reports, and CLI all complete and passing CI gates.
+Milestones M0–M6, M7a, M8, M9 complete; M7b (dynamic-Huffman encoder) complete (ADR 0007). Decoder, stored encoder, compressing encoder (fixed + dynamic blocks), Lean formal model with 218 kernel-checked theorems (73 headline theorems registered in `spec/scripts/axioms.lean`), the compressing encoder with `decode_compress` (M7a fixed blocks, generalized in M7b to dynamic blocks through `decode_emitBlocks`), gzip framing (RFC 1952, outside Lean verification boundary, differential tested against zlib), 4-way differential harness (20,197 streams, 0 findings), fuzz targets, size reports, and CLI all complete and passing CI gates.

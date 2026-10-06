@@ -7,6 +7,7 @@
 use deflate_core::bitwriter::BitWriter;
 use deflate_core::encode_dynamic::{BLOCK_TOKENS, emit_dynamic_block, lengths_for};
 use deflate_core::encode_fixed::{emit_fixed, emit_fixed_block};
+use deflate_core::gzip::{gunzip, gzip, gzip_stored};
 use deflate_core::huffman_build::{UsedSymbols, valid_lengths};
 use deflate_core::tokens::Token;
 use deflate_core::{Error, deflate, deflate_stored, inflate_with_limit};
@@ -16,8 +17,11 @@ const USAGE: &str = "\
 usage: vdeflate -d [--limit N] < INPUT > OUTPUT   decompress raw DEFLATE
        vdeflate -c             < INPUT > OUTPUT   compress (LZ77 + fixed Huffman)
        vdeflate -c --stored    < INPUT > OUTPUT   compress (stored blocks only)
+       vdeflate -zd [--limit N] < INPUT > OUTPUT  decompress gzip (RFC 1952)
+       vdeflate -zc [--stored] < INPUT > OUTPUT   compress gzip (RFC 1952)
 
-Raw RFC 1951 streams only: no gzip or zip framing.
+Raw RFC 1951 streams only: no gzip or zip framing (without -z).
+With -z: gzip (RFC 1952) framing.
 --limit N bounds the decompressed size in bytes (default: 1073741824).
 
 This program is NOT formally verified. The Lean theorems in spec/ are about
@@ -231,7 +235,7 @@ fn main() {
                     std::process::exit(2);
                 }
             },
-            Some("--stored") if mode == Some("-c") => {
+            Some("--stored") if mode == Some("-c") || mode == Some("-zc") => {
                 stored = true;
                 i += 1;
             }
@@ -254,6 +258,9 @@ fn main() {
         Some("-d") => inflate_with_limit(&input, limit).map_err(err_name),
         Some("-c") if stored => Ok(deflate_stored(&input)),
         Some("-c") => Ok(deflate(&input)),
+        Some("-zd") => gunzip(&input, limit).map_err(err_name),
+        Some("-zc") if stored => gzip_stored(&input, limit).map_err(err_name),
+        Some("-zc") => gzip(&input, limit).map_err(err_name),
         _ => {
             eprint!("{USAGE}");
             std::process::exit(2);

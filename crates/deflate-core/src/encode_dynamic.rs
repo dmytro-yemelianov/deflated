@@ -297,29 +297,43 @@ fn emit_block(w: &mut BitWriter, final_: bool, tokens: &[Token]) {
     }
 }
 
-/// Block stream over a token iterator, buffering one chunk at a time. The
-/// last chunk (or the only, possibly empty, one) is final.
-pub fn emit_blocks_iter<I: Iterator<Item = Token>>(mut tokens: I) -> Vec<u8> {
+/// Choose a block token count from the next at most [`BLOCK_TOKENS`]
+/// un-emitted tokens. The window is refilled before each call; only empty
+/// input produces an empty window. Counts in `1..=BLOCK_TOKENS` are accepted
+/// and capped to the remaining window length. `None`, zero and larger counts
+/// use the default window length. Custom splitting is not covered by Lean's
+/// default `emitBlocks` proof.
+pub type SplitFor = fn(&[Token]) -> Option<usize>;
+
+/// Block stream with bounded token lookahead: at most [`BLOCK_TOKENS`]
+/// buffered tokens plus one token to determine finality. Output bytes grow
+/// with the stream. Each nonempty block consumes at least one token.
+pub fn emit_blocks_iter<I: Iterator<Item = Token>>(tokens: I, split_for: SplitFor) -> Vec<u8> {
+    let mut tokens = tokens.fuse().peekable();
     let mut w = BitWriter::new();
     let mut chunk: Vec<Token> = Vec::with_capacity(BLOCK_TOKENS);
-    let mut carry = tokens.next();
     loop {
-        chunk.clear();
-        while chunk.len() < BLOCK_TOKENS
-            && let Some(t) = carry.take()
-        {
-            chunk.push(t);
-            carry = tokens.next();
+        while chunk.len() < BLOCK_TOKENS {
+            match tokens.next() {
+                Some(t) => chunk.push(t),
+                None => break,
+            }
         }
-        let last = carry.is_none();
-        emit_block(&mut w, last, &chunk);
+        let bs = split_for(&chunk)
+            .filter(|&n| (1..=BLOCK_TOKENS).contains(&n))
+            .unwrap_or(BLOCK_TOKENS)
+            .min(chunk.len());
+        let last = bs == chunk.len() && tokens.peek().is_none();
+        emit_block(&mut w, last, &chunk[..bs]);
         if last {
             return w.finish();
         }
+        chunk.drain(..bs);
     }
 }
 
-/// Lean `emitBlocks` (with the Rust heuristic as `lengthsFor`).
-pub fn emit_blocks(tokens: &[Token]) -> Vec<u8> {
-    emit_blocks_iter(tokens.iter().copied())
+/// Slice wrapper for [`emit_blocks_iter`]. With the default split this
+/// mirrors Lean `emitBlocks`; custom split policies are checked in Rust.
+pub fn emit_blocks(tokens: &[Token], split_for: SplitFor) -> Vec<u8> {
+    emit_blocks_iter(tokens.iter().copied(), split_for)
 }

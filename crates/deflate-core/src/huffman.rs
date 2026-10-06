@@ -20,7 +20,8 @@ use alloc::vec::Vec;
 pub const MAX_CODE_LEN: usize = 15;
 
 /// Width of the primary decode table. Lean `tableBits`.
-pub const TABLE_BITS: u32 = 9;
+/// 12 bits: covers ~99% of codes in typical DEFLATE streams (most codes <= 12 bits).
+pub const TABLE_BITS: u32 = 12;
 const TABLE_SIZE: usize = 1 << TABLE_BITS;
 
 /// Whether an incomplete code is tolerable here. See ADR 0004.

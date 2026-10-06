@@ -218,7 +218,16 @@ def emitBlocksGo (lf : LengthsFor) (w : BitWriter) (ts : List Token) : BitWriter
   if ts.length ≤ blockTokens then emitBlock lf w true ts
   else emitBlocksGo lf (emitBlock lf w false (ts.take blockTokens)) (ts.drop blockTokens)
 termination_by ts.length
-decreasing_by simp [blockTokens] at *; omega
+decreasing_by
+  have h : (ts.drop blockTokens).length < ts.length := by
+    have h₁ : (ts.drop blockTokens).length ≤ ts.length - blockTokens := by
+      rw [List.length_drop]
+      <;> omega
+    have h₂ : ts.length - blockTokens < ts.length := by
+      have h₃ : blockTokens > 0 := by decide
+      omega
+    omega
+  exact h
 
 /-- The block stream for `ts`: blocks share one writer, and only the end is
     padded to a byte. Rust: `emit_blocks`. -/

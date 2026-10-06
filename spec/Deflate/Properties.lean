@@ -1401,6 +1401,12 @@ theorem decode_within_limit {bs : ByteArray} {limit : Nat} {o : ByteArray}
 
 
 
+/-! ### M7a -/
+
+/-! ### M7a -/
+
+/-! ### M7a -/
+
 /-! ### M7a — Tokens and the matcher (spec §3.1–3.2)
 
   The matcher re-checks every finder candidate, so both headline theorems
@@ -1525,6 +1531,8 @@ theorem validFrom_iff (out : Array UInt8) (ts : List Token) :
 theorem valid_iff_prefix (ts : List Token) :
     Valid ts ↔ ∀ n (h : n < ts.length), ts[n].valid (expand (ts.take n)).size :=
   validFrom_iff #[] ts
+
+/-! ### M7a -/
 
 /-! ### M7a — Bit writer read-back (spec §3.3)
 
@@ -1904,6 +1912,8 @@ theorem encodeStored_empty (limit : Nat) : decode (encodeStored ⟨#[]⟩) limit
 /-- P10, stated on its own: encoding is a stream the decoder accepts. -/
 theorem encodeStored_valid : (decode (encodeStored ⟨#[]⟩) 0).isOk = true := by
   rw [encodeStored_empty 0]; rfl
+
+/-! ### M7a -/
 
 /-! ### M7a — Fixed-Huffman emitter round trip (spec §3.4)
 

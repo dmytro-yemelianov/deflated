@@ -4,6 +4,7 @@
 //! verbatim from b73b887 (only the symbol lookups are renamed so they do not
 //! depend on the new tables).
 
+use deflate_core::compress::default_split_for;
 use deflate_core::encode_dynamic::emit_blocks;
 use deflate_core::encode_fixed::{dist_sym, length_sym};
 use deflate_core::tokens::Token;
@@ -381,7 +382,7 @@ fn single_pass_emit_blocks_matches_reference() {
         for mode in 0..6 {
             let ts = stream(&mut rng, n, mode);
             assert_eq!(
-                emit_blocks(&ts),
+                emit_blocks(&ts, default_split_for),
                 reference::emit_blocks(&ts),
                 "n={n} mode={mode}"
             );
@@ -393,7 +394,7 @@ fn single_pass_emit_blocks_matches_reference() {
         let mode = rng.below(6);
         let ts = stream(&mut rng, n, mode);
         assert_eq!(
-            emit_blocks(&ts),
+            emit_blocks(&ts, default_split_for),
             reference::emit_blocks(&ts),
             "n={n} mode={mode}"
         );

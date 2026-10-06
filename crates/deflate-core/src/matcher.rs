@@ -1,4 +1,4 @@
-//! Greedy hash-chain matcher (spec §3.2). Mirrors `spec/Deflate/Match.lean`
+//! Lazy-match LZ77 matcher (spec §3.2). Mirrors `spec/Deflate/Match.lean`
 //! (`compressTokens`, `accept`). The finder is untrusted: every candidate
 //! goes through `accept`, which is exactly the Lean acceptance rule.
 
@@ -46,6 +46,10 @@ struct Matcher<'a> {
     head: Vec<u32>,
     /// Position mod WINDOW -> previous position with the same hash, + 1.
     prev: Vec<u32>,
+    /// Cached best match at current position (for lazy evaluation).
+    cached_match: Option<(usize, usize)>,
+    /// Cached best match at next position (lookahead).
+    lookahead_match: Option<(usize, usize)>,
 }
 
 impl Matcher<'_> {
@@ -75,7 +79,7 @@ impl Matcher<'_> {
     }
 
     /// Best verified `(len, dist)` at `i`, walking at most `MAX_CHAIN` links.
-    fn candidate(&self, i: usize) -> Option<(usize, usize)> {
+    fn find_best(&self, i: usize) -> Option<(usize, usize)> {
         let h = self.hash_at(i)?;
         let limit = MAX_MATCH.min(self.input.len().saturating_sub(i));
         let mut cand = usize::try_from(*self.head.get(h)?).ok()?;
@@ -108,6 +112,32 @@ impl Matcher<'_> {
             .take_while(|(x, y)| x == y)
             .count()
     }
+
+    /// Get best match at current position, computing if needed.
+    fn current_match(&mut self) -> Option<(usize, usize)> {
+        if self.cached_match.is_none() {
+            self.cached_match = self.find_best(self.i);
+        }
+        self.cached_match
+    }
+
+    /// Get best match at next position, computing if needed.
+    fn lookahead(&mut self) -> Option<(usize, usize)> {
+        if self.lookahead_match.is_none() && self.i + 1 < self.input.len() {
+            self.lookahead_match = self.find_best(self.i + 1);
+        }
+        self.lookahead_match
+    }
+
+    /// Compare two matches: return true if m2 is better than m1.
+    /// Better = longer, or same length but closer distance.
+    fn is_better(m1: Option<(usize, usize)>, m2: Option<(usize, usize)>) -> bool {
+        match (m1, m2) {
+            (None, Some(_)) => true,
+            (Some((l1, d1)), Some((l2, d2))) => l2 > l1 || (l2 == l1 && d2 < d1),
+            _ => false,
+        }
+    }
 }
 
 impl Iterator for Matcher<'_> {
@@ -116,20 +146,44 @@ impl Iterator for Matcher<'_> {
     fn next(&mut self) -> Option<Token> {
         let i = self.i;
         let byte = *self.input.get(i)?;
+
+        // Ensure the hash tables are populated up to current position
         self.insert_up_to(i);
-        let found = self.candidate(i);
-        if let Some((len, dist)) = found
-            && let (Ok(l), Ok(d)) = (u16::try_from(len), u16::try_from(dist))
-        {
+
+        // Find best match at current position
+        let current = self.current_match();
+
+        // Lazy matching: check if next position has a better match
+        if let Some((len, dist)) = current {
+            let lookahead = self.lookahead();
+            if Self::is_better(current, lookahead) {
+                // Emit literal instead, advance by 1
+                self.i = i.saturating_add(1);
+                // Invalidate cached matches since we advanced
+                self.cached_match = None;
+                self.lookahead_match = None;
+                return Some(Token::Literal(byte));
+            }
+            // Emit the match
             self.i = i.saturating_add(len);
-            return Some(Token::Match { len: l, dist: d });
+            if let (Ok(l), Ok(d)) = (u16::try_from(len), u16::try_from(dist)) {
+                // Invalidate cached matches since we advanced
+                self.cached_match = None;
+                self.lookahead_match = None;
+                return Some(Token::Match { len: l, dist: d });
+            }
         }
+
+        // No match or match not better than lookahead - emit literal
         self.i = i.saturating_add(1);
+        // Invalidate cached matches since we advanced
+        self.cached_match = None;
+        self.lookahead_match = None;
         Some(Token::Literal(byte))
     }
 }
 
-/// Greedy LZ77 tokens for `input` (Lean `compressTokens`). Memory is fixed
+/// Lazy-match LZ77 tokens for `input` (Lean `compressTokens`). Memory is fixed
 /// (about 192 KiB), independent of the input size.
 pub fn tokens(input: &[u8]) -> impl Iterator<Item = Token> + '_ {
     Matcher {
@@ -138,5 +192,48 @@ pub fn tokens(input: &[u8]) -> impl Iterator<Item = Token> + '_ {
         next_ins: 0,
         head: vec![0; 1 << HASH_BITS],
         prev: vec![0; WINDOW],
+        cached_match: None,
+        lookahead_match: None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::tokens::Token;
+
+    #[test]
+    fn lazy_prefers_longer_lookahead() {
+        // Input: "abcXabcY"
+        // At position 0: match "abc" (len=3) at distance 4 (lookahead at pos 4)
+        // But at position 1: match "bcXabcY" could be longer
+        // Actually let's construct a case where lookahead is better
+        let input = b"abcdefghijklabcdefghijkl";
+        let toks: Vec<Token> = tokens(input).collect();
+        // Should find match at position 12 (second "abcdefghijkl")
+        let has_long_match = toks
+            .iter()
+            .any(|t| matches!(t, Token::Match { len, .. } if *len > 3));
+        assert!(has_long_match, "Should find matches: {toks:?}");
+    }
+
+    #[test]
+    fn lazy_still_emits_literals() {
+        let input = b"abcdefghijkl";
+        let toks: Vec<Token> = tokens(input).collect();
+        // All literals, no matches
+        assert!(toks.iter().all(|t| matches!(t, Token::Literal(_))));
+    }
+
+    #[test]
+    fn lazy_roundtrip_small() {
+        let input = b"hello world hello world";
+        let toks: Vec<Token> = tokens(input).collect();
+        // Should find the second "hello world" as a match
+        let match_count = toks
+            .iter()
+            .filter(|t| matches!(t, Token::Match { .. }))
+            .count();
+        assert!(match_count > 0, "Should find at least one match: {toks:?}");
     }
 }

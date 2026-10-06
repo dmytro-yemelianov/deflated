@@ -36,7 +36,9 @@ jobs:
         run: cargo clippy --workspace --all-targets -- -D warnings
 
       - name: Test
-        run: cargo test --workspace
+        run: |
+          sh scripts/test_axiom_gate.sh
+          cargo test --workspace
 
       - name: No unsafe, no std in the core
         run: |
@@ -49,10 +51,7 @@ jobs:
           if grep -rnwE 'sorry|admit|native_decide' spec/ --include='*.lean'; then
             echo "::error::sorry/admit/native_decide present in Lean sources"; exit 1
           fi
-          lake env lean spec/scripts/axioms.lean | tee axioms.log
-          if grep -qE 'sorryAx|ofReduceBool' axioms.log; then
-            echo "::error::a headline theorem depends on sorryAx or ofReduceBool"; exit 1
-          fi
+          sh scripts/axiom_gate.sh
 
       - name: Differential harness self-test
         run: python3 oracles/differential.py --self-test
@@ -68,4 +67,3 @@ jobs:
           rustup toolchain install nightly --profile minimal
           cargo install cargo-fuzz --locked
           make fuzz
-
