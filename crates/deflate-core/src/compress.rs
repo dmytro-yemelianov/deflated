@@ -19,8 +19,8 @@ pub fn deflate(input: &[u8]) -> Vec<u8> {
 }
 
 /// Block stream with a custom split function. See [`SplitFor`] for the
-/// bounded lookahead window and invalid-count fallback. Lean covers only
-/// the default splitting policy.
+/// bounded lookahead window and invalid-count fallback. Lean's
+/// `decode_compressSplit` covers every checked splitting policy.
 pub fn deflate_with_split(input: &[u8], split_for: SplitFor) -> Vec<u8> {
     let blocks_out = emit_blocks_iter(tokens(input), split_for);
     let blocks = input.len().div_ceil(MAX_STORED).max(1);

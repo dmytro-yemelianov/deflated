@@ -210,7 +210,7 @@ fn fill_matches_literal_evaluation_on_degenerate_distance_codes() {
 
 #[test]
 fn entries_are_hits_only_within_table_bits() {
-    // Lean `tableEntry_some`: a hit has 1 <= len <= 9.
+    // Lean `tableEntry_some`: a hit has 1 <= len <= TABLE_BITS.
     let mut rng = Rng(7);
     for _ in 0..200 {
         let t = HuffmanTable::from_lengths(
@@ -259,7 +259,7 @@ fn random_bits_under_fixed_codes() {
 #[test]
 fn encoded_streams_decode_identically() {
     // Random bits favour short codes; encoding chosen symbols exercises the
-    // 10 to 15 bit fallback as often as the hits.
+    // 13 to 15 bit fallback as often as the hits.
     let mut rng = Rng(0xA076_1D64_78BD_642F);
     for i in 0..300 {
         let lengths = if i % 10 == 0 {

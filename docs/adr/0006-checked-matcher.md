@@ -65,3 +65,27 @@ that it is free; it is claimed to be small next to the chain walk it follows.
   tests and the harness check that. There is no refinement proof (ADR 0003).
 - A better finder (lazy matching, longer chains, dynamic Huffman) is a
   Rust-only change plus a differential re-run; the Lean theorems stand.
+
+## Matcher tuning
+
+Rust uses one-position lazy matching. Searching the next position needs
+only a yes/no decision: a closer distance wins at equal length, and any
+other distance needs one extra byte. Lean `better_match_iff_threshold`,
+built on `accept_prefix`, proves that checking this threshold prefix is
+equivalent to the existence of an accepted better match at that distance.
+Rust checks those prefixes across the same bounded hash chain and stops at
+the first success. A maximal distance-one match cannot be improved.
+
+The current search also rejects older candidates that disagree at the
+first byte beyond the best match, and compares long runs in eight-byte
+chunks with explicit little-endian conversion. The original byte-by-byte
+search remains a test reference: token sequences must agree on seeded
+inputs, short tails, repeated patterns, overlapping matches, and window
+wrap. This is finite evidence for the Rust implementation, while Lean
+proves the threshold rule and correctness for every checked finder.
+
+Long advances insert hash entries through bounded three-byte windows,
+checking the input and stored-position limits once per run. Short advances
+keep the scalar path: bulk setup regressed text in the candidate measurement.
+`bulk_insertion_preserves_scalar_tables` compares all heads, links, and the
+cursor against the original inserter, including ring wrap and short tails.

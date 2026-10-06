@@ -13,9 +13,9 @@ import Deflate.Huffman
 
 namespace Deflate
 
-/-- Width of the primary table: 9 bits, so every code of the fixed
-    literal/length code (7 to 9 bits long) resolves in one lookup. -/
-def tableBits : Nat := 9
+/-- Width of the primary table, shared with Rust `TABLE_BITS`. Every fixed
+    code and dynamic codes up to 12 bits resolve in one lookup. -/
+def tableBits : Nat := 12
 
 /-- A table entry: `some (s, l)` means "symbol `s`, consume `l` bits";
     `none` means "fall back to `decodeSym`". -/
@@ -31,28 +31,34 @@ def patternBytes (p : Nat) : ByteArray :=
 def patternReader (p : Nat) : BitReader := ⟨patternBytes p, 0⟩
 
 /-- The entry for pattern `p`: run the canonical decoder on a stream whose
-    next bits are `p`. A symbol decoded within `tableBits` bits is a hit;
+    next bits are `p`. A symbol decoded within `bits` bits is a hit;
     anything else (a longer code, an invalid code) is a fallback. -/
-def tableEntry (c : Code) (p : Nat) : TableEntry :=
+def tableEntryAt (bits : Nat) (c : Code) (p : Nat) : TableEntry :=
   match decodeSym c (patternReader p) with
-  | .ok (s, r') => if r'.pos ≤ tableBits then some (s, r'.pos) else none
+  | .ok (s, r') => if r'.pos ≤ bits then some (s, r'.pos) else none
   | .error _ => none
 
-/-- The primary table: `2 ^ tableBits` entries, indexed by the pattern. -/
-def buildTable (c : Code) : Array TableEntry :=
-  Array.ofFn (n := 2 ^ tableBits) fun p => tableEntry c p.val
+def tableEntry := tableEntryAt tableBits
 
-/-- Decode one symbol through a table. Peek `tableBits` bits without
+/-- The primary table: `2 ^ bits` entries, indexed by the pattern. -/
+def buildTableAt (bits : Nat) (c : Code) : Array TableEntry :=
+  Array.ofFn (n := 2 ^ bits) fun p => tableEntryAt bits c p.val
+
+def buildTable := buildTableAt tableBits
+
+/-- Decode one symbol through a table. Peek `bits` bits without
     consuming them; when fewer remain, `readBits` is `none` and the
     canonical decoder runs. A hit consumes the entry's length; a fallback
     runs `decodeSym` from the original reader. -/
-def decodeSymFast (c : Code) (tbl : Array TableEntry) (r : BitReader) :
+def decodeSymFastAt (bits : Nat) (c : Code) (tbl : Array TableEntry) (r : BitReader) :
     Except DecErr (Nat × BitReader) :=
-  match BitReader.readBits r tableBits with
+  match BitReader.readBits r bits with
   | none => decodeSym c r
   | some (p, _) =>
     match tbl.getD p none with
     | some (s, l) => .ok (s, { r with pos := r.pos + l })
     | none => decodeSym c r
+
+def decodeSymFast := decodeSymFastAt tableBits
 
 end Deflate

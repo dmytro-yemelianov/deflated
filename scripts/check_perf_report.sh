@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Every number in docs/perf-report.md must appear in scripts/reports/perf.json,
-# scripts/reports/compress.json or scripts/reports/profile.json. Same rule as scripts/check_size_report.sh,
+# scripts/reports/compress.json, profile.json or matcher.json. Same rule as scripts/check_size_report.sh,
 # extended to decimals, because throughput and profile shares are decimals.
 set -euo pipefail
 md=docs/perf-report.md
-data=$(cat scripts/reports/perf.json scripts/reports/compress.json scripts/reports/profile.json)
+data=$(cat scripts/reports/perf.json scripts/reports/compress.json scripts/reports/profile.json scripts/reports/matcher.json)
 test -s "$md" || { echo "missing $md"; exit 1; }
 missing=0
 while read -r n; do

@@ -7,9 +7,9 @@
   "reference": "miniz_oxide v0.8.9 levels 1 and 6",
   "reps": 5,
   "results": [
-    {"input": "random.raw", "raw_bytes": 8388608, "deflate_core_bytes": 8389253, "deflate_core_ratio": 1.0001, "deflate_core_mb_s": 36.1, "miniz_l1_bytes": 8396378, "miniz_l1_ratio": 1.0009, "miniz_l1_mb_s": 197.1, "miniz_l6_bytes": 8389933, "miniz_l6_ratio": 1.0002, "miniz_l6_mb_s": 44.0},
-    {"input": "repetitive.raw", "raw_bytes": 8388608, "deflate_core_bytes": 16293, "deflate_core_ratio": 0.0019, "deflate_core_mb_s": 490.4, "miniz_l1_bytes": 76665, "miniz_l1_ratio": 0.0091, "miniz_l1_mb_s": 6478.5, "miniz_l6_bytes": 16294, "miniz_l6_ratio": 0.0019, "miniz_l6_mb_s": 947.3},
-    {"input": "text.raw", "raw_bytes": 8388608, "deflate_core_bytes": 3108238, "deflate_core_ratio": 0.3705, "deflate_core_mb_s": 38.4, "miniz_l1_bytes": 4779962, "miniz_l1_ratio": 0.5698, "miniz_l1_mb_s": 147.6, "miniz_l6_bytes": 3047954, "miniz_l6_ratio": 0.3633, "miniz_l6_mb_s": 69.4},
-    {"input": "zeros.raw", "raw_bytes": 8388608, "deflate_core_bytes": 8156, "deflate_core_ratio": 0.0010, "deflate_core_mb_s": 499.7, "miniz_l1_bytes": 38339, "miniz_l1_ratio": 0.0046, "miniz_l1_mb_s": 12224.6, "miniz_l6_bytes": 8156, "miniz_l6_ratio": 0.0010, "miniz_l6_mb_s": 945.6}
+    {"input": "random.raw", "raw_bytes": 8388608, "deflate_core_bytes": 8389253, "deflate_core_ratio": 1.0001, "deflate_core_mb_s": 62.7, "miniz_l1_bytes": 8396378, "miniz_l1_ratio": 1.0009, "miniz_l1_mb_s": 411.7, "miniz_l6_bytes": 8389933, "miniz_l6_ratio": 1.0002, "miniz_l6_mb_s": 80.8},
+    {"input": "repetitive.raw", "raw_bytes": 8388608, "deflate_core_bytes": 16293, "deflate_core_ratio": 0.0019, "deflate_core_mb_s": 1465.2, "miniz_l1_bytes": 76665, "miniz_l1_ratio": 0.0091, "miniz_l1_mb_s": 10986.4, "miniz_l6_bytes": 16294, "miniz_l6_ratio": 0.0019, "miniz_l6_mb_s": 1637.0},
+    {"input": "text.raw", "raw_bytes": 8388608, "deflate_core_bytes": 3043353, "deflate_core_ratio": 0.3628, "deflate_core_mb_s": 53.7, "miniz_l1_bytes": 4779962, "miniz_l1_ratio": 0.5698, "miniz_l1_mb_s": 237.4, "miniz_l6_bytes": 3047954, "miniz_l6_ratio": 0.3633, "miniz_l6_mb_s": 110.9},
+    {"input": "zeros.raw", "raw_bytes": 8388608, "deflate_core_bytes": 8156, "deflate_core_ratio": 0.0010, "deflate_core_mb_s": 1677.0, "miniz_l1_bytes": 38339, "miniz_l1_ratio": 0.0046, "miniz_l1_mb_s": 19192.3, "miniz_l6_bytes": 8156, "miniz_l6_ratio": 0.0010, "miniz_l6_mb_s": 1732.0}
   ]
 }

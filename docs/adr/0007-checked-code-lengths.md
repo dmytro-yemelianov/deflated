@@ -40,15 +40,13 @@ the first time it was tuned, exactly as ADR 0006 argued for the matcher.
   `rleLengths_expand` and `decodeSym_canonical`. The heuristic itself is
   unproved. `emitBlocks_none` and `compress_none` show that
   `lengthsFor := fun _ => none` gives M7a's output.
-- **Block size is 16384 tokens.** Tokens are cut into chunks of 16384, the
-  last chunk (or the only, possibly empty, one) is final, and blocks share
-  one bit writer, padding only at the very end. A fixed size keeps the
-  Lean cutting function trivial to reason about. It was not tuned. Adaptive
-  block splitting is **not** covered as things stand: Lean `emitBlocksGo`
-  hard-codes `blockTokens = 16384`, so a Rust splitter would no longer
-  mirror any proved function and `EMITBLOCKS` would diverge. It needs a Lean
-  change first: a `splitFor` parameter (untrusted, like `lengthsFor`) and
-  `decode_emitBlocks` restated over it.
+- **Default block size is 16384 tokens.** Custom splitting is checked and
+  covered by `EncodeSplit.lean`: invalid counts fall back to the default,
+  chunks are nonempty unless the input is empty, and only the final block
+  sets BFINAL. `decode_compressSplit` holds for every checked `splitFor`.
+  Rust supplies a bounded token window; Lean supplies the remaining list.
+  The proof covers correctness for each policy, while byte equality
+  requires matching policy decisions (see `docs/verification-boundary.md`).
 - **The code-length code's lengths are passed explicitly.** The CL code is
   also built by a heuristic, so for Rust and Lean to emit identical bytes
   the oracle command carries all three arrays: `EMITDYN <lit> <dist> <cl>
@@ -88,8 +86,7 @@ and once to emit.
   set the decoder accepts for arbitrary frequencies.
 - A better length heuristic is a Rust-only change plus a differential
   re-run; the Lean theorems stand, because only `lengthsFor` is a
-  parameter. A block splitter is not: it needs the Lean change described
-  under "Block size" above.
+  parameter. A block splitter is also a checked parameter in `EncodeSplit.lean`.
 - Dynamic multi-block streams are compared **by decoding only**. `EMITDYN`
   checks one dynamic block byte for byte, and `EMITBLOCKS` checks the
   multi-block cutting byte for byte with fixed blocks (`lengthsFor =

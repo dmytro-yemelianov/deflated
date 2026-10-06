@@ -5,19 +5,19 @@
   "size_tool": "/Library/Developer/CommandLineTools/usr/bin/llvm-size",
   "profiles": {
     "release": {
-      "total_bytes": 503360,
-      "sections": { "__text": 278692, "__stubs": 840, "__stub_helper": 864, "__gcc_except_tab": 6104, "__const": 19216, "__cstring": 11, "__unwind_info": 6232, "__eh_frame": 39804, "__const": 11448, "__got": 16, "__la_symbol_ptr": 560, "__data": 2416, "__thread_vars": 216, "__thread_data": 32, "__thread_bss": 72, "__common": 80, "__bss": 240 }
+      "total_bytes": 540464,
+      "sections": { "__text": 299308, "__stubs": 840, "__stub_helper": 864, "__gcc_except_tab": 6764, "__const": 21872, "__cstring": 11, "__unwind_info": 6584, "__eh_frame": 42012, "__const": 11928, "__got": 16, "__la_symbol_ptr": 560, "__data": 2416, "__thread_vars": 216, "__thread_data": 32, "__thread_bss": 72, "__common": 80, "__bss": 240 }
     },
     "min": {
-      "total_bytes": 319488,
-      "sections": { "__text": 222340, "__stubs": 804, "__stub_helper": 828, "__gcc_except_tab": 3908, "__const": 16512, "__cstring": 11, "__unwind_info": 4776, "__eh_frame": 26104, "__const": 10168, "__got": 16, "__la_symbol_ptr": 536, "__data": 2416, "__thread_vars": 192, "__thread_bss": 56, "__bss": 296 }
+      "total_bytes": 336096,
+      "sections": { "__text": 232672, "__stubs": 804, "__stub_helper": 828, "__gcc_except_tab": 3916, "__const": 19000, "__cstring": 11, "__unwind_info": 4992, "__eh_frame": 26104, "__const": 10696, "__got": 16, "__la_symbol_ptr": 536, "__data": 2416, "__thread_vars": 192, "__thread_bss": 56, "__bss": 296 }
     }
   },
   "working_memory": {
-      "input_name": "big.deflate",
-      "compressed_bytes": 4390,
-      "decompressed_bytes": 1048576,
-      "limit_bytes": 16777216,
-      "peak_rss_bytes": 3014656
+    "input_name": "big.deflate",
+    "compressed_bytes": 4390,
+    "decompressed_bytes": 1048576,
+    "limit_bytes": 16777216,
+    "peak_rss_bytes": 3112960
   }
 }

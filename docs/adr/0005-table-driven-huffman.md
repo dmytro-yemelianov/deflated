@@ -23,18 +23,18 @@ covers it. This ADR records the lemma.
 
 ## Decision
 
-- Add a **primary decode table** of `2^K` entries with **K = 9**
-  (`Deflate.tableBits`), one per possible value of the next 9 stream bits.
+- Add a **primary decode table** of `2^K` entries with **K = 12**
+  (`Deflate.tableBits`), one per possible value of the next 12 stream bits.
 - The table is defined **by evaluation**: the entry for pattern `p` is what
   the canonical decoder `decodeSym` does on a stream whose next bits are
-  `p`. A symbol `s` decoded after consuming `l ≤ 9` bits gives the entry
+  `p`. A symbol `s` decoded after consuming `l ≤ 12` bits gives the entry
   `(s, l)`; anything else (a longer code, an invalid pattern, running off
   the 16-bit pattern stream) gives **fallback**.
-- **Fast decode** (`Deflate.decodeSymFast`): when at least 9 bits remain,
+- **Fast decode** (`Deflate.decodeSymFast`): when at least 12 bits remain,
   peek them without consuming, look up; on `(s, l)` return `s` and advance
-  by `l`; on fallback, or when fewer than 9 bits remain, run the canonical
+  by `l`; on fallback, or when fewer than 12 bits remain, run the canonical
   decoder unchanged from the original position.
-- **No second-level tables.** Codes of 10 to 15 bits always take the
+- **No second-level tables.** Codes of 13 to 15 bits always take the
   canonical walk.
 - The Lean model's block decoder (`decodeHuffBlock`, `readCodeLengths`) keeps
   calling `decodeSym`. Nothing in the model's semantics or in any existing
@@ -49,7 +49,7 @@ Definitions live in `spec/Deflate/HuffmanTable.lean`; theorems in the
 
 ## Why table by evaluation
 
-The alternative is the usual construction: for each symbol of length `L ≤ 9`,
+The alternative is the usual construction: for each symbol of length `L ≤ 12`,
 bit-reverse its canonical code and write it into every slot whose low `L`
 bits match. Specifying the table that way would make the Lean proof a
 statement about canonical-code arithmetic, bit reversal and the Kraft
@@ -61,7 +61,7 @@ out of the proof. The correspondence argument then needs one property of
 nothing else, so a run that succeeds after `l` bits succeeds the same way on
 any stream whose next `l` bits are the same (`decodeSym_local`). If the
 entry for `p` is `(s, l)`, the decode of the pattern stream succeeded after
-`l ≤ 9` bits. The real stream's next 9 bits *are* `p` (`readBits_bit`), so its
+`l ≤ 12` bits. The real stream's next 12 bits *are* `p` (`readBits_bit`), so its
 next `l` bits agree, and the canonical decode of the real stream returns
 `(s, pos + l)`. That is what the fast path returned. On fallback, and near
 the end of the stream, the fast path *is* the canonical decode. Hence
@@ -72,30 +72,34 @@ That equality holds for every `Code`, whether complete, incomplete or
 degenerate, and for every reader. It needs no validity hypothesis, because an
 entry is only a hit when `decodeSym` itself produced it.
 
-## Why K = 9
+## Why K = 12
 
-The fixed literal/length code (RFC 1951 §3.2.6) has codes of 7, 8 and 9 bits.
-With K = 9 every fixed-code symbol resolves in one lookup:
-`fixedLitLen_table_total` proves, by kernel evaluation, that no entry of the
-fixed literal/length table is a fallback, and `fixedDist_table_total` proves
-the same for the 5-bit fixed distance code. Dynamic codes produced by zlib
-keep the frequent literals short, so most of their symbols also resolve in
-one lookup. The rare 10 to 15 bit codes take the existing walk. zlib's
-inflate uses 9 bits for its literal/length root table for the same reason.
+The table began at nine bits and was widened in Rust at commit `271b35c`.
+Lean now uses the same twelve-bit width. `decodeSymFastAt_eq` proves
+equivalence for every width at most sixteen bits; `decodeSymFast_eq` and
+both fixed-table totality theorems use the current width. A Rust test reads
+Lean's constant and fails on drift. Twelve bits cover more dynamic codes in one lookup; this
+is a speed and memory tradeoff, not a universal optimum.
+
+The fixed codes need only nine bits for literal/length symbols and five
+for distances. The totality proofs check those smaller pattern spaces by
+kernel evaluation and lift to twelve bits with decoder locality. This
+avoids enumerating the larger table inside the kernel.
 
 ## Table size cost
 
-- **Memory:** 512 entries × 2 bytes (`u16`, encoding below) = 1 KiB per table.
-  A block needs one for literal/length and one for distance, 2 KiB total, held
+- **Memory:** 4096 entries × 2 bytes (`u16`, encoding below) = 8 KiB per table.
+  A block needs one for literal/length and one for distance, 16 KiB total, held
   in `HuffmanTable` beside the existing `counts` and `symbols`. Using a table
-  for the code-length code too is optional and costs another 1 KiB while the
+  for the code-length code too is optional and costs another 8 KiB while the
   header is read.
-- **Build time:** at most 512 slot writes per table with the replication
-  construction, against a block of thousands of symbols. Building tables does
-  not appear in the profile today (perf-report finding 4).
+- **Build time:** at most 4096 slot writes per table with the replication
+  construction, against a block of thousands of symbols. Table construction
+  is a small share of decoder samples on the benchmark corpus; tiny blocks
+  may make the cost more significant.
 - **Binary size:** the build loop and lookup are a few dozen instructions. If
   the two fixed tables are precomputed as `static` data instead of being built
-  at runtime, that adds 2 KiB of read-only data. Measure with `make size`
+  at runtime, that adds 16 KiB of read-only data. Measure with `make size`
   either way and record the delta, as spec §16 requires.
 
 ## Lean theorem names
@@ -108,7 +112,7 @@ and resting only on `propext`, `Quot.sound` and `Classical.choice`:
 - `buildTable_size`: the table has `2 ^ tableBits` entries.
 - `tableEntry_some`: a hit has `0 < l ≤ tableBits` and `s < c.lengths.size`.
 - `readBits_some`: with `readBits_eof`, the peek succeeds exactly when
-  `pos + 9 ≤ size`.
+  `pos + 12 ≤ size`.
 - `fixedLitLen_table_total`, `fixedDist_table_total`: the fixed tables have
   no fallback entries.
 
@@ -118,25 +122,25 @@ Supporting lemmas: `readBits_bit` (bit `i` of the peeked value is stream bit
 
 ## What the Rust must mirror
 
-**Peek.** `peek_bits(9)` returns the same value `read_bits(9)` would, which is
-the next 9 stream bits LSB first (stream bit `pos + i` is bit `i` of the
+**Peek.** `peek_bits(12)` returns the same value `read_bits(12)` would, which is
+the next 12 stream bits LSB first (stream bit `pos + i` is bit `i` of the
 value), and does not move `pos`. It is only called when
-`pos + 9 <= bit_len()`. This is the Lean `readBits r tableBits` returning
+`pos + 12 <= bit_len()`. This is the Lean `readBits r tableBits` returning
 `some (p, _)`, where the second component is discarded.
 
 **Entry encoding.** `u16`, with `0` meaning fallback, and otherwise
-`(sym << 4) | len`, where `1 <= len <= 9`. `tableEntry_some` guarantees
+`(sym << 4) | len`, where `1 <= len <= 12`. `tableEntry_some` guarantees
 `len >= 1` for every hit, so `0` is unambiguous. Every symbol is below 288,
 so `sym << 4 | len` fits in a `u16`.
 
-**Table contents.** For every `p` in `0..512`, `table[p]` must encode
+**Table contents.** For every `p` in `0..4096`, `table[p]` must encode
 `tableEntry c p`: run the canonical decode on a stream whose first two bytes
 are `[p & 0xff, p >> 8]`, starting at bit 0. If it returns `Ok(sym)` having
-consumed `len <= 9` bits, the entry is `(sym, len)`. If it returns any error,
-or consumed more than 9 bits, the entry is fallback. The Rust may build the
+consumed `len <= 12` bits, the entry is `(sym, len)`. If it returns any error,
+or consumed more than 12 bits, the entry is fallback. The Rust may build the
 table this literal way, or with the replication construction (for each symbol
-`s` with `1 <= L = len(s) <= 9` and canonical code `v`, set every slot
-`reverse_bits(v, L) | (k << L)` for `k` in `0..2^(9-L)` to `(s, L)`; leave the
+`s` with `1 <= L = len(s) <= 12` and canonical code `v`, set every slot
+`reverse_bits(v, L) | (k << L)` for `k` in `0..2^(12-L)` to `(s, L)`; leave the
 rest `0`). If it uses replication, a test must check it against the literal
 construction for the fixed codes, for many random complete length sets, and
 for the empty and one-symbol distance codes of ADR 0004.
@@ -145,15 +149,15 @@ for the empty and one-symbol distance codes of ADR 0004.
 
 ```text
 decode_fast(r):
-  if r.pos + 9 <= r.bit_len():
-    e = table[r.peek_bits(9)]
+  if r.pos + 12 <= r.bit_len():
+    e = table[r.peek_bits(12)]
     if e != 0:
       r.pos += e & 0xf
       return Ok(e >> 4)
   return decode(r)   // the existing canonical walk, unchanged, from the original pos
 ```
 
-**Near the end of the stream.** When fewer than 9 bits remain, use the
+**Near the end of the stream.** When fewer than 12 bits remain, use the
 canonical walk. Do not zero-pad the peek and look up: a padded pattern can
 hit using padding bits, which would be wrong, and the version that checks
 `len <= remaining` is a different algorithm that `decodeSymFast_eq` does not
@@ -164,7 +168,7 @@ position, never a direct `Err(InvalidCode)`. This is load-bearing for errors:
 a pattern that is invalid in the 16-bit pattern stream can reach
 `UnexpectedEof` first in a real stream that ends sooner, and only the walk
 reports that the way the model does. The fixed tables have no fallback
-entries, and for dynamic codes it covers codes longer than 9 bits and the
+entries, and for dynamic codes it covers codes longer than 12 bits and the
 unused half of a one-symbol distance code.
 
 **Where it is used.** For the literal/length and distance decodes in

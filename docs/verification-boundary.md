@@ -55,6 +55,12 @@ are named below.
 - **P1 (Bit reader):** `byteAt_oob`, `readBits_pos`, `readBits_bytes`, `readBits_lt`, `readBits_eof`, `alignToByte_idem`.
 - **P2 (Canonical Huffman):** `fixedLitLen_complete`, `fixedDist_complete`, `decodeSym_pos`, `decodeSym_bytes`, `decodeSym_in_range`.
 - **P2 (Table-driven Huffman, ADR 0005):** `decodeSymFast_eq` (the table fast path equals `decodeSym` on every reader, results and errors alike), `decodeSym_local`, `buildTable_size`, `tableEntry_some`, `readBits_some`, `fixedLitLen_table_total`, `fixedDist_table_total`.
+- **Table widths and lazy search:** `decodeSymFastAt_eq` covers every
+  table width at most sixteen bits; `decodeSymFast_eq` specializes it to
+  Rust's twelve-bit table, with a regression test guarding the shared
+  constant. `accept_prefix` and `better_match_iff_threshold` justify
+  checking only the prefix required to improve a lazy match. Rust token
+  equality with the original matcher is checked by finite reference tests.
 - **P3 (Block headers & stored blocks):** `readHeader_pos`, `readStored_aligned`, `readStored_consumes`, `readStored_rejects_bad_nlen`.
 - **P4 (Huffman block body):** `decodeHuffBlock_monotone`, `decodeHuffBlock_within_limit`, `decodeHuffBlock_progress`.
 - **P5 (Dynamic Huffman tables):** `clOrder_is_a_permutation`, `readDynamicCodes_valid`, `readDynamicCodes_pos`.

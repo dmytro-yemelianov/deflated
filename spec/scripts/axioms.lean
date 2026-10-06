@@ -3,6 +3,9 @@
 -- Theorem names are added here by the task that proves them.
 import Deflate
 open Deflate
+#print axioms Deflate.accept_prefix
+#print axioms Deflate.better_match_iff_threshold
+#print axioms Deflate.decodeSymFastAt_eq
 #print axioms Deflate.byteAt_oob
 #print axioms Deflate.readBits_pos
 #print axioms Deflate.readBits_bytes

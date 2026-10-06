@@ -7,8 +7,8 @@
 //!
 //! usage: perf CORPUS_DIR [REPS]
 //!        perf compress CORPUS_DIR [REPS]   (encoder ratio and speed)
-//! With `PERF_ONLY=name.deflate` it decodes that one file in a loop for
-//! `PERF_SECS` seconds instead, so a sampling profiler has something to see.
+//! With `PERF_ONLY=name` it processes that one file in a loop for
+//! `PERF_SECS` seconds instead, for decoder or encoder sampling.
 
 use std::time::{Duration, Instant};
 
@@ -27,6 +27,20 @@ fn best_of<F: FnMut()>(reps: u32, mut f: F) -> Duration {
 /// levels 1 and 6 on each `.raw` payload. Every stream is decoded back with
 /// `deflate-core` and compared before it is timed.
 fn compress_mode(dir: &std::path::Path, reps: u32) {
+    if let Ok(only) = std::env::var("PERF_ONLY") {
+        let raw = std::fs::read(dir.join(&only)).expect("read input");
+        let secs: u64 = std::env::var("PERF_SECS")
+            .ok()
+            .and_then(|s| s.parse().ok())
+            .unwrap_or(4);
+        let out = deflate_core::deflate(&raw);
+        assert_eq!(deflate_core::inflate(&out).expect("round-trip"), raw);
+        let until = Instant::now() + Duration::from_secs(secs);
+        while Instant::now() < until {
+            std::hint::black_box(deflate_core::deflate(std::hint::black_box(&raw)));
+        }
+        return;
+    }
     let mut names: Vec<String> = std::fs::read_dir(dir)
         .expect("read corpus dir")
         .filter_map(|e| e.ok()?.file_name().into_string().ok())

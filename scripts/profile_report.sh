@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Where decode time goes, per deflate-core function (spec §16: measure, then
+# Where decode and encode time go, per deflate-core function (spec §16: measure, then
 # optimize). macOS only: needs samply (`cargo install samply`) and atos.
 #
-# Builds the perf example with line tables, samples it decoding one input in
+# Builds the perf example with line tables, samples it processing one input in
 # a loop, and writes inclusive per-function shares to target/reports/, or
 # with --record to the baseline scripts/reports/profile.json (and regenerates
 # the tables in docs/perf-report.md). Run scripts/perf_report.sh first; it
@@ -23,14 +23,16 @@ CARGO_PROFILE_RELEASE_DEBUG=line-tables-only CARGO_TARGET_DIR=$tdir \
 bin=$tdir/release/examples/perf
 dsymutil "$bin"
 
-inputs="text.dyn.deflate zeros.fixed.deflate repetitive.dyn.deflate text.stored.deflate"
+inputs="text.dyn.deflate zeros.fixed.deflate repetitive.dyn.deflate text.stored.deflate text.raw random.raw zeros.raw repetitive.raw"
 {
   echo "{"
   printf '  "tool": "%s",\n  "seconds_per_input": %s,\n  "profiles": {\n' "$(samply --version)" "$secs"
   first=1
   for f in $inputs; do
+    command_args=("$bin" "$corpus")
+    [[ $f != *.raw ]] || command_args=("$bin" compress "$corpus")
     PERF_ONLY=$f PERF_SECS=$secs samply record --save-only --unstable-presymbolicate \
-      -o "$tdir/$f.json.gz" -- "$bin" "$corpus" >/dev/null 2>&1
+      -o "$tdir/$f.json.gz" -- "${command_args[@]}" >/dev/null 2>&1
     [ $first -eq 1 ] || printf ',\n'
     first=0
     printf '    "%s": %s' "$f" "$(python3 scripts/profile_attrib.py "$tdir/$f.json.gz" "$bin")"

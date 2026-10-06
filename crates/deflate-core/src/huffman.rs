@@ -6,11 +6,11 @@
 //! one bit in at a time and test, at each length, whether the accumulated
 //! value falls inside that length's contiguous range.
 //!
-//! [`HuffmanTable::decode_fast`] puts a 9-bit lookup table in front of that
+//! [`HuffmanTable::decode_fast`] puts a 12-bit lookup table in front of that
 //! walk (ADR 0005, `spec/Deflate/HuffmanTable.lean`). It mirrors Lean
 //! `decodeSymFast`, which `decodeSymFast_eq` proves equal to `decodeSym` on
-//! every reader, errors included. Codes longer than 9 bits, and anything
-//! within 9 bits of the end of the stream, still take the canonical walk.
+//! every reader, errors included. Codes longer than 12 bits, and anything
+//! within 12 bits of the end of the stream, still take the canonical walk.
 
 use crate::bitstream::BitReader;
 use crate::error::Error;
@@ -20,7 +20,7 @@ use alloc::vec::Vec;
 pub const MAX_CODE_LEN: usize = 15;
 
 /// Width of the primary decode table. Lean `tableBits`.
-/// 12 bits: covers ~99% of codes in typical DEFLATE streams (most codes <= 12 bits).
+/// Codes up to 12 bits resolve in one lookup; longer codes use the walk.
 pub const TABLE_BITS: u32 = 12;
 const TABLE_SIZE: usize = 1 << TABLE_BITS;
 
@@ -41,7 +41,7 @@ pub struct HuffmanTable {
     /// Symbols ordered by (length, symbol): the canonical order.
     symbols: Vec<u16>,
     /// Lean `buildTable`: entry `p` is `(sym << 4) | len` when the canonical
-    /// walk on next-bits `p` yields `sym` after `len <= 9` bits, else 0
+    /// walk on next-bits `p` yields `sym` after `len <= TABLE_BITS` bits, else 0
     /// (fallback). `len >= 1` on every hit, so 0 is unambiguous.
     fast: [u16; TABLE_SIZE],
 }

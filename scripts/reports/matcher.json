@@ -1,0 +1,383 @@
+{
+  "baseline_commit": "9a045cb57137976a3471ae094db8bb0b0b2a4112",
+  "candidate_matcher_sha256": "22283b46742fa8d00b229362ea6bd6f445985d3a80a64775a3d0604dc8ff8d89",
+  "cpu": "Apple M5",
+  "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)",
+  "profile": "release",
+  "paired_runs": 3,
+  "reps_per_input": 5,
+  "aggregation": "median MB/s per binary, speedup is after/before",
+  "method": "Alternate old/new order with our own build, tests, and fuzzing idle; separately compare full encoder bytes on all four raw payloads",
+  "results": [
+    {
+      "input": "random.raw",
+      "before_mb_s": 59.9,
+      "after_mb_s": 63.5,
+      "speedup": 1.06,
+      "byte_identical": true,
+      "compressed_bytes": 8389253
+    },
+    {
+      "input": "repetitive.raw",
+      "before_mb_s": 617.8,
+      "after_mb_s": 1465.2,
+      "speedup": 2.37,
+      "byte_identical": true,
+      "compressed_bytes": 16293
+    },
+    {
+      "input": "text.raw",
+      "before_mb_s": 37.5,
+      "after_mb_s": 53.6,
+      "speedup": 1.43,
+      "byte_identical": true,
+      "compressed_bytes": 3043353
+    },
+    {
+      "input": "zeros.raw",
+      "before_mb_s": 649.1,
+      "after_mb_s": 1679.6,
+      "speedup": 2.59,
+      "byte_identical": true,
+      "compressed_bytes": 8156
+    }
+  ],
+  "runs": [
+    {
+      "before": [
+        {
+          "input": "random.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 8389253,
+          "deflate_core_ratio": 1.0001,
+          "deflate_core_mb_s": 59.9,
+          "miniz_l1_bytes": 8396378,
+          "miniz_l1_ratio": 1.0009,
+          "miniz_l1_mb_s": 409.8,
+          "miniz_l6_bytes": 8389933,
+          "miniz_l6_ratio": 1.0002,
+          "miniz_l6_mb_s": 79.3
+        },
+        {
+          "input": "repetitive.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 16293,
+          "deflate_core_ratio": 0.0019,
+          "deflate_core_mb_s": 618.5,
+          "miniz_l1_bytes": 76665,
+          "miniz_l1_ratio": 0.0091,
+          "miniz_l1_mb_s": 10589.4,
+          "miniz_l6_bytes": 16294,
+          "miniz_l6_ratio": 0.0019,
+          "miniz_l6_mb_s": 1661.7
+        },
+        {
+          "input": "text.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 3043353,
+          "deflate_core_ratio": 0.3628,
+          "deflate_core_mb_s": 37.6,
+          "miniz_l1_bytes": 4779962,
+          "miniz_l1_ratio": 0.5698,
+          "miniz_l1_mb_s": 237.5,
+          "miniz_l6_bytes": 3047954,
+          "miniz_l6_ratio": 0.3633,
+          "miniz_l6_mb_s": 110.9
+        },
+        {
+          "input": "zeros.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 8156,
+          "deflate_core_ratio": 0.001,
+          "deflate_core_mb_s": 649.1,
+          "miniz_l1_bytes": 38339,
+          "miniz_l1_ratio": 0.0046,
+          "miniz_l1_mb_s": 18991.3,
+          "miniz_l6_bytes": 8156,
+          "miniz_l6_ratio": 0.001,
+          "miniz_l6_mb_s": 1742.0
+        }
+      ],
+      "after": [
+        {
+          "input": "random.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 8389253,
+          "deflate_core_ratio": 1.0001,
+          "deflate_core_mb_s": 62.1,
+          "miniz_l1_bytes": 8396378,
+          "miniz_l1_ratio": 1.0009,
+          "miniz_l1_mb_s": 410.9,
+          "miniz_l6_bytes": 8389933,
+          "miniz_l6_ratio": 1.0002,
+          "miniz_l6_mb_s": 79.5
+        },
+        {
+          "input": "repetitive.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 16293,
+          "deflate_core_ratio": 0.0019,
+          "deflate_core_mb_s": 1465.2,
+          "miniz_l1_bytes": 76665,
+          "miniz_l1_ratio": 0.0091,
+          "miniz_l1_mb_s": 10909.6,
+          "miniz_l6_bytes": 16294,
+          "miniz_l6_ratio": 0.0019,
+          "miniz_l6_mb_s": 1679.7
+        },
+        {
+          "input": "text.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 3043353,
+          "deflate_core_ratio": 0.3628,
+          "deflate_core_mb_s": 53.6,
+          "miniz_l1_bytes": 4779962,
+          "miniz_l1_ratio": 0.5698,
+          "miniz_l1_mb_s": 229.8,
+          "miniz_l6_bytes": 3047954,
+          "miniz_l6_ratio": 0.3633,
+          "miniz_l6_mb_s": 111.1
+        },
+        {
+          "input": "zeros.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 8156,
+          "deflate_core_ratio": 0.001,
+          "deflate_core_mb_s": 1682.4,
+          "miniz_l1_bytes": 38339,
+          "miniz_l1_ratio": 0.0046,
+          "miniz_l1_mb_s": 18806.8,
+          "miniz_l6_bytes": 8156,
+          "miniz_l6_ratio": 0.001,
+          "miniz_l6_mb_s": 1727.4
+        }
+      ]
+    },
+    {
+      "after": [
+        {
+          "input": "random.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 8389253,
+          "deflate_core_ratio": 1.0001,
+          "deflate_core_mb_s": 63.5,
+          "miniz_l1_bytes": 8396378,
+          "miniz_l1_ratio": 1.0009,
+          "miniz_l1_mb_s": 411.5,
+          "miniz_l6_bytes": 8389933,
+          "miniz_l6_ratio": 1.0002,
+          "miniz_l6_mb_s": 80.7
+        },
+        {
+          "input": "repetitive.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 16293,
+          "deflate_core_ratio": 0.0019,
+          "deflate_core_mb_s": 1451.3,
+          "miniz_l1_bytes": 76665,
+          "miniz_l1_ratio": 0.0091,
+          "miniz_l1_mb_s": 10990.6,
+          "miniz_l6_bytes": 16294,
+          "miniz_l6_ratio": 0.0019,
+          "miniz_l6_mb_s": 1671.2
+        },
+        {
+          "input": "text.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 3043353,
+          "deflate_core_ratio": 0.3628,
+          "deflate_core_mb_s": 53.4,
+          "miniz_l1_bytes": 4779962,
+          "miniz_l1_ratio": 0.5698,
+          "miniz_l1_mb_s": 236.6,
+          "miniz_l6_bytes": 3047954,
+          "miniz_l6_ratio": 0.3633,
+          "miniz_l6_mb_s": 111.2
+        },
+        {
+          "input": "zeros.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 8156,
+          "deflate_core_ratio": 0.001,
+          "deflate_core_mb_s": 1666.7,
+          "miniz_l1_bytes": 38339,
+          "miniz_l1_ratio": 0.0046,
+          "miniz_l1_mb_s": 19025.4,
+          "miniz_l6_bytes": 8156,
+          "miniz_l6_ratio": 0.001,
+          "miniz_l6_mb_s": 1727.6
+        }
+      ],
+      "before": [
+        {
+          "input": "random.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 8389253,
+          "deflate_core_ratio": 1.0001,
+          "deflate_core_mb_s": 60.1,
+          "miniz_l1_bytes": 8396378,
+          "miniz_l1_ratio": 1.0009,
+          "miniz_l1_mb_s": 410.1,
+          "miniz_l6_bytes": 8389933,
+          "miniz_l6_ratio": 1.0002,
+          "miniz_l6_mb_s": 79.6
+        },
+        {
+          "input": "repetitive.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 16293,
+          "deflate_core_ratio": 0.0019,
+          "deflate_core_mb_s": 617.1,
+          "miniz_l1_bytes": 76665,
+          "miniz_l1_ratio": 0.0091,
+          "miniz_l1_mb_s": 10860.8,
+          "miniz_l6_bytes": 16294,
+          "miniz_l6_ratio": 0.0019,
+          "miniz_l6_mb_s": 1678.3
+        },
+        {
+          "input": "text.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 3043353,
+          "deflate_core_ratio": 0.3628,
+          "deflate_core_mb_s": 37.5,
+          "miniz_l1_bytes": 4779962,
+          "miniz_l1_ratio": 0.5698,
+          "miniz_l1_mb_s": 235.3,
+          "miniz_l6_bytes": 3047954,
+          "miniz_l6_ratio": 0.3633,
+          "miniz_l6_mb_s": 111.3
+        },
+        {
+          "input": "zeros.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 8156,
+          "deflate_core_ratio": 0.001,
+          "deflate_core_mb_s": 650.2,
+          "miniz_l1_bytes": 38339,
+          "miniz_l1_ratio": 0.0046,
+          "miniz_l1_mb_s": 18903.9,
+          "miniz_l6_bytes": 8156,
+          "miniz_l6_ratio": 0.001,
+          "miniz_l6_mb_s": 1725.5
+        }
+      ]
+    },
+    {
+      "before": [
+        {
+          "input": "random.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 8389253,
+          "deflate_core_ratio": 1.0001,
+          "deflate_core_mb_s": 59.5,
+          "miniz_l1_bytes": 8396378,
+          "miniz_l1_ratio": 1.0009,
+          "miniz_l1_mb_s": 412.0,
+          "miniz_l6_bytes": 8389933,
+          "miniz_l6_ratio": 1.0002,
+          "miniz_l6_mb_s": 80.8
+        },
+        {
+          "input": "repetitive.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 16293,
+          "deflate_core_ratio": 0.0019,
+          "deflate_core_mb_s": 617.8,
+          "miniz_l1_bytes": 76665,
+          "miniz_l1_ratio": 0.0091,
+          "miniz_l1_mb_s": 10784.0,
+          "miniz_l6_bytes": 16294,
+          "miniz_l6_ratio": 0.0019,
+          "miniz_l6_mb_s": 1665.0
+        },
+        {
+          "input": "text.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 3043353,
+          "deflate_core_ratio": 0.3628,
+          "deflate_core_mb_s": 37.4,
+          "miniz_l1_bytes": 4779962,
+          "miniz_l1_ratio": 0.5698,
+          "miniz_l1_mb_s": 237.4,
+          "miniz_l6_bytes": 3047954,
+          "miniz_l6_ratio": 0.3633,
+          "miniz_l6_mb_s": 111.2
+        },
+        {
+          "input": "zeros.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 8156,
+          "deflate_core_ratio": 0.001,
+          "deflate_core_mb_s": 647.4,
+          "miniz_l1_bytes": 38339,
+          "miniz_l1_ratio": 0.0046,
+          "miniz_l1_mb_s": 19208.7,
+          "miniz_l6_bytes": 8156,
+          "miniz_l6_ratio": 0.001,
+          "miniz_l6_mb_s": 1742.7
+        }
+      ],
+      "after": [
+        {
+          "input": "random.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 8389253,
+          "deflate_core_ratio": 1.0001,
+          "deflate_core_mb_s": 63.6,
+          "miniz_l1_bytes": 8396378,
+          "miniz_l1_ratio": 1.0009,
+          "miniz_l1_mb_s": 198.0,
+          "miniz_l6_bytes": 8389933,
+          "miniz_l6_ratio": 1.0002,
+          "miniz_l6_mb_s": 79.7
+        },
+        {
+          "input": "repetitive.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 16293,
+          "deflate_core_ratio": 0.0019,
+          "deflate_core_mb_s": 1474.1,
+          "miniz_l1_bytes": 76665,
+          "miniz_l1_ratio": 0.0091,
+          "miniz_l1_mb_s": 11235.4,
+          "miniz_l6_bytes": 16294,
+          "miniz_l6_ratio": 0.0019,
+          "miniz_l6_mb_s": 1670.1
+        },
+        {
+          "input": "text.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 3043353,
+          "deflate_core_ratio": 0.3628,
+          "deflate_core_mb_s": 53.7,
+          "miniz_l1_bytes": 4779962,
+          "miniz_l1_ratio": 0.5698,
+          "miniz_l1_mb_s": 236.4,
+          "miniz_l6_bytes": 3047954,
+          "miniz_l6_ratio": 0.3633,
+          "miniz_l6_mb_s": 110.9
+        },
+        {
+          "input": "zeros.raw",
+          "raw_bytes": 8388608,
+          "deflate_core_bytes": 8156,
+          "deflate_core_ratio": 0.001,
+          "deflate_core_mb_s": 1679.6,
+          "miniz_l1_bytes": 38339,
+          "miniz_l1_ratio": 0.0046,
+          "miniz_l1_mb_s": 19110.3,
+          "miniz_l6_bytes": 8156,
+          "miniz_l6_ratio": 0.001,
+          "miniz_l6_mb_s": 1739.4
+        }
+      ]
+    }
+  ],
+  "release_binary_size": {
+    "before_total_bytes": 540560,
+    "after_total_bytes": 540464,
+    "before_text_bytes": 298420,
+    "after_text_bytes": 299308
+  }
+}

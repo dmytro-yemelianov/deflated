@@ -587,48 +587,61 @@ theorem decodeSym_local {c : Code} {r q r' : BitReader} {s : Nat}
     decodeSym c q = .ok (s, ⟨q.bytes, q.pos + (r'.pos - r.pos)⟩) :=
   decodeGo_local c maxCodeLen 1 0 0 r q s r' h hag
 
-/-- The primary table has exactly `2 ^ tableBits = 512` entries. -/
-theorem buildTable_size (c : Code) : (buildTable c).size = 2 ^ tableBits := by
-  simp [buildTable]
+theorem buildTableAt_size (bits : Nat) (c : Code) :
+    (buildTableAt bits c).size = 2 ^ bits := by
+  simp [buildTableAt]
+
+/-- The primary table has exactly `2 ^ tableBits = 4096` entries. -/
+theorem buildTable_size (c : Code) : (buildTable c).size = 2 ^ tableBits :=
+  buildTableAt_size tableBits c
+
+theorem buildTableAt_getD (bits : Nat) (c : Code) {p : Nat} (hp : p < 2 ^ bits) :
+    (buildTableAt bits c).getD p none = tableEntryAt bits c p := by
+  simp [buildTableAt, Array.getD, hp]
 
 /-- Looking up an in-range pattern returns its entry, as defined. -/
 theorem buildTable_getD (c : Code) {p : Nat} (hp : p < 2 ^ tableBits) :
-    (buildTable c).getD p none = tableEntry c p := by
-  simp [buildTable, Array.getD, hp]
+    (buildTable c).getD p none = tableEntry c p :=
+  buildTableAt_getD tableBits c hp
 
-/-- **Table-driven decoding is the canonical decoding** (ADR 0005). On every
-    reader, the fast path returns exactly what `decodeSym` returns: the same
-    symbol and reader on success, the same error on failure. Every theorem
-    about `decodeSym` therefore holds of `decodeSymFast` too. -/
-theorem decodeSymFast_eq (c : Code) (r : BitReader) :
-    decodeSymFast c (buildTable c) r = decodeSym c r := by
-  unfold decodeSymFast
+/-- The table fast path equals canonical decoding for any width supported
+    by the two-byte pattern reader. Keeping the width symbolic also avoids
+    expanding the recursive reader during proof elaboration. -/
+theorem decodeSymFastAt_eq (bits : Nat) (hwidth : bits ≤ 16) (c : Code) (r : BitReader) :
+    decodeSymFastAt bits c (buildTableAt bits c) r = decodeSym c r := by
+  unfold decodeSymFastAt
   split
   · rfl
   · rename_i p r₂ hp
-    have hlt : p < 2 ^ tableBits := readBits_lt _ _ _ _ hp
-    rw [buildTable_getD c hlt]
-    unfold tableEntry
+    have hlt : p < 2 ^ bits := readBits_lt _ _ _ _ hp
+    rw [buildTableAt_getD bits c hlt]
+    unfold tableEntryAt
     rcases hdec : decodeSym c (patternReader p) with e | ⟨s, r''⟩
     · rfl
     · dsimp only
-      by_cases hl : r''.pos ≤ tableBits
+      by_cases hl : r''.pos ≤ bits
       · rw [if_pos hl]
         dsimp only
         have hag : Agree (patternReader p) r (r''.pos - (patternReader p).pos) := by
           intro i hi
-          have hi9 : i < tableBits := by
+          have hiTable : i < bits := by
             simp only [patternReader] at hi; dsimp only [BitPos] at *; omega
-          obtain ⟨hsz, hbit⟩ := readBits_bit _ _ _ _ hp i hi9
+          obtain ⟨hsz, hbit⟩ := readBits_bit _ _ _ _ hp i hiTable
           refine ⟨?_, hsz, ?_⟩
           · show 0 + i < 16
-            simp only [tableBits] at hi9; omega
+            omega
           · rw [hbit]
             show bitAt (patternReader p).bytes (0 + i) = _
-            rw [Nat.zero_add, patternReader_bit p i (by simp only [tableBits] at hi9; omega)]
+            rw [Nat.zero_add, patternReader_bit p i (by omega)]
         rw [decodeSym_local hdec hag]
         rfl
       · rw [if_neg hl]
+
+/-- **Table-driven decoding is canonical decoding** (ADR 0005), at Rust's
+    current width, with identical symbols, readers, and errors. -/
+theorem decodeSymFast_eq (c : Code) (r : BitReader) :
+    decodeSymFast c (buildTable c) r = decodeSym c r :=
+  decodeSymFastAt_eq tableBits (by decide) c r
 
 /-- The peek succeeds whenever `n` bits remain. With `readBits_eof` (fewer
     than `n` bits remain, so it fails), this pins the fast path's guard:
@@ -651,7 +664,7 @@ theorem readBits_some : ∀ (n : Nat) (r : BitReader), r.pos + n ≤ r.size →
     reserved for "fall back". -/
 theorem tableEntry_some {c : Code} {p s l : Nat} (h : tableEntry c p = some (s, l)) :
     0 < l ∧ l ≤ tableBits ∧ s < c.lengths.size := by
-  unfold tableEntry at h
+  unfold tableEntry tableEntryAt at h
   split at h
   · rename_i s' r' hdec
     split at h
@@ -662,16 +675,56 @@ theorem tableEntry_some {c : Code} {p s l : Nat} (h : tableEntry c p = some (s, 
     · contradiction
   · contradiction
 
-/-- Every 9-bit pattern resolves in the fixed literal/length table: its codes
-    are 7 to 9 bits long and complete, so the fast path never falls back on a
-    fixed block while 9 bits remain. Checked by kernel evaluation. -/
+private theorem tableEntry_total_of_short_patterns (c : Code) (n : Nat)
+    (hn : n ≤ tableBits) (hwidth : tableBits ≤ 16)
+    (ht : ∀ p, p < 2 ^ n → (tableEntryAt n c p).isSome = true) :
+    ∀ p, p < 2 ^ tableBits → (tableEntry c p).isSome = true := by
+  intro p _
+  have hs := ht (p % 2 ^ n) (Nat.mod_lt _ (Nat.two_pow_pos n))
+  unfold tableEntryAt at hs
+  cases he : decodeSym c (patternReader (p % 2 ^ n)) with
+  | error e => simp [he] at hs
+  | ok pair =>
+    obtain ⟨s, r'⟩ := pair
+    simp only [he] at hs
+    have hshort : r'.pos ≤ n := by
+      by_cases hle : r'.pos ≤ n
+      · exact hle
+      · simp [hle] at hs
+    dsimp only [BitPos] at *
+    have hag : Agree (patternReader (p % 2 ^ n)) (patternReader p)
+        (r'.pos - (patternReader (p % 2 ^ n)).pos) := by
+      intro i hi
+      have hin : i < n := by simp only [patternReader] at hi; omega
+      have hi16 : i < 16 := by omega
+      refine ⟨?_, ?_, ?_⟩
+      · rw [patternReader_size]
+        simpa [patternReader, BitPos] using hi16
+      · rw [patternReader_size]
+        simpa [patternReader, BitPos] using hi16
+      · simp only [patternReader, BitPos, Nat.zero_add]
+        change bitAt (patternReader (p % 2 ^ n)).bytes i = bitAt (patternReader p).bytes i
+        rw [patternReader_bit (p % 2 ^ n) i hi16, patternReader_bit p i hi16,
+          Nat.testBit_mod_two_pow]
+        simp [hin]
+    have hd := decodeSym_local he hag
+    have hl : r'.pos ≤ tableBits := by dsimp only [BitPos]; omega
+    unfold tableEntry tableEntryAt
+    rw [hd]
+    simp only [patternReader, BitPos, Nat.zero_add, Nat.sub_zero, if_pos hl]
+    rfl
+
+/-- Every 12-bit pattern resolves in the fixed literal/length table. Check
+    only the low 9 bits by kernel evaluation, then lift by locality. -/
 theorem fixedLitLen_table_total :
     ∀ p, p < 2 ^ tableBits → (tableEntry fixedLitLen p).isSome = true := by
+  apply tableEntry_total_of_short_patterns fixedLitLen 9 (by decide) (by decide)
   decide +kernel
 
 /-- Likewise every pattern resolves in the fixed (5-bit) distance table. -/
 theorem fixedDist_table_total :
     ∀ p, p < 2 ^ tableBits → (tableEntry fixedDist p).isSome = true := by
+  apply tableEntry_total_of_short_patterns fixedDist 5 (by decide) (by decide)
   decide +kernel
 
 /-! ### P6 — LZ77 copies -/
@@ -1431,6 +1484,33 @@ theorem accept_spec {x : Array UInt8} {i len dist : Nat}
     List.mem_range, beq_iff_eq] at h
   obtain ⟨⟨⟨⟨⟨⟨h1, h2⟩, h3⟩, h4⟩, h5⟩, h6⟩, h7⟩ := h
   exact ⟨h1, h2, h3, h4, h5, h6, h7⟩
+
+/-- A legal match has legal prefixes of at least three bytes. -/
+theorem accept_prefix {x : Array UInt8} {i len dist shortLen : Nat}
+    (h : accept x i len dist = true) (hmin : 3 ≤ shortLen) (hle : shortLen ≤ len) :
+    accept x i shortLen dist = true := by
+  obtain ⟨_, hmax, hdmin, hdmax, hdi, hend, hbytes⟩ := accept_spec h
+  simp only [accept, Bool.and_eq_true, decide_eq_true_eq, List.all_eq_true,
+    List.mem_range, beq_iff_eq]
+  exact ⟨⟨⟨⟨⟨⟨hmin, by omega⟩, hdmin⟩, hdmax⟩, hdi⟩, by omega⟩,
+    fun k hk => hbytes k (by omega)⟩
+
+/-- Lazy matching needs only a threshold prefix, rather than the longest
+    next match: equal length wins at a closer distance, otherwise one extra
+    byte is required. Rust `better_next` checks exactly this prefix. -/
+theorem better_match_iff_threshold {x : Array UInt8} {i len dist nextDist : Nat}
+    (hmin : 3 ≤ len) :
+    (∃ nextLen, accept x i nextLen nextDist = true ∧
+      (len < nextLen ∨ (len = nextLen ∧ nextDist < dist))) ↔
+    accept x i (if nextDist < dist then len else len + 1) nextDist = true := by
+  constructor
+  · rintro ⟨nextLen, hacc, hbetter⟩
+    apply accept_prefix hacc
+    · split <;> omega
+    · split <;> omega
+  · intro hacc
+    refine ⟨_, hacc, ?_⟩
+    split <;> omega
 
 /-- A copy whose source bytes agree with `x` extends a prefix of `x`. -/
 theorem copyGo_extract (x : Array UInt8) (dist : Nat) (hd : 1 ≤ dist) :

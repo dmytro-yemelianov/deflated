@@ -47,11 +47,25 @@ def profile(prof):
     return "\n".join(out).rstrip()
 
 
+def matcher(data):
+    rows = [
+        "| Input | Before MB/s | After MB/s | Speedup | Bytes identical |",
+        "| --- | ---: | ---: | ---: | --- |",
+    ]
+    for r in data["results"]:
+        rows.append(
+            f"| `{r['input']}` | {r['before_mb_s']} | {r['after_mb_s']} "
+            f"| {r['speedup']}× | {'yes' if r['byte_identical'] else 'no'} |"
+        )
+    return "\n".join(rows)
+
+
 def main():
     tables = {
         "throughput": throughput(json.load(open("scripts/reports/perf.json"))),
         "compression": compression(json.load(open("scripts/reports/compress.json"))),
         "profile": profile(json.load(open("scripts/reports/profile.json"))),
+        "matcher": matcher(json.load(open("scripts/reports/matcher.json"))),
     }
     doc = open(DOC).read()
     for name, body in tables.items():

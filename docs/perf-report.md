@@ -19,7 +19,9 @@ This is the baseline the next optimization is judged against (spec §16).
 | v1, commit `bcc7d19` | As shipped: no optimization (plan, "Gaps found and accepted") |
 | commit `99bbd9d` | Candidates 1 (`copy_back` in chunks) and 2 (`read_bits` from one byte window) applied |
 | commit `496e31a` | Also candidate 3: table-driven Huffman decode (ADR 0005) |
-| Current | Also candidate 4: stored blocks reserve room for the rest of the input |
+| Stored capacity | Also candidate 4: stored blocks reserve room for the rest of the input |
+| Lazy matching | Look ahead one position; widen the Huffman table to twelve bits |
+| Current | Threshold lookahead, candidate rejection, portable word comparison, and batched hash insertion |
 
 `git show <commit>:scripts/reports/perf.json` has each earlier baseline.
 Candidates 1 and 2 brought match-heavy inputs to roughly miniz_oxide's speed
@@ -63,16 +65,16 @@ decompressed output (8388608 bytes for every input).
 <!-- perf:throughput -->
 | Input | Compressed bytes | deflate-core MB/s | miniz_oxide MB/s | Slowdown |
 | --- | ---: | ---: | ---: | ---: |
-| `random.stored.deflate` | 8389258 | 70764.9 | 31885.8 | 0.45× |
-| `repetitive.dyn.deflate` | 16280 | 4395.8 | 1980.6 | 0.45× |
-| `repetitive.fixed.deflate` | 60974 | 4850.9 | 1984.7 | 0.41× |
-| `repetitive.stored.deflate` | 8389258 | 49514.6 | 32864.3 | 0.66× |
-| `text.dyn.deflate` | 3050677 | 230.7 | 306.1 | 1.33× |
-| `text.fixed.deflate` | 3854367 | 234.1 | 275.7 | 1.18× |
-| `text.stored.deflate` | 8389258 | 62582.4 | 34580.2 | 0.55× |
-| `zeros.dyn.deflate` | 8144 | 3630.3 | 4905.6 | 1.35× |
-| `zeros.fixed.deflate` | 52840 | 4330.7 | 5244.4 | 1.21× |
-| `zeros.stored.deflate` | 8389258 | 59829.3 | 28719.9 | 0.48× |
+| `random.stored.deflate` | 8389258 | 28122.2 | 37042.5 | 1.32× |
+| `repetitive.dyn.deflate` | 16280 | 8425.1 | 3118.2 | 0.37× |
+| `repetitive.fixed.deflate` | 60974 | 8765.5 | 3188.0 | 0.36× |
+| `repetitive.stored.deflate` | 8389258 | 67019.3 | 37729.8 | 0.56× |
+| `text.dyn.deflate` | 3050677 | 376.1 | 493.8 | 1.31× |
+| `text.fixed.deflate` | 3854367 | 379.3 | 490.6 | 1.29× |
+| `text.stored.deflate` | 8389258 | 59599.3 | 35153.9 | 0.59× |
+| `zeros.dyn.deflate` | 8144 | 8626.6 | 7933.4 | 0.92× |
+| `zeros.fixed.deflate` | 52840 | 6660.9 | 9348.8 | 1.4× |
+| `zeros.stored.deflate` | 8389258 | 61737.7 | 36380.0 | 0.59× |
 <!-- /perf:throughput -->
 
 Back-to-back runs on the same machine moved the slowdown by up to about 5% on
@@ -82,7 +84,7 @@ than that as noise.
 
 ## Compression
 
-Raw data: `scripts/reports/compress.json`. `deflate_core::deflate` (a greedy
+Raw data: `scripts/reports/compress.json`. `deflate_core::deflate` (a lazy
 hash-chain matcher, then blocks of a fixed token count (ADR 0007), each dynamic-Huffman,
 fixed-Huffman or the whole stream stored, whichever is smallest; M7b) against `miniz_oxide` levels 1 and 6, on the `.raw`
 payloads from the same corpus. Ratio is compressed size over input size, so
@@ -94,50 +96,50 @@ before it is timed.
 <!-- perf:compression -->
 | Input | Ratio ours | Ratio level 1 | Ratio level 6 | MB/s ours | MB/s level 1 | MB/s level 6 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| `random.raw` | 1.0001 | 1.0009 | 1.0002 | 36.1 | 197.1 | 44.0 |
-| `repetitive.raw` | 0.0019 | 0.0091 | 0.0019 | 490.4 | 6478.5 | 947.3 |
-| `text.raw` | 0.3705 | 0.5698 | 0.3633 | 38.4 | 147.6 | 69.4 |
-| `zeros.raw` | 0.001 | 0.0046 | 0.001 | 499.7 | 12224.6 | 945.6 |
+| `random.raw` | 1.0001 | 1.0009 | 1.0002 | 62.7 | 411.7 | 80.8 |
+| `repetitive.raw` | 0.0019 | 0.0091 | 0.0019 | 1465.2 | 10986.4 | 1637.0 |
+| `text.raw` | 0.3628 | 0.5698 | 0.3633 | 53.7 | 237.4 | 110.9 |
+| `zeros.raw` | 0.001 | 0.0046 | 0.001 | 1677.0 | 19192.3 | 1732.0 |
 <!-- /perf:compression -->
 
-What the table says, and no more:
+What the table says:
 
-- **Text.** Our ratio is far better than level 1 and about 2% worse than
-  level 6 (0.3705 against 0.3633), which is within what lazy matching would
-  recover and is the next candidate. M7a's fixed-only encoder, whose figures
-  are in git history at commit 63c9901, was between the two levels; the
-  dynamic block is what moved it. We are slower than both levels; the
-  encoder has no lazy matching and no early exit.
-- **Random bytes.** The output is stored blocks, so the ratio is the stored
-  framing overhead and is slightly better than miniz_oxide's. The time
-  is the matcher failing to find anything.
-- **Zeros and the 9-byte pattern.** Dynamic codes let a run of 258-byte
-  matches cost a fraction of a bit each, and both ratios now equal level 6 to
-  the four digits shown (0.0019 and 0.001), where fixed codes could not
-  reach them. The matcher is far slower than miniz_oxide's run-length fast
-  paths, so speed on these is the worst gap.
-- **Speed against M7a, and what the first M7b recording got wrong.** The
-  first M7b recording put text well under half of M7a's speed and blamed
-  machine load. That was wrong. Measured back to back against M7a
-  (alternating runs of both binaries on the same corpus), the slowdown was
-  real, about 40% on text. The cause was per-token work repeated per block:
-  `emit_blocks` walked each block's tokens five times (frequency counting
-  in `lengths_for`, the used-symbol set, `fixed_bits`, `dynamic_bits`, then
-  the emit), and every walk mapped each match to its length and distance
-  symbols by a linear scan of the 29- and 30-entry base tables. Building
-  the Huffman codes, which is per block and linear in the alphabet, was
-  not the cost. The fix counts frequencies once per block, derives the used
-  set and both bit sizes from the counts (the sum of frequency times code
-  length, plus extra bits per symbol), and maps lengths and distances to
-  symbols through precomputed tables in constant time. Each block's tokens
-  are now walked once to analyse and once to emit, and the output bytes are
-  unchanged (`emit_blocks_equiv_tests.rs` compares them with the old code).
-  Measured back to back again, the encoder now matches M7a's speed on text
-  while keeping the dynamic blocks' ratio.
-- **Noise and load.** Absolute MB/s here move by tens of percent with
-  machine load, and this table was recorded under load, so compare MB/s
-  only between runs made back to back, and otherwise compare the ratios.
-  The verified claim is that the encoder round-trips, not that it is fast.
+- **Text.** Lazy matching produces a slightly smaller stream than level 6
+  on this synthetic corpus, while level 6 still compresses faster.
+- **Random bytes.** Output uses stored blocks; most work is unsuccessful
+  match search followed by a discarded Huffman encoding.
+- **Zeros and repeating bytes.** Ratios match level 6 at the displayed
+  precision. Hash-table insertion now limits speed after eliminating
+  redundant lookahead and comparing long runs in word chunks.
+- **Noise and load.** Compare optimizations in alternating runs of the
+  old and new binaries. Absolute throughput changes with machine load.
+
+The current matcher preserves the old token stream. `better_next` tests
+only the prefix needed to beat the current match, using
+`better_match_iff_threshold` and `accept_prefix` in Lean. Older candidates
+that disagree at the first byte beyond the best match are skipped; longer
+comparisons use portable little-endian word loads and a byte tail. Reference
+tests cover token equality, overlaps, window wrap, and comparison boundaries.
+Long insertion runs iterate over bounded three-byte windows; short advances
+keep the scalar path to avoid setup overhead on text. A separate reference
+test compares every hash head, chain link, and insertion cursor across short
+inputs and window boundaries. The finder remains checked by `accept` before
+any match is emitted.
+
+Matched measurements against the pre-optimization binary are in
+`scripts/reports/matcher.json`: three alternating pairs, best of five per
+input, then the median throughput per binary. The comparison keeps our own
+build, test, and fuzz processes idle during timing. A separate encoder check compares complete
+output bytes, and both timed binaries check round trips before timing.
+
+<!-- perf:matcher -->
+| Input | Before MB/s | After MB/s | Speedup | Bytes identical |
+| --- | ---: | ---: | ---: | --- |
+| `random.raw` | 59.9 | 63.5 | 1.06× | yes |
+| `repetitive.raw` | 617.8 | 1465.2 | 2.37× | yes |
+| `text.raw` | 37.5 | 53.6 | 1.43× | yes |
+| `zeros.raw` | 649.1 | 1679.6 | 2.59× | yes |
+<!-- /perf:matcher -->
 
 The Lean side proves `decode (compress find input) = input` for every finder,
 every `lengthsFor` and every input (`decode_compress`); this table measures
@@ -147,67 +149,154 @@ unproved and is checked per block (ADR 0007).
 ## Where the time goes
 
 <!-- perf:profile -->
-`text.dyn.deflate` (3365 samples)
+`text.dyn.deflate` (4021 samples)
 
 | Function | Inclusive % |
 | --- | ---: |
-| `block::decode_huff_block` | 43.2 |
-| `lz77::copy_back` | 30.0 |
-| `bitstream::peek_bits` | 19.0 |
-| `huffman::decode_fast` | 15.5 |
-| `bitstream::read_bits` | 10.1 |
-| `lz77::read_distance` | 8.4 |
-| `lz77::read_length` | 4.7 |
-| `bitstream::skip_bits` | 1.9 |
-| `lz77::{closure#0}` | 1.8 |
-| perf (outside deflate-core) | 25.3 |
-| libsystem_platform.dylib | 0.8 |
+| `block::decode_huff_block` | 37.7 |
+| `lz77::copy_back` | 25.7 |
+| `huffman::decode_fast` | 12.9 |
+| `bitstream::peek_bits` | 12.4 |
+| `bitstream::read_bits` | 6.8 |
+| `lz77::read_length` | 5.3 |
+| `lz77::read_distance` | 3.5 |
+| `bitstream::skip_bits` | 2.7 |
+| `huffman::from_lengths` | 0.7 |
+| `bitstream::{closure#0}` | 0.7 |
+| `huffman::build_fast` | 0.5 |
+| perf (outside deflate-core) | 34.7 |
+| libsystem_platform.dylib | 0.7 |
 
-`zeros.fixed.deflate` (3964 samples)
+`zeros.fixed.deflate` (3996 samples)
 
 | Function | Inclusive % |
 | --- | ---: |
 | `lz77::copy_back` | 19.4 |
-| `block::decode_huff_block` | 11.4 |
-| `bitstream::peek_bits` | 6.1 |
-| `huffman::decode_fast` | 5.8 |
-| `bitstream::read_bits` | 3.4 |
-| `lz77::read_length` | 2.4 |
-| `lz77::read_distance` | 2.0 |
-| `bitstream::skip_bits` | 0.8 |
-| libsystem_platform.dylib | 59.2 |
-| libsystem_kernel.dylib | 5.6 |
-| perf (outside deflate-core) | 4.0 |
+| `block::decode_huff_block` | 10.7 |
+| `bitstream::peek_bits` | 5.7 |
+| `huffman::decode_fast` | 5.6 |
+| `bitstream::read_bits` | 2.7 |
+| `lz77::read_length` | 2.1 |
+| `lz77::read_distance` | 1.4 |
+| `bitstream::skip_bits` | 1.0 |
+| libsystem_platform.dylib | 60.6 |
+| libsystem_kernel.dylib | 5.7 |
+| perf (outside deflate-core) | 3.0 |
 
-`repetitive.dyn.deflate` (3997 samples)
-
-| Function | Inclusive % |
-| --- | ---: |
-| `lz77::copy_back` | 15.8 |
-| `block::decode_huff_block` | 13.7 |
-| `bitstream::peek_bits` | 7.2 |
-| `huffman::decode_fast` | 6.7 |
-| `bitstream::read_bits` | 3.7 |
-| `lz77::read_length` | 2.7 |
-| `lz77::read_distance` | 2.3 |
-| `bitstream::skip_bits` | 0.9 |
-| libsystem_platform.dylib | 59.1 |
-| libsystem_kernel.dylib | 8.6 |
-| perf (outside deflate-core) | 2.4 |
-
-`text.stored.deflate` (4000 samples)
+`repetitive.dyn.deflate` (3991 samples)
 
 | Function | Inclusive % |
 | --- | ---: |
-| libsystem_platform.dylib | 99.3 |
+| `lz77::copy_back` | 17.0 |
+| `block::decode_huff_block` | 13.4 |
+| `bitstream::peek_bits` | 7.3 |
+| `huffman::decode_fast` | 6.4 |
+| `bitstream::read_bits` | 3.8 |
+| `lz77::read_length` | 2.5 |
+| `lz77::read_distance` | 2.1 |
+| `bitstream::skip_bits` | 0.5 |
+| libsystem_platform.dylib | 61.0 |
+| libsystem_kernel.dylib | 5.5 |
+| perf (outside deflate-core) | 2.5 |
+
+`text.stored.deflate` (3973 samples)
+
+| Function | Inclusive % |
+| --- | ---: |
+| libsystem_platform.dylib | 99.1 |
+
+`text.raw` (3896 samples)
+
+| Function | Inclusive % |
+| --- | ---: |
+| `matcher::next` | 78.7 |
+| `matcher::find_best` | 41.2 |
+| `matcher::better_next` | 24.4 |
+| `encode_dynamic::emit_dynamic_block` | 10.6 |
+| `matcher::common` | 9.5 |
+| `bitwriter::write_code` | 6.1 |
+| `matcher::accept` | 5.4 |
+| `matcher::{closure#0}` | 5.2 |
+| `matcher::insert_up_to` | 4.6 |
+| `bitwriter::write_bits` | 3.8 |
+| `matcher::insert` | 3.3 |
+| `encode_dynamic::emit_block` | 1.5 |
+| `encode_dynamic::from_tokens` | 1.4 |
+| `matcher::hash_at` | 1.3 |
+| `encode_dynamic::emit_blocks_iter` | 1.1 |
+| `matcher::{closure#2}` | 0.7 |
+| `encode_fixed::dist_sym` | 0.7 |
+| `encode_fixed::dist_slot` | 0.5 |
+| libsystem_platform.dylib | 4.9 |
+| perf (outside deflate-core) | 2.1 |
+
+`random.raw` (4209 samples)
+
+| Function | Inclusive % |
+| --- | ---: |
+| `matcher::next` | 68.7 |
+| `matcher::find_best` | 56.7 |
+| `encode_dynamic::emit_dynamic_block` | 15.7 |
+| `bitwriter::write_code` | 11.5 |
+| `matcher::insert_up_to` | 6.9 |
+| `encode_dynamic::emit_blocks_iter` | 5.2 |
+| `bitwriter::write_bits` | 4.7 |
+| `matcher::common` | 3.7 |
+| `encode_dynamic::emit_block` | 3.7 |
+| `encode_dynamic::from_tokens` | 3.7 |
+| `matcher::insert` | 3.2 |
+| `huffman::from_lengths` | 1.9 |
+| `huffman::build_fast` | 1.5 |
+| `matcher::hash_at` | 1.0 |
+| `encode_dynamic::len_at` | 0.7 |
+| `huffman_build::build_lengths` | 0.5 |
+| `huffman_build::canonical_codes` | 0.5 |
+| perf (outside deflate-core) | 1.5 |
+| libsystem_malloc.dylib | 0.7 |
+| libsystem_platform.dylib | 0.6 |
+
+`zeros.raw` (4009 samples)
+
+| Function | Inclusive % |
+| --- | ---: |
+| `matcher::next` | 92.7 |
+| `matcher::insert_up_to` | 56.6 |
+| `matcher::find_best` | 7.5 |
+| `matcher::common` | 6.1 |
+| `encode_dynamic::emit_dynamic_block` | 2.3 |
+| `matcher::hash` | 2.1 |
+| `encode_dynamic::from_tokens` | 1.4 |
+| `encode_dynamic::emit_block` | 1.4 |
+| `bitwriter::write_code` | 1.1 |
+| `bitwriter::write_bits` | 0.8 |
+| `matcher::accept` | 0.6 |
+| `matcher::{closure#2}` | 0.6 |
+| `encode_fixed::dist_sym` | 0.6 |
+| `encode_dynamic::emit_blocks_iter` | 0.5 |
+| libsystem_platform.dylib | 2.7 |
+
+`repetitive.raw` (3995 samples)
+
+| Function | Inclusive % |
+| --- | ---: |
+| `matcher::next` | 94.2 |
+| `matcher::insert_up_to` | 55.9 |
+| `matcher::find_best` | 10.4 |
+| `matcher::common` | 8.8 |
+| `encode_dynamic::emit_dynamic_block` | 1.8 |
+| `matcher::better_next` | 1.3 |
+| `bitwriter::write_bits` | 0.8 |
+| `bitwriter::write_code` | 0.7 |
+| `matcher::accept` | 0.5 |
+| libsystem_platform.dylib | 2.8 |
 <!-- /perf:profile -->
 
 ## Findings
 
-1. **Text is no longer dominated by one function.** With the 9-bit table,
+1. **Text is no longer dominated by one function.** With the twelve-bit table,
    `huffman::decode_fast` and the `peek_bits` it relies on are a minority of
    text decode time, spread alongside `copy_back` and extra-bit reads. Codes
-   longer than 9 bits barely reach the canonical walk. About a third of
+   longer than twelve bits barely reach the canonical walk. About a third of
    samples land on inlined code that `atos` does not attribute to a core
    source line, so the split among core functions is approximate.
 2. **Match-heavy streams now spend most of their time in `memmove`.**
@@ -217,9 +306,13 @@ unproved and is checked per block (ADR 0007).
 3. **Stored blocks are now bound by copying the bytes.** The first stored
    block reserves room for the rest of the input, capped by the limit, so the
    output no longer grows by doubling and copying.
-4. **Building tables costs nothing measurable.** `from_lengths` and
-   `read_dynamic_tables` do not appear in any profile above, even for dynamic
-   streams; `profile_attrib.py` drops shares under half a percent.
+4. **Building tables is a small cost on these large inputs.** `from_lengths` and
+   `read_dynamic_tables` occupy little decoder time;
+   `profile_attrib.py` drops shares under half a percent. Tiny blocks may
+   make table construction more significant.
+
+The same sampling command now profiles encoding the raw payloads as well.
+Encoder shares use the same inclusive accounting and should not be summed.
 
 ## Candidates
 
@@ -233,6 +326,7 @@ then the test and differential suites, then a new run of this report and of
 | 2 | `read_bits`: one little-endian window of up to 5 bytes, shifted and masked | Done | None: same LSB-first value, same all-or-nothing EOF check (P1); `read_bits_matches_bit_by_bit_reference_everywhere` pins it |
 | 3 | Table-driven Huffman decode with a peeked bit window and the canonical walk as the fallback for long codes | Done | Changes the decode algorithm. ADR on table-driven Huffman decoding; Lean `decodeSymFast_eq` proves table lookup equals the canonical decode on every reader. Costs binary size |
 | 4 | Reserve output capacity for stored blocks, bounded by the limit | Done | None, but must keep the bomb rule: never reserve past `limit` |
+| 5 | Lazy threshold search, candidate pruning, word comparisons, and batched insertion | Done | Lean proves the threshold predicate; reference tests preserve Rust tokens and hash tables, and the arbitrary-finder round-trip theorem still applies |
 
 ## What is not in this report
 

@@ -156,3 +156,15 @@ fn fixed_tables_are_actually_built() {
     assert_eq!(fixed_litlen().decode(&mut r).unwrap(), 256);
     assert_eq!(r.bit_pos(), 7);
 }
+#[test]
+fn primary_table_width_matches_lean_model() {
+    // A passing proof for another width does not cover Rust's fast path.
+    let model = include_str!("../../../spec/Deflate/HuffmanTable.lean");
+    let width = model
+        .lines()
+        .find_map(|line| line.strip_prefix("def tableBits : Nat := "))
+        .expect("Lean tableBits definition")
+        .parse::<u32>()
+        .expect("literal Lean table width");
+    assert_eq!(deflate_core::huffman::TABLE_BITS, width);
+}

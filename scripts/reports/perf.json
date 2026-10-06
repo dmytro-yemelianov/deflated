@@ -7,15 +7,15 @@
   "reference": "miniz_oxide v0.8.9",
   "reps": 15,
   "results": [
-    {"input": "random.stored.deflate", "compressed_bytes": 8389258, "decompressed_bytes": 8388608, "deflate_core_ns": 118542, "miniz_oxide_ns": 263083, "deflate_core_mb_s": 70764.9, "miniz_oxide_mb_s": 31885.8, "slowdown": 0.45},
-    {"input": "repetitive.dyn.deflate", "compressed_bytes": 16280, "decompressed_bytes": 8388608, "deflate_core_ns": 1908333, "miniz_oxide_ns": 4235375, "deflate_core_mb_s": 4395.8, "miniz_oxide_mb_s": 1980.6, "slowdown": 0.45},
-    {"input": "repetitive.fixed.deflate", "compressed_bytes": 60974, "decompressed_bytes": 8388608, "deflate_core_ns": 1729291, "miniz_oxide_ns": 4226667, "deflate_core_mb_s": 4850.9, "miniz_oxide_mb_s": 1984.7, "slowdown": 0.41},
-    {"input": "repetitive.stored.deflate", "compressed_bytes": 8389258, "decompressed_bytes": 8388608, "deflate_core_ns": 169417, "miniz_oxide_ns": 255250, "deflate_core_mb_s": 49514.6, "miniz_oxide_mb_s": 32864.3, "slowdown": 0.66},
-    {"input": "text.dyn.deflate", "compressed_bytes": 3050677, "decompressed_bytes": 8388608, "deflate_core_ns": 36363250, "miniz_oxide_ns": 27400541, "deflate_core_mb_s": 230.7, "miniz_oxide_mb_s": 306.1, "slowdown": 1.33},
-    {"input": "text.fixed.deflate", "compressed_bytes": 3854367, "decompressed_bytes": 8388608, "deflate_core_ns": 35838709, "miniz_oxide_ns": 30430500, "deflate_core_mb_s": 234.1, "miniz_oxide_mb_s": 275.7, "slowdown": 1.18},
-    {"input": "text.stored.deflate", "compressed_bytes": 8389258, "decompressed_bytes": 8388608, "deflate_core_ns": 134041, "miniz_oxide_ns": 242584, "deflate_core_mb_s": 62582.4, "miniz_oxide_mb_s": 34580.2, "slowdown": 0.55},
-    {"input": "zeros.dyn.deflate", "compressed_bytes": 8144, "decompressed_bytes": 8388608, "deflate_core_ns": 2310709, "miniz_oxide_ns": 1710000, "deflate_core_mb_s": 3630.3, "miniz_oxide_mb_s": 4905.6, "slowdown": 1.35},
-    {"input": "zeros.fixed.deflate", "compressed_bytes": 52840, "decompressed_bytes": 8388608, "deflate_core_ns": 1937000, "miniz_oxide_ns": 1599542, "deflate_core_mb_s": 4330.7, "miniz_oxide_mb_s": 5244.4, "slowdown": 1.21},
-    {"input": "zeros.stored.deflate", "compressed_bytes": 8389258, "decompressed_bytes": 8388608, "deflate_core_ns": 140209, "miniz_oxide_ns": 292083, "deflate_core_mb_s": 59829.3, "miniz_oxide_mb_s": 28719.9, "slowdown": 0.48}
+    {"input": "random.stored.deflate", "compressed_bytes": 8389258, "decompressed_bytes": 8388608, "deflate_core_ns": 298291, "miniz_oxide_ns": 226459, "deflate_core_mb_s": 28122.2, "miniz_oxide_mb_s": 37042.5, "slowdown": 1.32},
+    {"input": "repetitive.dyn.deflate", "compressed_bytes": 16280, "decompressed_bytes": 8388608, "deflate_core_ns": 995667, "miniz_oxide_ns": 2690167, "deflate_core_mb_s": 8425.1, "miniz_oxide_mb_s": 3118.2, "slowdown": 0.37},
+    {"input": "repetitive.fixed.deflate", "compressed_bytes": 60974, "decompressed_bytes": 8388608, "deflate_core_ns": 957000, "miniz_oxide_ns": 2631291, "deflate_core_mb_s": 8765.5, "miniz_oxide_mb_s": 3188.0, "slowdown": 0.36},
+    {"input": "repetitive.stored.deflate", "compressed_bytes": 8389258, "decompressed_bytes": 8388608, "deflate_core_ns": 125167, "miniz_oxide_ns": 222334, "deflate_core_mb_s": 67019.3, "miniz_oxide_mb_s": 37729.8, "slowdown": 0.56},
+    {"input": "text.dyn.deflate", "compressed_bytes": 3050677, "decompressed_bytes": 8388608, "deflate_core_ns": 22302458, "miniz_oxide_ns": 16987209, "deflate_core_mb_s": 376.1, "miniz_oxide_mb_s": 493.8, "slowdown": 1.31},
+    {"input": "text.fixed.deflate", "compressed_bytes": 3854367, "decompressed_bytes": 8388608, "deflate_core_ns": 22116416, "miniz_oxide_ns": 17096958, "deflate_core_mb_s": 379.3, "miniz_oxide_mb_s": 490.6, "slowdown": 1.29},
+    {"input": "text.stored.deflate", "compressed_bytes": 8389258, "decompressed_bytes": 8388608, "deflate_core_ns": 140750, "miniz_oxide_ns": 238625, "deflate_core_mb_s": 59599.3, "miniz_oxide_mb_s": 35153.9, "slowdown": 0.59},
+    {"input": "zeros.dyn.deflate", "compressed_bytes": 8144, "decompressed_bytes": 8388608, "deflate_core_ns": 972416, "miniz_oxide_ns": 1057375, "deflate_core_mb_s": 8626.6, "miniz_oxide_mb_s": 7933.4, "slowdown": 0.92},
+    {"input": "zeros.fixed.deflate", "compressed_bytes": 52840, "decompressed_bytes": 8388608, "deflate_core_ns": 1259375, "miniz_oxide_ns": 897292, "deflate_core_mb_s": 6660.9, "miniz_oxide_mb_s": 9348.8, "slowdown": 1.40},
+    {"input": "zeros.stored.deflate", "compressed_bytes": 8389258, "decompressed_bytes": 8388608, "deflate_core_ns": 135875, "miniz_oxide_ns": 230583, "deflate_core_mb_s": 61737.7, "miniz_oxide_mb_s": 36380.0, "slowdown": 0.59}
   ]
 }
