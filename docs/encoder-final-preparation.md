@@ -63,3 +63,33 @@ and commit `d977bb5`: 542336 →542304 bytes (-32), passing the +64 KiB guard.
 Policy payloads are separately 72/99/96 bytes and remain research-worker
 inputs. This size result covers the portable core optimization and default
 CLI; a future release CLI exposing new presets must be measured separately.
+
+The final driver uses an explicit `prepare`/`measure` boundary. Preparation
+builds and hashes all four candidate/original workers, copies all three
+policies, archives the exact committed source and snapshots raw inputs;
+it performs no held encoding or selector-feature calculation. Measurement
+refuses a previously started directory, checks the complete freeze before
+running, rotates case/method/pair order, and preserves every observation and
+failure. Ten 20 ms paired sessions use fresh processes for first-call data.
+Original controls keep their native paired Balanced timers; new role
+profiles are paired against original Balanced or Best as declared.
+
+Supplementary default-core verification compiles the same small harness on
+archived original source and current source, both without `research-tuning`.
+It must preserve all packets, have primary warm/first-call speed lower 95%
+bounds above 1, and satisfy the unchanged decode/tiny/RSS/portable-size caps.
+This tests a semantics-preserving optimization; it does not replace the
+main role's 1.5× speed target. Any rejected default improvement remains a
+negative result. Role/profile qualification remains governed by the original
+contract and same-guard frontier comparison.
+
+Shared tiny stress uses random and periodic bytes at sizes
+0/1/2/3/4/15/31/64/255/257/258/259/1024/4096, deduplicated by raw hash.
+It is latency and boundary evidence, not an independent workload holdout.
+Separate RSS uses three processes per method/baseline on the two largest
+held real cases, largest synthetic case, a drift case and the known collision
+outlier (deduplicated if a selection coincides). The actual Lean/Rust CLI
+check replays every new profile/default packet on all frozen cases after
+timing. Source and binary changes abort the study instead of silently mixing
+revisions; final statistics retain primary real, synthetic, regression,
+family and per-file results separately.

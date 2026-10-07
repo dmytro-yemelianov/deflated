@@ -78,6 +78,8 @@ research-check:
 	@python3 scripts/test_search_final_artifacts.py
 
 research-final-check:
+	@cargo build --locked -p deflate-core --example default_bench --release
+	@python3 scripts/test_encoder_final.py --binary target/release/examples/default_bench
 	@cargo test --locked -p deflate-core --example final_bench --features research-tuning
 	@cargo build --locked -p deflate-core --example final_bench --features research-tuning --release
 	@python3 scripts/test_search_final.py --binary target/release/examples/final_bench
