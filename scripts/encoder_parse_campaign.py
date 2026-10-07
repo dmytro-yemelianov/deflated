@@ -41,6 +41,8 @@ def sources():
         "crates/deflate-core/examples/support/bounded_parse.rs","crates/deflate-core/examples/support/policy.rs",
         "scripts/encoder_parse_campaign.py","scripts/encoder_measure.py","scripts/encoder_corpus.py",
         "scripts/encoder_baseline.py","scripts/search_corpus.py","scripts/search_poc.py","scripts/search_cost_oracle.py")]
+    adaptive=ROOT/"crates/deflate-core/examples/support/adaptive.rs"
+    if adaptive.exists():paths.append(adaptive)
     return {str(p.relative_to(ROOT)):sha(p) for p in paths}
 
 
@@ -104,9 +106,13 @@ def summary(rows, selected, names):
     return result
 
 
-def run(out,binary,real,synthetic,baseline,partition,rounds,minimum,names):
-    if rounds<1 or minimum<1 or not names or len(names)!=len(set(names)) or any(n not in methods() for n in names):
+def run(out,binary,real,synthetic,baseline,partition,rounds,minimum,names, *,
+        allowed_methods=None, inspector="--bounded-inspect", run_oracle=True, extra_sources=(), label="P3 bounded"):
+    allowed=methods() if allowed_methods is None else allowed_methods
+    if rounds<1 or minimum<1 or not names or len(names)!=len(set(names)) or any(n not in allowed for n in names):
         raise ValueError("invalid bounded-pilot protocol")
+    def source_hashes():
+        return {**sources(),**{str(Path(p).resolve().relative_to(ROOT)):sha(p) for p in extra_sources}}
     selected=cases(real,synthetic,partition)
     seal=check_baseline(baseline)
     compiler=subprocess.check_output(["rustc","--version"],text=True).strip()
@@ -116,14 +122,14 @@ def run(out,binary,real,synthetic,baseline,partition,rounds,minimum,names):
     if binary.name!="final_bench" or binary.parent.name!="examples" or binary.parent.parent.name!="release":
         raise ValueError("expected target-dir/release/examples/final_bench")
     out.mkdir(parents=True,exist_ok=False)
-    before=sources()
+    before=source_hashes()
     build=subprocess.run(["cargo","build","--locked","--release","-p","deflate-core","--example","final_bench",
                           "--features","research-tuning","--target-dir",str(binary.parents[2])],cwd=ROOT,text=True,capture_output=True)
     (out/"build.log").write_text(build.stdout+build.stderr)
-    if build.returncode!=0 or before!=sources():raise ValueError("build failed or sources changed during compilation")
-    frozen={"source_sha256":sources(),"binary_sha256":sha(binary),"baseline_sha256":sha(baseline/"baseline.json"),
+    if build.returncode!=0 or before!=source_hashes():raise ValueError("build failed or sources changed during compilation")
+    frozen={"source_sha256":source_hashes(),"binary_sha256":sha(binary),"baseline_sha256":sha(baseline/"baseline.json"),
             "real_manifest_sha256":sha(real/"manifest.json"),"synthetic_manifest_sha256":sha(synthetic/"manifest.json")}
-    protocol={"purpose":"P3 bounded training/validation pilot; no final-test encoding or final confidence",
+    protocol={"purpose":label+" training/validation pilot; no final-test encoding or final confidence",
               "partition":partition,"cases":selected,"methods":names,"rounds":rounds,"minimum_ms":minimum,"frozen":frozen,
               "build":{"rustc":compiler,"flags":overrides,"log_sha256":sha(out/"build.log")},
               "paired_original":"original Best; its separately timed original Balanced is the speed headline baseline"}
@@ -132,8 +138,10 @@ def run(out,binary,real,synthetic,baseline,partition,rounds,minimum,names):
     current=None
     begun=time.perf_counter()
     try:
-        print("short fixed-code diagnostics",flush=True)
-        oracle=oracle_checks(binary,out,names)
+        oracle=None
+        if run_oracle:
+            print("short fixed-code diagnostics",flush=True)
+            oracle=oracle_checks(binary,out,names)
         # Inspection is separate from timing. Include header/extra bits and
         # estimation errors on representative real, drift and outlier cases.
         diagnostics=[]
@@ -142,10 +150,10 @@ def run(out,binary,real,synthetic,baseline,partition,rounds,minimum,names):
             raw=Path(case["raw_path"]).read_bytes()
             for name in names:
                 current={"phase":"diagnostic","input":case["raw_path"],"method":name}
-                data=json.loads(subprocess.check_output([str(binary),"--bounded-inspect",case["raw_path"],str(out/"diagnostic-streams"),name],text=True,timeout=120))
+                data=json.loads(subprocess.check_output([str(binary),inspector,case["raw_path"],str(out/"diagnostic-streams"),name],text=True,timeout=120))
                 packet=(out/"diagnostic-streams/candidate.deflate").read_bytes()
                 decode_exact(packet,raw)
-                if data["attempted_stream_bits"]!=data["actual_payload_bits"]+data["header_and_eob_bits"]:
+                if "attempted_stream_bits" in data and data["attempted_stream_bits"]!=data["actual_payload_bits"]+data["header_and_eob_bits"]:
                     raise ValueError("rebuilt Huffman/header accounting differs from emitted bits")
                 diagnostics.append({**current,"stats":data,"packet_sha256":hashlib.sha256(packet).hexdigest()})
         write_json(out/"diagnostics.json",diagnostics)
@@ -188,7 +196,7 @@ def run(out,binary,real,synthetic,baseline,partition,rounds,minimum,names):
                         row={**current,"candidate":observed[0],"original":observed[1]}
                         rows.append(row)
                         log.write(json.dumps(row,allow_nan=False)+"\n");log.flush()
-        if sources()!=frozen["source_sha256"] or sha(binary)!=frozen["binary_sha256"] or check_baseline(baseline)!=seal or sha(real/"manifest.json")!=frozen["real_manifest_sha256"] or sha(synthetic/"manifest.json")!=frozen["synthetic_manifest_sha256"]:
+        if source_hashes()!=frozen["source_sha256"] or sha(binary)!=frozen["binary_sha256"] or check_baseline(baseline)!=seal or sha(real/"manifest.json")!=frozen["real_manifest_sha256"] or sha(synthetic/"manifest.json")!=frozen["synthetic_manifest_sha256"]:
             raise ValueError("frozen parser protocol/source/corpus changed")
         result={"protocol":protocol,"oracle":oracle,"diagnostics_sha256":sha(out/"diagnostics.json"),"rows":len(rows),"control_rows":len(controls),"controls_ledger_sha256":sha(out/"controls.jsonl"),
                 "metrics":summary(rows,selected,names),"raw_ledger_sha256":sha(out/"measurements.jsonl"),"elapsed_seconds":time.perf_counter()-begun,

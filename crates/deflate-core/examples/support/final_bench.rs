@@ -2,6 +2,8 @@
 use deflate_core::research::{Config, Index};
 use std::hint::black_box;
 use std::time::{Duration, Instant};
+#[path = "adaptive.rs"]
+mod adaptive;
 #[path = "bounded_parse.rs"]
 mod bounded_parse;
 #[path = "policy.rs"]
@@ -13,11 +15,15 @@ pub(crate) enum BaseMethod {
     Configured(Config),
     Reference(u8),
     Bounded(bounded_parse::Settings),
+    Adaptive(adaptive::Settings),
 }
 
 impl BaseMethod {
     fn parse(text: &str) -> Result<Self, String> {
         use deflate_core::CompressionLevel;
+        if text.starts_with("adaptive:") {
+            return adaptive::Settings::parse(text).map(Self::Adaptive);
+        }
         if text.starts_with("bounded:") {
             return bounded_parse::Settings::parse(text).map(Self::Bounded);
         }
@@ -64,6 +70,7 @@ impl BaseMethod {
             Self::Configured(config) => deflate_core::research::deflate(raw, config),
             Self::Reference(level) => miniz_oxide::deflate::compress_to_vec(raw, level),
             Self::Bounded(settings) => bounded_parse::encode::<false>(raw, settings).packet,
+            Self::Adaptive(settings) => adaptive::encode(raw, settings),
         }
     }
 }
@@ -125,6 +132,34 @@ pub fn memory(method: &str, input: &str, output: &str) -> Result<(), String> {
 
 pub fn run() -> Result<(), String> {
     let args: Vec<_> = std::env::args().skip(1).collect();
+    if args.first().is_some_and(|a| a == "--adaptive-inspect") {
+        if args.len() != 4 {
+            return Err("final_bench --adaptive-inspect INPUT OUT METHOD".into());
+        }
+        let raw = std::fs::read(&args[1]).map_err(|e| e.to_string())?;
+        let settings = adaptive::Settings::parse(&args[3])?;
+        let hint = adaptive::hint(&raw, settings.samples);
+        let regional = deflate_core::research::deflate_adaptive(&raw, settings.regional);
+        let baseline = deflate_core::deflate(&raw);
+        let packet = adaptive::encode(&raw, settings);
+        for data in [&regional, &baseline, &packet] {
+            assert_eq!(deflate_core::inflate(data).unwrap(), raw);
+            assert_eq!(miniz_oxide::inflate::decompress_to_vec(data).unwrap(), raw);
+        }
+        write_packets(&args[2], &packet, Some(&baseline))?;
+        println!(
+            "{{\"raw_bytes\":{},\"packed_bytes\":{},\"baseline_bytes\":{},\"regional_bytes\":{},\"samples\":{},\"sample_repeats\":{},\"stored_prediction\":{},\"exact_cap_percent\":{}}}",
+            raw.len(),
+            packet.len(),
+            baseline.len(),
+            regional.len(),
+            hint.samples,
+            hint.repeats,
+            hint.stored,
+            settings.exact_cap_percent
+        );
+        return Ok(());
+    }
     if args.first().is_some_and(|a| a == "--bounded-inspect") {
         if args.len() != 4 {
             return Err("final_bench --bounded-inspect INPUT OUT METHOD".into());

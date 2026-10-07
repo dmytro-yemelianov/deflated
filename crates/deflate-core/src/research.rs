@@ -90,11 +90,143 @@ pub fn deflate(input: &[u8], config: Config) -> Vec<u8> {
     crate::compress::configured(input, config)
 }
 
+/// Bounded regional effort. After `light` visits, a match of at least
+/// `stop_length` bytes ends the search; ambiguous positions retain the full
+/// base probe budget. Lazy lookahead is restricted to matches <= its limit.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct AdaptiveConfig {
+    base: Config,
+    light: usize,
+    stop_length: usize,
+    lazy_limit: usize,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum AdaptiveError {
+    LightProbes,
+    StopLength,
+    LazyLimit,
+}
+
+impl AdaptiveConfig {
+    pub fn new(
+        base: Config,
+        light: usize,
+        stop_length: usize,
+        lazy_limit: usize,
+    ) -> Result<Self, AdaptiveError> {
+        if light == 0 || light > base.probes() {
+            return Err(AdaptiveError::LightProbes);
+        }
+        if !(3..=258).contains(&stop_length) {
+            return Err(AdaptiveError::StopLength);
+        }
+        if lazy_limit > 258 {
+            return Err(AdaptiveError::LazyLimit);
+        }
+        Ok(Self {
+            base,
+            light,
+            stop_length,
+            lazy_limit,
+        })
+    }
+    pub fn base(self) -> Config {
+        self.base
+    }
+    pub fn light(self) -> usize {
+        self.light
+    }
+    pub fn stop_length(self) -> usize {
+        self.stop_length
+    }
+    pub fn lazy_limit(self) -> usize {
+        self.lazy_limit
+    }
+}
+
+pub fn deflate_adaptive(input: &[u8], config: AdaptiveConfig) -> Vec<u8> {
+    crate::compress::adaptive(input, config)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::tokens::Token;
     use alloc::vec;
+
+    #[test]
+    fn adaptive_bounds_and_full_effort_equivalence() {
+        let base = Config::new(128, true, 0, Index::Trigram, 16384).unwrap();
+        assert_eq!(
+            AdaptiveConfig::new(base, 0, 8, 16),
+            Err(AdaptiveError::LightProbes)
+        );
+        assert_eq!(
+            AdaptiveConfig::new(base, 129, 8, 16),
+            Err(AdaptiveError::LightProbes)
+        );
+        assert_eq!(
+            AdaptiveConfig::new(base, 4, 2, 16),
+            Err(AdaptiveError::StopLength)
+        );
+        assert_eq!(
+            AdaptiveConfig::new(base, 4, 259, 16),
+            Err(AdaptiveError::StopLength)
+        );
+        assert_eq!(
+            AdaptiveConfig::new(base, 4, 8, 259),
+            Err(AdaptiveError::LazyLimit)
+        );
+        let mut word = 43_u32;
+        let input: Vec<u8> = (0..3 * 32768 + 259)
+            .map(|i| {
+                word = word.wrapping_mul(1664525).wrapping_add(1013904223);
+                if i % 8192 < 4096 {
+                    (word >> 24) as u8
+                } else {
+                    b"abcabd"[i % 6]
+                }
+            })
+            .collect();
+        for index in [Index::Dual, Index::Trigram] {
+            let base = Config::new(128, true, 0, index, 16384).unwrap();
+            let full = AdaptiveConfig::new(base, 128, 258, 258).unwrap();
+            assert_eq!(deflate_adaptive(&input, full), deflate(&input, base));
+            for light in [4, 16] {
+                for stop in [4, 8, 16] {
+                    let config = AdaptiveConfig::new(base, light, stop, 16).unwrap();
+                    let tokens: Vec<_> =
+                        crate::matcher::tokens_with_adaptive(&input, config).collect();
+                    assert_eq!(crate::tokens::expand(&tokens).unwrap(), input);
+                    let mut pos = 0;
+                    for token in tokens {
+                        match token {
+                            Token::Literal(byte) => {
+                                assert_eq!(input[pos], byte);
+                                pos += 1;
+                            }
+                            Token::Match { len, dist } => {
+                                assert!(crate::matcher::accept(
+                                    &input,
+                                    pos,
+                                    len as usize,
+                                    dist as usize
+                                ));
+                                pos += len as usize;
+                            }
+                        }
+                    }
+                    let packet = deflate_adaptive(&input, config);
+                    assert_eq!(crate::inflate(&packet).unwrap(), input);
+                    assert_eq!(
+                        miniz_oxide::inflate::decompress_to_vec(&packet).unwrap(),
+                        input
+                    );
+                }
+            }
+        }
+    }
 
     #[test]
     fn rejects_unbounded_and_unsupported_settings() {

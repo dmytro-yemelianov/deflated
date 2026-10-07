@@ -2,10 +2,11 @@
 
 Status: active. P0 corpus/control contract and P1 profiling are implemented;
 P2 isolated speed pilots and P3 bounded-cost investigation are complete;
-P4–P6 remain pending.
+P4 regional/predictor work is underway; P5–P6 remain pending.
 Evidence: [refreshed encoder profiles](encoder-profile-report.md).
 Initial implementation evidence: [isolated speed spikes](encoder-speed-spikes.md).
 Bounded parser prototype: [P3 investigation](encoder-bounded-parser.md).
+Adaptive prototype: [P4 investigation](encoder-adaptive-investigation.md).
 Baseline: `14f15e63e1a8955c5cfebf869ce065f29dd950fc` (completed S0–S9).
 
 ## Objective

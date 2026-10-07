@@ -102,6 +102,27 @@ pub(crate) fn configured(input: &[u8], config: crate::research::Config) -> Vec<u
     )
 }
 
+#[cfg(feature = "research-tuning")]
+pub(crate) fn adaptive(input: &[u8], config: crate::research::AdaptiveConfig) -> Vec<u8> {
+    fn split<const N: usize>(_: &[Token]) -> Option<usize> {
+        Some(N)
+    }
+    let split_for: SplitFor = match config.base().block_tokens() {
+        256 => split::<256>,
+        1024 => split::<1024>,
+        4096 => split::<4096>,
+        16384 => split::<16384>,
+        _ => unreachable!("validated research configuration"),
+    };
+    choose_stored(
+        input,
+        emit_blocks_iter(
+            crate::matcher::tokens_with_adaptive(input, config),
+            split_for,
+        ),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

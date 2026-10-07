@@ -38,6 +38,14 @@ trait SearchPolicy: Copy {
     fn probes(self, three_only: bool) -> usize;
     fn lazy(self) -> bool;
     fn insertion_tail(self) -> Option<usize>;
+    #[cfg(feature = "research-tuning")]
+    fn enough(self, _visits: usize, _length: usize) -> bool {
+        false
+    }
+    #[cfg(feature = "research-tuning")]
+    fn lazy_at(self, _length: usize) -> bool {
+        true
+    }
 }
 
 impl SearchPolicy for CompressionLevel {
@@ -66,6 +74,25 @@ impl SearchPolicy for crate::research::Config {
 
     fn insertion_tail(self) -> Option<usize> {
         (self.insert_tail() != 0).then_some(self.insert_tail())
+    }
+}
+
+#[cfg(feature = "research-tuning")]
+impl SearchPolicy for crate::research::AdaptiveConfig {
+    fn probes(self, _three_only: bool) -> usize {
+        self.base().probes()
+    }
+    fn lazy(self) -> bool {
+        self.base().lazy()
+    }
+    fn insertion_tail(self) -> Option<usize> {
+        (self.base().insert_tail() != 0).then_some(self.base().insert_tail())
+    }
+    fn enough(self, visits: usize, length: usize) -> bool {
+        visits >= self.light() && length >= self.stop_length()
+    }
+    fn lazy_at(self, length: usize) -> bool {
+        length <= self.lazy_limit()
     }
 }
 
@@ -292,6 +319,30 @@ impl<'a> Matcher<'a, crate::research::Config> {
     }
 }
 
+#[cfg(feature = "research-tuning")]
+impl<'a> Matcher<'a, crate::research::AdaptiveConfig> {
+    fn adaptive(input: &'a [u8], config: crate::research::AdaptiveConfig) -> Self {
+        let three_only = config.base().index() == crate::research::Index::Trigram;
+        Self {
+            input,
+            i: 0,
+            next_ins: 0,
+            short: Chain::new(),
+            long: if three_only {
+                Chain {
+                    head: Vec::new(),
+                    prev: Vec::new(),
+                }
+            } else {
+                Chain::new()
+            },
+            level: config,
+            three_only,
+            pending: None,
+        }
+    }
+}
+
 impl<P: SearchPolicy> Matcher<'_, P> {
     #[cfg(test)]
     fn insert(&mut self, p: usize) {
@@ -401,7 +452,11 @@ impl<P: SearchPolicy> Matcher<'_, P> {
         let mut best = None;
         if self.three_only {
             let h = hash(bytes[0], bytes[1], bytes[2]);
-            for c in self.short.candidates(i, h, self.level.probes(true)) {
+            for (_probe, c) in self
+                .short
+                .candidates(i, h, self.level.probes(true))
+                .enumerate()
+            {
                 if best.is_none_or(|(len, _)| self.input[c + len] == bytes[len]) {
                     let len = self.common(c, i, limit);
                     if len >= MIN_MATCH && best.is_none_or(|(bl, _)| len > bl) {
@@ -411,13 +466,21 @@ impl<P: SearchPolicy> Matcher<'_, P> {
                         }
                     }
                 }
+                #[cfg(feature = "research-tuning")]
+                if self
+                    .level
+                    .enough(_probe + 1, best.map_or(0, |(len, _)| len))
+                {
+                    break;
+                }
             }
             return best.filter(|&(len, dist)| accept(self.input, i, len, dist));
         }
         if limit >= 4 {
-            for c in self
+            for (_probe, c) in self
                 .long
                 .candidates(i, hash4(bytes), self.level.probes(false))
+                .enumerate()
             {
                 if best.is_none_or(|(len, _)| self.input[c + len] == bytes[len]) {
                     let len = self.common(c, i, limit);
@@ -427,6 +490,13 @@ impl<P: SearchPolicy> Matcher<'_, P> {
                             break;
                         }
                     }
+                }
+                #[cfg(feature = "research-tuning")]
+                if self
+                    .level
+                    .enough(_probe + 1, best.map_or(0, |(len, _)| len))
+                {
+                    break;
                 }
             }
         }
@@ -557,7 +627,10 @@ impl<P: SearchPolicy> Iterator for Matcher<'_, P> {
 
         // Lazy matching: check if next position has a better match
         if let Some((len, dist)) = current {
-            if self.level.lazy() && self.better_next(len, dist) {
+            let lazy = self.level.lazy();
+            #[cfg(feature = "research-tuning")]
+            let lazy = lazy && self.level.lazy_at(len);
+            if lazy && self.better_next(len, dist) {
                 // Emit literal instead, advance by 1
                 self.i = i.saturating_add(1);
                 self.pending = None;
@@ -599,6 +672,14 @@ pub(crate) fn tokens_with_config(
     config: crate::research::Config,
 ) -> impl Iterator<Item = Token> + '_ {
     Matcher::configured(input, config)
+}
+
+#[cfg(feature = "research-tuning")]
+pub(crate) fn tokens_with_adaptive(
+    input: &[u8],
+    config: crate::research::AdaptiveConfig,
+) -> impl Iterator<Item = Token> + '_ {
+    Matcher::adaptive(input, config)
 }
 
 #[cfg(test)]
