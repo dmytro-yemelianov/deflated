@@ -60,3 +60,52 @@ class NSGAProposer:
                 "trials": [{"number": t.number, "params": t.params, "values": t.values,
                             "state": t.state.name, "config_id": t.user_attrs.get("config_id")}
                            for t in self.study.trials]}
+
+
+class TPEProposer(NSGAProposer):
+    """Mixed ordinal/categorical, conditional multivariate MOTPE baseline."""
+    def __init__(self, seed):
+        import optuna
+        if optuna.__version__ != '4.5.0':
+            raise ValueError('use pinned optuna==4.5.0')
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        self.optuna = optuna
+        self.study = optuna.create_study(directions=['minimize', 'minimize'],
+            sampler=optuna.samplers.TPESampler(seed=seed, n_startup_trials=12,
+                n_ei_candidates=64, multivariate=True, group=True))
+        self.cached, self.pending, self.feedback_seconds = 0, None, 0.0
+
+    @staticmethod
+    def decode_params(params):
+        return {'probes': 1 << params['probe_exponent'], 'lazy': params['lazy'],
+                'insert_tail': 0 if params['full_insertion'] else 1 << params['tail_exponent'],
+                'index': params['index'], 'block_tokens': params['block_tokens']}
+
+    def ask(self, trials):
+        previous = {t['id']: t for t in trials}
+        for _ in range(10000):
+            trial = self.study.ask()
+            params = {'probe_exponent': trial.suggest_int('probe_exponent', 0, 10),
+                      'lazy': trial.suggest_categorical('lazy', AXES['lazy']),
+                      'full_insertion': trial.suggest_categorical('full_insertion', [False, True]),
+                      'index': trial.suggest_categorical('index', AXES['index']),
+                      'block_tokens': trial.suggest_categorical('block_tokens', AXES['block_tokens'])}
+            if not params['full_insertion']:
+                params['tail_exponent'] = trial.suggest_int('tail_exponent', 2, 5)
+            config = self.decode_params(params)
+            key = identity(config)
+            trial.set_user_attr('config_id', key)
+            if key in previous:
+                self.study.tell(trial, self.values(previous[key]))
+                self.cached += 1
+                continue
+            self.pending = trial
+            return config
+        raise ValueError('TPE duplicate proposal limit reached')
+
+    def evidence(self):
+        result = super().evidence()
+        result.pop('population_size')
+        result.update(sampler='multivariate group-decomposed MOTPE', startup_trials=12, ei_candidates=64,
+                      representation='log2 integer probes; categorical lazy/index/splits; categorical full insertion with inactive numeric log2 tail')
+        return result

@@ -249,9 +249,9 @@ def run_study(args):
     trials = [measure(config, "train", training) for config in CONTROLS]
     optimizer_started = time.perf_counter()
     optimizer = None
-    if args.strategy == "nsga2":
-        from search_optimizer import NSGAProposer
-        optimizer = NSGAProposer(args.seed)
+    if args.strategy in ("nsga2", "tpe"):
+        from search_optimizer import NSGAProposer, TPEProposer
+        optimizer = (NSGAProposer if args.strategy == "nsga2" else TPEProposer)(args.seed)
     optimizer_setup_seconds = time.perf_counter() - optimizer_started
     proposal_seconds = 0.0
     rng = random.Random(args.seed)
@@ -269,6 +269,7 @@ def run_study(args):
         if optimizer:
             optimizer.tell(result)
         seen.add(result["id"])
+        result['search_elapsed_seconds'] = time.perf_counter() - optimizer_started
         trials.append(result)
     roles = select_finalists(trials, args.size_tolerance)
     frozen = {"criteria": {"speed": "minimum ratio of summed median ns to paired Balanced, excluding stored",
@@ -298,7 +299,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--corpus", type=pathlib.Path, default=ROOT / "target/search/corpus-smoke")
     parser.add_argument("--out", type=pathlib.Path)
-    parser.add_argument("--strategy", choices=["random", "pareto-mutation", "nsga2", "fixed"], default="random")
+    parser.add_argument("--strategy", choices=["random", "pareto-mutation", "nsga2", "tpe", "fixed"], default="random")
     parser.add_argument("--training-only", action="store_true")
     parser.add_argument("--fixed-configs", type=pathlib.Path)
     parser.add_argument("--seed", type=int, default=195108)

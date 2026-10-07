@@ -6,7 +6,8 @@ context-policy spike with nested grouped validation. Production presets
 and the Lean model are unchanged.
 The adapter exposes five bounded axes behind `research-tuning`. A trained
 feature/latent surrogate spike is complete with negative replacement and
-fitting-parity findings; verified Bayesian optimization remains outstanding. See
+fitting-parity findings. The mixed-variable Bayesian comparison adds observed
+wall-time frontiers and a whole-loop GPU accounting bound. See
 [the CPU search report](cpu-search-report.md) for the initial implementation
 and [the campaign report](cpu-search-campaign-report.md) for mixed workloads,
 full-file regression checks and process RSS.
@@ -15,6 +16,8 @@ selection costs and [the completion audit](autotuning-completion-audit.md)
 for remaining deliverables.
 The trained ensembles and CPU/Metal measurements are in
 [the surrogate report](trained-surrogate-report.md).
+The fresh three-seed optimizer runs are in
+[the Bayesian report](bayesian-search-report.md).
 
 The aim is to discover useful speed/size/memory tradeoffs and then decide
 whether adaptive selection and GPU-assisted optimization are worth their

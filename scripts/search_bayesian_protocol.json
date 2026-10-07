@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "study": "S3 mixed-variable MOTPE versus random and NSGA-II; matched wall-time evidence",
+  "seeds": [195108, 195109, 195110],
+  "strategies": ["random", "nsga2", "tpe"],
+  "configured_trials": 32,
+  "training_rounds": 5,
+  "training_minimum_batch_ms": 5,
+  "trial_timeout_seconds": 600,
+  "hypervolume_reference": [4.0, 1.5],
+  "hypervolume_anchor": [1.0, 1.0],
+  "hypervolume_policy": "Configured trials only plus fixed anchor; exclude presets, stored and references",
+  "wall_time_scope": "After common four controls: optimizer setup, ask/cache/feedback, native encoding, three-decoder validation, corpus/source guards and ledger I/O",
+  "wall_time_checkpoints_seconds": [30, 60, 90],
+  "common_horizon": "Minimum observed configured-search completion time across all nine studies; do not extrapolate stopped runs",
+  "time_to_hypervolume": [1.75, 1.8],
+  "order": "Rotate strategy order by seed; serialize every native measurement",
+  "tpe": {"startup_trials": 12, "ei_candidates": 64, "multivariate": true, "group": true},
+  "gpu_decision": "Retain CPU fallback: latent model failed prediction/calibration and fit-parity gates; bound end-to-end upside from actual optimizer setup/ask/feedback time",
+  "promotion": "none; freeze finalists before S9, no reserved-test encoding"
+}

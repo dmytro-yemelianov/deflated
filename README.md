@@ -57,6 +57,8 @@ The context-policy experiment, including negative adaptation findings, is in
 is tracked in [the completion audit](docs/autotuning-completion-audit.md).
 The trained feature/latent ensembles and CPU/Metal crossover are compared in
 [docs/trained-surrogate-report.md](docs/trained-surrogate-report.md).
+The mixed-variable Bayesian comparison and observed wall-time frontiers are
+in [docs/bayesian-search-report.md](docs/bayesian-search-report.md).
 
 The CLI supports raw streams (`-c`, `-d`) and gzip (`-zc`, `-zd`).
 `--stored` selects stored blocks for either compression mode; `--limit N`
