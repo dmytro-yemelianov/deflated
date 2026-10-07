@@ -124,7 +124,9 @@ def prepare(out, real, synthetic, baseline):
     synthetic_cases=sorted([c for c in records if c["scope"]=="new-synthetic-test"],key=lambda c:(-c["bytes"],c["path"]))
     drift=next(c for c in synthetic_cases if c["family"]=="drift")
     collision=next(c for c in records if c["scope"]=="old-regression" and c["family"]=="collision_trigram")
-    memory=list(dict.fromkeys(c["path"] for c in [*real_cases[:2],synthetic_cases[0],drift,collision]))
+    memory_real={}
+    for c in real_cases:memory_real.setdefault(c["class"],c)
+    memory=list(dict.fromkeys(c["path"] for c in [*memory_real.values(),synthetic_cases[0],drift,collision]))
     shutil.copy2(ROOT/"scripts/reports/encoder-p5-portable-size.json",out/"portable-size.json")
     size=json.loads((out/"portable-size.json").read_text())
     for name,path,expected in (("portable_vdeflate",ROOT/"target/encoder-performance/p5-portable-cli/release/vdeflate",size["candidate"]["binary_sha256"]),

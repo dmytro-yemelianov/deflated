@@ -86,10 +86,16 @@ contract and same-guard frontier comparison.
 Shared tiny stress uses random and periodic bytes at sizes
 0/1/2/3/4/15/31/64/255/257/258/259/1024/4096, deduplicated by raw hash.
 It is latency and boundary evidence, not an independent workload holdout.
-Separate RSS uses three processes per method/baseline on the two largest
-held real cases, largest synthetic case, a drift case and the known collision
+Separate RSS uses three processes per method/baseline on the largest held
+real case in each class, largest synthetic case, a drift case and the known collision
 outlier (deduplicated if a selection coincides). The actual Lean/Rust CLI
 check replays every new profile/default packet on all frozen cases after
 timing. Source and binary changes abort the study instead of silently mixing
 revisions; final statistics retain primary real, synthetic, regression,
 family and per-file results separately.
+
+Preparation `p5-final-v1` remained unencoded. Before starting the held study,
+RSS selection was expanded from two real cases to one per real class so the
+memory gate covers all six acquisition classes. The authoritative final
+freeze is `p5-final-v2`; the earlier preparation is retained, not restarted
+as a partially observed measurement.
