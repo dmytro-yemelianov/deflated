@@ -54,6 +54,7 @@ jobs:
           python3 scripts/test_new_methods_synthetic.py
           python3 scripts/test_new_methods_data_artifacts.py
           python3 scripts/test_new_methods_b_screen.py
+          python3 scripts/new_methods_b_publish.py --check
           python3 scripts/new_methods_reference_lock.py --check
           python3 scripts/new_methods_decoder_lock.py --check
           make research-check

@@ -4,6 +4,14 @@ A raw DEFLATE (RFC 1951) decoder and compressing encoder with gzip and minimal
 single-entry ZIP framing in Rust, with zero
 runtime dependencies, beside an executable Lean 4 model of the same semantics.
 
+**Status: maintenance mode (2026-10-07).** Active compression research is closed
+by the maintainer's decision. Keep the existing implementation, correctness
+checks and published evidence; there is no active performance roadmap.
+See the [handover](docs/handover.md) for maintenance commands and unresolved
+limits, and the [closure report](docs/new-methods-report.md) for the last study.
+The DSC1 family was rejected on training; the proposed new matcher was not
+implemented. Neither result establishes superiority over established codecs.
+
 - `crates/deflate-core/` — the decoder and encoder. `no_std`, no runtime
   dependencies, `#![forbid(unsafe_code)]`.
 - `spec/Deflate/` — the Lean 4 model and kernel-checked proofs, with headline
@@ -11,7 +19,8 @@ runtime dependencies, beside an executable Lean 4 model of the same semantics.
   with no `sorry`, no `admit` and no `native_decide`.
 - `oracles/` — a differential harness running `deflate-core`, the Lean model,
   and `zlib` over the same corpus, with optional `lean-zip` advisories.
-- `fuzz/` — five persistent `cargo-fuzz` targets: `inflate`, `dynamic_header`, `differential`, `roundtrip`, `dynamic_lengths`.
+- `fuzz/` — five core `cargo-fuzz` targets and two experimental DSC1 targets;
+  see the [target descriptions](fuzz/README.md).
 
 **What is proved, and what is not.** The theorems are statements about the
 Lean model, not about the Rust binary. Nothing is extracted from or to Rust.
@@ -33,28 +42,27 @@ checked policy, alongside initial gzip and ZIP framing proofs.
     make size     # reproducible binary-size measurement
     make perf     # decode and compress throughput against miniz_oxide
     make profile  # where decode and encode time go (macOS, needs samply)
-    make research-check # autotuning-tool integrity checks, no GPU dependency
-    make research-poc   # seeded synthetic corpus and finite tuning pilot
-    make research-search # bounded CPU parameter search and frozen validation
-    make research-defaults # compare feature-enabled presets with frozen bytes
-    make research-campaign # mixed workloads, three-seed search, reference/RSS checks
-    make research-policy-check # native feature parity and policy parser checks
-    make research-policy # nested grouped selection and charged native validation
+    make research-check # audit retained research tooling and artifacts
 
 Needs Rust 1.88 (edition 2024), elan with Lean v4.30.0, and Python 3.
 The optional optimizer campaign needs Python 3.12+ and a local research venv.
 
-The next tuning investigation covers multidimensional parameter search,
+## Retained research
+
+Research commands and reports are retained for reproduction. They do not
+schedule new searches; `research-poc`, `research-search`, `research-campaign`
+and `research-policy` explicitly run historical experiments when invoked.
+The closed tuning investigation covered multidimensional parameter search,
 GPU-assisted proposals, synthetic generators and verification gates. Its
-bounded spikes and runnable PoC are in
+bounded spikes and PoC are in
 [docs/autotuning-investigation.md](docs/autotuning-investigation.md).
 The validated parameter adapter, CPU search commands and first synthetic
 results are in [docs/cpu-search-report.md](docs/cpu-search-report.md).
 The larger mixed-workload experiment and full-file validation are in
 [docs/cpu-search-campaign-report.md](docs/cpu-search-campaign-report.md).
 The context-policy experiment, including negative adaptation findings, is in
-[docs/context-policy-report.md](docs/context-policy-report.md). Remaining work
-is tracked in [the completion audit](docs/autotuning-completion-audit.md).
+[docs/context-policy-report.md](docs/context-policy-report.md). Completed stages
+are recorded in [the completion audit](docs/autotuning-completion-audit.md).
 The trained feature/latent ensembles and CPU/Metal crossover are compared in
 [docs/trained-surrogate-report.md](docs/trained-surrogate-report.md).
 The mixed-variable Bayesian comparison and observed wall-time frontiers are

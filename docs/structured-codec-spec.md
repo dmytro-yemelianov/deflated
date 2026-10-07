@@ -1,6 +1,9 @@
 # B: DSC1 byte-exact structured codec specification
 
-Status: experimental prototype v1, not ZIP/DEFLATE framing and not a released
+Status: experimental prototype v1; its initial family was rejected after
+training and research closed on 2026-10-07. Full transform/frame proofs were
+not completed. See the [closure report](new-methods-report.md).
+This is not ZIP/DEFLATE framing and not a released
 format. [Plan](new-methods-plan.md), [protocol](../scripts/new_methods_protocol.json).
 Implement an independent reference and vectors before relying on Rust roundtrip.
 

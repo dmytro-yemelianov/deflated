@@ -1,10 +1,12 @@
 # G0 resident-input workers
 
-This is a tooling/correctness checkpoint on Apple M5/macOS, not a performance
-study. No study train/validation/holdout encoding has occurred. The complete
-`new-methods-reference-lock.json` is now frozen before screening. The active
+This records the tooling/correctness checkpoint on Apple M5/macOS, preceding
+the B training screen. Research was closed on 2026-10-07; see the
+[closure report](new-methods-report.md) for measurements and cancelled scope.
+The complete `new-methods-reference-lock.json` was frozen before screening. The historical
 [plan](new-methods-plan.md) and [protocol](../scripts/new_methods_protocol.json)
-retain their configuration, selection and final-session budgets.
+retain the preregistered configuration, selection and final-session budgets;
+unrun stages are not an active roadmap.
 
 ## Implemented controls
 

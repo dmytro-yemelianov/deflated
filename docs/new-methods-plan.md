@@ -1,13 +1,14 @@
 # New compression methods: bounded investigation plan
 
-Status: active goal, specifications frozen for the initial roster; baseline
-sealed and independent DSC1/Rust correctness prototype implemented. The seven
-mandatory native workers and three Rust workers pass independent framing and
-resident-input timer contracts. G0's nine-control reference lock is frozen;
-optional OpenZL qualification was excluded after its two bounded setup attempts.
-G1's 36 source groups, 99 synthetic/stress cases and historical regression index
-are acquired, frozen and audited; screening and proofs remain pending. No performance or
-research-novelty claim follows from this plan. Baseline:
+Status: closed by maintainer decision on 2026-10-07; project in maintenance
+mode. G0/G1 and the independent DSC1 prototype are complete. All 12 B settings
+failed the charged training screen; no sentinel was selected. A was cancelled
+before implementation. Remaining proof, validation, held/RSS and promotion
+work was cancelled, not passed. See the [closure report](new-methods-report.md)
+and [handover](handover.md) for final dispositions and retained evidence.
+The protocol and checklist below record the original scope; unchecked items
+are historical unfinished work, not an active backlog. No new performance or
+research-novelty claim follows from this campaign. Baseline:
 `b7d5e0fc79f4f72d2ba772312ec9a22497699ed5`.
 
 ## Objective and deliverables
@@ -22,10 +23,10 @@ Investigate two concrete prototypes:
 Deliver reproducible sources, pinned native controls, acquisition/generator
 manifests, independent test evidence, model proofs in their stated boundary,
 all accepted/rejected measurements and a final `new-methods-report.md`.
-Resolve all stages; completing a negative investigation does not establish
-the numerical targets. A new general-purpose entropy format, a long-distance
-universal codec and full GPU encoding are subsequent hypotheses, outside the
-initial two-prototype budget.
+The original objective was to resolve all stages; it was not fully achieved.
+The maintainer's closure supersedes that objective without claiming the
+numerical targets. General-purpose entropy formats, long-distance codecs and
+full GPU encoding were outside this budget and are not scheduled follow-ups.
 
 The [machine-readable protocol](../scripts/new_methods_protocol.json) fixes
 targets and budgets. G0 must fill a separate immutable reference lock with
@@ -89,7 +90,8 @@ track/split, 72 synthetic cases, six separate 8 MiB long cases and 21 shared
 tiny/boundary witnesses. The eighteen historical manifests retain 1,252 case
 records / 399 unique hashes; all fifty unique old real inputs pass comparison
 against the fresh real files. Byte deduplication is not a semantic independence
-proof. No study corpus has been encoded; held access remains restricted until G5.
+proof. B training and shared stress were subsequently encoded in the completed
+screen; validation/held codec screening and fitting did not occur before closure.
 
 ## G2 — Matcher screen
 
@@ -119,11 +121,12 @@ regional-budget and stored-predictor negatives remain controls/diagnostics.
   `forbid(unsafe_code)` and only the local `deflate-core` dependency. Keep
   reference libraries in benchmark/oracle tooling. Default DEFLATE APIs and
   wire format retain their contract; B is explicitly experimental.
-- [ ] Screen 12 B configurations: chunk log2 16/18 × dictionary mode off/keys/
+- [x] Screen 12 B configurations: chunk log2 16/18 × dictionary mode off/keys/
   all-quoted × numeric mode off/checked-delta. Always charge scanning, dictionary
   selection, all four substream encoders, byte reconstruction checking, CRC,
   exact raw/DEFLATE alternatives and final size selection. No free retry.
-- [ ] Select one B sentinel on training, confirm on three validation sessions.
+- [x] Resolve B selection on training: all 12 failed the point guards and no
+  sentinel was selected. Three-session validation was not warranted or run.
   Rebuilt whole-frame costs decide usefulness. An unsuccessful transform can
   finish as a documented negative; the format roundtrip does not imply a win.
 
@@ -195,25 +198,26 @@ published sizes. Report all preregistered scopes even when a primary target pass
 
 ## G6 — Integration and completion
 
-- [ ] Promote only qualified A paths with unchanged DEFLATE contracts. Keep
-  coverage tradeoffs explicit. Expose B only as a versioned opt-in experimental
-  codec when its model/frame, correspondence and measured role gates pass.
+- [x] Resolve promotion: no new path or format qualified; none promoted.
+  The original rule required unchanged DEFLATE contracts for qualified A paths,
+  explicit coverage tradeoffs, and B's model/frame, correspondence and measured
+  role gates before opt-in exposure. Those promotion gates were not reached.
 - [ ] Run format, default/all-feature Clippy and applicable Rust/research/model/
   axiom/differential/framing/fuzz suites. Require successful CI at the exact
   final revision, and remeasure any integrated hot-path change.
-- [ ] Publish all budgets, reference comparisons, regressions, failed novelty
+- [x] Publish completed budgets, reference comparisons, regressions, failed novelty
   hypotheses and proof gaps in `docs/new-methods-report.md`; retain compressed
   raw ledgers and build/source/corpus receipts with reproduction tooling.
-- [ ] Resolve the GPU decision with fresh accounting. Proposal/fitting work
+- [x] Resolve the GPU decision: B proposal/selection was 0.0148% of its loop;
+  no GPU work justified. A accounting was cancelled with A. Proposal/fitting work
   needs ≥5% of the measured loop or a demonstrated larger-batch whole-loop
   benefit to reopen scoring. A GPU encoder spike needs a separately measured
   GPU-suitable bottleneck and a bounded CPU/native baseline; no cloud spending.
 
-Goal completion requires all stages resolved, including honest early rejection
-paths. It does not require inventing a previously unknown compression principle
-or meeting every numerical target. Preserve unrelated `memory/`, `.DS_Store`
-and existing study artifacts. The first implementation checkpoint is G0
-baseline/reference sealing and G3 independent normative vectors.
+The original all-stage completion requirement was not met. Closure records
+both B's honest early rejection and the maintainer's cancellation of A and
+remaining gates; it is not a completed evaluation of every planned method.
+Unrelated `memory/`, `.DS_Store` and existing study artifacts are preserved.
 
 ## Initial implementation checkpoint
 
@@ -252,8 +256,8 @@ mandatory resident-input adapters, matched framing, charged state and independen
 contract checks. G0 is now resolved by the immutable
 `scripts/reports/new-methods-reference-lock.json`; OpenZL's bounded exclusion is
 part of that lock. G1 is resolved by the published data/audit/regression receipts.
-Next checkpoint: G2/G3 charged training screens. Promotion and G4–G6 completion
-have not occurred.
+B's subsequent charged training screen is published in the closure report.
+G2 and remaining G4–G5 work were cancelled. No further checkpoint is scheduled.
 
 ## G0 budget clarification, before study screening (2026-10-07)
 
@@ -264,7 +268,8 @@ worker, separate from dependency feasibility. This clarification is recorded
 before any train/validation/held codec measurement; it does not expand A/B's
 configuration, selection or final-session budgets.
 
-Five common C compiler checks have been used: fresh-state worker; correction
+At this historical checkpoint five common C compiler checks had been used:
+fresh-state worker; correction
 of native LZ4's independent one-block header and macOS clock resolution;
 implementation of the planned reusable-context track; reset-check argument
 guard; zero initialization accounting for unsupported one-shot reset APIs and
@@ -274,3 +279,8 @@ reusable timer contracts now pass. Brotli/LZMA2 remain fresh state with zero
 separate initialization reported. Later implementation recompilation after
 dependency feasibility is established is not a new dependency setup spike;
 preserve its own bounded build/fix ledger.
+
+The decoder-only supplement later consumed the sixth compiler check and second
+contract-fix round; its separate lock and ledger preserve that final budget
+accounting. These were completed before B screening. No additional native
+adapter development is planned after closure.

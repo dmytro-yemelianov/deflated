@@ -1,6 +1,9 @@
 # A: tagged/grouped matcher specification
 
-Status: research design v1, governed by [the plan](new-methods-plan.md) and
+Status: unimplemented research design v1; cancelled on 2026-10-07 when active
+R&D ended. No matcher equivalence or performance result follows from this
+specification. See the [closure report](new-methods-report.md).
+The historical design was governed by [the plan](new-methods-plan.md) and
 [protocol](../scripts/new_methods_protocol.json). No implementation speed claim.
 
 ## Domain, contracts and hypothesis

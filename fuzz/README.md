@@ -13,6 +13,14 @@ Persistent fuzz targets using `libfuzzer-sys` and `cargo-fuzz`.
    or a research configuration. Further bytes vary probe budget, lazy mode,
    insertion tail, index and checked block size within validated bounds.
 5. **`dynamic_lengths`**: `build_lengths` must return a Kraft-valid length set, nonzero exactly where the frequency is, for any frequency vector.
+6. **`structured_decode`**: Exercises the experimental DSC1 frame/operation decoder
+   with a 1 MiB output limit on arbitrary input bytes.
+7. **`structured_roundtrip`**: Requires byte-exact DSC1 encode/decode recovery
+   across the research settings, with bounded input length.
+
+DSC1 remains a rejected research prototype after the
+[campaign closure](../docs/new-methods-report.md). Its fuzz targets preserve
+finite regression evidence and do not establish formal verification or promotion.
 
 ## Running
 
@@ -22,6 +30,9 @@ cargo +nightly fuzz run dynamic_header -- -max_total_time=60 -rss_limit_mb=4096
 cargo +nightly fuzz run differential   -- -max_total_time=60 -rss_limit_mb=4096
 cargo +nightly fuzz run roundtrip      -- -max_total_time=60 -rss_limit_mb=4096
 cargo +nightly fuzz run dynamic_lengths -- -max_total_time=60 -rss_limit_mb=4096
+python3 scripts/structured_fuzz_seeds.py
+cargo +nightly fuzz run structured_decode -- -max_total_time=60 -rss_limit_mb=4096
+cargo +nightly fuzz run structured_roundtrip -- -max_total_time=60 -max_len=70000 -rss_limit_mb=4096
 ```
 
 ## Minimized Findings

@@ -1,5 +1,10 @@
 # Fresh data and preserved regressions
 
+Research closed on 2026-10-07. Acquisition and generation below are complete;
+B training/shared stress was subsequently screened and rejected. Validation and
+held data were not used for codec screening or fitting. See the
+[closure report](new-methods-report.md) and [handover](handover.md).
+
 G1's acquisition recipes are fixed in
 [`new_methods_sources.json`](../scripts/new_methods_sources.json).
 There are 36 fresh source groups: twelve per split, with four shared between
@@ -80,4 +85,5 @@ synthetics in isolation and runs in CI without downloading real data. Supplement
 its immutable index preserves all their input hashes and original paths.
 Partial acquisition failures retain their own receipt; cached successes can
 resume only under the same inventory/tool intent. Screening and performance
-claims remain separate G2/G3 work.
+claims are separate from acquisition: B's training result is published, while
+A's screen was cancelled before implementation.

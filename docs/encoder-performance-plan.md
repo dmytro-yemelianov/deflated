@@ -1,4 +1,4 @@
-# Next goal: encoder performance and compression improvements
+# Completed encoder performance and compression investigation
 
 Status: complete. P0–P6 investigations, final independent validation and
 conditional integration are resolved. The main 1.5×/+1% target is not achieved;
@@ -8,7 +8,8 @@ Evidence: [refreshed encoder profiles](encoder-profile-report.md).
 Initial implementation evidence: [isolated speed spikes](encoder-speed-spikes.md).
 Bounded parser prototype: [P3 investigation](encoder-bounded-parser.md).
 Adaptive prototype: [P4 investigation](encoder-adaptive-investigation.md).
-Next checkpoint: [P5 role preparation](encoder-final-preparation.md).
+Historical P5 checkpoint: [role preparation](encoder-final-preparation.md).
+Active R&D subsequently ended; see the [maintenance handover](handover.md).
 Baseline: `14f15e63e1a8955c5cfebf869ce065f29dd950fc` (completed S0–S9).
 
 ## Objective

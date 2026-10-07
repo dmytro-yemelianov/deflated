@@ -1,4 +1,12 @@
-# Experimental DSC1 prototype
+# Experimental DSC1 prototype (rejected research family)
+
+Status: research closed on 2026-10-07. All 12 preregistered configurations
+failed the one-session training screen; no sentinel or production release was
+selected. The best-size setting produces 8.52% more bytes and encodes 38.58×
+slower than zstd-3 on the eight structured training groups. These are training
+point estimates, not independent final-test results. See the
+[closure report](../../docs/new-methods-report.md) and
+[maintenance handover](../../docs/handover.md).
 
 Byte-exact lexical transforms over arbitrary input bytes, independent chunks,
 literal/dictionary/numeric streams and baseline DEFLATE compression. This is a
@@ -27,5 +35,7 @@ varints, check stream/output bounds and validate chunk/frame CRCs.
 
 The 64 MiB convenience output ceiling is a caller policy, not a format size
 limit. Pass an explicit ceiling through `decode_with_limit` for other policies.
-Both codec settings and model/proof gates remain subject to the fixed research
-protocol; the convenience settings are not a measured winning preset.
+The former protocol and uncompleted model/proof gates are retained as historical
+requirements. Full transform/frame model proofs were not completed; the
+convenience settings are not a measured winning preset. Commands above reproduce
+the retained prototype and do not initiate a new research campaign.
