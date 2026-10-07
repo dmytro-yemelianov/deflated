@@ -30,7 +30,10 @@ class SurrogateArtifactTests(unittest.TestCase):
         errors = collections.defaultdict(list)
         for row in rows:
             original = by_id[row['id']]
-            self.assertEqual(row['target_log'], original['y'])
+            # libm log may differ by an ULP across Darwin/Linux. Ledger and
+            # packed-stream hashes remain exact; derived floats use tolerance.
+            for target, reconstructed in zip(row['target_log'], original['y']):
+                self.assertAlmostEqual(target, reconstructed, delta=1e-12)
             self.assertEqual(row['group'], original['group'])
             plan = partition[row['fold']]
             self.assertIn(row['group'], plan['held_groups'])
