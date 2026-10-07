@@ -113,6 +113,42 @@ regional 16/16/dual (old-outlier size benefit), and adaptive streaming
 (smallest new real training packet among streaming recipes). This is a
 confirmation screen, not an expansion or restart of the 24-recipe budget.
 
+At commit `3bdca61`, the confirmation screen completed 279 pairs (three
+sessions) and 186 direct controls in 42.354 seconds. Corrected sampling
+reaches 1.262× Balanced on real validation, but increases real bytes 2.152%
+and has a 1.247× synthetic worst-file ratio. Regional 16/16/dual is 0.849×
+Balanced with +0.025% real bytes and a 1.319× synthetic worst-file ratio.
+Adaptive streaming is 1.054× Best with +0.271% real bytes; it saves 0.014%
+on synthetic validation and 0.347% on old outliers. All fail their primary
+role target. No final-test inputs were encoded.
+Evidence: [summary](../scripts/reports/encoder-p4-sentinels.json),
+[pairs](../scripts/reports/encoder-p4-sentinels-measurements.jsonl.gz),
+[controls](../scripts/reports/encoder-p4-sentinels-controls.jsonl.gz),
+[diagnostics](../scripts/reports/encoder-p4-sentinels-diagnostics.json.gz).
+
+## Frozen selector experiment
+
+The remaining three recipes compare the same training-fitted policy in
+feature-only, regional-replacement and exact-1%-fallback execution modes.
+The fixed leaf vocabulary is original Balanced, 16-probe lazy trigram,
+original Best and stored. Depths -1/0/1/2 undergo three-fold nested CV.
+Real source lineage and complete synthetic families, including both members
+of paired transforms, stay in one fold. Real encode time is the first loss
+component; total time breaks ties. Training leaves must satisfy 1% aggregate
+size growth in every scope and 20% on every file. These are training
+constraints, not generalization guarantees.
+
+The v2 policy adds tagged-word repeat rate and the corrected stored hint to
+the existing 13 features. Native/Python features are compared before fitting.
+Feature computation and dictionary allocation occur inside every native
+policy encode; original v1 policies keep their old features and behavior.
+The regional mode replaces only the 16-probe leaf with 16/16/dual adaptive
+effort; it performs no full-input retry. The exact mode runs the feature-only
+candidate and Balanced, choosing by actual packet length with integer 1%
+arithmetic. Tiny inputs take Balanced directly in all three modes.
+Teacher leaf timings omit features and cannot establish a speed result;
+the fully charged native policy screen and independent validation decide it.
+
 The initial screen uses all eight real training sources, 20 new synthetic
 cases and the three old outliers. Original Best and separately timed Balanced
 are paired; old size policy and miniz6 remain direct controls. Diagnostic

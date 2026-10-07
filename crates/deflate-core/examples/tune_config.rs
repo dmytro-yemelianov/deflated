@@ -4,6 +4,8 @@ use std::hint::black_box;
 use std::path::Path;
 use std::time::{Duration, Instant};
 
+#[path = "support/adaptive.rs"]
+mod adaptive;
 #[path = "support/policy.rs"]
 mod policy;
 
@@ -66,13 +68,19 @@ impl BaseMethod {
 
 enum Method {
     Base(BaseMethod),
-    Policy(policy::Policy),
+    Policy(policy::Policy, policy::Execution),
 }
 
 impl Method {
     fn parse(text: &str) -> Result<Self, String> {
-        if let Some(path) = text.strip_prefix("policy@") {
-            return policy::Policy::load(path).map(Self::Policy);
+        for (prefix, execution) in [
+            ("policy@", policy::Execution::Feature),
+            ("policy-local@", policy::Execution::Regional),
+            ("policy-exact@", policy::Execution::Exact),
+        ] {
+            if let Some(path) = text.strip_prefix(prefix) {
+                return policy::Policy::load(path).map(|p| Self::Policy(p, execution));
+            }
         }
         BaseMethod::parse(text).map(Self::Base)
     }
@@ -80,7 +88,7 @@ impl Method {
     fn encode(&self, raw: &[u8]) -> Vec<u8> {
         match self {
             Self::Base(method) => method.encode(raw),
-            Self::Policy(selector) => selector.choose(raw).encode(raw),
+            Self::Policy(selector, execution) => selector.encode(raw, *execution),
         }
     }
 }

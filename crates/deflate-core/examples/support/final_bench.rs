@@ -84,19 +84,25 @@ impl BaseMethod {
 
 enum Method {
     Base(BaseMethod),
-    Policy(policy::Policy),
+    Policy(policy::Policy, policy::Execution),
 }
 impl Method {
     fn parse(text: &str) -> Result<Self, String> {
-        if let Some(path) = text.strip_prefix("policy@") {
-            return policy::Policy::load(path).map(Self::Policy);
+        for (prefix, execution) in [
+            ("policy@", policy::Execution::Feature),
+            ("policy-local@", policy::Execution::Regional),
+            ("policy-exact@", policy::Execution::Exact),
+        ] {
+            if let Some(path) = text.strip_prefix(prefix) {
+                return policy::Policy::load(path).map(|p| Self::Policy(p, execution));
+            }
         }
         BaseMethod::parse(text).map(Self::Base)
     }
     fn encode(&self, raw: &[u8]) -> Vec<u8> {
         match self {
             Self::Base(method) => method.encode(raw),
-            Self::Policy(selector) => selector.choose(raw).encode(raw),
+            Self::Policy(selector, execution) => selector.encode(raw, *execution),
         }
     }
 }
@@ -139,6 +145,40 @@ pub fn memory(method: &str, input: &str, output: &str) -> Result<(), String> {
 
 pub fn run() -> Result<(), String> {
     let args: Vec<_> = std::env::args().skip(1).collect();
+    if args.first().is_some_and(|a| a == "--selector-features") {
+        if args.len() != 2 {
+            return Err("final_bench --selector-features INPUT".into());
+        }
+        let raw = std::fs::read(&args[1]).map_err(|e| e.to_string())?;
+        println!("{:?}", policy::enhanced_features(&raw));
+        return Ok(());
+    }
+    if args.first().is_some_and(|a| a == "--selector-inspect") {
+        if args.len() != 4 {
+            return Err("final_bench --selector-inspect INPUT OUT METHOD".into());
+        }
+        let raw = std::fs::read(&args[1]).map_err(|e| e.to_string())?;
+        let method = Method::parse(&args[3])?;
+        let packet = method.encode(&raw);
+        let baseline = deflate_core::deflate(&raw);
+        for data in [&packet, &baseline] {
+            assert_eq!(deflate_core::inflate(data).unwrap(), raw);
+            assert_eq!(miniz_oxide::inflate::decompress_to_vec(data).unwrap(), raw);
+        }
+        if args[3].starts_with("policy-exact@") {
+            assert!((packet.len() as u128) * 100 <= (baseline.len() as u128) * 101);
+        }
+        write_packets(&args[2], &packet, Some(&baseline))?;
+        println!(
+            "{{\"raw_bytes\":{},\"packed_bytes\":{},\"baseline_bytes\":{},\"features\":{:?},\"exact_cap\":{}}}",
+            raw.len(),
+            packet.len(),
+            baseline.len(),
+            policy::enhanced_features(&raw),
+            args[3].starts_with("policy-exact@")
+        );
+        return Ok(());
+    }
     if args.first().is_some_and(|a| a == "--stream-inspect") {
         if args.len() != 4 {
             return Err("final_bench --stream-inspect INPUT OUT METHOD".into());
