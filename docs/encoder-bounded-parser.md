@@ -1,7 +1,7 @@
 # P3: bounded encoded-cost parsing
 
-Status: prototype and local verification complete; native training campaign
-pending. No performance or compression improvement is established yet.
+Status: 24-method training screen, three selected validation sentinels and
+RSS checks complete. None qualifies for integration under the declared guards.
 This code is confined to the research worker, with no production-core change.
 
 The preregistered roster contains 24 methods: probes 4/8/16 × lookahead 0/1 ×
@@ -42,17 +42,90 @@ The campaign reuses all 128 S7 fixed-code witnesses, checks the independent
 Python oracle, token expansion/costs and exact-consumption zlib decoding.
 Bounded parses may miss that oracle's optimum.
 
-All 24 methods are screened on eight new real training sources, 20 new
+All 24 methods were screened on eight new real training sources, 20 new
 synthetic cases and three old S9 outliers. The sealed original Best is paired
 serially, with its separately timed original Balanced as the speed headline;
 old size policy and miniz6 controls use the same inputs. Real, synthetic and
 regression results remain separate. Final-test files are inaccessible to this
-driver. Selection is training-only; validation and final guards are still due.
+driver. Selection used training only: the fastest method, the smallest output,
+and its no-refinement counterpart were confirmed on the disjoint validation
+split with three paired sessions. Final-test inputs remain unencoded.
+
+## Native results and decision
+
+The training screen has one session (744 paired rows plus 62 controls); the
+validation has three (279 paired rows plus 186 controls). These are pilot
+timings, with no final confidence or first-call claims. Every warm packet
+passes Rust, miniz and exact-consumption zlib; internal Balanced packets also
+match the sealed original across the worker changes.
+
+| Method | Real-training speed vs original Balanced | Real-validation speed | Validation bytes vs Best | Validation worst file vs Best |
+| --- | ---: | ---: | ---: | ---: |
+| Longest, 4 probes, greedy | 1.452× | 1.439× | +3.874% | 1.129× |
+| Feedback, 16 probes, short lazy | 0.558× | 0.625× | +0.706% | 1.031× |
+| Feedback + one refinement pass | 0.533× | 0.588× | +0.704% | 1.031× |
+
+The feedback/refinement method gives the smallest aggregate real-training
+output among all 24 new recipes, but is still +0.988% versus Best. On real
+validation, its +0.704% fails the size target of at least 0.2% reduction.
+Refinement saves only about 0.002 percentage points on validation and slows
+encoding. The fast method misses 1.5× and the main compromise's 1% size guard.
+
+Secondary scopes prevent promoting the fast method with only P2 reversal:
+it grows synthetic-validation bytes by 1.200%, but the worst file is 1.395×
+Balanced. Old outliers grow by 27.476% overall and 41.573% on the worst file.
+Feedback's old-outlier output is +31.585% versus Best, with a worst-file ratio
+of 1.546×. The collision witnesses show why a uniformly small search budget
+is insufficient; no correctness failure is involved.
+
+Direct original controls on the same real validation inputs give miniz6
+1.294× Balanced for +0.588% bytes, and the old size policy 0.688× for -0.339%.
+The bounded size recipes do not beat these or original Best. All controls,
+synthetic/family and per-file observations remain in the ledgers.
+
+Seven training diagnostic cases for the 16-probe refined method account for
+7,149,848 visits and 1,119,912 committed tokens; only four blocks retain a
+refinement. Its estimated payload total is +4.573% above the rebuilt actual
+payload. This is a workload-specific aggregate, not a prediction guarantee.
+Header/EOB totals plus rebuilt payload bits equal the emitted stream bits.
+Across 3072 training short-witness/method pairs, 585 reach the exact fixed-code
+optimum and the worst gap is 132 bits. No bounded result falls below that
+oracle. Tokens and both fixed/auto packets are preserved for every pair.
+
+RSS uses five large training cases (LLVM, Chinook, zlib archive, an actual-hash
+collision and random islands), three repeats for three selected methods and
+four original controls: 105 fresh processes. The maximum median RSS deltas
+versus original Best are -360448, -409600 and -344064 bytes respectively.
+Memory is within the guard on these cases; output and runtime prevent promotion.
+Memory packets match their three-decoder timing goldens and exact zlib decoding.
+
+Decision: retain the prototype, diagnostics and negative results; keep Best
+and the old size policy as controls. Do not combine these rejected size recipes
+with P2 or alter defaults. Next investigate regional search effort and streaming
+block decisions in P4. A wider cost search or new learned representation needs
+new evidence and an explicitly bounded extension of this completed 24-method
+screen; the current results do not justify an unrestricted cross-product.
+
+[Training metadata](../scripts/reports/encoder-p3-train.json),
+[training paired ledger](../scripts/reports/encoder-p3-train-measurements.jsonl.gz),
+[native references](../scripts/reports/encoder-p3-train-controls.jsonl.gz),
+[oracle witnesses](../scripts/reports/encoder-p3-train-oracle.json.gz), and
+[cost diagnostics](../scripts/reports/encoder-p3-train-diagnostics.json.gz)
+preserve the complete screen. [Validation metadata](../scripts/reports/encoder-p3-validation.json),
+[paired observations](../scripts/reports/encoder-p3-validation-measurements.jsonl.gz),
+[controls](../scripts/reports/encoder-p3-validation-controls.jsonl.gz),
+[oracle packets](../scripts/reports/encoder-p3-validation-oracle.json.gz),
+[diagnostics](../scripts/reports/encoder-p3-validation-diagnostics.json.gz), and
+[RSS evidence](../scripts/reports/encoder-p3-rss.json) retain the confirmations.
+Sources are frozen at commit `a4971aa`, with exact file/compiler/binary hashes
+in each protocol. All native timing/resource stages ran serially.
 
 ```sh
 make research-final-check
 python3 scripts/test_encoder_parse.py
 python3 scripts/encoder_parse_campaign.py --rounds 1 --out target/encoder-performance/p3-train-NEW
+python3 scripts/encoder_parse_campaign.py --rounds 3 --partition validation --methods bounded:4:0:longest:0 bounded:16:1:feedback:0 bounded:16:1:feedback:1 --out target/encoder-performance/p3-validation-NEW
+python3 scripts/encoder_parse_rss.py --study target/encoder-performance/p3-train-NEW --out target/encoder-performance/p3-rss-NEW
 ```
 
 The worker builds under the original compiler/flags, hashes sources, binary,

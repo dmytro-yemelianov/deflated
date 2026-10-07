@@ -1,0 +1,5202 @@
+{
+  "control_rows": 186,
+  "controls_ledger_sha256": "c8eb664e7633377cabb7b5017fb5cf130e152bf4991d956958f8d33a25042055",
+  "diagnostics_sha256": "a8dc17c6b7ff9ebd24a0c047a8b69fa477c14e7f6591eea2e93e77aa0024b2d9",
+  "elapsed_seconds": 42.35840583301615,
+  "limitations": [
+    "warm pilot, not final warm/first-call confidence",
+    "no RSS/tiny/integrated size guard decision",
+    "per-block refinement check does not guarantee a global size improvement when feedback changes future parsing"
+  ],
+  "metrics": {
+    "new-real-validation": {
+      "bounded:16:1:feedback:0": {
+        "files": [
+          {
+            "best_size_ratio": 1.0270254460368529,
+            "case": "validation/rust.raw",
+            "encode_ns": 2480291.6666666665,
+            "family": "real",
+            "original_balanced_bytes": 17219,
+            "original_balanced_ns": 1036741.6,
+            "original_best_bytes": 17095,
+            "original_best_ns": 2068027.6666666667,
+            "packed_bytes": 17557,
+            "size_ratio": 1.019629479063825,
+            "source_group": "rust"
+          },
+          {
+            "best_size_ratio": 1.0307007020581884,
+            "case": "validation/postgresql.raw",
+            "encode_ns": 13687208,
+            "family": "real",
+            "original_balanced_bytes": 96754,
+            "original_balanced_ns": 6237292,
+            "original_best_bytes": 95861,
+            "original_best_ns": 11372750,
+            "packed_bytes": 98804,
+            "size_ratio": 1.0211877545114414,
+            "source_group": "postgresql"
+          },
+          {
+            "best_size_ratio": 1.0111518963529633,
+            "case": "validation/natural-earth.raw",
+            "encode_ns": 31815417,
+            "family": "real",
+            "original_balanced_bytes": 208221,
+            "original_balanced_ns": 13097084,
+            "original_best_bytes": 207319,
+            "original_best_ns": 19462541,
+            "packed_bytes": 209631,
+            "size_ratio": 1.0067716512743672,
+            "source_group": "natural-earth"
+          },
+          {
+            "best_size_ratio": 1.0229346065308211,
+            "case": "validation/w3c-svg.raw",
+            "encode_ns": 1507468.75,
+            "family": "real",
+            "original_balanced_bytes": 11850,
+            "original_balanced_ns": 560203.7777777778,
+            "original_best_bytes": 11729,
+            "original_best_ns": 1178966.6,
+            "packed_bytes": 11998,
+            "size_ratio": 1.0124894514767933,
+            "source_group": "w3c-svg"
+          },
+          {
+            "best_size_ratio": 1.0197545198208657,
+            "case": "validation/fd.raw",
+            "encode_ns": 42794625,
+            "family": "real",
+            "original_balanced_bytes": 363940,
+            "original_balanced_ns": 21802250,
+            "original_best_bytes": 361740,
+            "original_best_ns": 44124250,
+            "packed_bytes": 368886,
+            "size_ratio": 1.0135901522228938,
+            "source_group": "fd"
+          },
+          {
+            "best_size_ratio": 0.9998429049958685,
+            "case": "validation/bzip2-archive.raw",
+            "encode_ns": 17002042,
+            "family": "real",
+            "original_balanced_bytes": 808729,
+            "original_balanced_ns": 13316792,
+            "original_best_bytes": 808428,
+            "original_best_ns": 32950250,
+            "packed_bytes": 808301,
+            "size_ratio": 0.9994707745116101,
+            "source_group": "bzip2-archive"
+          },
+          {
+            "best_size_ratio": 1.0006704216726698,
+            "case": "validation/lshort.raw",
+            "encode_ns": 13671583,
+            "family": "real",
+            "original_balanced_bytes": 620505,
+            "original_balanced_ns": 20009625,
+            "original_best_bytes": 620505,
+            "original_best_ns": 25201084,
+            "packed_bytes": 620921,
+            "size_ratio": 1.0006704216726698,
+            "source_group": "lshort"
+          },
+          {
+            "best_size_ratio": 1.0113366505350692,
+            "case": "validation/dejavu.raw",
+            "encode_ns": 27274625,
+            "family": "real",
+            "original_balanced_bytes": 371016,
+            "original_balanced_ns": 17862875,
+            "original_best_bytes": 366775,
+            "original_best_ns": 31657167,
+            "packed_bytes": 370933,
+            "size_ratio": 0.999776289971322,
+            "source_group": "dejavu"
+          }
+        ],
+        "packed_size_change_pct": 0.35212874374457304,
+        "packed_size_change_vs_best_pct": 0.7061393431164742,
+        "warm_speed_vs_original_balanced": 0.6251802238551306,
+        "warm_speed_vs_original_best": 1.118361112583744,
+        "worst_file_size_ratio": 1.0211877545114414
+      },
+      "bounded:16:1:feedback:1": {
+        "files": [
+          {
+            "best_size_ratio": 1.0259725065808716,
+            "case": "validation/rust.raw",
+            "encode_ns": 2713729.5,
+            "family": "real",
+            "original_balanced_bytes": 17219,
+            "original_balanced_ns": 1023433.4,
+            "original_best_bytes": 17095,
+            "original_best_ns": 2120139,
+            "packed_bytes": 17539,
+            "size_ratio": 1.0185841221906033,
+            "source_group": "rust"
+          },
+          {
+            "best_size_ratio": 1.0307007020581884,
+            "case": "validation/postgresql.raw",
+            "encode_ns": 14557417,
+            "family": "real",
+            "original_balanced_bytes": 96754,
+            "original_balanced_ns": 6228375,
+            "original_best_bytes": 95861,
+            "original_best_ns": 11469458,
+            "packed_bytes": 98804,
+            "size_ratio": 1.0211877545114414,
+            "source_group": "postgresql"
+          },
+          {
+            "best_size_ratio": 1.0111518963529633,
+            "case": "validation/natural-earth.raw",
+            "encode_ns": 32758792,
+            "family": "real",
+            "original_balanced_bytes": 208221,
+            "original_balanced_ns": 12947334,
+            "original_best_bytes": 207319,
+            "original_best_ns": 19541458,
+            "packed_bytes": 209631,
+            "size_ratio": 1.0067716512743672,
+            "source_group": "natural-earth"
+          },
+          {
+            "best_size_ratio": 1.0212294313240686,
+            "case": "validation/w3c-svg.raw",
+            "encode_ns": 1636229,
+            "family": "real",
+            "original_balanced_bytes": 11850,
+            "original_balanced_ns": 578921.3333333334,
+            "original_best_bytes": 11729,
+            "original_best_ns": 1206116.6,
+            "packed_bytes": 11978,
+            "size_ratio": 1.0108016877637132,
+            "source_group": "w3c-svg"
+          },
+          {
+            "best_size_ratio": 1.0197545198208657,
+            "case": "validation/fd.raw",
+            "encode_ns": 45126917,
+            "family": "real",
+            "original_balanced_bytes": 363940,
+            "original_balanced_ns": 21697125,
+            "original_best_bytes": 361740,
+            "original_best_ns": 43997750,
+            "packed_bytes": 368886,
+            "size_ratio": 1.0135901522228938,
+            "source_group": "fd"
+          },
+          {
+            "best_size_ratio": 0.9998429049958685,
+            "case": "validation/bzip2-archive.raw",
+            "encode_ns": 18569667,
+            "family": "real",
+            "original_balanced_bytes": 808729,
+            "original_balanced_ns": 13197125,
+            "original_best_bytes": 808428,
+            "original_best_ns": 32776500,
+            "packed_bytes": 808301,
+            "size_ratio": 0.9994707745116101,
+            "source_group": "bzip2-archive"
+          },
+          {
+            "best_size_ratio": 1.0006704216726698,
+            "case": "validation/lshort.raw",
+            "encode_ns": 15042708,
+            "family": "real",
+            "original_balanced_bytes": 620505,
+            "original_balanced_ns": 20135875,
+            "original_best_bytes": 620505,
+            "original_best_ns": 25115625,
+            "packed_bytes": 620921,
+            "size_ratio": 1.0006704216726698,
+            "source_group": "lshort"
+          },
+          {
+            "best_size_ratio": 1.0112903005930065,
+            "case": "validation/dejavu.raw",
+            "encode_ns": 28831250,
+            "family": "real",
+            "original_balanced_bytes": 371016,
+            "original_balanced_ns": 17740875,
+            "original_best_bytes": 366775,
+            "original_best_ns": 31692208,
+            "packed_bytes": 370916,
+            "size_ratio": 0.9997304698449663,
+            "source_group": "dejavu"
+          }
+        ],
+        "packed_size_change_pct": 0.3499271885660127,
+        "packed_size_change_vs_best_pct": 0.7039300215469169,
+        "warm_speed_vs_original_balanced": 0.5874842806478197,
+        "warm_speed_vs_original_best": 1.0545260268644272,
+        "worst_file_size_ratio": 1.0211877545114414
+      },
+      "bounded:4:0:longest:0": {
+        "files": [
+          {
+            "best_size_ratio": 1.1166422930681486,
+            "case": "validation/rust.raw",
+            "encode_ns": 601963,
+            "family": "real",
+            "original_balanced_bytes": 17219,
+            "original_balanced_ns": 1079675,
+            "original_best_bytes": 17095,
+            "original_best_ns": 2045069.3333333333,
+            "packed_bytes": 19089,
+            "size_ratio": 1.1086009640513386,
+            "source_group": "rust"
+          },
+          {
+            "best_size_ratio": 1.1292705062538466,
+            "case": "validation/postgresql.raw",
+            "encode_ns": 3661958,
+            "family": "real",
+            "original_balanced_bytes": 96754,
+            "original_balanced_ns": 6127375,
+            "original_best_bytes": 95861,
+            "original_best_ns": 11236667,
+            "packed_bytes": 108253,
+            "size_ratio": 1.118847799574178,
+            "source_group": "postgresql"
+          },
+          {
+            "best_size_ratio": 1.1191834805300045,
+            "case": "validation/natural-earth.raw",
+            "encode_ns": 6951458,
+            "family": "real",
+            "original_balanced_bytes": 208221,
+            "original_balanced_ns": 13060917,
+            "original_best_bytes": 207319,
+            "original_best_ns": 19282625,
+            "packed_bytes": 232028,
+            "size_ratio": 1.1143352495665664,
+            "source_group": "natural-earth"
+          },
+          {
+            "best_size_ratio": 1.1212379572001023,
+            "case": "validation/w3c-svg.raw",
+            "encode_ns": 389253.23076923075,
+            "family": "real",
+            "original_balanced_bytes": 11850,
+            "original_balanced_ns": 560944.4444444445,
+            "original_best_bytes": 11729,
+            "original_best_ns": 1164425,
+            "packed_bytes": 13151,
+            "size_ratio": 1.109789029535865,
+            "source_group": "w3c-svg"
+          },
+          {
+            "best_size_ratio": 1.075421573505833,
+            "case": "validation/fd.raw",
+            "encode_ns": 12203875,
+            "family": "real",
+            "original_balanced_bytes": 363940,
+            "original_balanced_ns": 21586417,
+            "original_best_bytes": 361740,
+            "original_best_ns": 43901542,
+            "packed_bytes": 389023,
+            "size_ratio": 1.068920701214486,
+            "source_group": "fd"
+          },
+          {
+            "best_size_ratio": 1.000435412924837,
+            "case": "validation/bzip2-archive.raw",
+            "encode_ns": 17319416,
+            "family": "real",
+            "original_balanced_bytes": 808729,
+            "original_balanced_ns": 13239334,
+            "original_best_bytes": 808428,
+            "original_best_ns": 33012624.999999996,
+            "packed_bytes": 808780,
+            "size_ratio": 1.0000630619156725,
+            "source_group": "bzip2-archive"
+          },
+          {
+            "best_size_ratio": 1.0006414130426025,
+            "case": "validation/lshort.raw",
+            "encode_ns": 13279334,
+            "family": "real",
+            "original_balanced_bytes": 620505,
+            "original_balanced_ns": 20505542,
+            "original_best_bytes": 620505,
+            "original_best_ns": 25260083,
+            "packed_bytes": 620903,
+            "size_ratio": 1.0006414130426025,
+            "source_group": "lshort"
+          },
+          {
+            "best_size_ratio": 1.076054801990321,
+            "case": "validation/dejavu.raw",
+            "encode_ns": 11326000,
+            "family": "real",
+            "original_balanced_bytes": 371016,
+            "original_balanced_ns": 18434458,
+            "original_best_bytes": 366775,
+            "original_best_ns": 32251084,
+            "packed_bytes": 394670,
+            "size_ratio": 1.063754662871682,
+            "source_group": "dejavu"
+          }
+        ],
+        "packed_size_change_pct": 3.5089987567217484,
+        "packed_size_change_vs_best_pct": 3.87414579594223,
+        "warm_speed_vs_original_balanced": 1.4390685389642521,
+        "warm_speed_vs_original_best": 2.558128524545741,
+        "worst_file_size_ratio": 1.118847799574178
+      }
+    },
+    "new-synthetic-validation": {
+      "bounded:16:1:feedback:0": {
+        "files": [
+          {
+            "best_size_ratio": 0.9993462220976931,
+            "case": "validation/cost_sensitive-8-0.raw",
+            "encode_ns": 5106875,
+            "family": "cost_sensitive",
+            "original_balanced_bytes": 246261,
+            "original_balanced_ns": 3993646,
+            "original_best_bytes": 246261,
+            "original_best_ns": 9549666,
+            "packed_bytes": 246100,
+            "size_ratio": 0.9993462220976931,
+            "source_group": "validation:cost_sensitive:8"
+          },
+          {
+            "best_size_ratio": 0.9993021916052027,
+            "case": "validation/cost_sensitive-11-0.raw",
+            "encode_ns": 5039334,
+            "family": "cost_sensitive",
+            "original_balanced_bytes": 246486,
+            "original_balanced_ns": 4082062.4999999995,
+            "original_best_bytes": 246486,
+            "original_best_ns": 9522875,
+            "packed_bytes": 246314,
+            "size_ratio": 0.9993021916052027,
+            "source_group": "validation:cost_sensitive:11"
+          },
+          {
+            "best_size_ratio": 1.422912205567452,
+            "case": "validation/collision_trigram-8-0.raw",
+            "encode_ns": 5925625,
+            "family": "collision_trigram",
+            "original_balanced_bytes": 13745,
+            "original_balanced_ns": 2332444.3333333335,
+            "original_best_bytes": 11208,
+            "original_best_ns": 1766347,
+            "packed_bytes": 15948,
+            "size_ratio": 1.1602764641687886,
+            "source_group": "validation:collision_trigram:8"
+          },
+          {
+            "best_size_ratio": 1.4329405648934326,
+            "case": "validation/collision_trigram-11-0.raw",
+            "encode_ns": 3132291.5,
+            "family": "collision_trigram",
+            "original_balanced_bytes": 14098,
+            "original_balanced_ns": 2070416.6666666667,
+            "original_best_bytes": 11542,
+            "original_best_ns": 1540156.25,
+            "packed_bytes": 16539,
+            "size_ratio": 1.1731451269683644,
+            "source_group": "validation:collision_trigram:11"
+          },
+          {
+            "best_size_ratio": 1.0366109664959275,
+            "case": "validation/collision_fourbyte-8-0.raw",
+            "encode_ns": 5185750,
+            "family": "collision_fourbyte",
+            "original_balanced_bytes": 11133,
+            "original_balanced_ns": 1252687.5,
+            "original_best_bytes": 11909,
+            "original_best_ns": 4834646,
+            "packed_bytes": 12345,
+            "size_ratio": 1.1088655348962544,
+            "source_group": "validation:collision_fourbyte:8"
+          },
+          {
+            "best_size_ratio": 1.0067743205986608,
+            "case": "validation/collision_fourbyte-11-0.raw",
+            "encode_ns": 3758750,
+            "family": "collision_fourbyte",
+            "original_balanced_bytes": 14538,
+            "original_balanced_ns": 1867638.6666666667,
+            "original_best_bytes": 12695,
+            "original_best_ns": 4537354,
+            "packed_bytes": 12781,
+            "size_ratio": 0.879144311459623,
+            "source_group": "validation:collision_fourbyte:11"
+          },
+          {
+            "best_size_ratio": 1.1328746314002323,
+            "case": "validation/collision_cost_trigram-8-0.raw",
+            "encode_ns": 5516042,
+            "family": "collision_cost_trigram",
+            "original_balanced_bytes": 11309,
+            "original_balanced_ns": 1302750,
+            "original_best_bytes": 11191,
+            "original_best_ns": 1703569.3333333333,
+            "packed_bytes": 12678,
+            "size_ratio": 1.1210540277654966,
+            "source_group": "validation:collision_cost_trigram:8"
+          },
+          {
+            "best_size_ratio": 1.1018374068296066,
+            "case": "validation/collision_cost_trigram-11-0.raw",
+            "encode_ns": 3787375,
+            "family": "collision_cost_trigram",
+            "original_balanced_bytes": 11748,
+            "original_balanced_ns": 1015075,
+            "original_best_bytes": 11538,
+            "original_best_ns": 1441541.75,
+            "packed_bytes": 12713,
+            "size_ratio": 1.0821416411304052,
+            "source_group": "validation:collision_cost_trigram:11"
+          },
+          {
+            "best_size_ratio": 0.9995783386542979,
+            "case": "validation/change_points-8-0.raw",
+            "encode_ns": 2785937.5,
+            "family": "change_points",
+            "original_balanced_bytes": 99565,
+            "original_balanced_ns": 2733000,
+            "original_best_bytes": 99606,
+            "original_best_ns": 3828146,
+            "packed_bytes": 99564,
+            "size_ratio": 0.9999899563099482,
+            "source_group": "validation:change_points:8"
+          },
+          {
+            "best_size_ratio": 1.0004315876747647,
+            "case": "validation/change_points-11-0.raw",
+            "encode_ns": 2654020.5,
+            "family": "change_points",
+            "original_balanced_bytes": 88116,
+            "original_balanced_ns": 2401833.3333333335,
+            "original_best_bytes": 88047,
+            "original_best_ns": 3346229.5,
+            "packed_bytes": 88085,
+            "size_ratio": 0.999648191020927,
+            "source_group": "validation:change_points:11"
+          },
+          {
+            "best_size_ratio": 0.9872643967105511,
+            "case": "validation/drift-8-0.raw",
+            "encode_ns": 8193417,
+            "family": "drift",
+            "original_balanced_bytes": 187342,
+            "original_balanced_ns": 7538542,
+            "original_best_bytes": 186171,
+            "original_best_ns": 9470417,
+            "packed_bytes": 183800,
+            "size_ratio": 0.9810934013728903,
+            "source_group": "validation:drift:8"
+          },
+          {
+            "best_size_ratio": 0.9910987943057914,
+            "case": "validation/drift-11-0.raw",
+            "encode_ns": 8554500,
+            "family": "drift",
+            "original_balanced_bytes": 188347,
+            "original_balanced_ns": 7622250,
+            "original_best_bytes": 187278,
+            "original_best_ns": 9793375,
+            "packed_bytes": 185611,
+            "size_ratio": 0.9854736204983355,
+            "source_group": "validation:drift:11"
+          },
+          {
+            "best_size_ratio": 0.9996109379827516,
+            "case": "validation/feature_sampling_trap-8-0.raw",
+            "encode_ns": 5267292,
+            "family": "feature_sampling_trap",
+            "original_balanced_bytes": 262169,
+            "original_balanced_ns": 8317791.999999999,
+            "original_best_bytes": 262169,
+            "original_best_ns": 10410833,
+            "packed_bytes": 262067,
+            "size_ratio": 0.9996109379827516,
+            "source_group": "validation:feature_sampling_trap:8"
+          },
+          {
+            "best_size_ratio": 1.067212583103616,
+            "case": "validation/feature_sampling_trap-11-0.raw",
+            "encode_ns": 3503583.5,
+            "family": "feature_sampling_trap",
+            "original_balanced_bytes": 13616,
+            "original_balanced_ns": 2089583.3333333333,
+            "original_best_bytes": 12334,
+            "original_best_ns": 10640292,
+            "packed_bytes": 13163,
+            "size_ratio": 0.9667303172737955,
+            "source_group": "validation:feature_sampling_trap:11"
+          },
+          {
+            "best_size_ratio": 1.0,
+            "case": "validation/random_islands-8-0.raw",
+            "encode_ns": 1670406.25,
+            "family": "random_islands",
+            "original_balanced_bytes": 4780,
+            "original_balanced_ns": 489075.8181818182,
+            "original_best_bytes": 4780,
+            "original_best_ns": 710338.625,
+            "packed_bytes": 4780,
+            "size_ratio": 1.0,
+            "source_group": "validation:random_islands:8"
+          },
+          {
+            "best_size_ratio": 1.0,
+            "case": "validation/random_islands-11-0.raw",
+            "encode_ns": 1624437.5,
+            "family": "random_islands",
+            "original_balanced_bytes": 5937,
+            "original_balanced_ns": 504337.5,
+            "original_best_bytes": 5937,
+            "original_best_ns": 715916.7142857143,
+            "packed_bytes": 5937,
+            "size_ratio": 1.0,
+            "source_group": "validation:random_islands:11"
+          },
+          {
+            "best_size_ratio": 1.0,
+            "case": "validation/paired_transforms-8-0.raw",
+            "encode_ns": 837845.2857142857,
+            "family": "paired_transforms",
+            "original_balanced_bytes": 1017,
+            "original_balanced_ns": 243428.57142857142,
+            "original_best_bytes": 1017,
+            "original_best_ns": 258725,
+            "packed_bytes": 1017,
+            "size_ratio": 1.0,
+            "source_group": "validation:paired_transforms:8"
+          },
+          {
+            "best_size_ratio": 1.000656069015444,
+            "case": "validation/paired_transforms-8-1.raw",
+            "encode_ns": 3334917,
+            "family": "paired_transforms",
+            "original_balanced_bytes": 132735,
+            "original_balanced_ns": 2267500,
+            "original_best_bytes": 132608,
+            "original_best_ns": 5324000,
+            "packed_bytes": 132695,
+            "size_ratio": 0.9996986476814707,
+            "source_group": "validation:paired_transforms:8"
+          },
+          {
+            "best_size_ratio": 1.0,
+            "case": "validation/paired_transforms-11-0.raw",
+            "encode_ns": 887416.6666666666,
+            "family": "paired_transforms",
+            "original_balanced_bytes": 1021,
+            "original_balanced_ns": 140523.16666666666,
+            "original_best_bytes": 1021,
+            "original_best_ns": 260277.1,
+            "packed_bytes": 1021,
+            "size_ratio": 1.0,
+            "source_group": "validation:paired_transforms:11"
+          },
+          {
+            "best_size_ratio": 1.0005864838040242,
+            "case": "validation/paired_transforms-11-1.raw",
+            "encode_ns": 1590343.75,
+            "family": "paired_transforms",
+            "original_balanced_bytes": 66554,
+            "original_balanced_ns": 1094691.8,
+            "original_best_bytes": 66498,
+            "original_best_ns": 2539729.5,
+            "packed_bytes": 66537,
+            "size_ratio": 0.9997445683204615,
+            "source_group": "validation:paired_transforms:11"
+          }
+        ],
+        "packed_size_change_pct": -0.05072455271990517,
+        "packed_size_change_vs_best_pct": 0.5836815094864445,
+        "warm_speed_vs_original_balanced": 0.6809838379334836,
+        "warm_speed_vs_original_best": 1.1766073709705995,
+        "worst_file_size_ratio": 1.1731451269683644
+      },
+      "bounded:16:1:feedback:1": {
+        "files": [
+          {
+            "best_size_ratio": 0.9993462220976931,
+            "case": "validation/cost_sensitive-8-0.raw",
+            "encode_ns": 5542458,
+            "family": "cost_sensitive",
+            "original_balanced_bytes": 246261,
+            "original_balanced_ns": 3961937.5,
+            "original_best_bytes": 246261,
+            "original_best_ns": 9692042,
+            "packed_bytes": 246100,
+            "size_ratio": 0.9993462220976931,
+            "source_group": "validation:cost_sensitive:8"
+          },
+          {
+            "best_size_ratio": 0.9993021916052027,
+            "case": "validation/cost_sensitive-11-0.raw",
+            "encode_ns": 5666041,
+            "family": "cost_sensitive",
+            "original_balanced_bytes": 246486,
+            "original_balanced_ns": 3948521,
+            "original_best_bytes": 246486,
+            "original_best_ns": 9828833,
+            "packed_bytes": 246314,
+            "size_ratio": 0.9993021916052027,
+            "source_group": "validation:cost_sensitive:11"
+          },
+          {
+            "best_size_ratio": 1.422912205567452,
+            "case": "validation/collision_trigram-8-0.raw",
+            "encode_ns": 6083167,
+            "family": "collision_trigram",
+            "original_balanced_bytes": 13745,
+            "original_balanced_ns": 2310000,
+            "original_best_bytes": 11208,
+            "original_best_ns": 1777375,
+            "packed_bytes": 15948,
+            "size_ratio": 1.1602764641687886,
+            "source_group": "validation:collision_trigram:8"
+          },
+          {
+            "best_size_ratio": 1.4329405648934326,
+            "case": "validation/collision_trigram-11-0.raw",
+            "encode_ns": 3310479,
+            "family": "collision_trigram",
+            "original_balanced_bytes": 14098,
+            "original_balanced_ns": 2069472.3333333333,
+            "original_best_bytes": 11542,
+            "original_best_ns": 1525385.5,
+            "packed_bytes": 16539,
+            "size_ratio": 1.1731451269683644,
+            "source_group": "validation:collision_trigram:11"
+          },
+          {
+            "best_size_ratio": 1.0366109664959275,
+            "case": "validation/collision_fourbyte-8-0.raw",
+            "encode_ns": 5607792,
+            "family": "collision_fourbyte",
+            "original_balanced_bytes": 11133,
+            "original_balanced_ns": 1265885.5,
+            "original_best_bytes": 11909,
+            "original_best_ns": 4854021,
+            "packed_bytes": 12345,
+            "size_ratio": 1.1088655348962544,
+            "source_group": "validation:collision_fourbyte:8"
+          },
+          {
+            "best_size_ratio": 1.0067743205986608,
+            "case": "validation/collision_fourbyte-11-0.raw",
+            "encode_ns": 3885729,
+            "family": "collision_fourbyte",
+            "original_balanced_bytes": 14538,
+            "original_balanced_ns": 1907125,
+            "original_best_bytes": 12695,
+            "original_best_ns": 4641625,
+            "packed_bytes": 12781,
+            "size_ratio": 0.879144311459623,
+            "source_group": "validation:collision_fourbyte:11"
+          },
+          {
+            "best_size_ratio": 1.1328746314002323,
+            "case": "validation/collision_cost_trigram-8-0.raw",
+            "encode_ns": 5544875,
+            "family": "collision_cost_trigram",
+            "original_balanced_bytes": 11309,
+            "original_balanced_ns": 1338697.75,
+            "original_best_bytes": 11191,
+            "original_best_ns": 1763527.6666666667,
+            "packed_bytes": 12678,
+            "size_ratio": 1.1210540277654966,
+            "source_group": "validation:collision_cost_trigram:8"
+          },
+          {
+            "best_size_ratio": 1.1018374068296066,
+            "case": "validation/collision_cost_trigram-11-0.raw",
+            "encode_ns": 3976687.5,
+            "family": "collision_cost_trigram",
+            "original_balanced_bytes": 11748,
+            "original_balanced_ns": 1030166.8,
+            "original_best_bytes": 11538,
+            "original_best_ns": 1473458.25,
+            "packed_bytes": 12713,
+            "size_ratio": 1.0821416411304052,
+            "source_group": "validation:collision_cost_trigram:11"
+          },
+          {
+            "best_size_ratio": 0.9995783386542979,
+            "case": "validation/change_points-8-0.raw",
+            "encode_ns": 2953208.5,
+            "family": "change_points",
+            "original_balanced_bytes": 99565,
+            "original_balanced_ns": 2726041.5,
+            "original_best_bytes": 99606,
+            "original_best_ns": 3823145.5,
+            "packed_bytes": 99564,
+            "size_ratio": 0.9999899563099482,
+            "source_group": "validation:change_points:8"
+          },
+          {
+            "best_size_ratio": 1.0004315876747647,
+            "case": "validation/change_points-11-0.raw",
+            "encode_ns": 2779250,
+            "family": "change_points",
+            "original_balanced_bytes": 88116,
+            "original_balanced_ns": 2397166.6666666665,
+            "original_best_bytes": 88047,
+            "original_best_ns": 3392771,
+            "packed_bytes": 88085,
+            "size_ratio": 0.999648191020927,
+            "source_group": "validation:change_points:11"
+          },
+          {
+            "best_size_ratio": 0.9870387976645127,
+            "case": "validation/drift-8-0.raw",
+            "encode_ns": 8809083,
+            "family": "drift",
+            "original_balanced_bytes": 187342,
+            "original_balanced_ns": 7579084,
+            "original_best_bytes": 186171,
+            "original_best_ns": 9866250,
+            "packed_bytes": 183758,
+            "size_ratio": 0.9808692124563633,
+            "source_group": "validation:drift:8"
+          },
+          {
+            "best_size_ratio": 0.9910987943057914,
+            "case": "validation/drift-11-0.raw",
+            "encode_ns": 9278500,
+            "family": "drift",
+            "original_balanced_bytes": 188347,
+            "original_balanced_ns": 7615792,
+            "original_best_bytes": 187278,
+            "original_best_ns": 9655875,
+            "packed_bytes": 185611,
+            "size_ratio": 0.9854736204983355,
+            "source_group": "validation:drift:11"
+          },
+          {
+            "best_size_ratio": 0.9996109379827516,
+            "case": "validation/feature_sampling_trap-8-0.raw",
+            "encode_ns": 5966291,
+            "family": "feature_sampling_trap",
+            "original_balanced_bytes": 262169,
+            "original_balanced_ns": 8079332.999999999,
+            "original_best_bytes": 262169,
+            "original_best_ns": 10288084,
+            "packed_bytes": 262067,
+            "size_ratio": 0.9996109379827516,
+            "source_group": "validation:feature_sampling_trap:8"
+          },
+          {
+            "best_size_ratio": 1.067212583103616,
+            "case": "validation/feature_sampling_trap-11-0.raw",
+            "encode_ns": 3629125,
+            "family": "feature_sampling_trap",
+            "original_balanced_bytes": 13616,
+            "original_balanced_ns": 2058903,
+            "original_best_bytes": 12334,
+            "original_best_ns": 10682291,
+            "packed_bytes": 13163,
+            "size_ratio": 0.9667303172737955,
+            "source_group": "validation:feature_sampling_trap:11"
+          },
+          {
+            "best_size_ratio": 1.0,
+            "case": "validation/random_islands-8-0.raw",
+            "encode_ns": 1770597.3333333333,
+            "family": "random_islands",
+            "original_balanced_bytes": 4780,
+            "original_balanced_ns": 480424.1818181818,
+            "original_best_bytes": 4780,
+            "original_best_ns": 694104.25,
+            "packed_bytes": 4780,
+            "size_ratio": 1.0,
+            "source_group": "validation:random_islands:8"
+          },
+          {
+            "best_size_ratio": 0.9983156476334849,
+            "case": "validation/random_islands-11-0.raw",
+            "encode_ns": 1783347.3333333333,
+            "family": "random_islands",
+            "original_balanced_bytes": 5937,
+            "original_balanced_ns": 496431.8181818182,
+            "original_best_bytes": 5937,
+            "original_best_ns": 708744.75,
+            "packed_bytes": 5927,
+            "size_ratio": 0.9983156476334849,
+            "source_group": "validation:random_islands:11"
+          },
+          {
+            "best_size_ratio": 1.0,
+            "case": "validation/paired_transforms-8-0.raw",
+            "encode_ns": 837173.5,
+            "family": "paired_transforms",
+            "original_balanced_bytes": 1017,
+            "original_balanced_ns": 251331.25,
+            "original_best_bytes": 1017,
+            "original_best_ns": 259262.5,
+            "packed_bytes": 1017,
+            "size_ratio": 1.0,
+            "source_group": "validation:paired_transforms:8"
+          },
+          {
+            "best_size_ratio": 1.000656069015444,
+            "case": "validation/paired_transforms-8-1.raw",
+            "encode_ns": 3644916.5,
+            "family": "paired_transforms",
+            "original_balanced_bytes": 132735,
+            "original_balanced_ns": 2244958.3333333335,
+            "original_best_bytes": 132608,
+            "original_best_ns": 5293417,
+            "packed_bytes": 132695,
+            "size_ratio": 0.9996986476814707,
+            "source_group": "validation:paired_transforms:8"
+          },
+          {
+            "best_size_ratio": 1.0,
+            "case": "validation/paired_transforms-11-0.raw",
+            "encode_ns": 834604.1666666666,
+            "family": "paired_transforms",
+            "original_balanced_bytes": 1021,
+            "original_balanced_ns": 141067.11111111112,
+            "original_best_bytes": 1021,
+            "original_best_ns": 259922.95,
+            "packed_bytes": 1021,
+            "size_ratio": 1.0,
+            "source_group": "validation:paired_transforms:11"
+          },
+          {
+            "best_size_ratio": 1.0005864838040242,
+            "case": "validation/paired_transforms-11-1.raw",
+            "encode_ns": 1734000,
+            "family": "paired_transforms",
+            "original_balanced_bytes": 66554,
+            "original_balanced_ns": 1078175,
+            "original_best_bytes": 66498,
+            "original_best_ns": 2579791.5,
+            "packed_bytes": 66537,
+            "size_ratio": 0.9997445683204615,
+            "source_group": "validation:paired_transforms:11"
+          }
+        ],
+        "packed_size_change_pct": -0.053933405203399065,
+        "packed_size_change_vs_best_pct": 0.5804522895169528,
+        "warm_speed_vs_original_balanced": 0.6334553843038422,
+        "warm_speed_vs_original_best": 1.1126602512946229,
+        "worst_file_size_ratio": 1.1731451269683644
+      },
+      "bounded:4:0:longest:0": {
+        "files": [
+          {
+            "best_size_ratio": 1.0001015183078117,
+            "case": "validation/cost_sensitive-8-0.raw",
+            "encode_ns": 5042958,
+            "family": "cost_sensitive",
+            "original_balanced_bytes": 246261,
+            "original_balanced_ns": 3991020.5000000005,
+            "original_best_bytes": 246261,
+            "original_best_ns": 9740625,
+            "packed_bytes": 246286,
+            "size_ratio": 1.0001015183078117,
+            "source_group": "validation:cost_sensitive:8"
+          },
+          {
+            "best_size_ratio": 1.000004057025551,
+            "case": "validation/cost_sensitive-11-0.raw",
+            "encode_ns": 5058542,
+            "family": "cost_sensitive",
+            "original_balanced_bytes": 246486,
+            "original_balanced_ns": 4009875.0000000005,
+            "original_best_bytes": 246486,
+            "original_best_ns": 9828167,
+            "packed_bytes": 246487,
+            "size_ratio": 1.000004057025551,
+            "source_group": "validation:cost_sensitive:11"
+          },
+          {
+            "best_size_ratio": 1.7111884368308352,
+            "case": "validation/collision_trigram-8-0.raw",
+            "encode_ns": 715220.2857142857,
+            "family": "collision_trigram",
+            "original_balanced_bytes": 13745,
+            "original_balanced_ns": 2319930.3333333335,
+            "original_best_bytes": 11208,
+            "original_best_ns": 1780569.3333333333,
+            "packed_bytes": 19179,
+            "size_ratio": 1.3953437613677702,
+            "source_group": "validation:collision_trigram:8"
+          },
+          {
+            "best_size_ratio": 1.6503205683590365,
+            "case": "validation/collision_trigram-11-0.raw",
+            "encode_ns": 705604.125,
+            "family": "collision_trigram",
+            "original_balanced_bytes": 14098,
+            "original_balanced_ns": 2068458.3333333333,
+            "original_best_bytes": 11542,
+            "original_best_ns": 1568500,
+            "packed_bytes": 19048,
+            "size_ratio": 1.3511136331394524,
+            "source_group": "validation:collision_trigram:11"
+          },
+          {
+            "best_size_ratio": 1.16130657485935,
+            "case": "validation/collision_fourbyte-8-0.raw",
+            "encode_ns": 630619.875,
+            "family": "collision_fourbyte",
+            "original_balanced_bytes": 11133,
+            "original_balanced_ns": 1292531.25,
+            "original_best_bytes": 11909,
+            "original_best_ns": 4714166.5,
+            "packed_bytes": 13830,
+            "size_ratio": 1.2422527620587442,
+            "source_group": "validation:collision_fourbyte:8"
+          },
+          {
+            "best_size_ratio": 1.09515557306026,
+            "case": "validation/collision_fourbyte-11-0.raw",
+            "encode_ns": 613208.3333333334,
+            "family": "collision_fourbyte",
+            "original_balanced_bytes": 14538,
+            "original_balanced_ns": 1833638.6666666667,
+            "original_best_bytes": 12695,
+            "original_best_ns": 4610375,
+            "packed_bytes": 13903,
+            "size_ratio": 0.9563213646994084,
+            "source_group": "validation:collision_fourbyte:11"
+          },
+          {
+            "best_size_ratio": 1.2625323921007954,
+            "case": "validation/collision_cost_trigram-8-0.raw",
+            "encode_ns": 655781.25,
+            "family": "collision_cost_trigram",
+            "original_balanced_bytes": 11309,
+            "original_balanced_ns": 1311927,
+            "original_best_bytes": 11191,
+            "original_best_ns": 1789819.3333333333,
+            "packed_bytes": 14129,
+            "size_ratio": 1.249358917676187,
+            "source_group": "validation:collision_cost_trigram:8"
+          },
+          {
+            "best_size_ratio": 1.2147685907436296,
+            "case": "validation/collision_cost_trigram-11-0.raw",
+            "encode_ns": 622328.7777777778,
+            "family": "collision_cost_trigram",
+            "original_balanced_bytes": 11748,
+            "original_balanced_ns": 1011566.6,
+            "original_best_bytes": 11538,
+            "original_best_ns": 1458166.5,
+            "packed_bytes": 14016,
+            "size_ratio": 1.1930541368743617,
+            "source_group": "validation:collision_cost_trigram:11"
+          },
+          {
+            "best_size_ratio": 0.999588378210148,
+            "case": "validation/change_points-8-0.raw",
+            "encode_ns": 1987013.6666666667,
+            "family": "change_points",
+            "original_balanced_bytes": 99565,
+            "original_balanced_ns": 2794021,
+            "original_best_bytes": 99606,
+            "original_best_ns": 3847125,
+            "packed_bytes": 99565,
+            "size_ratio": 1.0,
+            "source_group": "validation:change_points:8"
+          },
+          {
+            "best_size_ratio": 1.0008745329199178,
+            "case": "validation/change_points-11-0.raw",
+            "encode_ns": 1756611,
+            "family": "change_points",
+            "original_balanced_bytes": 88116,
+            "original_balanced_ns": 2406208.3333333335,
+            "original_best_bytes": 88047,
+            "original_best_ns": 3398520.5,
+            "packed_bytes": 88124,
+            "size_ratio": 1.0000907894139544,
+            "source_group": "validation:change_points:11"
+          },
+          {
+            "best_size_ratio": 1.0058011183266997,
+            "case": "validation/drift-8-0.raw",
+            "encode_ns": 5491750,
+            "family": "drift",
+            "original_balanced_bytes": 187342,
+            "original_balanced_ns": 7527084,
+            "original_best_bytes": 186171,
+            "original_best_ns": 9513833,
+            "packed_bytes": 187251,
+            "size_ratio": 0.9995142573475249,
+            "source_group": "validation:drift:8"
+          },
+          {
+            "best_size_ratio": 1.011127842031632,
+            "case": "validation/drift-11-0.raw",
+            "encode_ns": 5452000,
+            "family": "drift",
+            "original_balanced_bytes": 188347,
+            "original_balanced_ns": 7589417,
+            "original_best_bytes": 187278,
+            "original_best_ns": 9619625,
+            "packed_bytes": 189362,
+            "size_ratio": 1.0053889894715604,
+            "source_group": "validation:drift:11"
+          },
+          {
+            "best_size_ratio": 1.0,
+            "case": "validation/feature_sampling_trap-8-0.raw",
+            "encode_ns": 5416083,
+            "family": "feature_sampling_trap",
+            "original_balanced_bytes": 262169,
+            "original_balanced_ns": 8065833.999999999,
+            "original_best_bytes": 262169,
+            "original_best_ns": 10025791,
+            "packed_bytes": 262169,
+            "size_ratio": 1.0,
+            "source_group": "validation:feature_sampling_trap:8"
+          },
+          {
+            "best_size_ratio": 1.164423544673261,
+            "case": "validation/feature_sampling_trap-11-0.raw",
+            "encode_ns": 660885.5,
+            "family": "feature_sampling_trap",
+            "original_balanced_bytes": 13616,
+            "original_balanced_ns": 2007250,
+            "original_best_bytes": 12334,
+            "original_best_ns": 10539333,
+            "packed_bytes": 14362,
+            "size_ratio": 1.0547884841363102,
+            "source_group": "validation:feature_sampling_trap:11"
+          },
+          {
+            "best_size_ratio": 1.0156903765690377,
+            "case": "validation/random_islands-8-0.raw",
+            "encode_ns": 421513.9166666667,
+            "family": "random_islands",
+            "original_balanced_bytes": 4780,
+            "original_balanced_ns": 488003.8181818182,
+            "original_best_bytes": 4780,
+            "original_best_ns": 701703.125,
+            "packed_bytes": 4855,
+            "size_ratio": 1.0156903765690377,
+            "source_group": "validation:random_islands:8"
+          },
+          {
+            "best_size_ratio": 1.021559710291393,
+            "case": "validation/random_islands-11-0.raw",
+            "encode_ns": 439996.5,
+            "family": "random_islands",
+            "original_balanced_bytes": 5937,
+            "original_balanced_ns": 514887.5,
+            "original_best_bytes": 5937,
+            "original_best_ns": 724363.1428571428,
+            "packed_bytes": 6065,
+            "size_ratio": 1.021559710291393,
+            "source_group": "validation:random_islands:11"
+          },
+          {
+            "best_size_ratio": 1.0,
+            "case": "validation/paired_transforms-8-0.raw",
+            "encode_ns": 201470,
+            "family": "paired_transforms",
+            "original_balanced_bytes": 1017,
+            "original_balanced_ns": 244944.47619047618,
+            "original_best_bytes": 1017,
+            "original_best_ns": 261102.05,
+            "packed_bytes": 1017,
+            "size_ratio": 1.0,
+            "source_group": "validation:paired_transforms:8"
+          },
+          {
+            "best_size_ratio": 1.000957709942085,
+            "case": "validation/paired_transforms-8-1.raw",
+            "encode_ns": 2806354,
+            "family": "paired_transforms",
+            "original_balanced_bytes": 132735,
+            "original_balanced_ns": 2256694.3333333335,
+            "original_best_bytes": 132608,
+            "original_best_ns": 5501416,
+            "packed_bytes": 132735,
+            "size_ratio": 1.0,
+            "source_group": "validation:paired_transforms:8"
+          },
+          {
+            "best_size_ratio": 1.0,
+            "case": "validation/paired_transforms-11-0.raw",
+            "encode_ns": 203638.32,
+            "family": "paired_transforms",
+            "original_balanced_bytes": 1021,
+            "original_balanced_ns": 139939.80555555556,
+            "original_best_bytes": 1021,
+            "original_best_ns": 255162.5,
+            "packed_bytes": 1021,
+            "size_ratio": 1.0,
+            "source_group": "validation:paired_transforms:11"
+          },
+          {
+            "best_size_ratio": 1.0008270925441367,
+            "case": "validation/paired_transforms-11-1.raw",
+            "encode_ns": 1303031.25,
+            "family": "paired_transforms",
+            "original_balanced_bytes": 66554,
+            "original_balanced_ns": 1110425,
+            "original_best_bytes": 66498,
+            "original_best_ns": 2545062.5,
+            "packed_bytes": 66553,
+            "size_ratio": 0.999984974607086,
+            "source_group": "validation:paired_transforms:11"
+          }
+        ],
+        "packed_size_change_pct": 1.1996171592152383,
+        "packed_size_change_vs_best_pct": 1.8419594906774917,
+        "warm_speed_vs_original_balanced": 1.3185061946207715,
+        "warm_speed_vs_original_best": 2.2999707087900783,
+        "worst_file_size_ratio": 1.3953437613677702
+      }
+    },
+    "old-regression": {
+      "bounded:16:1:feedback:0": {
+        "files": [
+          {
+            "best_size_ratio": 1.0758328581901115,
+            "case": "test/fresh-1-feature_sampling_trap-5-0.raw",
+            "encode_ns": 3456729.5,
+            "family": "feature_sampling_trap",
+            "original_balanced_bytes": 12769,
+            "original_balanced_ns": 1981597,
+            "original_best_bytes": 12277,
+            "original_best_ns": 10474167,
+            "packed_bytes": 13208,
+            "size_ratio": 1.0343801394001095,
+            "source_group": "s9-feature_sampling_trap"
+          },
+          {
+            "best_size_ratio": 1.0122110771914523,
+            "case": "test/fresh-0-new-template_edits-1021.raw",
+            "encode_ns": 1829277.6666666667,
+            "family": "template_edits",
+            "original_balanced_bytes": 4643,
+            "original_balanced_ns": 397259.6153846154,
+            "original_best_bytes": 4586,
+            "original_best_ns": 903263.8333333334,
+            "packed_bytes": 4642,
+            "size_ratio": 0.9997846220116304,
+            "source_group": "s9-template_edits"
+          },
+          {
+            "best_size_ratio": 1.5462461505787406,
+            "case": "test/fresh-1-collision_trigram-5-0.raw",
+            "encode_ns": 8776625,
+            "family": "collision_trigram",
+            "original_balanced_bytes": 24122,
+            "original_balanced_ns": 4773000,
+            "original_best_bytes": 18834,
+            "original_best_ns": 2915333.5,
+            "packed_bytes": 29122,
+            "size_ratio": 1.207279661719592,
+            "source_group": "s9-collision_trigram"
+          }
+        ],
+        "packed_size_change_pct": 13.092887754610683,
+        "packed_size_change_vs_best_pct": 31.58528727904306,
+        "warm_speed_vs_original_balanced": 0.5085716906068983,
+        "warm_speed_vs_original_best": 1.0163648002691958,
+        "worst_file_size_ratio": 1.207279661719592
+      },
+      "bounded:16:1:feedback:1": {
+        "files": [
+          {
+            "best_size_ratio": 1.0758328581901115,
+            "case": "test/fresh-1-feature_sampling_trap-5-0.raw",
+            "encode_ns": 3595396,
+            "family": "feature_sampling_trap",
+            "original_balanced_bytes": 12769,
+            "original_balanced_ns": 1876514,
+            "original_best_bytes": 12277,
+            "original_best_ns": 10791417,
+            "packed_bytes": 13208,
+            "size_ratio": 1.0343801394001095,
+            "source_group": "s9-feature_sampling_trap"
+          },
+          {
+            "best_size_ratio": 1.0122110771914523,
+            "case": "test/fresh-0-new-template_edits-1021.raw",
+            "encode_ns": 1924041.6666666667,
+            "family": "template_edits",
+            "original_balanced_bytes": 4643,
+            "original_balanced_ns": 391990.3846153846,
+            "original_best_bytes": 4586,
+            "original_best_ns": 895784.6666666666,
+            "packed_bytes": 4642,
+            "size_ratio": 0.9997846220116304,
+            "source_group": "s9-template_edits"
+          },
+          {
+            "best_size_ratio": 1.5462461505787406,
+            "case": "test/fresh-1-collision_trigram-5-0.raw",
+            "encode_ns": 9055791,
+            "family": "collision_trigram",
+            "original_balanced_bytes": 24122,
+            "original_balanced_ns": 4669270.5,
+            "original_best_bytes": 18834,
+            "original_best_ns": 2903708.5,
+            "packed_bytes": 29122,
+            "size_ratio": 1.207279661719592,
+            "source_group": "s9-collision_trigram"
+          }
+        ],
+        "packed_size_change_pct": 13.092887754610683,
+        "packed_size_change_vs_best_pct": 31.58528727904306,
+        "warm_speed_vs_original_balanced": 0.4759976699701441,
+        "warm_speed_vs_original_best": 1.0010759007874683,
+        "worst_file_size_ratio": 1.207279661719592
+      },
+      "bounded:4:0:longest:0": {
+        "files": [
+          {
+            "best_size_ratio": 1.1466970758328583,
+            "case": "test/fresh-1-feature_sampling_trap-5-0.raw",
+            "encode_ns": 627979.125,
+            "family": "feature_sampling_trap",
+            "original_balanced_bytes": 12769,
+            "original_balanced_ns": 1895319.3333333333,
+            "original_best_bytes": 12277,
+            "original_best_ns": 10486083,
+            "packed_bytes": 14078,
+            "size_ratio": 1.10251390085363,
+            "source_group": "s9-feature_sampling_trap"
+          },
+          {
+            "best_size_ratio": 1.0290013083296992,
+            "case": "test/fresh-0-new-template_edits-1021.raw",
+            "encode_ns": 473969.63636363635,
+            "family": "template_edits",
+            "original_balanced_bytes": 4643,
+            "original_balanced_ns": 385189.07692307694,
+            "original_best_bytes": 4586,
+            "original_best_ns": 945388.8333333334,
+            "packed_bytes": 4719,
+            "size_ratio": 1.0163687271160888,
+            "source_group": "s9-template_edits"
+          },
+          {
+            "best_size_ratio": 1.8131570563873844,
+            "case": "test/fresh-1-collision_trigram-5-0.raw",
+            "encode_ns": 1027550,
+            "family": "collision_trigram",
+            "original_balanced_bytes": 24122,
+            "original_balanced_ns": 4753708.5,
+            "original_best_bytes": 18834,
+            "original_best_ns": 2871271,
+            "packed_bytes": 34149,
+            "size_ratio": 1.41567863361247,
+            "source_group": "s9-collision_trigram"
+          }
+        ],
+        "packed_size_change_pct": 27.476284489815583,
+        "packed_size_change_vs_best_pct": 48.32058716418746,
+        "warm_speed_vs_original_balanced": 3.303226579832341,
+        "warm_speed_vs_original_best": 6.7164832836880795,
+        "worst_file_size_ratio": 1.41567863361247
+      }
+    }
+  },
+  "oracle": {
+    "max_fixed_bit_gap": 132,
+    "optimal": 78,
+    "pairs": 384,
+    "sha256": "e5c99c9a1c2f09134e441b81b4c7f4bea841bb120811cfb6d23b6011cc142369"
+  },
+  "protocol": {
+    "build": {
+      "flags": {},
+      "log_sha256": "9576f1f7e73fc2bb1ec2336aae60cb485c591eadc60a1b998573411c34057e08",
+      "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)"
+    },
+    "cases": [
+      {
+        "archive_member": null,
+        "bytes": 105355,
+        "class": "source",
+        "extracted_source_bytes": 105355,
+        "extracted_source_sha256": "ceead71cf9baad16b4f7d19405f9e38350f009432196165a727b6b81802b0994",
+        "extraction_range": [
+          0,
+          105355
+        ],
+        "family": "real",
+        "license": "MIT OR Apache-2.0",
+        "license_path": "licenses/rust.txt",
+        "partition": "validation",
+        "path": "validation/rust.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:39.144760+00:00",
+          "commit": "6b00bc3880198600130e1cf62b8f8a93494488cc",
+          "download": {
+            "bytes": 105355,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"b2c73a95302432cab7d7790e1c0675a701bba80f0aca865085ec57f17d3a34ae\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/rust-lang/rust/6b00bc3880198600130e1cf62b8f8a93494488cc/library/core/src/str/mod.rs",
+            "resolved_url": "https://raw.githubusercontent.com/rust-lang/rust/6b00bc3880198600130e1cf62b8f8a93494488cc/library/core/src/str/mod.rs",
+            "sha256": "ceead71cf9baad16b4f7d19405f9e38350f009432196165a727b6b81802b0994"
+          },
+          "license_download": {
+            "bytes": 1068,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"6d9a1a6e3773aed7a994e6c78b043d1984934b1629a3a1677a506a392dd23e24\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/rust-lang/rust/6b00bc3880198600130e1cf62b8f8a93494488cc/LICENSE-MIT",
+            "resolved_url": "https://raw.githubusercontent.com/rust-lang/rust/6b00bc3880198600130e1cf62b8f8a93494488cc/LICENSE-MIT",
+            "sha256": "b71bd43a069ca0641a9ecfe585ca7b3c53b5cc1608f8b68321168698e28b5ea1"
+          },
+          "source": {
+            "class": "source",
+            "file": "library/core/src/str/mod.rs",
+            "id": "rust",
+            "license": "MIT OR Apache-2.0",
+            "license_file": "LICENSE-MIT",
+            "partition": "validation",
+            "ref": "1.88.0",
+            "repo": "rust-lang/rust"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/validation/rust.raw",
+        "scope": "new-real-validation",
+        "sha256": "ceead71cf9baad16b4f7d19405f9e38350f009432196165a727b6b81802b0994",
+        "source_group": "rust"
+      },
+      {
+        "archive_member": null,
+        "bytes": 501908,
+        "class": "source",
+        "extracted_source_bytes": 501908,
+        "extracted_source_sha256": "ba8ad5a6e1df5768dee7dbca5f2594400a741806b4f671579ecf806969b9e3bf",
+        "extraction_range": [
+          0,
+          501908
+        ],
+        "family": "real",
+        "license": "PostgreSQL",
+        "license_path": "licenses/postgresql.txt",
+        "partition": "validation",
+        "path": "validation/postgresql.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:38.585473+00:00",
+          "commit": "7885b94dd81b98bbab9ed878680d156df7bf857f",
+          "download": {
+            "bytes": 501908,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"be67b2eef2e5bcfcf2bc6bb04352441d58b10e2cff3c159bf9b77e7ace8fcbe1\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/postgres/postgres/7885b94dd81b98bbab9ed878680d156df7bf857f/src/backend/parser/gram.y",
+            "resolved_url": "https://raw.githubusercontent.com/postgres/postgres/7885b94dd81b98bbab9ed878680d156df7bf857f/src/backend/parser/gram.y",
+            "sha256": "ba8ad5a6e1df5768dee7dbca5f2594400a741806b4f671579ecf806969b9e3bf"
+          },
+          "license_download": {
+            "bytes": 1198,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"1cc812bf7f7006038dc3afe3fa61ef61aee126a4e3923ae807828ce4a11515e2\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/postgres/postgres/7885b94dd81b98bbab9ed878680d156df7bf857f/COPYRIGHT",
+            "resolved_url": "https://raw.githubusercontent.com/postgres/postgres/7885b94dd81b98bbab9ed878680d156df7bf857f/COPYRIGHT",
+            "sha256": "5ed3ce5c9373dff7f98b1fae7a6c7ccd98df7d734d46d24c1bcebf1240be8307"
+          },
+          "source": {
+            "class": "source",
+            "file": "src/backend/parser/gram.y",
+            "id": "postgresql",
+            "license": "PostgreSQL",
+            "license_file": "COPYRIGHT",
+            "partition": "validation",
+            "ref": "REL_17_6",
+            "repo": "postgres/postgres"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/validation/postgresql.raw",
+        "scope": "new-real-validation",
+        "sha256": "ba8ad5a6e1df5768dee7dbca5f2594400a741806b4f671579ecf806969b9e3bf",
+        "source_group": "postgresql"
+      },
+      {
+        "archive_member": null,
+        "bytes": 838726,
+        "class": "structured",
+        "extracted_source_bytes": 838726,
+        "extracted_source_sha256": "6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f",
+        "extraction_range": [
+          0,
+          838726
+        ],
+        "family": "real",
+        "license": "public domain",
+        "license_path": "licenses/natural-earth.txt",
+        "partition": "validation",
+        "path": "validation/natural-earth.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:39.653376+00:00",
+          "commit": "ca96624a56bd078437bca8184e78163e5039ad19",
+          "download": {
+            "bytes": 838726,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"e2d9d73e03bb65f28bbc4b83cc136b667337ec9e6316d7e58d6334916b70dacb\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_admin_0_countries.geojson",
+            "resolved_url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_admin_0_countries.geojson",
+            "sha256": "6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f"
+          },
+          "license_download": {
+            "bytes": 38013,
+            "content_type": "text/html; charset=UTF-8",
+            "etag": null,
+            "last_modified": "Wed, 07 Oct 2026 08:59:52 GMT",
+            "requested_url": "https://www.naturalearthdata.com/about/terms-of-use/",
+            "resolved_url": "https://www.naturalearthdata.com/about/terms-of-use/",
+            "sha256": "76ff08520d4f4c78b45525cab2706bcca97ede0dc15d739ae8cae20e23c0e86e"
+          },
+          "source": {
+            "class": "structured",
+            "file": "geojson/ne_110m_admin_0_countries.geojson",
+            "id": "natural-earth",
+            "license": "public domain",
+            "license_url": "https://www.naturalearthdata.com/about/terms-of-use/",
+            "partition": "validation",
+            "ref": "HEAD",
+            "repo": "nvkelso/natural-earth-vector"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/validation/natural-earth.raw",
+        "scope": "new-real-validation",
+        "sha256": "6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f",
+        "source_group": "natural-earth"
+      },
+      {
+        "archive_member": null,
+        "bytes": 51937,
+        "class": "markup",
+        "extracted_source_bytes": 51937,
+        "extracted_source_sha256": "d0fe40614aff13d18750e6f449ba2a033209713e2b73be09a0bad73c90bcb894",
+        "extraction_range": [
+          0,
+          51937
+        ],
+        "family": "real",
+        "license": "W3C document terms",
+        "license_path": "licenses/w3c-svg.txt",
+        "partition": "validation",
+        "path": "validation/w3c-svg.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:39.077001+00:00",
+          "commit": null,
+          "download": {
+            "bytes": 51937,
+            "content_type": "text/html; charset=utf-8",
+            "etag": null,
+            "last_modified": "Wed, 10 Aug 2011 03:35:27 GMT",
+            "requested_url": "https://www.w3.org/TR/SVG11/intro.html",
+            "resolved_url": "https://www.w3.org/TR/SVG11/intro.html",
+            "sha256": "d0fe40614aff13d18750e6f449ba2a033209713e2b73be09a0bad73c90bcb894"
+          },
+          "license_download": {
+            "bytes": 27473,
+            "content_type": "text/html; charset=UTF-8",
+            "etag": null,
+            "last_modified": null,
+            "requested_url": "https://www.w3.org/copyright/document-license/",
+            "resolved_url": "https://www.w3.org/copyright/document-license-2023/",
+            "sha256": "888bd32d1e7b386edd688a588b70873d794563bd8ae9cdeb09089ea50d0da29d"
+          },
+          "source": {
+            "class": "markup",
+            "id": "w3c-svg",
+            "license": "W3C document terms",
+            "license_url": "https://www.w3.org/copyright/document-license/",
+            "partition": "validation",
+            "url": "https://www.w3.org/TR/SVG11/intro.html"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/validation/w3c-svg.raw",
+        "scope": "new-real-validation",
+        "sha256": "d0fe40614aff13d18750e6f449ba2a033209713e2b73be09a0bad73c90bcb894",
+        "source_group": "w3c-svg"
+      },
+      {
+        "archive_member": "fd-v10.2.0-x86_64-unknown-linux-gnu/fd",
+        "bytes": 1048576,
+        "class": "executable",
+        "extracted_source_bytes": 4025736,
+        "extracted_source_sha256": "eea818be74986760a1436c72135041c6ac3d709eea268554a11356e71f066a8e",
+        "extraction_range": [
+          0,
+          1048576
+        ],
+        "family": "real",
+        "license": "MIT OR Apache-2.0",
+        "license_path": "licenses/fd.txt",
+        "partition": "validation",
+        "path": "validation/fd.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:40.228752+00:00",
+          "commit": null,
+          "download": {
+            "bytes": 1629598,
+            "content_type": "application/octet-stream",
+            "etag": "\"0x8DCC33E417535F2\"",
+            "last_modified": "Fri, 23 Aug 2024 06:38:53 GMT",
+            "requested_url": "https://github.com/sharkdp/fd/releases/download/v10.2.0/fd-v10.2.0-x86_64-unknown-linux-gnu.tar.gz",
+            "resolved_url": "https://release-assets.githubusercontent.com/github-production-release-asset/90793418/c857fb09-278f-408e-8144-9c0f4d9eb5d3?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-10-07T09%3A55%3A25Z&rscd=attachment%3B+filename%3Dfd-v10.2.0-x86_64-unknown-linux-gnu.tar.gz&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-10-07T08%3A54%3A27Z&ske=2026-10-07T09%3A55%3A25Z&sks=b&skv=2018-11-09&sig=e%2FX2bLz0JOvY1fR7lZdXSIaecjqdNyMi0GJ0TXwQMRc%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MTM2NDA1OSwibmJmIjoxNzkxMzYzNzU5LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.rwmCXrvGjiutWNTuUza7P_60HIZMEPMtC6eTjH0NPwM&response-content-disposition=attachment%3B%20filename%3Dfd-v10.2.0-x86_64-unknown-linux-gnu.tar.gz&response-content-type=application%2Foctet-stream",
+            "sha256": "5f9030bcb0e1d03818521ed2e3d74fdb046480a45a4418ccff4f070241b4ed25"
+          },
+          "license_download": {
+            "bytes": 1082,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"766ab1d156b06d61ee49a9a963fadd70e190eb21a94ee99ce89257e888123afb\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/sharkdp/fd/v10.2.0/LICENSE-MIT",
+            "resolved_url": "https://raw.githubusercontent.com/sharkdp/fd/v10.2.0/LICENSE-MIT",
+            "sha256": "322cfc7aa0c774d0eca3b2610f1d414de3ddbd7d8dd4b9dea941a13a6eb07455"
+          },
+          "source": {
+            "class": "executable",
+            "id": "fd",
+            "license": "MIT OR Apache-2.0",
+            "license_url": "https://raw.githubusercontent.com/sharkdp/fd/v10.2.0/LICENSE-MIT",
+            "member_suffix": "/fd",
+            "partition": "validation",
+            "url": "https://github.com/sharkdp/fd/releases/download/v10.2.0/fd-v10.2.0-x86_64-unknown-linux-gnu.tar.gz"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/validation/fd.raw",
+        "scope": "new-real-validation",
+        "sha256": "8c8d3b7b5a7ea2938b2c88a6a2df51ca24fd7f5421ae8e1de91192a0dae7f57a",
+        "source_group": "fd"
+      },
+      {
+        "archive_member": null,
+        "bytes": 810029,
+        "class": "compressed",
+        "extracted_source_bytes": 810029,
+        "extracted_source_sha256": "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269",
+        "extraction_range": [
+          0,
+          810029
+        ],
+        "family": "real",
+        "license": "bzip2-1.0.6",
+        "license_path": "licenses/bzip2-archive.txt",
+        "partition": "validation",
+        "path": "validation/bzip2-archive.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:44.323733+00:00",
+          "commit": null,
+          "download": {
+            "bytes": 810029,
+            "content_type": "application/x-gzip",
+            "etag": "\"c5c2d-58d93aafd7700\"",
+            "last_modified": "Sat, 13 Jul 2019 17:50:52 GMT",
+            "requested_url": "https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz",
+            "resolved_url": "https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz",
+            "sha256": "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269"
+          },
+          "license_download": {
+            "bytes": 1896,
+            "content_type": "text/plain; charset=ISO-8859-1",
+            "etag": null,
+            "last_modified": null,
+            "requested_url": "https://sourceware.org/git/?p=bzip2.git;a=blob_plain;f=LICENSE;hb=bzip2-1.0.8",
+            "resolved_url": "https://sourceware.org/git/?p=bzip2.git;a=blob_plain;f=LICENSE;hb=bzip2-1.0.8",
+            "sha256": "c6dbbf828498be844a89eaa3b84adbab3199e342eb5cb2ed2f0d4ba7ec0f38a3"
+          },
+          "source": {
+            "class": "compressed",
+            "id": "bzip2-archive",
+            "license": "bzip2-1.0.6",
+            "license_url": "https://sourceware.org/git/?p=bzip2.git;a=blob_plain;f=LICENSE;hb=bzip2-1.0.8",
+            "partition": "validation",
+            "url": "https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/validation/bzip2-archive.raw",
+        "scope": "new-real-validation",
+        "sha256": "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269",
+        "source_group": "bzip2-archive"
+      },
+      {
+        "archive_member": null,
+        "bytes": 641763,
+        "class": "mixed-binary",
+        "extracted_source_bytes": 641763,
+        "extracted_source_sha256": "ecef13f225de55549ee5214f70cca30998f3251dee65c6b00931aae18b7736c2",
+        "extraction_range": [
+          0,
+          641763
+        ],
+        "family": "real",
+        "license": "GPL-2.0",
+        "license_path": "licenses/lshort.txt",
+        "partition": "validation",
+        "path": "validation/lshort.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:41.904146+00:00",
+          "commit": null,
+          "download": {
+            "bytes": 641763,
+            "content_type": "application/pdf",
+            "etag": "\"9cae3-5bd19fc671780\"",
+            "last_modified": "Tue, 09 Mar 2021 12:49:50 GMT",
+            "requested_url": "https://mirrors.ctan.org/info/lshort/english/lshort.pdf",
+            "resolved_url": "https://ftp.cvut.cz/CTAN/info/lshort/english/lshort.pdf",
+            "sha256": "ecef13f225de55549ee5214f70cca30998f3251dee65c6b00931aae18b7736c2"
+          },
+          "license_download": {
+            "bytes": 17405,
+            "content_type": "text/html;charset=UTF-8",
+            "etag": null,
+            "last_modified": null,
+            "requested_url": "https://ctan.org/pkg/lshort-english",
+            "resolved_url": "https://ctan.org/pkg/lshort-english",
+            "sha256": "8a67f70c984e0308e00839d78f395457ffd9eb6219970dbf5b5ebbd2b0df4c5a"
+          },
+          "source": {
+            "class": "mixed-binary",
+            "id": "lshort",
+            "license": "GPL-2.0",
+            "license_url": "https://ctan.org/pkg/lshort-english",
+            "partition": "validation",
+            "url": "https://mirrors.ctan.org/info/lshort/english/lshort.pdf"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/validation/lshort.raw",
+        "scope": "new-real-validation",
+        "sha256": "ecef13f225de55549ee5214f70cca30998f3251dee65c6b00931aae18b7736c2",
+        "source_group": "lshort"
+      },
+      {
+        "archive_member": "dejavu-fonts-ttf-2.37/ttf/DejaVuSans.ttf",
+        "bytes": 757076,
+        "class": "mixed-binary",
+        "extracted_source_bytes": 757076,
+        "extracted_source_sha256": "7da195a74c55bef988d0d48f9508bd5d849425c1770dba5d7bfc6ce9ed848954",
+        "extraction_range": [
+          0,
+          757076
+        ],
+        "family": "real",
+        "license": "Bitstream Vera and DejaVu terms",
+        "license_path": "licenses/dejavu.txt",
+        "partition": "validation",
+        "path": "validation/dejavu.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:41.570205+00:00",
+          "commit": null,
+          "download": {
+            "bytes": 5429777,
+            "content_type": "application/octet-stream",
+            "etag": "\"0x8D9B9CBE1F7F464\"",
+            "last_modified": "Tue, 07 Dec 2021 21:52:37 GMT",
+            "requested_url": "https://github.com/dejavu-fonts/dejavu-fonts/releases/download/version_2_37/dejavu-fonts-ttf-2.37.tar.bz2",
+            "resolved_url": "https://release-assets.githubusercontent.com/github-production-release-asset/35780815/409cca4c-5655-11e6-91b7-15d1661045d3?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-10-07T09%3A57%3A29Z&rscd=attachment%3B+filename%3Ddejavu-fonts-ttf-2.37.tar.bz2&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-10-07T08%3A56%3A48Z&ske=2026-10-07T09%3A57%3A29Z&sks=b&skv=2018-11-09&sig=TbAXdiabfRiRLQErordydYI9UXBSqPzCgk8q4p8FFAU%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MTM2NDA2MCwibmJmIjoxNzkxMzYzNzYwLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.L0mJCh19pGWiwO1BtSJhr9f8YOof74q4HTqzMOwjI6A&response-content-disposition=attachment%3B%20filename%3Ddejavu-fonts-ttf-2.37.tar.bz2&response-content-type=application%2Foctet-stream",
+            "sha256": "fa9ca4d13871dd122f61258a80d01751d603b4d3ee14095d65453b4e846e17d7"
+          },
+          "license_download": {
+            "bytes": 8816,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"b40b446010bc6736a1a697f71260696fcc2af9dd9422f2ad1119a9a9b7e3242d\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/version_2_37/LICENSE",
+            "resolved_url": "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/version_2_37/LICENSE",
+            "sha256": "7a083b136e64d064794c3419751e5c7dd10d2f64c108fe5ba161eae5e5958a93"
+          },
+          "source": {
+            "class": "mixed-binary",
+            "id": "dejavu",
+            "license": "Bitstream Vera and DejaVu terms",
+            "license_url": "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/version_2_37/LICENSE",
+            "member_suffix": "/DejaVuSans.ttf",
+            "partition": "validation",
+            "url": "https://github.com/dejavu-fonts/dejavu-fonts/releases/download/version_2_37/dejavu-fonts-ttf-2.37.tar.bz2"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/validation/dejavu.raw",
+        "scope": "new-real-validation",
+        "sha256": "7da195a74c55bef988d0d48f9508bd5d849425c1770dba5d7bfc6ce9ed848954",
+        "source_group": "dejavu"
+      },
+      {
+        "bytes": 262144,
+        "class": "synthetic",
+        "family": "feature_sampling_trap",
+        "partition": "regression",
+        "path": "test/fresh-1-feature_sampling_trap-5-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/search/final-s9-rotated/corpus/test/fresh-1-feature_sampling_trap-5-0.raw",
+        "scope": "old-regression",
+        "sha256": "5f4a6023f9f567d48485c68fbf7a75a1b5edd9db0064121effe8fd383e03a45a",
+        "source_group": "s9-feature_sampling_trap"
+      },
+      {
+        "bytes": 262144,
+        "class": "synthetic",
+        "family": "template_edits",
+        "partition": "regression",
+        "path": "test/fresh-0-new-template_edits-1021.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/search/final-s9-rotated/corpus/test/fresh-0-new-template_edits-1021.raw",
+        "scope": "old-regression",
+        "sha256": "b996b8d16c37929f3d991ef2aeed12c885c0ccb4f8f4d815760330ced3a56ef8",
+        "source_group": "s9-template_edits"
+      },
+      {
+        "bytes": 262144,
+        "class": "synthetic",
+        "family": "collision_trigram",
+        "partition": "regression",
+        "path": "test/fresh-1-collision_trigram-5-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/search/final-s9-rotated/corpus/test/fresh-1-collision_trigram-5-0.raw",
+        "scope": "old-regression",
+        "sha256": "62fc490ba89ea6d465dba7e12fb70cbed9cecaa48c01332e5368460768eb1e4b",
+        "source_group": "s9-collision_trigram"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "injections": [
+            [
+              33008,
+              33,
+              257
+            ],
+            [
+              34037,
+              63,
+              32767
+            ],
+            [
+              35066,
+              64,
+              1
+            ],
+            [
+              36095,
+              127,
+              32
+            ],
+            [
+              37124,
+              128,
+              65
+            ],
+            [
+              38153,
+              129,
+              1024
+            ],
+            [
+              39182,
+              255,
+              32768
+            ],
+            [
+              40211,
+              256,
+              4
+            ],
+            [
+              41240,
+              258,
+              33
+            ],
+            [
+              42269,
+              3,
+              256
+            ],
+            [
+              43298,
+              4,
+              4096
+            ],
+            [
+              44327,
+              5,
+              32769
+            ],
+            [
+              45356,
+              10,
+              16
+            ],
+            [
+              46385,
+              11,
+              64
+            ],
+            [
+              47414,
+              12,
+              257
+            ],
+            [
+              48443,
+              31,
+              32767
+            ],
+            [
+              49472,
+              32,
+              1
+            ],
+            [
+              50501,
+              33,
+              32
+            ],
+            [
+              51530,
+              63,
+              65
+            ],
+            [
+              52559,
+              64,
+              1024
+            ],
+            [
+              53588,
+              127,
+              32768
+            ],
+            [
+              54617,
+              128,
+              4
+            ],
+            [
+              55646,
+              129,
+              33
+            ],
+            [
+              56675,
+              255,
+              256
+            ],
+            [
+              57704,
+              256,
+              4096
+            ],
+            [
+              58733,
+              258,
+              32769
+            ],
+            [
+              59762,
+              3,
+              16
+            ],
+            [
+              60791,
+              4,
+              64
+            ],
+            [
+              61820,
+              5,
+              257
+            ],
+            [
+              62849,
+              10,
+              32767
+            ],
+            [
+              63878,
+              11,
+              1
+            ],
+            [
+              64907,
+              12,
+              32
+            ],
+            [
+              65936,
+              31,
+              65
+            ],
+            [
+              66965,
+              32,
+              1024
+            ],
+            [
+              67994,
+              33,
+              32768
+            ],
+            [
+              69023,
+              63,
+              4
+            ],
+            [
+              70052,
+              64,
+              33
+            ],
+            [
+              71081,
+              127,
+              256
+            ],
+            [
+              72110,
+              128,
+              4096
+            ],
+            [
+              73139,
+              129,
+              32769
+            ],
+            [
+              74168,
+              255,
+              16
+            ],
+            [
+              75197,
+              256,
+              64
+            ],
+            [
+              76226,
+              258,
+              257
+            ],
+            [
+              77255,
+              3,
+              32767
+            ],
+            [
+              78284,
+              4,
+              1
+            ],
+            [
+              79313,
+              5,
+              32
+            ],
+            [
+              80342,
+              10,
+              65
+            ],
+            [
+              81371,
+              11,
+              1024
+            ],
+            [
+              82400,
+              12,
+              32768
+            ],
+            [
+              83429,
+              31,
+              4
+            ],
+            [
+              84458,
+              32,
+              33
+            ],
+            [
+              85487,
+              33,
+              256
+            ],
+            [
+              86516,
+              63,
+              4096
+            ],
+            [
+              87545,
+              64,
+              32769
+            ],
+            [
+              88574,
+              127,
+              16
+            ],
+            [
+              89603,
+              128,
+              64
+            ],
+            [
+              90632,
+              129,
+              257
+            ],
+            [
+              91661,
+              255,
+              32767
+            ],
+            [
+              92690,
+              256,
+              1
+            ],
+            [
+              93719,
+              258,
+              32
+            ],
+            [
+              94748,
+              3,
+              65
+            ],
+            [
+              95777,
+              4,
+              1024
+            ],
+            [
+              96806,
+              5,
+              32768
+            ],
+            [
+              97835,
+              10,
+              4
+            ],
+            [
+              98864,
+              11,
+              33
+            ],
+            [
+              99893,
+              12,
+              256
+            ],
+            [
+              100922,
+              31,
+              4096
+            ],
+            [
+              101951,
+              32,
+              32769
+            ],
+            [
+              102980,
+              33,
+              16
+            ],
+            [
+              104009,
+              63,
+              64
+            ],
+            [
+              105038,
+              64,
+              257
+            ],
+            [
+              106067,
+              127,
+              32767
+            ],
+            [
+              107096,
+              128,
+              1
+            ],
+            [
+              108125,
+              129,
+              32
+            ],
+            [
+              109154,
+              255,
+              65
+            ],
+            [
+              110183,
+              256,
+              1024
+            ],
+            [
+              111212,
+              258,
+              32768
+            ],
+            [
+              112241,
+              3,
+              4
+            ],
+            [
+              113270,
+              4,
+              33
+            ],
+            [
+              114299,
+              5,
+              256
+            ],
+            [
+              115328,
+              10,
+              4096
+            ],
+            [
+              116357,
+              11,
+              32769
+            ],
+            [
+              117386,
+              12,
+              16
+            ],
+            [
+              118415,
+              31,
+              64
+            ],
+            [
+              119444,
+              32,
+              257
+            ],
+            [
+              120473,
+              33,
+              32767
+            ],
+            [
+              121502,
+              63,
+              1
+            ],
+            [
+              122531,
+              64,
+              32
+            ],
+            [
+              123560,
+              127,
+              65
+            ],
+            [
+              124589,
+              128,
+              1024
+            ],
+            [
+              125618,
+              129,
+              32768
+            ],
+            [
+              126647,
+              255,
+              4
+            ],
+            [
+              127676,
+              256,
+              33
+            ],
+            [
+              128705,
+              258,
+              256
+            ],
+            [
+              129734,
+              3,
+              4096
+            ],
+            [
+              130763,
+              4,
+              32769
+            ],
+            [
+              131792,
+              5,
+              16
+            ],
+            [
+              132821,
+              10,
+              64
+            ],
+            [
+              133850,
+              11,
+              257
+            ],
+            [
+              134879,
+              12,
+              32767
+            ],
+            [
+              135908,
+              31,
+              1
+            ],
+            [
+              136937,
+              32,
+              32
+            ],
+            [
+              137966,
+              33,
+              65
+            ],
+            [
+              138995,
+              63,
+              1024
+            ],
+            [
+              140024,
+              64,
+              32768
+            ],
+            [
+              141053,
+              127,
+              4
+            ],
+            [
+              142082,
+              128,
+              33
+            ],
+            [
+              143111,
+              129,
+              256
+            ],
+            [
+              144140,
+              255,
+              4096
+            ],
+            [
+              145169,
+              256,
+              32769
+            ],
+            [
+              146198,
+              258,
+              16
+            ],
+            [
+              147227,
+              3,
+              64
+            ],
+            [
+              148256,
+              4,
+              257
+            ],
+            [
+              149285,
+              5,
+              32767
+            ],
+            [
+              150314,
+              10,
+              1
+            ],
+            [
+              151343,
+              11,
+              32
+            ],
+            [
+              152372,
+              12,
+              65
+            ],
+            [
+              153401,
+              31,
+              1024
+            ],
+            [
+              154430,
+              32,
+              32768
+            ],
+            [
+              155459,
+              33,
+              4
+            ],
+            [
+              156488,
+              63,
+              33
+            ],
+            [
+              157517,
+              64,
+              256
+            ],
+            [
+              158546,
+              127,
+              4096
+            ],
+            [
+              159575,
+              128,
+              32769
+            ],
+            [
+              160604,
+              129,
+              16
+            ],
+            [
+              161633,
+              255,
+              64
+            ],
+            [
+              162662,
+              256,
+              257
+            ],
+            [
+              163691,
+              258,
+              32767
+            ],
+            [
+              164720,
+              3,
+              1
+            ],
+            [
+              165749,
+              4,
+              32
+            ],
+            [
+              166778,
+              5,
+              65
+            ],
+            [
+              167807,
+              10,
+              1024
+            ],
+            [
+              168836,
+              11,
+              32768
+            ],
+            [
+              169865,
+              12,
+              4
+            ],
+            [
+              170894,
+              31,
+              33
+            ],
+            [
+              171923,
+              32,
+              256
+            ],
+            [
+              172952,
+              33,
+              4096
+            ],
+            [
+              173981,
+              63,
+              32769
+            ],
+            [
+              175010,
+              64,
+              16
+            ],
+            [
+              176039,
+              127,
+              64
+            ],
+            [
+              177068,
+              128,
+              257
+            ],
+            [
+              178097,
+              129,
+              32767
+            ],
+            [
+              179126,
+              255,
+              1
+            ],
+            [
+              180155,
+              256,
+              32
+            ],
+            [
+              181184,
+              258,
+              65
+            ],
+            [
+              182213,
+              3,
+              1024
+            ],
+            [
+              183242,
+              4,
+              32768
+            ],
+            [
+              184271,
+              5,
+              4
+            ],
+            [
+              185300,
+              10,
+              33
+            ],
+            [
+              186329,
+              11,
+              256
+            ],
+            [
+              187358,
+              12,
+              4096
+            ],
+            [
+              188387,
+              31,
+              32769
+            ],
+            [
+              189416,
+              32,
+              16
+            ],
+            [
+              190445,
+              33,
+              64
+            ],
+            [
+              191474,
+              63,
+              257
+            ],
+            [
+              192503,
+              64,
+              32767
+            ],
+            [
+              193532,
+              127,
+              1
+            ],
+            [
+              194561,
+              128,
+              32
+            ],
+            [
+              195590,
+              129,
+              65
+            ],
+            [
+              196619,
+              255,
+              1024
+            ],
+            [
+              197648,
+              256,
+              32768
+            ],
+            [
+              198677,
+              258,
+              4
+            ],
+            [
+              199706,
+              3,
+              33
+            ],
+            [
+              200735,
+              4,
+              256
+            ],
+            [
+              201764,
+              5,
+              4096
+            ],
+            [
+              202793,
+              10,
+              32769
+            ],
+            [
+              203822,
+              11,
+              16
+            ],
+            [
+              204851,
+              12,
+              64
+            ],
+            [
+              205880,
+              31,
+              257
+            ],
+            [
+              206909,
+              32,
+              32767
+            ],
+            [
+              207938,
+              33,
+              1
+            ],
+            [
+              208967,
+              63,
+              32
+            ],
+            [
+              209996,
+              64,
+              65
+            ],
+            [
+              211025,
+              127,
+              1024
+            ],
+            [
+              212054,
+              128,
+              32768
+            ],
+            [
+              213083,
+              129,
+              4
+            ],
+            [
+              214112,
+              255,
+              33
+            ],
+            [
+              215141,
+              256,
+              256
+            ],
+            [
+              216170,
+              258,
+              4096
+            ],
+            [
+              217199,
+              3,
+              32769
+            ],
+            [
+              218228,
+              4,
+              16
+            ],
+            [
+              219257,
+              5,
+              64
+            ],
+            [
+              220286,
+              10,
+              257
+            ],
+            [
+              221315,
+              11,
+              32767
+            ],
+            [
+              222344,
+              12,
+              1
+            ],
+            [
+              223373,
+              31,
+              32
+            ],
+            [
+              224402,
+              32,
+              65
+            ],
+            [
+              225431,
+              33,
+              1024
+            ],
+            [
+              226460,
+              63,
+              32768
+            ],
+            [
+              227489,
+              64,
+              4
+            ],
+            [
+              228518,
+              127,
+              33
+            ],
+            [
+              229547,
+              128,
+              256
+            ],
+            [
+              230576,
+              129,
+              4096
+            ],
+            [
+              231605,
+              255,
+              32769
+            ],
+            [
+              232634,
+              256,
+              16
+            ],
+            [
+              233663,
+              258,
+              64
+            ],
+            [
+              234692,
+              3,
+              257
+            ],
+            [
+              235721,
+              4,
+              32767
+            ],
+            [
+              236750,
+              5,
+              1
+            ],
+            [
+              237779,
+              10,
+              32
+            ],
+            [
+              238808,
+              11,
+              65
+            ],
+            [
+              239837,
+              12,
+              1024
+            ],
+            [
+              240866,
+              31,
+              32768
+            ],
+            [
+              241895,
+              32,
+              4
+            ],
+            [
+              242924,
+              33,
+              33
+            ],
+            [
+              243953,
+              63,
+              256
+            ],
+            [
+              244982,
+              64,
+              4096
+            ],
+            [
+              246011,
+              127,
+              32769
+            ],
+            [
+              247040,
+              128,
+              16
+            ],
+            [
+              248069,
+              129,
+              64
+            ],
+            [
+              249098,
+              255,
+              257
+            ],
+            [
+              250127,
+              256,
+              32767
+            ],
+            [
+              251156,
+              258,
+              1
+            ],
+            [
+              252185,
+              3,
+              32
+            ],
+            [
+              253214,
+              4,
+              65
+            ],
+            [
+              254243,
+              5,
+              1024
+            ],
+            [
+              255272,
+              10,
+              32768
+            ],
+            [
+              256301,
+              11,
+              4
+            ],
+            [
+              257330,
+              12,
+              33
+            ],
+            [
+              258359,
+              31,
+              256
+            ],
+            [
+              259388,
+              32,
+              4096
+            ],
+            [
+              260417,
+              33,
+              32769
+            ],
+            [
+              261446,
+              63,
+              16
+            ]
+          ]
+        },
+        "family": "cost_sensitive",
+        "pair_id": "validation:cost_sensitive:8",
+        "params": {
+          "regime": 8,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/cost_sensitive-8-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/cost_sensitive-8-0.raw",
+        "regime": "encoder:cost_sensitive:8:0",
+        "scope": "new-synthetic-validation",
+        "seed": 367774484282133266,
+        "sha256": "7130620475bc21aab9e001ad0a7968c1c3a9ec10803d86f75766fffabcd80d22",
+        "source_group": "validation:cost_sensitive:8"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "injections": [
+            [
+              33011,
+              127,
+              32767
+            ],
+            [
+              34043,
+              128,
+              1
+            ],
+            [
+              35075,
+              129,
+              32
+            ],
+            [
+              36107,
+              255,
+              65
+            ],
+            [
+              37139,
+              256,
+              1024
+            ],
+            [
+              38171,
+              258,
+              32768
+            ],
+            [
+              39203,
+              3,
+              4
+            ],
+            [
+              40235,
+              4,
+              33
+            ],
+            [
+              41267,
+              5,
+              256
+            ],
+            [
+              42299,
+              10,
+              4096
+            ],
+            [
+              43331,
+              11,
+              32769
+            ],
+            [
+              44363,
+              12,
+              16
+            ],
+            [
+              45395,
+              31,
+              64
+            ],
+            [
+              46427,
+              32,
+              257
+            ],
+            [
+              47459,
+              33,
+              32767
+            ],
+            [
+              48491,
+              63,
+              1
+            ],
+            [
+              49523,
+              64,
+              32
+            ],
+            [
+              50555,
+              127,
+              65
+            ],
+            [
+              51587,
+              128,
+              1024
+            ],
+            [
+              52619,
+              129,
+              32768
+            ],
+            [
+              53651,
+              255,
+              4
+            ],
+            [
+              54683,
+              256,
+              33
+            ],
+            [
+              55715,
+              258,
+              256
+            ],
+            [
+              56747,
+              3,
+              4096
+            ],
+            [
+              57779,
+              4,
+              32769
+            ],
+            [
+              58811,
+              5,
+              16
+            ],
+            [
+              59843,
+              10,
+              64
+            ],
+            [
+              60875,
+              11,
+              257
+            ],
+            [
+              61907,
+              12,
+              32767
+            ],
+            [
+              62939,
+              31,
+              1
+            ],
+            [
+              63971,
+              32,
+              32
+            ],
+            [
+              65003,
+              33,
+              65
+            ],
+            [
+              66035,
+              63,
+              1024
+            ],
+            [
+              67067,
+              64,
+              32768
+            ],
+            [
+              68099,
+              127,
+              4
+            ],
+            [
+              69131,
+              128,
+              33
+            ],
+            [
+              70163,
+              129,
+              256
+            ],
+            [
+              71195,
+              255,
+              4096
+            ],
+            [
+              72227,
+              256,
+              32769
+            ],
+            [
+              73259,
+              258,
+              16
+            ],
+            [
+              74291,
+              3,
+              64
+            ],
+            [
+              75323,
+              4,
+              257
+            ],
+            [
+              76355,
+              5,
+              32767
+            ],
+            [
+              77387,
+              10,
+              1
+            ],
+            [
+              78419,
+              11,
+              32
+            ],
+            [
+              79451,
+              12,
+              65
+            ],
+            [
+              80483,
+              31,
+              1024
+            ],
+            [
+              81515,
+              32,
+              32768
+            ],
+            [
+              82547,
+              33,
+              4
+            ],
+            [
+              83579,
+              63,
+              33
+            ],
+            [
+              84611,
+              64,
+              256
+            ],
+            [
+              85643,
+              127,
+              4096
+            ],
+            [
+              86675,
+              128,
+              32769
+            ],
+            [
+              87707,
+              129,
+              16
+            ],
+            [
+              88739,
+              255,
+              64
+            ],
+            [
+              89771,
+              256,
+              257
+            ],
+            [
+              90803,
+              258,
+              32767
+            ],
+            [
+              91835,
+              3,
+              1
+            ],
+            [
+              92867,
+              4,
+              32
+            ],
+            [
+              93899,
+              5,
+              65
+            ],
+            [
+              94931,
+              10,
+              1024
+            ],
+            [
+              95963,
+              11,
+              32768
+            ],
+            [
+              96995,
+              12,
+              4
+            ],
+            [
+              98027,
+              31,
+              33
+            ],
+            [
+              99059,
+              32,
+              256
+            ],
+            [
+              100091,
+              33,
+              4096
+            ],
+            [
+              101123,
+              63,
+              32769
+            ],
+            [
+              102155,
+              64,
+              16
+            ],
+            [
+              103187,
+              127,
+              64
+            ],
+            [
+              104219,
+              128,
+              257
+            ],
+            [
+              105251,
+              129,
+              32767
+            ],
+            [
+              106283,
+              255,
+              1
+            ],
+            [
+              107315,
+              256,
+              32
+            ],
+            [
+              108347,
+              258,
+              65
+            ],
+            [
+              109379,
+              3,
+              1024
+            ],
+            [
+              110411,
+              4,
+              32768
+            ],
+            [
+              111443,
+              5,
+              4
+            ],
+            [
+              112475,
+              10,
+              33
+            ],
+            [
+              113507,
+              11,
+              256
+            ],
+            [
+              114539,
+              12,
+              4096
+            ],
+            [
+              115571,
+              31,
+              32769
+            ],
+            [
+              116603,
+              32,
+              16
+            ],
+            [
+              117635,
+              33,
+              64
+            ],
+            [
+              118667,
+              63,
+              257
+            ],
+            [
+              119699,
+              64,
+              32767
+            ],
+            [
+              120731,
+              127,
+              1
+            ],
+            [
+              121763,
+              128,
+              32
+            ],
+            [
+              122795,
+              129,
+              65
+            ],
+            [
+              123827,
+              255,
+              1024
+            ],
+            [
+              124859,
+              256,
+              32768
+            ],
+            [
+              125891,
+              258,
+              4
+            ],
+            [
+              126923,
+              3,
+              33
+            ],
+            [
+              127955,
+              4,
+              256
+            ],
+            [
+              128987,
+              5,
+              4096
+            ],
+            [
+              130019,
+              10,
+              32769
+            ],
+            [
+              131051,
+              11,
+              16
+            ],
+            [
+              132083,
+              12,
+              64
+            ],
+            [
+              133115,
+              31,
+              257
+            ],
+            [
+              134147,
+              32,
+              32767
+            ],
+            [
+              135179,
+              33,
+              1
+            ],
+            [
+              136211,
+              63,
+              32
+            ],
+            [
+              137243,
+              64,
+              65
+            ],
+            [
+              138275,
+              127,
+              1024
+            ],
+            [
+              139307,
+              128,
+              32768
+            ],
+            [
+              140339,
+              129,
+              4
+            ],
+            [
+              141371,
+              255,
+              33
+            ],
+            [
+              142403,
+              256,
+              256
+            ],
+            [
+              143435,
+              258,
+              4096
+            ],
+            [
+              144467,
+              3,
+              32769
+            ],
+            [
+              145499,
+              4,
+              16
+            ],
+            [
+              146531,
+              5,
+              64
+            ],
+            [
+              147563,
+              10,
+              257
+            ],
+            [
+              148595,
+              11,
+              32767
+            ],
+            [
+              149627,
+              12,
+              1
+            ],
+            [
+              150659,
+              31,
+              32
+            ],
+            [
+              151691,
+              32,
+              65
+            ],
+            [
+              152723,
+              33,
+              1024
+            ],
+            [
+              153755,
+              63,
+              32768
+            ],
+            [
+              154787,
+              64,
+              4
+            ],
+            [
+              155819,
+              127,
+              33
+            ],
+            [
+              156851,
+              128,
+              256
+            ],
+            [
+              157883,
+              129,
+              4096
+            ],
+            [
+              158915,
+              255,
+              32769
+            ],
+            [
+              159947,
+              256,
+              16
+            ],
+            [
+              160979,
+              258,
+              64
+            ],
+            [
+              162011,
+              3,
+              257
+            ],
+            [
+              163043,
+              4,
+              32767
+            ],
+            [
+              164075,
+              5,
+              1
+            ],
+            [
+              165107,
+              10,
+              32
+            ],
+            [
+              166139,
+              11,
+              65
+            ],
+            [
+              167171,
+              12,
+              1024
+            ],
+            [
+              168203,
+              31,
+              32768
+            ],
+            [
+              169235,
+              32,
+              4
+            ],
+            [
+              170267,
+              33,
+              33
+            ],
+            [
+              171299,
+              63,
+              256
+            ],
+            [
+              172331,
+              64,
+              4096
+            ],
+            [
+              173363,
+              127,
+              32769
+            ],
+            [
+              174395,
+              128,
+              16
+            ],
+            [
+              175427,
+              129,
+              64
+            ],
+            [
+              176459,
+              255,
+              257
+            ],
+            [
+              177491,
+              256,
+              32767
+            ],
+            [
+              178523,
+              258,
+              1
+            ],
+            [
+              179555,
+              3,
+              32
+            ],
+            [
+              180587,
+              4,
+              65
+            ],
+            [
+              181619,
+              5,
+              1024
+            ],
+            [
+              182651,
+              10,
+              32768
+            ],
+            [
+              183683,
+              11,
+              4
+            ],
+            [
+              184715,
+              12,
+              33
+            ],
+            [
+              185747,
+              31,
+              256
+            ],
+            [
+              186779,
+              32,
+              4096
+            ],
+            [
+              187811,
+              33,
+              32769
+            ],
+            [
+              188843,
+              63,
+              16
+            ],
+            [
+              189875,
+              64,
+              64
+            ],
+            [
+              190907,
+              127,
+              257
+            ],
+            [
+              191939,
+              128,
+              32767
+            ],
+            [
+              192971,
+              129,
+              1
+            ],
+            [
+              194003,
+              255,
+              32
+            ],
+            [
+              195035,
+              256,
+              65
+            ],
+            [
+              196067,
+              258,
+              1024
+            ],
+            [
+              197099,
+              3,
+              32768
+            ],
+            [
+              198131,
+              4,
+              4
+            ],
+            [
+              199163,
+              5,
+              33
+            ],
+            [
+              200195,
+              10,
+              256
+            ],
+            [
+              201227,
+              11,
+              4096
+            ],
+            [
+              202259,
+              12,
+              32769
+            ],
+            [
+              203291,
+              31,
+              16
+            ],
+            [
+              204323,
+              32,
+              64
+            ],
+            [
+              205355,
+              33,
+              257
+            ],
+            [
+              206387,
+              63,
+              32767
+            ],
+            [
+              207419,
+              64,
+              1
+            ],
+            [
+              208451,
+              127,
+              32
+            ],
+            [
+              209483,
+              128,
+              65
+            ],
+            [
+              210515,
+              129,
+              1024
+            ],
+            [
+              211547,
+              255,
+              32768
+            ],
+            [
+              212579,
+              256,
+              4
+            ],
+            [
+              213611,
+              258,
+              33
+            ],
+            [
+              214643,
+              3,
+              256
+            ],
+            [
+              215675,
+              4,
+              4096
+            ],
+            [
+              216707,
+              5,
+              32769
+            ],
+            [
+              217739,
+              10,
+              16
+            ],
+            [
+              218771,
+              11,
+              64
+            ],
+            [
+              219803,
+              12,
+              257
+            ],
+            [
+              220835,
+              31,
+              32767
+            ],
+            [
+              221867,
+              32,
+              1
+            ],
+            [
+              222899,
+              33,
+              32
+            ],
+            [
+              223931,
+              63,
+              65
+            ],
+            [
+              224963,
+              64,
+              1024
+            ],
+            [
+              225995,
+              127,
+              32768
+            ],
+            [
+              227027,
+              128,
+              4
+            ],
+            [
+              228059,
+              129,
+              33
+            ],
+            [
+              229091,
+              255,
+              256
+            ],
+            [
+              230123,
+              256,
+              4096
+            ],
+            [
+              231155,
+              258,
+              32769
+            ],
+            [
+              232187,
+              3,
+              16
+            ],
+            [
+              233219,
+              4,
+              64
+            ],
+            [
+              234251,
+              5,
+              257
+            ],
+            [
+              235283,
+              10,
+              32767
+            ],
+            [
+              236315,
+              11,
+              1
+            ],
+            [
+              237347,
+              12,
+              32
+            ],
+            [
+              238379,
+              31,
+              65
+            ],
+            [
+              239411,
+              32,
+              1024
+            ],
+            [
+              240443,
+              33,
+              32768
+            ],
+            [
+              241475,
+              63,
+              4
+            ],
+            [
+              242507,
+              64,
+              33
+            ],
+            [
+              243539,
+              127,
+              256
+            ],
+            [
+              244571,
+              128,
+              4096
+            ],
+            [
+              245603,
+              129,
+              32769
+            ],
+            [
+              246635,
+              255,
+              16
+            ],
+            [
+              247667,
+              256,
+              64
+            ],
+            [
+              248699,
+              258,
+              257
+            ],
+            [
+              249731,
+              3,
+              32767
+            ],
+            [
+              250763,
+              4,
+              1
+            ],
+            [
+              251795,
+              5,
+              32
+            ],
+            [
+              252827,
+              10,
+              65
+            ],
+            [
+              253859,
+              11,
+              1024
+            ],
+            [
+              254891,
+              12,
+              32768
+            ],
+            [
+              255923,
+              31,
+              4
+            ],
+            [
+              256955,
+              32,
+              33
+            ],
+            [
+              257987,
+              33,
+              256
+            ],
+            [
+              259019,
+              63,
+              4096
+            ],
+            [
+              260051,
+              64,
+              32769
+            ],
+            [
+              261083,
+              127,
+              16
+            ]
+          ]
+        },
+        "family": "cost_sensitive",
+        "pair_id": "validation:cost_sensitive:11",
+        "params": {
+          "regime": 11,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/cost_sensitive-11-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/cost_sensitive-11-0.raw",
+        "regime": "encoder:cost_sensitive:11:0",
+        "scope": "new-synthetic-validation",
+        "seed": 11093447791439390258,
+        "sha256": "06efe1813d74cd38a1c07fa9d20d21dbb7bc73d3df7b3da4908adad20f4f6964",
+        "source_group": "validation:cost_sensitive:11"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "actual_production_hash_bits": 15,
+          "bucket": 21473,
+          "hash_bits": 15,
+          "key_count": 21,
+          "keys_sha256": "7e0cb2ef4d3ecc32267c78a0e8ae52ab2425125217d50207bdd39f1ce7216146",
+          "kind": "trigram",
+          "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide",
+          "suffix_bytes": 27
+        },
+        "family": "collision_trigram",
+        "pair_id": "validation:collision_trigram:8",
+        "params": {
+          "regime": 8,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/collision_trigram-8-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/collision_trigram-8-0.raw",
+        "regime": "encoder:collision_trigram:8:0",
+        "scope": "new-synthetic-validation",
+        "seed": 13757682161342613784,
+        "sha256": "10c58454f436f8c9312f4cfcb5d94e6dc00160b68b0d4123fc8c82f7dc9be539",
+        "source_group": "validation:collision_trigram:8"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "actual_production_hash_bits": 15,
+          "bucket": 12645,
+          "hash_bits": 15,
+          "key_count": 27,
+          "keys_sha256": "a1687717596fc51f4a8b294b9560a29a4992f24b5350a5d9f23c5d3d8c2b2bd6",
+          "kind": "trigram",
+          "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide",
+          "suffix_bytes": 30
+        },
+        "family": "collision_trigram",
+        "pair_id": "validation:collision_trigram:11",
+        "params": {
+          "regime": 11,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/collision_trigram-11-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/collision_trigram-11-0.raw",
+        "regime": "encoder:collision_trigram:11:0",
+        "scope": "new-synthetic-validation",
+        "seed": 10576254420121112157,
+        "sha256": "b6f4c1f052d839fd4c8020647494e6d02aded4152101461f7e9e0bf65fc520cd",
+        "source_group": "validation:collision_trigram:11"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "actual_production_hash_bits": 15,
+          "bucket": 26507,
+          "hash_bits": 15,
+          "key_count": 21,
+          "keys_sha256": "9dc967db9d34142f1e977d6f1496341b000655f87759e1881737bd56268664f2",
+          "kind": "fourbyte",
+          "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide",
+          "suffix_bytes": 27
+        },
+        "family": "collision_fourbyte",
+        "pair_id": "validation:collision_fourbyte:8",
+        "params": {
+          "regime": 8,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/collision_fourbyte-8-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/collision_fourbyte-8-0.raw",
+        "regime": "encoder:collision_fourbyte:8:0",
+        "scope": "new-synthetic-validation",
+        "seed": 15156150910417554292,
+        "sha256": "9a83f2332093b660567cf02020a49ef2cff5bc095fc853ff18ad9397af9b99e7",
+        "source_group": "validation:collision_fourbyte:8"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "actual_production_hash_bits": 15,
+          "bucket": 22456,
+          "hash_bits": 15,
+          "key_count": 27,
+          "keys_sha256": "40b69873339b9e448aa6b721fcf41f3f3b0c4cb9425e4056fcdaab465631eadb",
+          "kind": "fourbyte",
+          "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide",
+          "suffix_bytes": 30
+        },
+        "family": "collision_fourbyte",
+        "pair_id": "validation:collision_fourbyte:11",
+        "params": {
+          "regime": 11,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/collision_fourbyte-11-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/collision_fourbyte-11-0.raw",
+        "regime": "encoder:collision_fourbyte:11:0",
+        "scope": "new-synthetic-validation",
+        "seed": 16969820601297741998,
+        "sha256": "160e69c150fc09d62588f5379560b14608620c167472af12d2d37178300a62a9",
+        "source_group": "validation:collision_fourbyte:11"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "actual_production_hash_bits": 15,
+          "bucket": 3658,
+          "hash_bits": 15,
+          "key_count": 21,
+          "keys_sha256": "df7ff82c5d0b1a35d022a099f5ce1d775f7acd65aa307b0783b18a6d351cb111",
+          "kind": "cost_trigram",
+          "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide",
+          "suffix_bytes": 27
+        },
+        "family": "collision_cost_trigram",
+        "pair_id": "validation:collision_cost_trigram:8",
+        "params": {
+          "regime": 8,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/collision_cost_trigram-8-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/collision_cost_trigram-8-0.raw",
+        "regime": "encoder:collision_cost_trigram:8:0",
+        "scope": "new-synthetic-validation",
+        "seed": 4638048572313715644,
+        "sha256": "dd4ac4c800e3baa75240686b37e1ad2ff1adb1ffb519b6f730ca2be2059df2dc",
+        "source_group": "validation:collision_cost_trigram:8"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "actual_production_hash_bits": 15,
+          "bucket": 17910,
+          "hash_bits": 15,
+          "key_count": 27,
+          "keys_sha256": "6502b41a172b574778d0a425165b5c044cd432e193d49b890d90efda5b1a640b",
+          "kind": "cost_trigram",
+          "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide",
+          "suffix_bytes": 30
+        },
+        "family": "collision_cost_trigram",
+        "pair_id": "validation:collision_cost_trigram:11",
+        "params": {
+          "regime": 11,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/collision_cost_trigram-11-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/collision_cost_trigram-11-0.raw",
+        "regime": "encoder:collision_cost_trigram:11:0",
+        "scope": "new-synthetic-validation",
+        "seed": 260101940725214647,
+        "sha256": "265797ceec7f833842db89fd319c044e653e9571cf4d43cc55e2fac765504ed0",
+        "source_group": "validation:collision_cost_trigram:11"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "regime_changes": [
+            [
+              0,
+              16385,
+              2
+            ],
+            [
+              16385,
+              32767,
+              0
+            ],
+            [
+              49152,
+              32768,
+              1
+            ],
+            [
+              81920,
+              32769,
+              2
+            ],
+            [
+              114689,
+              65535,
+              0
+            ],
+            [
+              180224,
+              65536,
+              1
+            ],
+            [
+              245760,
+              65537,
+              2
+            ]
+          ]
+        },
+        "family": "change_points",
+        "pair_id": "validation:change_points:8",
+        "params": {
+          "regime": 8,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/change_points-8-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/change_points-8-0.raw",
+        "regime": "encoder:change_points:8:0",
+        "scope": "new-synthetic-validation",
+        "seed": 12816005067567721254,
+        "sha256": "6751ca4ccedc421d83144431b15ff0674ada1e12295b780bcdcc50e8b5b5ca12",
+        "source_group": "validation:change_points:8"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "regime_changes": [
+            [
+              0,
+              32769,
+              2
+            ],
+            [
+              32769,
+              65535,
+              0
+            ],
+            [
+              98304,
+              65536,
+              1
+            ],
+            [
+              163840,
+              65537,
+              2
+            ],
+            [
+              229377,
+              511,
+              0
+            ],
+            [
+              229888,
+              512,
+              1
+            ],
+            [
+              230400,
+              513,
+              2
+            ],
+            [
+              230913,
+              4095,
+              0
+            ],
+            [
+              235008,
+              4096,
+              1
+            ],
+            [
+              239104,
+              4097,
+              2
+            ],
+            [
+              243201,
+              16383,
+              0
+            ],
+            [
+              259584,
+              16384,
+              1
+            ]
+          ]
+        },
+        "family": "change_points",
+        "pair_id": "validation:change_points:11",
+        "params": {
+          "regime": 11,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/change_points-11-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/change_points-11-0.raw",
+        "regime": "encoder:change_points:11:0",
+        "scope": "new-synthetic-validation",
+        "seed": 6638891439955337118,
+        "sha256": "2ead2d1fa6784d2422facaa97011e9a634bd164f5adfc19a3bbf97b2a882c63f",
+        "source_group": "validation:change_points:11"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "regime_changes": [
+            [
+              0,
+              16385,
+              2
+            ],
+            [
+              16385,
+              32767,
+              0
+            ],
+            [
+              49152,
+              32768,
+              1
+            ],
+            [
+              81920,
+              32769,
+              2
+            ],
+            [
+              114689,
+              65535,
+              0
+            ],
+            [
+              180224,
+              65536,
+              1
+            ],
+            [
+              245760,
+              65537,
+              2
+            ]
+          ]
+        },
+        "family": "drift",
+        "pair_id": "validation:drift:8",
+        "params": {
+          "regime": 8,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/drift-8-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/drift-8-0.raw",
+        "regime": "encoder:drift:8:0",
+        "scope": "new-synthetic-validation",
+        "seed": 17598267478926449629,
+        "sha256": "20ed844be0b80634ed5401bc37feb97e7d7c521c4bde0995947a9e9e1ed17934",
+        "source_group": "validation:drift:8"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "regime_changes": [
+            [
+              0,
+              32769,
+              2
+            ],
+            [
+              32769,
+              65535,
+              0
+            ],
+            [
+              98304,
+              65536,
+              1
+            ],
+            [
+              163840,
+              65537,
+              2
+            ],
+            [
+              229377,
+              511,
+              0
+            ],
+            [
+              229888,
+              512,
+              1
+            ],
+            [
+              230400,
+              513,
+              2
+            ],
+            [
+              230913,
+              4095,
+              0
+            ],
+            [
+              235008,
+              4096,
+              1
+            ],
+            [
+              239104,
+              4097,
+              2
+            ],
+            [
+              243201,
+              16383,
+              0
+            ],
+            [
+              259584,
+              16384,
+              1
+            ]
+          ]
+        },
+        "family": "drift",
+        "pair_id": "validation:drift:11",
+        "params": {
+          "regime": 11,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/drift-11-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/drift-11-0.raw",
+        "regime": "encoder:drift:11:0",
+        "scope": "new-synthetic-validation",
+        "seed": 2152050775089092333,
+        "sha256": "ebc2c3f6895230eb85983f529801c2dbf2324370d883626a41f61403601032cb",
+        "source_group": "validation:drift:11"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "poison": "zero samples / random background",
+          "sample_positions": 4096
+        },
+        "family": "feature_sampling_trap",
+        "pair_id": "validation:feature_sampling_trap:8",
+        "params": {
+          "regime": 8,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/feature_sampling_trap-8-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/feature_sampling_trap-8-0.raw",
+        "regime": "encoder:feature_sampling_trap:8:0",
+        "scope": "new-synthetic-validation",
+        "seed": 16971178311152654337,
+        "sha256": "77a2946322be0aedfce8c772c1775ec83d7dd0d3fb0e52584b83e5b847d0e9a2",
+        "source_group": "validation:feature_sampling_trap:8"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "poison": "flat samples / periodic background",
+          "sample_positions": 4096
+        },
+        "family": "feature_sampling_trap",
+        "pair_id": "validation:feature_sampling_trap:11",
+        "params": {
+          "regime": 11,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/feature_sampling_trap-11-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/feature_sampling_trap-11-0.raw",
+        "regime": "encoder:feature_sampling_trap:11:0",
+        "scope": "new-synthetic-validation",
+        "seed": 4647382369003091543,
+        "sha256": "3a27cea8a41f3553d1f6d95c6bdced6aa496ab1bb4f8a641acafeadf319655ab",
+        "source_group": "validation:feature_sampling_trap:11"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "period": 47,
+          "random_islands": [
+            [
+              519,
+              57
+            ],
+            [
+              4863,
+              57
+            ],
+            [
+              9207,
+              57
+            ],
+            [
+              13551,
+              57
+            ],
+            [
+              17895,
+              57
+            ],
+            [
+              22239,
+              57
+            ],
+            [
+              26583,
+              57
+            ],
+            [
+              30927,
+              57
+            ],
+            [
+              35271,
+              57
+            ],
+            [
+              39615,
+              57
+            ],
+            [
+              43959,
+              57
+            ],
+            [
+              48303,
+              57
+            ],
+            [
+              52647,
+              57
+            ],
+            [
+              56991,
+              57
+            ],
+            [
+              61335,
+              57
+            ],
+            [
+              65679,
+              57
+            ],
+            [
+              70023,
+              57
+            ],
+            [
+              74367,
+              57
+            ],
+            [
+              78711,
+              57
+            ],
+            [
+              83055,
+              57
+            ],
+            [
+              87399,
+              57
+            ],
+            [
+              91743,
+              57
+            ],
+            [
+              96087,
+              57
+            ],
+            [
+              100431,
+              57
+            ],
+            [
+              104775,
+              57
+            ],
+            [
+              109119,
+              57
+            ],
+            [
+              113463,
+              57
+            ],
+            [
+              117807,
+              57
+            ],
+            [
+              122151,
+              57
+            ],
+            [
+              126495,
+              57
+            ],
+            [
+              130839,
+              57
+            ],
+            [
+              135183,
+              57
+            ],
+            [
+              139527,
+              57
+            ],
+            [
+              143871,
+              57
+            ],
+            [
+              148215,
+              57
+            ],
+            [
+              152559,
+              57
+            ],
+            [
+              156903,
+              57
+            ],
+            [
+              161247,
+              57
+            ],
+            [
+              165591,
+              57
+            ],
+            [
+              169935,
+              57
+            ],
+            [
+              174279,
+              57
+            ],
+            [
+              178623,
+              57
+            ],
+            [
+              182967,
+              57
+            ],
+            [
+              187311,
+              57
+            ],
+            [
+              191655,
+              57
+            ],
+            [
+              195999,
+              57
+            ],
+            [
+              200343,
+              57
+            ],
+            [
+              204687,
+              57
+            ],
+            [
+              209031,
+              57
+            ],
+            [
+              213375,
+              57
+            ],
+            [
+              217719,
+              57
+            ],
+            [
+              222063,
+              57
+            ],
+            [
+              226407,
+              57
+            ],
+            [
+              230751,
+              57
+            ],
+            [
+              235095,
+              57
+            ],
+            [
+              239439,
+              57
+            ],
+            [
+              243783,
+              57
+            ],
+            [
+              248127,
+              57
+            ],
+            [
+              252471,
+              57
+            ],
+            [
+              256815,
+              57
+            ],
+            [
+              261159,
+              57
+            ]
+          ],
+          "window_wraps": 8
+        },
+        "family": "random_islands",
+        "pair_id": "validation:random_islands:8",
+        "params": {
+          "regime": 8,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/random_islands-8-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/random_islands-8-0.raw",
+        "regime": "encoder:random_islands:8:0",
+        "scope": "new-synthetic-validation",
+        "seed": 313358715582816945,
+        "sha256": "7c33144ed60a63d613edf64a592e7410133cb6b6ed5aa84f6cd26adf8ff655e3",
+        "source_group": "validation:random_islands:8"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "period": 53,
+          "random_islands": [
+            [
+              522,
+              78
+            ],
+            [
+              4959,
+              78
+            ],
+            [
+              9396,
+              78
+            ],
+            [
+              13833,
+              78
+            ],
+            [
+              18270,
+              78
+            ],
+            [
+              22707,
+              78
+            ],
+            [
+              27144,
+              78
+            ],
+            [
+              31581,
+              78
+            ],
+            [
+              36018,
+              78
+            ],
+            [
+              40455,
+              78
+            ],
+            [
+              44892,
+              78
+            ],
+            [
+              49329,
+              78
+            ],
+            [
+              53766,
+              78
+            ],
+            [
+              58203,
+              78
+            ],
+            [
+              62640,
+              78
+            ],
+            [
+              67077,
+              78
+            ],
+            [
+              71514,
+              78
+            ],
+            [
+              75951,
+              78
+            ],
+            [
+              80388,
+              78
+            ],
+            [
+              84825,
+              78
+            ],
+            [
+              89262,
+              78
+            ],
+            [
+              93699,
+              78
+            ],
+            [
+              98136,
+              78
+            ],
+            [
+              102573,
+              78
+            ],
+            [
+              107010,
+              78
+            ],
+            [
+              111447,
+              78
+            ],
+            [
+              115884,
+              78
+            ],
+            [
+              120321,
+              78
+            ],
+            [
+              124758,
+              78
+            ],
+            [
+              129195,
+              78
+            ],
+            [
+              133632,
+              78
+            ],
+            [
+              138069,
+              78
+            ],
+            [
+              142506,
+              78
+            ],
+            [
+              146943,
+              78
+            ],
+            [
+              151380,
+              78
+            ],
+            [
+              155817,
+              78
+            ],
+            [
+              160254,
+              78
+            ],
+            [
+              164691,
+              78
+            ],
+            [
+              169128,
+              78
+            ],
+            [
+              173565,
+              78
+            ],
+            [
+              178002,
+              78
+            ],
+            [
+              182439,
+              78
+            ],
+            [
+              186876,
+              78
+            ],
+            [
+              191313,
+              78
+            ],
+            [
+              195750,
+              78
+            ],
+            [
+              200187,
+              78
+            ],
+            [
+              204624,
+              78
+            ],
+            [
+              209061,
+              78
+            ],
+            [
+              213498,
+              78
+            ],
+            [
+              217935,
+              78
+            ],
+            [
+              222372,
+              78
+            ],
+            [
+              226809,
+              78
+            ],
+            [
+              231246,
+              78
+            ],
+            [
+              235683,
+              78
+            ],
+            [
+              240120,
+              78
+            ],
+            [
+              244557,
+              78
+            ],
+            [
+              248994,
+              78
+            ],
+            [
+              253431,
+              78
+            ],
+            [
+              257868,
+              78
+            ]
+          ],
+          "window_wraps": 8
+        },
+        "family": "random_islands",
+        "pair_id": "validation:random_islands:11",
+        "params": {
+          "regime": 11,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/random_islands-11-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/random_islands-11-0.raw",
+        "regime": "encoder:random_islands:11:0",
+        "scope": "new-synthetic-validation",
+        "seed": 5339313377702062901,
+        "sha256": "e0e5763b3abe01e3a8728ddfb696d007b5b23950e4b4af1d18ea49687c3e79e1",
+        "source_group": "validation:random_islands:11"
+      },
+      {
+        "bytes": 131072,
+        "construction": {
+          "base_sha256": "3643f8cfe1ce20b6acdec39a051fd4e51b2b0c4c1097e05bec800e0c605f7c2f",
+          "period": 273,
+          "transform": "concatenate",
+          "window_wraps_base": 4
+        },
+        "family": "paired_transforms",
+        "pair_id": "validation:paired_transforms:8",
+        "params": {
+          "regime": 8,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/paired_transforms-8-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/paired_transforms-8-0.raw",
+        "regime": "encoder:paired_transforms:8:0",
+        "scope": "new-synthetic-validation",
+        "seed": 11498402423502667912,
+        "sha256": "3643f8cfe1ce20b6acdec39a051fd4e51b2b0c4c1097e05bec800e0c605f7c2f",
+        "source_group": "validation:paired_transforms:8"
+      },
+      {
+        "bytes": 262144,
+        "construction": {
+          "base_sha256": "3643f8cfe1ce20b6acdec39a051fd4e51b2b0c4c1097e05bec800e0c605f7c2f",
+          "period": 273,
+          "transform": "concatenate",
+          "window_wraps_base": 4
+        },
+        "family": "paired_transforms",
+        "pair_id": "validation:paired_transforms:8",
+        "params": {
+          "regime": 8,
+          "variant": 1,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/paired_transforms-8-1.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/paired_transforms-8-1.raw",
+        "regime": "encoder:paired_transforms:8:1",
+        "scope": "new-synthetic-validation",
+        "seed": 11498402423502667912,
+        "sha256": "e44a5a2ddb0f688d17c4fdf193a55b475b3a7a98c6a9a3af706a82e003d0c8b6",
+        "source_group": "validation:paired_transforms:8"
+      },
+      {
+        "bytes": 131072,
+        "construction": {
+          "base_sha256": "69693d4b5758fe7f89e8e4a72917c50e31ea9d1a9dc303153116e25d6714b3e4",
+          "period": 279,
+          "transform": "change_point",
+          "window_wraps_base": 4
+        },
+        "family": "paired_transforms",
+        "pair_id": "validation:paired_transforms:11",
+        "params": {
+          "regime": 11,
+          "variant": 0,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/paired_transforms-11-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/paired_transforms-11-0.raw",
+        "regime": "encoder:paired_transforms:11:0",
+        "scope": "new-synthetic-validation",
+        "seed": 4123687292238773673,
+        "sha256": "69693d4b5758fe7f89e8e4a72917c50e31ea9d1a9dc303153116e25d6714b3e4",
+        "source_group": "validation:paired_transforms:11"
+      },
+      {
+        "bytes": 131072,
+        "construction": {
+          "base_sha256": "69693d4b5758fe7f89e8e4a72917c50e31ea9d1a9dc303153116e25d6714b3e4",
+          "period": 279,
+          "transform": "change_point",
+          "window_wraps_base": 4
+        },
+        "family": "paired_transforms",
+        "pair_id": "validation:paired_transforms:11",
+        "params": {
+          "regime": 11,
+          "variant": 1,
+          "version": 1
+        },
+        "partition": "validation",
+        "path": "validation/paired_transforms-11-1.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/validation/paired_transforms-11-1.raw",
+        "regime": "encoder:paired_transforms:11:1",
+        "scope": "new-synthetic-validation",
+        "seed": 4123687292238773673,
+        "sha256": "d6062d0da334302ae75c7a2b8d83c4447d42ea7413d06ce5ad59dbc447246826",
+        "source_group": "validation:paired_transforms:11"
+      }
+    ],
+    "frozen": {
+      "baseline_sha256": "f17e4cb88c625ac11906b4da5736dcaf4e1bb31f2cb6fd0a2b3c4fad3c64fb69",
+      "binary_sha256": "3ce0a92fed26e71ce8054db19a6bf7a4402e50c2521e6102c2e96a087337730a",
+      "real_manifest_sha256": "7e2e2eec698be421e4e933b5117bc11defe74b042d45b1a9f5dd4e4f0aefde85",
+      "source_sha256": {
+        "Cargo.lock": "8ce82932f19c583ec37870d2f01dc9e72cb492b0aa02dde7e14b43142857a15d",
+        "Cargo.toml": "d8e747c012cba553ad19cdba4436e5c43dd30a10adce9e89933c3d538c4f4a39",
+        "crates/deflate-core/Cargo.toml": "27e824b076208ffe2864e6c1fae8b836429a393c26c62788e36f53acf1ff65e2",
+        "crates/deflate-core/examples/final_bench.rs": "f4ce0e0b3fe5e85a41d484ad872a0546c6e56c0fc213a09e3c6340377a1eca2a",
+        "crates/deflate-core/examples/support/bounded_parse.rs": "e7545af7442856c491e6eabedc90879d364f6848031659467ce2a0ecb2635262",
+        "crates/deflate-core/examples/support/final_bench.rs": "9212d1caefc5a658d611f6bb85001377d363525bc5cfeec3a3506c222cdb0a31",
+        "crates/deflate-core/examples/support/policy.rs": "2a50e4de8569e9df092229790555885407c9764870910c667cffac1b5dca08b6",
+        "crates/deflate-core/src/bitstream.rs": "95e941fcc379cafd8ae920f12ed4f6327e12062edfe39015f66eb43a9b094186",
+        "crates/deflate-core/src/bitwriter.rs": "0b6ff21ba48422ed34557f9b5e56dd89cd91315cac9a498f9bed306b3cd96588",
+        "crates/deflate-core/src/block.rs": "b99d28faf70ea823b251544f2040f0c4850b9871bcbd9e331742661545310eee",
+        "crates/deflate-core/src/compress.rs": "3977afe7fd649bcf031c999f738fc890b12f6d637064af58e3efd2388c0e51d6",
+        "crates/deflate-core/src/crc32.rs": "3166b0a90dc6cded7a07e5beae9b5cee0c843349123e80dd2e7cc898f71e7fad",
+        "crates/deflate-core/src/deflate.rs": "419e757fa99e22675f77628fc652badcfeb0817852835f790eb584aaebc67507",
+        "crates/deflate-core/src/encode_dynamic.rs": "0a10d270561609bcb1c9b883992880734c6395dfd532ad9ecd2bed54bc4a52ec",
+        "crates/deflate-core/src/encode_fixed.rs": "b4459d0cc109c2f50ebd28467ad1923fbf96a527480dd3f64399601cfa459fd1",
+        "crates/deflate-core/src/error.rs": "fe3ac5fc29296fd8e7e0539dc76c615717fe8a72bb3456608edd18efbb21fecd",
+        "crates/deflate-core/src/gzip.rs": "44a8044d6fd55a5f78fab74f75ba5815b004a4e83ffcbf08ae8254909021b5bd",
+        "crates/deflate-core/src/huffman.rs": "326b31f0fda785d2418f24c7348490520f7f869082fed3316f9f870bfe0fd964",
+        "crates/deflate-core/src/huffman_build.rs": "c2eef9c5c7d53eaf435b65cbc2eb6ad19f28e3df1aef87f6952024c8879ccc58",
+        "crates/deflate-core/src/inflate.rs": "ae4c905a7da364c4b05f4f8c4754ca01ad513b695ea82c28a06c2375dfcde272",
+        "crates/deflate-core/src/lib.rs": "82e81c94fbdad579be6157b3f9cd6b73f3d51ec526c68fda8d731d7f23070d68",
+        "crates/deflate-core/src/lz77.rs": "67991a3fb79ef37a65accdff089b3c34d90157e8eed43745fcbba60f432589c1",
+        "crates/deflate-core/src/matcher.rs": "d6e8f531d34370fde2cc787fbcb2fcd29880163671145a5b632cf167427f1ffd",
+        "crates/deflate-core/src/matcher_flat.rs": "2cb9257a6b93edce133891c4292690ef78e5edf87ccdbce976667d0d6d587890",
+        "crates/deflate-core/src/research.rs": "9359cf4a62664fcbf124ca4b778c09a7c48a2d3e29bfd5fb2bbbec9b21f44ca5",
+        "crates/deflate-core/src/tokens.rs": "5e2f16a94e1a8a35400be25e04280ecae25dd550ad7bd92e398715f16f84f839",
+        "crates/deflate-core/src/zip.rs": "e92492d2c4d61be74e8f6f73da43725992ca0c6be807d8da0d104e2e3a6ae731",
+        "scripts/encoder_baseline.py": "d1b5d7a5bb0b8c47e301b447744ac6029955f405247584094112fa13e4dc590d",
+        "scripts/encoder_corpus.py": "7c7cce08e46fce09a6ed3b1ea8f6f5e726a96f9587229ca6c4e070b9eca49645",
+        "scripts/encoder_measure.py": "e56985aa311e173f2cf79432c5aa6428c3545811caa8ea8e36f76f4c16649c0c",
+        "scripts/encoder_parse_campaign.py": "ae9219377633abc142d75b72da8ebaa3de6880be3c848d4ff33138c2cd689306",
+        "scripts/search_corpus.py": "ff99039e63e31f41805a433777ba454a8e6276706e4357d2f6273febe78f03c3",
+        "scripts/search_cost_oracle.py": "484c4740ab6b6fbe8febb1c1b43e2b1d92696a76bc7107cbb92dcc3d66527bdd",
+        "scripts/search_poc.py": "bde8f0bb0976f0197281eaa7e9c03445a6b628a28b04f5ab315d7a319d0e1763"
+      },
+      "synthetic_manifest_sha256": "a0ce2bef055f0c82ff57c923305f457c502b1f23ee449505e4db7cc7560568e6"
+    },
+    "methods": [
+      "bounded:4:0:longest:0",
+      "bounded:16:1:feedback:0",
+      "bounded:16:1:feedback:1"
+    ],
+    "minimum_ms": 5,
+    "paired_original": "original Best; its separately timed original Balanced is the speed headline baseline",
+    "partition": "validation",
+    "purpose": "P3 bounded training/validation pilot; no final-test encoding or final confidence",
+    "rounds": 3
+  },
+  "raw_ledger_sha256": "2f326e946ef0b69ae1fea99e1c48eac6f1283762daf704628be081f2cb61775f",
+  "rows": 279
+}

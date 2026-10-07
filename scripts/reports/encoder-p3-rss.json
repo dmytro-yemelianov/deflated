@@ -1,0 +1,1933 @@
+{
+  "cases": [
+    {
+      "archive_member": null,
+      "bytes": 1048576,
+      "class": "source",
+      "extracted_source_bytes": 1094042,
+      "extracted_source_sha256": "7a25359817edc9738ff0694ab566df87a47692448cce1eb80866ff598f1c025f",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "Apache-2.0 WITH LLVM-exception",
+      "license_path": "licenses/llvm.txt",
+      "partition": "train",
+      "path": "train/llvm.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:35.388840+00:00",
+        "commit": "87f0227cb60147a26a1eeb4fb06e3b505e9c7261",
+        "download": {
+          "bytes": 1094042,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"b5f28615d7d0952b7bd62a7d8dc82ece11ce15449a10a26501eb9a043d472060\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/llvm/llvm-project/87f0227cb60147a26a1eeb4fb06e3b505e9c7261/llvm/docs/LangRef.rst",
+          "resolved_url": "https://raw.githubusercontent.com/llvm/llvm-project/87f0227cb60147a26a1eeb4fb06e3b505e9c7261/llvm/docs/LangRef.rst",
+          "sha256": "7a25359817edc9738ff0694ab566df87a47692448cce1eb80866ff598f1c025f"
+        },
+        "license_download": {
+          "bytes": 15141,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"1d880dc428d0196d76eaba80541e1c33f1ca8c99574554724fdafd65245e514e\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/llvm/llvm-project/87f0227cb60147a26a1eeb4fb06e3b505e9c7261/LICENSE.TXT",
+          "resolved_url": "https://raw.githubusercontent.com/llvm/llvm-project/87f0227cb60147a26a1eeb4fb06e3b505e9c7261/LICENSE.TXT",
+          "sha256": "8d85c1057d742e597985c7d4e6320b015a9139385cff4cbae06ffc0ebe89afee"
+        },
+        "source": {
+          "class": "source",
+          "file": "llvm/docs/LangRef.rst",
+          "id": "llvm",
+          "license": "Apache-2.0 WITH LLVM-exception",
+          "license_file": "LICENSE.TXT",
+          "partition": "train",
+          "ref": "llvmorg-20.1.8",
+          "repo": "llvm/llvm-project"
+        }
+      },
+      "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/train/llvm.raw",
+      "scope": "new-real-train",
+      "sha256": "5068eca107efa4fba573f358903d2ac1050e4f13fa07c342060074bf64bd6ff7",
+      "source_group": "llvm"
+    },
+    {
+      "archive_member": null,
+      "bytes": 1048576,
+      "class": "compressed",
+      "extracted_source_bytes": 1512791,
+      "extracted_source_sha256": "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "Zlib and bundled component terms",
+      "license_path": "licenses/zlib-archive.txt",
+      "partition": "train",
+      "path": "train/zlib-archive.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:36.506748+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 1512791,
+          "content_type": "application/x-gzip",
+          "etag": "\"4401f6d-171557-60f8e30cc00a9\"",
+          "last_modified": "Mon, 22 Jan 2024 19:53:58 GMT",
+          "requested_url": "https://zlib.net/fossils/zlib-1.3.1.tar.gz",
+          "resolved_url": "https://zlib.net/fossils/zlib-1.3.1.tar.gz",
+          "sha256": "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23"
+        },
+        "license_download": {
+          "bytes": 2899,
+          "content_type": "text/html",
+          "etag": "\"de8555-b53-64b069242c400\"",
+          "last_modified": "Tue, 17 Feb 2026 15:17:36 GMT",
+          "requested_url": "https://zlib.net/zlib_license.html",
+          "resolved_url": "https://zlib.net/zlib_license.html",
+          "sha256": "d16e1e49584a44abccebc8fc9eda5378ce0e08d25d8fb00d99f7e4c40a84e594"
+        },
+        "source": {
+          "class": "compressed",
+          "id": "zlib-archive",
+          "license": "Zlib and bundled component terms",
+          "license_url": "https://zlib.net/zlib_license.html",
+          "partition": "train",
+          "url": "https://zlib.net/fossils/zlib-1.3.1.tar.gz"
+        }
+      },
+      "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/train/zlib-archive.raw",
+      "scope": "new-real-train",
+      "sha256": "ed063466fffe6ed447b5263e511373b42ebb8fd6f62c74e95891e18b07abe8fa",
+      "source_group": "zlib-archive"
+    },
+    {
+      "archive_member": null,
+      "bytes": 1007616,
+      "class": "mixed-binary",
+      "extracted_source_bytes": 1007616,
+      "extracted_source_sha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15",
+      "extraction_range": [
+        0,
+        1007616
+      ],
+      "family": "real",
+      "license": "MIT",
+      "license_path": "licenses/chinook.txt",
+      "partition": "train",
+      "path": "train/chinook.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:36.900406+00:00",
+        "commit": "7f67772503d71ba90f19283c38e93923addb43fa",
+        "download": {
+          "bytes": 1007616,
+          "content_type": "application/octet-stream",
+          "etag": "\"9b44f810743356375b16548765a9ea25c2bd48037b605f10020d40d1dc658101\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/lerocha/chinook-database/7f67772503d71ba90f19283c38e93923addb43fa/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite",
+          "resolved_url": "https://raw.githubusercontent.com/lerocha/chinook-database/7f67772503d71ba90f19283c38e93923addb43fa/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite",
+          "sha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15"
+        },
+        "license_download": {
+          "bytes": 1117,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"d5a35e103f5c533f1afecc4aafbaf39f703c9caeed151e9227fd9d64a8f31cdb\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/lerocha/chinook-database/7f67772503d71ba90f19283c38e93923addb43fa/LICENSE.md",
+          "resolved_url": "https://raw.githubusercontent.com/lerocha/chinook-database/7f67772503d71ba90f19283c38e93923addb43fa/LICENSE.md",
+          "sha256": "5064d720db431474b0a0b0cef9d2b5e362b6c6f80602b35c6443b07cbc979f77"
+        },
+        "source": {
+          "class": "mixed-binary",
+          "file": "ChinookDatabase/DataSources/Chinook_Sqlite.sqlite",
+          "id": "chinook",
+          "license": "MIT",
+          "license_file": "LICENSE.md",
+          "partition": "train",
+          "ref": "HEAD",
+          "repo": "lerocha/chinook-database"
+        }
+      },
+      "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/train/chinook.raw",
+      "scope": "new-real-train",
+      "sha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15",
+      "source_group": "chinook"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "actual_production_hash_bits": 15,
+        "bucket": 13645,
+        "hash_bits": 15,
+        "key_count": 25,
+        "keys_sha256": "63fe3af5adc4c69556c710e6473de05e40751bd57c820fb97722bcfe78a7f075",
+        "kind": "trigram",
+        "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide",
+        "suffix_bytes": 29
+      },
+      "family": "collision_trigram",
+      "pair_id": "train:collision_trigram:10",
+      "params": {
+        "regime": 10,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "train",
+      "path": "train/collision_trigram-10-0.raw",
+      "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/train/collision_trigram-10-0.raw",
+      "regime": "encoder:collision_trigram:10:0",
+      "scope": "new-synthetic-train",
+      "seed": 9625811499297112250,
+      "sha256": "40e6b38e8564afabcdb255a8693221018dd56869ba6d35bc44f4c22080de5b95",
+      "source_group": "train:collision_trigram:10"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "period": 45,
+        "random_islands": [
+          [
+            518,
+            50
+          ],
+          [
+            4831,
+            50
+          ],
+          [
+            9144,
+            50
+          ],
+          [
+            13457,
+            50
+          ],
+          [
+            17770,
+            50
+          ],
+          [
+            22083,
+            50
+          ],
+          [
+            26396,
+            50
+          ],
+          [
+            30709,
+            50
+          ],
+          [
+            35022,
+            50
+          ],
+          [
+            39335,
+            50
+          ],
+          [
+            43648,
+            50
+          ],
+          [
+            47961,
+            50
+          ],
+          [
+            52274,
+            50
+          ],
+          [
+            56587,
+            50
+          ],
+          [
+            60900,
+            50
+          ],
+          [
+            65213,
+            50
+          ],
+          [
+            69526,
+            50
+          ],
+          [
+            73839,
+            50
+          ],
+          [
+            78152,
+            50
+          ],
+          [
+            82465,
+            50
+          ],
+          [
+            86778,
+            50
+          ],
+          [
+            91091,
+            50
+          ],
+          [
+            95404,
+            50
+          ],
+          [
+            99717,
+            50
+          ],
+          [
+            104030,
+            50
+          ],
+          [
+            108343,
+            50
+          ],
+          [
+            112656,
+            50
+          ],
+          [
+            116969,
+            50
+          ],
+          [
+            121282,
+            50
+          ],
+          [
+            125595,
+            50
+          ],
+          [
+            129908,
+            50
+          ],
+          [
+            134221,
+            50
+          ],
+          [
+            138534,
+            50
+          ],
+          [
+            142847,
+            50
+          ],
+          [
+            147160,
+            50
+          ],
+          [
+            151473,
+            50
+          ],
+          [
+            155786,
+            50
+          ],
+          [
+            160099,
+            50
+          ],
+          [
+            164412,
+            50
+          ],
+          [
+            168725,
+            50
+          ],
+          [
+            173038,
+            50
+          ],
+          [
+            177351,
+            50
+          ],
+          [
+            181664,
+            50
+          ],
+          [
+            185977,
+            50
+          ],
+          [
+            190290,
+            50
+          ],
+          [
+            194603,
+            50
+          ],
+          [
+            198916,
+            50
+          ],
+          [
+            203229,
+            50
+          ],
+          [
+            207542,
+            50
+          ],
+          [
+            211855,
+            50
+          ],
+          [
+            216168,
+            50
+          ],
+          [
+            220481,
+            50
+          ],
+          [
+            224794,
+            50
+          ],
+          [
+            229107,
+            50
+          ],
+          [
+            233420,
+            50
+          ],
+          [
+            237733,
+            50
+          ],
+          [
+            242046,
+            50
+          ],
+          [
+            246359,
+            50
+          ],
+          [
+            250672,
+            50
+          ],
+          [
+            254985,
+            50
+          ],
+          [
+            259298,
+            50
+          ]
+        ],
+        "window_wraps": 8
+      },
+      "family": "random_islands",
+      "pair_id": "train:random_islands:7",
+      "params": {
+        "regime": 7,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "train",
+      "path": "train/random_islands-7-0.raw",
+      "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/train/random_islands-7-0.raw",
+      "regime": "encoder:random_islands:7:0",
+      "scope": "new-synthetic-train",
+      "seed": 12892893370306846654,
+      "sha256": "aaefe25fb760a5748f6ab6d57d4839fa741751d0d40a617f23f3d7e45b7f50f6",
+      "source_group": "train:random_islands:7"
+    }
+  ],
+  "driver_sha256": "a13ca1c31b40418d486ddee0cb27e10dcdeac01aae1e2e3646615e4f9dcc4956",
+  "note": "separate processes; three repeats; exact zlib plus packet identity to three-decoder timing goldens; RSS is not a timed benchmark",
+  "platform": "Darwin",
+  "rss_runs": 105,
+  "runs": [
+    {
+      "case": "train/llvm.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 245396,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "10526a3659056b7688eecdca2c7ddc3a53a929eaa390e6a9f3a5ab5d8bf58163",
+      "peak_rss_bytes": 3981312,
+      "repeat": 0,
+      "tool_stderr": "        0.01 real         0.00 user         0.00 sys\n             3981312  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 423  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  13  involuntary context switches\n           177535709  instructions retired\n            42226741  cycles elapsed\n             3162472  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 245396,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "10526a3659056b7688eecdca2c7ddc3a53a929eaa390e6a9f3a5ab5d8bf58163",
+      "peak_rss_bytes": 4014080,
+      "repeat": 1,
+      "tool_stderr": "        0.01 real         0.00 user         0.00 sys\n             4014080  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 425  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           176168849  instructions retired\n            41269285  cycles elapsed\n             3195240  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 245396,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "10526a3659056b7688eecdca2c7ddc3a53a929eaa390e6a9f3a5ab5d8bf58163",
+      "peak_rss_bytes": 4014080,
+      "repeat": 2,
+      "tool_stderr": "        0.01 real         0.00 user         0.00 sys\n             4014080  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 425  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  18  involuntary context switches\n           176260347  instructions retired\n            42339162  cycles elapsed\n             3195240  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 221580,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "f726295e604661724d3bb52ea474af3b61396758b7b1fa860cdab39608283fb2",
+      "peak_rss_bytes": 3932160,
+      "repeat": 0,
+      "tool_stderr": "        0.03 real         0.03 user         0.00 sys\n             3932160  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 421  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  36  involuntary context switches\n           843876048  instructions retired\n           150437488  cycles elapsed\n             3113320  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 221580,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "f726295e604661724d3bb52ea474af3b61396758b7b1fa860cdab39608283fb2",
+      "peak_rss_bytes": 3997696,
+      "repeat": 1,
+      "tool_stderr": "        0.03 real         0.03 user         0.00 sys\n             3997696  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 424  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  17  involuntary context switches\n           843693094  instructions retired\n           149625755  cycles elapsed\n             3178856  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 221580,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "f726295e604661724d3bb52ea474af3b61396758b7b1fa860cdab39608283fb2",
+      "peak_rss_bytes": 3948544,
+      "repeat": 2,
+      "tool_stderr": "        0.03 real         0.03 user         0.00 sys\n             3948544  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 422  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  17  involuntary context switches\n           843433299  instructions retired\n           149549236  cycles elapsed\n             3129704  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 221574,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "6d72f95a90a55765f24e17ddbb0abab4fb84d57fcbb6a67cdbccf624d017e55d",
+      "peak_rss_bytes": 4112384,
+      "repeat": 0,
+      "tool_stderr": "        0.03 real         0.03 user         0.00 sys\n             4112384  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 432  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  11  involuntary context switches\n           873995217  instructions retired\n           155802610  cycles elapsed\n             3293544  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 221574,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "6d72f95a90a55765f24e17ddbb0abab4fb84d57fcbb6a67cdbccf624d017e55d",
+      "peak_rss_bytes": 4259840,
+      "repeat": 1,
+      "tool_stderr": "        0.05 real         0.04 user         0.00 sys\n             4259840  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 441  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                 111  involuntary context switches\n           875313041  instructions retired\n           176412643  cycles elapsed\n             3441000  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 221574,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "6d72f95a90a55765f24e17ddbb0abab4fb84d57fcbb6a67cdbccf624d017e55d",
+      "peak_rss_bytes": 4145152,
+      "repeat": 2,
+      "tool_stderr": "        0.04 real         0.03 user         0.00 sys\n             4145152  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 433  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  51  involuntary context switches\n           874535581  instructions retired\n           161539577  cycles elapsed\n             3326312  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 217339,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "c61fde9e2a4b8ddf29b0d88ae9e6f9ae415feb0fb7adecb0a35d4ed916ca444c",
+      "peak_rss_bytes": 4112384,
+      "repeat": 0,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             4112384  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 430  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  12  involuntary context switches\n           237441841  instructions retired\n            68044394  cycles elapsed\n             3309928  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 217339,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "c61fde9e2a4b8ddf29b0d88ae9e6f9ae415feb0fb7adecb0a35d4ed916ca444c",
+      "peak_rss_bytes": 4128768,
+      "repeat": 1,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             4128768  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 432  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  10  involuntary context switches\n           236423282  instructions retired\n            67008890  cycles elapsed\n             3326312  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 217339,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "c61fde9e2a4b8ddf29b0d88ae9e6f9ae415feb0fb7adecb0a35d4ed916ca444c",
+      "peak_rss_bytes": 4145152,
+      "repeat": 2,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             4145152  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 433  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  11  involuntary context switches\n           236481728  instructions retired\n            67381876  cycles elapsed\n             3342696  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 216535,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "72b278c058cb3b1a628eeeb1a0b7d8ad3ff8fc00bed4eefbdb809699ce77f1ae",
+      "peak_rss_bytes": 4505600,
+      "repeat": 0,
+      "tool_stderr": "        0.02 real         0.01 user         0.00 sys\n             4505600  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 455  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  23  involuntary context switches\n           325392061  instructions retired\n            92107139  cycles elapsed\n             3703144  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 216535,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "72b278c058cb3b1a628eeeb1a0b7d8ad3ff8fc00bed4eefbdb809699ce77f1ae",
+      "peak_rss_bytes": 4521984,
+      "repeat": 1,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             4521984  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 456  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  14  involuntary context switches\n           325253475  instructions retired\n            91426397  cycles elapsed\n             3719528  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 216535,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "72b278c058cb3b1a628eeeb1a0b7d8ad3ff8fc00bed4eefbdb809699ce77f1ae",
+      "peak_rss_bytes": 4538368,
+      "repeat": 2,
+      "tool_stderr": "        0.02 real         0.01 user         0.00 sys\n             4538368  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 456  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           325122886  instructions retired\n            91314070  cycles elapsed\n             3735912  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 216535,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "72b278c058cb3b1a628eeeb1a0b7d8ad3ff8fc00bed4eefbdb809699ce77f1ae",
+      "peak_rss_bytes": 4538368,
+      "repeat": 0,
+      "tool_stderr": "        0.02 real         0.01 user         0.00 sys\n             4538368  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 456  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   9  involuntary context switches\n           325540662  instructions retired\n            91056930  cycles elapsed\n             3719504  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 216535,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "72b278c058cb3b1a628eeeb1a0b7d8ad3ff8fc00bed4eefbdb809699ce77f1ae",
+      "peak_rss_bytes": 4505600,
+      "repeat": 1,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             4505600  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 455  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  10  involuntary context switches\n           325541737  instructions retired\n            92071997  cycles elapsed\n             3703144  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 216535,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "72b278c058cb3b1a628eeeb1a0b7d8ad3ff8fc00bed4eefbdb809699ce77f1ae",
+      "peak_rss_bytes": 4505600,
+      "repeat": 2,
+      "tool_stderr": "        0.02 real         0.01 user         0.00 sys\n             4505600  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 455  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  10  involuntary context switches\n           325552740  instructions retired\n            90954297  cycles elapsed\n             3703144  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 216875,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "3a504065d76c08e6157b2a2203d68fab7ca468ae8f7528a40d4e3b8da4eae120",
+      "peak_rss_bytes": 3653632,
+      "repeat": 0,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             3653632  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 402  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   6  involuntary context switches\n           177909012  instructions retired\n            62118103  cycles elapsed\n             2916712  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 216875,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "3a504065d76c08e6157b2a2203d68fab7ca468ae8f7528a40d4e3b8da4eae120",
+      "peak_rss_bytes": 3653632,
+      "repeat": 1,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             3653632  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 402  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   9  involuntary context switches\n           178048408  instructions retired\n            61641888  cycles elapsed\n             2916712  peak memory footprint\n"
+    },
+    {
+      "case": "train/llvm.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 216875,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "3a504065d76c08e6157b2a2203d68fab7ca468ae8f7528a40d4e3b8da4eae120",
+      "peak_rss_bytes": 3653632,
+      "repeat": 2,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             3653632  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 402  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n           177806726  instructions retired\n            61416678  cycles elapsed\n             2916712  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 1048125,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "70fbaaa568a9d5e2f0aed805cedd94f1808842e5a8cf01dadd3dac8d14477125",
+      "peak_rss_bytes": 5046272,
+      "repeat": 0,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             5046272  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 489  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n           419242588  instructions retired\n           100866888  cycles elapsed\n             4227432  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 1048125,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "70fbaaa568a9d5e2f0aed805cedd94f1808842e5a8cf01dadd3dac8d14477125",
+      "peak_rss_bytes": 5144576,
+      "repeat": 1,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             5144576  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 495  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  10  involuntary context switches\n           419641181  instructions retired\n           101061858  cycles elapsed\n             4325736  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 1048125,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "70fbaaa568a9d5e2f0aed805cedd94f1808842e5a8cf01dadd3dac8d14477125",
+      "peak_rss_bytes": 5160960,
+      "repeat": 2,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             5160960  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 496  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           419497705  instructions retired\n           101631951  cycles elapsed\n             4342120  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 1047647,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "2964159606204b083500fa9ea1df0ac129da425cfacdc751c0175ccc1c0c1a7a",
+      "peak_rss_bytes": 5128192,
+      "repeat": 0,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             5128192  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 494  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           423041376  instructions retired\n           100064961  cycles elapsed\n             4309352  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 1047647,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "2964159606204b083500fa9ea1df0ac129da425cfacdc751c0175ccc1c0c1a7a",
+      "peak_rss_bytes": 5029888,
+      "repeat": 1,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             5029888  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 488  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   9  involuntary context switches\n           422708555  instructions retired\n            99760836  cycles elapsed\n             4211048  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 1047647,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "2964159606204b083500fa9ea1df0ac129da425cfacdc751c0175ccc1c0c1a7a",
+      "peak_rss_bytes": 5111808,
+      "repeat": 2,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             5111808  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 492  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   6  involuntary context switches\n           423142373  instructions retired\n            99064335  cycles elapsed\n             4292968  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 1047647,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "2964159606204b083500fa9ea1df0ac129da425cfacdc751c0175ccc1c0c1a7a",
+      "peak_rss_bytes": 5144576,
+      "repeat": 0,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             5144576  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 495  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   9  involuntary context switches\n           465912191  instructions retired\n           108499854  cycles elapsed\n             4325736  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 1047647,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "2964159606204b083500fa9ea1df0ac129da425cfacdc751c0175ccc1c0c1a7a",
+      "peak_rss_bytes": 5111808,
+      "repeat": 1,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             5111808  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 493  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           466145267  instructions retired\n           108999194  cycles elapsed\n             4292968  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 1047647,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "2964159606204b083500fa9ea1df0ac129da425cfacdc751c0175ccc1c0c1a7a",
+      "peak_rss_bytes": 5226496,
+      "repeat": 2,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             5226496  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 500  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   9  involuntary context switches\n           466051048  instructions retired\n           108512424  cycles elapsed\n             4407656  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 1048117,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "a866318bf1dfe53bcbb57658c165d6b7bcec009e660b15c6696dded4715f7d92",
+      "peak_rss_bytes": 5177344,
+      "repeat": 0,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             5177344  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 496  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n           335337410  instructions retired\n            78319023  cycles elapsed\n             4374888  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 1048117,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "a866318bf1dfe53bcbb57658c165d6b7bcec009e660b15c6696dded4715f7d92",
+      "peak_rss_bytes": 5160960,
+      "repeat": 1,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             5160960  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 495  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   9  involuntary context switches\n           334874831  instructions retired\n            78541413  cycles elapsed\n             4358504  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 1048117,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "a866318bf1dfe53bcbb57658c165d6b7bcec009e660b15c6696dded4715f7d92",
+      "peak_rss_bytes": 5259264,
+      "repeat": 2,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             5259264  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 501  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  10  involuntary context switches\n           335018988  instructions retired\n            79022539  cycles elapsed\n             4456808  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 1048117,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "a866318bf1dfe53bcbb57658c165d6b7bcec009e660b15c6696dded4715f7d92",
+      "peak_rss_bytes": 5636096,
+      "repeat": 0,
+      "tool_stderr": "        0.04 real         0.04 user         0.00 sys\n             5636096  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 524  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           645492987  instructions retired\n           184587471  cycles elapsed\n             4833640  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 1048117,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "a866318bf1dfe53bcbb57658c165d6b7bcec009e660b15c6696dded4715f7d92",
+      "peak_rss_bytes": 5652480,
+      "repeat": 1,
+      "tool_stderr": "        0.04 real         0.04 user         0.00 sys\n             5652480  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 525  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  12  involuntary context switches\n           645361277  instructions retired\n           186146006  cycles elapsed\n             4850024  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 1048117,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "a866318bf1dfe53bcbb57658c165d6b7bcec009e660b15c6696dded4715f7d92",
+      "peak_rss_bytes": 5636096,
+      "repeat": 2,
+      "tool_stderr": "        0.04 real         0.04 user         0.00 sys\n             5636096  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 523  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  10  involuntary context switches\n           645125191  instructions retired\n           185025011  cycles elapsed\n             4833640  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 1048117,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "a866318bf1dfe53bcbb57658c165d6b7bcec009e660b15c6696dded4715f7d92",
+      "peak_rss_bytes": 5193728,
+      "repeat": 0,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             5193728  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 497  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           401369841  instructions retired\n            96022112  cycles elapsed\n             4391272  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 1048117,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "a866318bf1dfe53bcbb57658c165d6b7bcec009e660b15c6696dded4715f7d92",
+      "peak_rss_bytes": 5177344,
+      "repeat": 1,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             5177344  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 496  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n           401404678  instructions retired\n            96490913  cycles elapsed\n             4374888  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 1048117,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "a866318bf1dfe53bcbb57658c165d6b7bcec009e660b15c6696dded4715f7d92",
+      "peak_rss_bytes": 5193728,
+      "repeat": 2,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             5193728  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 497  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  10  involuntary context switches\n           401398855  instructions retired\n            95865494  cycles elapsed\n             4391272  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 1045709,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "e37d55358232c0d269a2bd39bfafe5df3ebc13c35d85d73fff192cedc359679f",
+      "peak_rss_bytes": 4489216,
+      "repeat": 0,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             4489216  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 454  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n           225017719  instructions retired\n            62711426  cycles elapsed\n             3735912  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 1045709,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "e37d55358232c0d269a2bd39bfafe5df3ebc13c35d85d73fff192cedc359679f",
+      "peak_rss_bytes": 4489216,
+      "repeat": 1,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             4489216  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 454  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           225096213  instructions retired\n            62928145  cycles elapsed\n             3735912  peak memory footprint\n"
+    },
+    {
+      "case": "train/zlib-archive.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 1045709,
+        "raw_bytes": 1048576
+      },
+      "packet_sha256": "e37d55358232c0d269a2bd39bfafe5df3ebc13c35d85d73fff192cedc359679f",
+      "peak_rss_bytes": 4489216,
+      "repeat": 2,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             4489216  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 454  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           225029225  instructions retired\n            63143704  cycles elapsed\n             3735912  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 427601,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "e2ab32d57fdf7297f9e07dcc523205afceedc098aad4864455f449ace67e6d88",
+      "peak_rss_bytes": 4390912,
+      "repeat": 0,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             4390912  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 448  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           225419267  instructions retired\n            55561615  cycles elapsed\n             3572072  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 427601,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "e2ab32d57fdf7297f9e07dcc523205afceedc098aad4864455f449ace67e6d88",
+      "peak_rss_bytes": 4308992,
+      "repeat": 1,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             4308992  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 444  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           225385993  instructions retired\n            55687148  cycles elapsed\n             3490152  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 427601,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "e2ab32d57fdf7297f9e07dcc523205afceedc098aad4864455f449ace67e6d88",
+      "peak_rss_bytes": 4292608,
+      "repeat": 2,
+      "tool_stderr": "        0.01 real         0.01 user         0.00 sys\n             4292608  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 443  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   9  involuntary context switches\n           225311986  instructions retired\n            55551068  cycles elapsed\n             3473768  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 378176,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "8316ceafb7e49ced1b7ad880e77462bb69be2bd808e26a0742b75dc75123d2c0",
+      "peak_rss_bytes": 4325376,
+      "repeat": 0,
+      "tool_stderr": "        0.04 real         0.04 user         0.00 sys\n             4325376  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 444  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  10  involuntary context switches\n          1297751128  instructions retired\n           200139010  cycles elapsed\n             3506536  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 378176,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "8316ceafb7e49ced1b7ad880e77462bb69be2bd808e26a0742b75dc75123d2c0",
+      "peak_rss_bytes": 4276224,
+      "repeat": 1,
+      "tool_stderr": "        0.04 real         0.04 user         0.00 sys\n             4276224  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 442  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   9  involuntary context switches\n          1297665601  instructions retired\n           200365743  cycles elapsed\n             3457384  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 378176,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "8316ceafb7e49ced1b7ad880e77462bb69be2bd808e26a0742b75dc75123d2c0",
+      "peak_rss_bytes": 4276224,
+      "repeat": 2,
+      "tool_stderr": "        0.04 real         0.04 user         0.00 sys\n             4276224  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 442  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  11  involuntary context switches\n          1297622719  instructions retired\n           199421230  cycles elapsed\n             3457384  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 378175,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "0cab27f4306d1f1e366510e2813ff4b80df44188fad4b88ab146536f4a1d27fe",
+      "peak_rss_bytes": 4374528,
+      "repeat": 0,
+      "tool_stderr": "        0.04 real         0.04 user         0.00 sys\n             4374528  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 448  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  10  involuntary context switches\n          1333582971  instructions retired\n           206536218  cycles elapsed\n             3555688  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 378175,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "0cab27f4306d1f1e366510e2813ff4b80df44188fad4b88ab146536f4a1d27fe",
+      "peak_rss_bytes": 4423680,
+      "repeat": 1,
+      "tool_stderr": "        0.05 real         0.04 user         0.00 sys\n             4423680  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 450  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  11  involuntary context switches\n          1333625683  instructions retired\n           216153932  cycles elapsed\n             3604840  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 378175,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "0cab27f4306d1f1e366510e2813ff4b80df44188fad4b88ab146536f4a1d27fe",
+      "peak_rss_bytes": 4358144,
+      "repeat": 2,
+      "tool_stderr": "        0.04 real         0.04 user         0.00 sys\n             4358144  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 447  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  11  involuntary context switches\n          1333469548  instructions retired\n           205774376  cycles elapsed\n             3539304  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 377800,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "c189984b35a594916c772982025616d4099f1dd7e4b31a5bdf8039ae7a1e6cb4",
+      "peak_rss_bytes": 4538368,
+      "repeat": 0,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             4538368  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 457  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  11  involuntary context switches\n           499525284  instructions retired\n           113820034  cycles elapsed\n             3735912  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 377800,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "c189984b35a594916c772982025616d4099f1dd7e4b31a5bdf8039ae7a1e6cb4",
+      "peak_rss_bytes": 4472832,
+      "repeat": 1,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             4472832  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 452  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           499287852  instructions retired\n           112212327  cycles elapsed\n             3670376  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 377800,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "c189984b35a594916c772982025616d4099f1dd7e4b31a5bdf8039ae7a1e6cb4",
+      "peak_rss_bytes": 4489216,
+      "repeat": 2,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             4489216  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 454  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  10  involuntary context switches\n           499394091  instructions retired\n           112146381  cycles elapsed\n             3686760  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 372858,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "43b2cbdae72999e266f9964cf7a8d7c9e85ae59b3fec65fe6b28819016d9ddfe",
+      "peak_rss_bytes": 4849664,
+      "repeat": 0,
+      "tool_stderr": "        0.08 real         0.08 user         0.00 sys\n             4849664  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 476  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  12  involuntary context switches\n          1749419302  instructions retired\n           365888849  cycles elapsed\n             4047208  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 372858,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "43b2cbdae72999e266f9964cf7a8d7c9e85ae59b3fec65fe6b28819016d9ddfe",
+      "peak_rss_bytes": 4833280,
+      "repeat": 1,
+      "tool_stderr": "        0.08 real         0.08 user         0.00 sys\n             4833280  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 475  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  11  involuntary context switches\n          1749482288  instructions retired\n           370076678  cycles elapsed\n             4030824  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 372858,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "43b2cbdae72999e266f9964cf7a8d7c9e85ae59b3fec65fe6b28819016d9ddfe",
+      "peak_rss_bytes": 4767744,
+      "repeat": 2,
+      "tool_stderr": "        0.08 real         0.08 user         0.00 sys\n             4767744  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 470  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  13  involuntary context switches\n          1749410317  instructions retired\n           370735116  cycles elapsed\n             3965288  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 372858,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "43b2cbdae72999e266f9964cf7a8d7c9e85ae59b3fec65fe6b28819016d9ddfe",
+      "peak_rss_bytes": 4882432,
+      "repeat": 0,
+      "tool_stderr": "        0.08 real         0.08 user         0.00 sys\n             4882432  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 477  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  12  involuntary context switches\n          1750019088  instructions retired\n           371730633  cycles elapsed\n             4079976  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 372858,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "43b2cbdae72999e266f9964cf7a8d7c9e85ae59b3fec65fe6b28819016d9ddfe",
+      "peak_rss_bytes": 4849664,
+      "repeat": 1,
+      "tool_stderr": "        0.08 real         0.08 user         0.00 sys\n             4849664  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 475  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  12  involuntary context switches\n          1749923884  instructions retired\n           383513389  cycles elapsed\n             4047208  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 372858,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "43b2cbdae72999e266f9964cf7a8d7c9e85ae59b3fec65fe6b28819016d9ddfe",
+      "peak_rss_bytes": 4718592,
+      "repeat": 2,
+      "tool_stderr": "        0.08 real         0.08 user         0.00 sys\n             4718592  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 467  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  12  involuntary context switches\n          1749586995  instructions retired\n           367377438  cycles elapsed\n             3916136  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 405100,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "8b85a936827fd1d795bd90587c904654c2a8b2ae50e865571142b4648d1ec770",
+      "peak_rss_bytes": 3801088,
+      "repeat": 0,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             3801088  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 412  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   9  involuntary context switches\n           320744320  instructions retired\n           107275711  cycles elapsed\n             3064168  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 405100,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "8b85a936827fd1d795bd90587c904654c2a8b2ae50e865571142b4648d1ec770",
+      "peak_rss_bytes": 3801088,
+      "repeat": 1,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             3801088  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 411  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   9  involuntary context switches\n           320991156  instructions retired\n           107076118  cycles elapsed\n             3064168  peak memory footprint\n"
+    },
+    {
+      "case": "train/chinook.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 405100,
+        "raw_bytes": 1007616
+      },
+      "packet_sha256": "8b85a936827fd1d795bd90587c904654c2a8b2ae50e865571142b4648d1ec770",
+      "peak_rss_bytes": 3801088,
+      "repeat": 2,
+      "tool_stderr": "        0.02 real         0.02 user         0.00 sys\n             3801088  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 411  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   9  involuntary context switches\n           320815871  instructions retired\n           106956018  cycles elapsed\n             3064168  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 19065,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "e5e3eb79c3efb4aeabbf548e90c0d5146de4ed93bb78e0c98039ae496c9f05f7",
+      "peak_rss_bytes": 2818048,
+      "repeat": 0,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2818048  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 353  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n            40527231  instructions retired\n             9124970  cycles elapsed\n             1999208  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 19065,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "e5e3eb79c3efb4aeabbf548e90c0d5146de4ed93bb78e0c98039ae496c9f05f7",
+      "peak_rss_bytes": 2801664,
+      "repeat": 1,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2801664  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 352  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n            40435160  instructions retired\n             9136106  cycles elapsed\n             1982824  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 19065,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "e5e3eb79c3efb4aeabbf548e90c0d5146de4ed93bb78e0c98039ae496c9f05f7",
+      "peak_rss_bytes": 2801664,
+      "repeat": 2,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2801664  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 351  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n            40425166  instructions retired\n             9005740  cycles elapsed\n             1982824  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 16474,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "946d740c2d4b38df17999fd7dd02a1e465ecd6651e1ecac7577a5b3a7aab612e",
+      "peak_rss_bytes": 2752512,
+      "repeat": 0,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2752512  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 348  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           147483959  instructions retired\n            22980386  cycles elapsed\n             1933672  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 16474,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "946d740c2d4b38df17999fd7dd02a1e465ecd6651e1ecac7577a5b3a7aab612e",
+      "peak_rss_bytes": 2752512,
+      "repeat": 1,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2752512  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 349  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           147480938  instructions retired\n            22846177  cycles elapsed\n             1933672  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 16474,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "946d740c2d4b38df17999fd7dd02a1e465ecd6651e1ecac7577a5b3a7aab612e",
+      "peak_rss_bytes": 2752512,
+      "repeat": 2,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2752512  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 349  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n           147570067  instructions retired\n            23251789  cycles elapsed\n             1933672  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 16474,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "946d740c2d4b38df17999fd7dd02a1e465ecd6651e1ecac7577a5b3a7aab612e",
+      "peak_rss_bytes": 2818048,
+      "repeat": 0,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2818048  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 353  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n           156812502  instructions retired\n            23901779  cycles elapsed\n             1999208  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 16474,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "946d740c2d4b38df17999fd7dd02a1e465ecd6651e1ecac7577a5b3a7aab612e",
+      "peak_rss_bytes": 2818048,
+      "repeat": 1,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2818048  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 353  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n           156789768  instructions retired\n            24190354  cycles elapsed\n             1999208  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 16474,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "946d740c2d4b38df17999fd7dd02a1e465ecd6651e1ecac7577a5b3a7aab612e",
+      "peak_rss_bytes": 2818048,
+      "repeat": 2,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2818048  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 353  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n           156748638  instructions retired\n            23794568  cycles elapsed\n             1999208  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 13959,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "6785edbedc1fe0e0faf9216e4083a013c5732c9f7f7fdec0ab98478689708c61",
+      "peak_rss_bytes": 2736128,
+      "repeat": 0,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2736128  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 346  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   6  involuntary context switches\n            53477579  instructions retired\n            14867120  cycles elapsed\n             1933672  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 13959,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "6785edbedc1fe0e0faf9216e4083a013c5732c9f7f7fdec0ab98478689708c61",
+      "peak_rss_bytes": 2752512,
+      "repeat": 1,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2752512  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 348  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n            53570538  instructions retired\n            15227760  cycles elapsed\n             1950056  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 13959,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "6785edbedc1fe0e0faf9216e4083a013c5732c9f7f7fdec0ab98478689708c61",
+      "peak_rss_bytes": 2736128,
+      "repeat": 2,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2736128  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 346  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   9  involuntary context switches\n            53513965  instructions retired\n            14952368  cycles elapsed\n             1933672  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 11405,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "c573b05cdff4a2c9b02fc03fa9d66018473ee250e5833c059d8d80071d00a958",
+      "peak_rss_bytes": 3162112,
+      "repeat": 0,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             3162112  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 373  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n            50842849  instructions retired\n            12434589  cycles elapsed\n             2359656  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 11405,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "c573b05cdff4a2c9b02fc03fa9d66018473ee250e5833c059d8d80071d00a958",
+      "peak_rss_bytes": 3145728,
+      "repeat": 1,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             3145728  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 371  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n            50813990  instructions retired\n            12606160  cycles elapsed\n             2343272  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 11405,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "c573b05cdff4a2c9b02fc03fa9d66018473ee250e5833c059d8d80071d00a958",
+      "peak_rss_bytes": 3178496,
+      "repeat": 2,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             3178496  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 374  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n            50855830  instructions retired\n            12874749  cycles elapsed\n             2376040  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 11582,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "0bd7bb9593467260a375caa63171e1ae99e46fc0eac569cafb49ccd75db08384",
+      "peak_rss_bytes": 2654208,
+      "repeat": 0,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2654208  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 342  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n           174042042  instructions retired\n            30574747  cycles elapsed\n             1851752  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 11582,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "0bd7bb9593467260a375caa63171e1ae99e46fc0eac569cafb49ccd75db08384",
+      "peak_rss_bytes": 2654208,
+      "repeat": 1,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2654208  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 341  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  14  involuntary context switches\n           174128156  instructions retired\n            31730484  cycles elapsed\n             1851752  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 11582,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "0bd7bb9593467260a375caa63171e1ae99e46fc0eac569cafb49ccd75db08384",
+      "peak_rss_bytes": 2670592,
+      "repeat": 2,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2670592  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 342  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  35  involuntary context switches\n           174536861  instructions retired\n            31892344  cycles elapsed\n             1868136  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 11621,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "f4f793fa91a8e5205632918a31b34901ac1d0d38d8ee382c7882b10913b2310c",
+      "peak_rss_bytes": 2654208,
+      "repeat": 0,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2654208  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 341  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n            29201514  instructions retired\n             9243038  cycles elapsed\n             1917288  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 11621,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "f4f793fa91a8e5205632918a31b34901ac1d0d38d8ee382c7882b10913b2310c",
+      "peak_rss_bytes": 2654208,
+      "repeat": 1,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2654208  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 341  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n            29189465  instructions retired\n             8886202  cycles elapsed\n             1917288  peak memory footprint\n"
+    },
+    {
+      "case": "train/collision_trigram-10-0.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 11621,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "f4f793fa91a8e5205632918a31b34901ac1d0d38d8ee382c7882b10913b2310c",
+      "peak_rss_bytes": 2654208,
+      "repeat": 2,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2654208  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 342  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n            29193308  instructions retired\n             8538036  cycles elapsed\n             1917288  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 4411,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "8c3f59899ee4046a4063be3965ee827453808cef0831378f5e5e68a358652c9e",
+      "peak_rss_bytes": 2686976,
+      "repeat": 0,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2686976  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 344  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  20  involuntary context switches\n            31833544  instructions retired\n             8620795  cycles elapsed\n             1868136  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 4411,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "8c3f59899ee4046a4063be3965ee827453808cef0831378f5e5e68a358652c9e",
+      "peak_rss_bytes": 2686976,
+      "repeat": 1,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2686976  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 344  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n            31110720  instructions retired\n             7647920  cycles elapsed\n             1851728  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "bounded:4:0:longest:0",
+      "native": {
+        "packed_bytes": 4411,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "8c3f59899ee4046a4063be3965ee827453808cef0831378f5e5e68a358652c9e",
+      "peak_rss_bytes": 2654208,
+      "repeat": 2,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2654208  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 343  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  10  involuntary context switches\n            31321889  instructions retired\n             7914929  cycles elapsed\n             1835368  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 2670592,
+      "repeat": 0,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2670592  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 344  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  19  involuntary context switches\n            68562345  instructions retired\n            14422012  cycles elapsed\n             1851752  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 2670592,
+      "repeat": 1,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2670592  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 343  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  13  involuntary context switches\n            67318340  instructions retired\n            13927019  cycles elapsed\n             1851752  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "bounded:16:1:feedback:0",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 2670592,
+      "repeat": 2,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2670592  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 344  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n            67473529  instructions retired\n            13503913  cycles elapsed\n             1851752  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 2719744,
+      "repeat": 0,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2719744  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 346  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  18  involuntary context switches\n            69036702  instructions retired\n            13604182  cycles elapsed\n             1900904  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 2703360,
+      "repeat": 1,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2703360  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 346  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  11  involuntary context switches\n            69331916  instructions retired\n            13777424  cycles elapsed\n             1884520  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "bounded:16:1:feedback:1",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 2703360,
+      "repeat": 2,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2703360  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 346  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  12  involuntary context switches\n            69078575  instructions retired\n            13974703  cycles elapsed\n             1884520  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 2818048,
+      "repeat": 0,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2818048  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 351  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   5  involuntary context switches\n            34553231  instructions retired\n             7948535  cycles elapsed\n             2015592  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 2818048,
+      "repeat": 1,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2818048  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 352  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n            34501806  instructions retired\n             7571626  cycles elapsed\n             2015592  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "balanced",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 2834432,
+      "repeat": 2,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2834432  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 352  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   5  involuntary context switches\n            34471658  instructions retired\n             7622147  cycles elapsed\n             2031976  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 3112960,
+      "repeat": 0,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             3112960  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 370  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n            38550725  instructions retired\n             8653911  cycles elapsed\n             2310504  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 3080192,
+      "repeat": 1,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             3080192  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 368  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n            38641792  instructions retired\n             8447104  cycles elapsed\n             2277736  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "best",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 3080192,
+      "repeat": 2,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             3080192  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 367  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   9  involuntary context switches\n            38582871  instructions retired\n             9645831  cycles elapsed\n             2277736  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 2621440,
+      "repeat": 0,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2621440  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 340  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   7  involuntary context switches\n            32915503  instructions retired\n             7975373  cycles elapsed\n             1818984  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 2621440,
+      "repeat": 1,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2621440  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 339  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n            33043282  instructions retired\n             9077222  cycles elapsed\n             1818984  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "policy-size",
+      "native": {
+        "packed_bytes": 4322,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "060ba7cc8d6f9565e41b03fdcc16b7dcce768e3ad6c066bd2d2cf6f5384b22b1",
+      "peak_rss_bytes": 2621440,
+      "repeat": 2,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2621440  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 339  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                  15  involuntary context switches\n            33050997  instructions retired\n             8330842  cycles elapsed\n             1818984  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 4323,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "77390d5feaeb832a5aa57c0b2e7600e090189d6df162c7c538ee0e168b240ef0",
+      "peak_rss_bytes": 2654208,
+      "repeat": 0,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2654208  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 341  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n            23367790  instructions retired\n             6481584  cycles elapsed\n             1917288  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 4323,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "77390d5feaeb832a5aa57c0b2e7600e090189d6df162c7c538ee0e168b240ef0",
+      "peak_rss_bytes": 2654208,
+      "repeat": 1,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2654208  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 341  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n            23364574  instructions retired\n             6504362  cycles elapsed\n             1917288  peak memory footprint\n"
+    },
+    {
+      "case": "train/random_islands-7-0.raw",
+      "method": "miniz6",
+      "native": {
+        "packed_bytes": 4323,
+        "raw_bytes": 262144
+      },
+      "packet_sha256": "77390d5feaeb832a5aa57c0b2e7600e090189d6df162c7c538ee0e168b240ef0",
+      "peak_rss_bytes": 2654208,
+      "repeat": 2,
+      "tool_stderr": "        0.00 real         0.00 user         0.00 sys\n             2654208  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 341  page reclaims\n                   0  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                   8  involuntary context switches\n            23370490  instructions retired\n             6627973  cycles elapsed\n             1917288  peak memory footprint\n"
+    }
+  ],
+  "study_result_sha256": "158dd698af04f77e7dc9eaf8525e208e10919cfc2f502e96101f88698f6e5bfe",
+  "summary": {
+    "balanced": {
+      "cases": [
+        {
+          "case": "train/llvm.raw",
+          "increase_vs_original_best_bytes": -393216,
+          "median_peak_rss_bytes": 4128768
+        },
+        {
+          "case": "train/zlib-archive.raw",
+          "increase_vs_original_best_bytes": -458752,
+          "median_peak_rss_bytes": 5177344
+        },
+        {
+          "case": "train/chinook.raw",
+          "increase_vs_original_best_bytes": -344064,
+          "median_peak_rss_bytes": 4489216
+        },
+        {
+          "case": "train/collision_trigram-10-0.raw",
+          "increase_vs_original_best_bytes": -425984,
+          "median_peak_rss_bytes": 2736128
+        },
+        {
+          "case": "train/random_islands-7-0.raw",
+          "increase_vs_original_best_bytes": -262144,
+          "median_peak_rss_bytes": 2818048
+        }
+      ],
+      "max_median_increase_vs_best_bytes": -262144
+    },
+    "best": {
+      "cases": [
+        {
+          "case": "train/llvm.raw",
+          "increase_vs_original_best_bytes": 0,
+          "median_peak_rss_bytes": 4521984
+        },
+        {
+          "case": "train/zlib-archive.raw",
+          "increase_vs_original_best_bytes": 0,
+          "median_peak_rss_bytes": 5636096
+        },
+        {
+          "case": "train/chinook.raw",
+          "increase_vs_original_best_bytes": 0,
+          "median_peak_rss_bytes": 4833280
+        },
+        {
+          "case": "train/collision_trigram-10-0.raw",
+          "increase_vs_original_best_bytes": 0,
+          "median_peak_rss_bytes": 3162112
+        },
+        {
+          "case": "train/random_islands-7-0.raw",
+          "increase_vs_original_best_bytes": 0,
+          "median_peak_rss_bytes": 3080192
+        }
+      ],
+      "max_median_increase_vs_best_bytes": 0
+    },
+    "bounded:16:1:feedback:0": {
+      "cases": [
+        {
+          "case": "train/llvm.raw",
+          "increase_vs_original_best_bytes": -573440,
+          "median_peak_rss_bytes": 3948544
+        },
+        {
+          "case": "train/zlib-archive.raw",
+          "increase_vs_original_best_bytes": -524288,
+          "median_peak_rss_bytes": 5111808
+        },
+        {
+          "case": "train/chinook.raw",
+          "increase_vs_original_best_bytes": -557056,
+          "median_peak_rss_bytes": 4276224
+        },
+        {
+          "case": "train/collision_trigram-10-0.raw",
+          "increase_vs_original_best_bytes": -409600,
+          "median_peak_rss_bytes": 2752512
+        },
+        {
+          "case": "train/random_islands-7-0.raw",
+          "increase_vs_original_best_bytes": -409600,
+          "median_peak_rss_bytes": 2670592
+        }
+      ],
+      "max_median_increase_vs_best_bytes": -409600
+    },
+    "bounded:16:1:feedback:1": {
+      "cases": [
+        {
+          "case": "train/llvm.raw",
+          "increase_vs_original_best_bytes": -376832,
+          "median_peak_rss_bytes": 4145152
+        },
+        {
+          "case": "train/zlib-archive.raw",
+          "increase_vs_original_best_bytes": -491520,
+          "median_peak_rss_bytes": 5144576
+        },
+        {
+          "case": "train/chinook.raw",
+          "increase_vs_original_best_bytes": -458752,
+          "median_peak_rss_bytes": 4374528
+        },
+        {
+          "case": "train/collision_trigram-10-0.raw",
+          "increase_vs_original_best_bytes": -344064,
+          "median_peak_rss_bytes": 2818048
+        },
+        {
+          "case": "train/random_islands-7-0.raw",
+          "increase_vs_original_best_bytes": -376832,
+          "median_peak_rss_bytes": 2703360
+        }
+      ],
+      "max_median_increase_vs_best_bytes": -344064
+    },
+    "bounded:4:0:longest:0": {
+      "cases": [
+        {
+          "case": "train/llvm.raw",
+          "increase_vs_original_best_bytes": -507904,
+          "median_peak_rss_bytes": 4014080
+        },
+        {
+          "case": "train/zlib-archive.raw",
+          "increase_vs_original_best_bytes": -491520,
+          "median_peak_rss_bytes": 5144576
+        },
+        {
+          "case": "train/chinook.raw",
+          "increase_vs_original_best_bytes": -524288,
+          "median_peak_rss_bytes": 4308992
+        },
+        {
+          "case": "train/collision_trigram-10-0.raw",
+          "increase_vs_original_best_bytes": -360448,
+          "median_peak_rss_bytes": 2801664
+        },
+        {
+          "case": "train/random_islands-7-0.raw",
+          "increase_vs_original_best_bytes": -393216,
+          "median_peak_rss_bytes": 2686976
+        }
+      ],
+      "max_median_increase_vs_best_bytes": -360448
+    },
+    "miniz6": {
+      "cases": [
+        {
+          "case": "train/llvm.raw",
+          "increase_vs_original_best_bytes": -868352,
+          "median_peak_rss_bytes": 3653632
+        },
+        {
+          "case": "train/zlib-archive.raw",
+          "increase_vs_original_best_bytes": -1146880,
+          "median_peak_rss_bytes": 4489216
+        },
+        {
+          "case": "train/chinook.raw",
+          "increase_vs_original_best_bytes": -1032192,
+          "median_peak_rss_bytes": 3801088
+        },
+        {
+          "case": "train/collision_trigram-10-0.raw",
+          "increase_vs_original_best_bytes": -507904,
+          "median_peak_rss_bytes": 2654208
+        },
+        {
+          "case": "train/random_islands-7-0.raw",
+          "increase_vs_original_best_bytes": -425984,
+          "median_peak_rss_bytes": 2654208
+        }
+      ],
+      "max_median_increase_vs_best_bytes": -425984
+    },
+    "policy-size": {
+      "cases": [
+        {
+          "case": "train/llvm.raw",
+          "increase_vs_original_best_bytes": -16384,
+          "median_peak_rss_bytes": 4505600
+        },
+        {
+          "case": "train/zlib-archive.raw",
+          "increase_vs_original_best_bytes": -442368,
+          "median_peak_rss_bytes": 5193728
+        },
+        {
+          "case": "train/chinook.raw",
+          "increase_vs_original_best_bytes": 16384,
+          "median_peak_rss_bytes": 4849664
+        },
+        {
+          "case": "train/collision_trigram-10-0.raw",
+          "increase_vs_original_best_bytes": -507904,
+          "median_peak_rss_bytes": 2654208
+        },
+        {
+          "case": "train/random_islands-7-0.raw",
+          "increase_vs_original_best_bytes": -458752,
+          "median_peak_rss_bytes": 2621440
+        }
+      ],
+      "max_median_increase_vs_best_bytes": 16384
+    }
+  }
+}

@@ -1,7 +1,8 @@
 # Next goal: encoder performance and compression improvements
 
 Status: active. P0 corpus/control contract and P1 profiling are implemented;
-P2 isolated speed pilots are complete, P3 is underway, and P4–P6 are pending.
+P2 isolated speed pilots and P3 bounded-cost investigation are complete;
+P4–P6 remain pending.
 Evidence: [refreshed encoder profiles](encoder-profile-report.md).
 Initial implementation evidence: [isolated speed spikes](encoder-speed-spikes.md).
 Bounded parser prototype: [P3 investigation](encoder-bounded-parser.md).
@@ -90,7 +91,7 @@ noise; it does not establish population generalization.
   separate from benchmark timings.
 - [x] Attribute inclusive/exclusive samples, including inlined code; report
   unresolved samples and overlap rather than summing inclusive percentages.
-- [ ] Add optional research counters where sampling is insufficient: candidate
+- [x] Add optional research counters where sampling is insufficient: candidate
   visits, comparison lengths, insertions, short-match rejection, tokens/blocks,
   Huffman rebuilds, allocation counts/bytes and fallback frequency.
 - [x] Rank the measured costs and select at most three implementation spikes.
@@ -103,6 +104,11 @@ inclusive attribution counters, and 605 paired native control rows. Sampling
 supports three initial spikes; additional matcher counters are deferred until
 ambiguity requires them. Selected spikes: bounded code reversal, candidate/
 position bookkeeping, and equivalent accepted-match range checks.
+P3 adds an optional instrumented inspector for visits, comparison bytes,
+insertions, short rejection, tokens/blocks, Huffman analyses/refinement,
+stored selection and estimated/actual costs. Instrumentation is absent from
+timed specializations. Actual allocator-event counters were not required by
+the resolved spikes; separate process RSS is measured rather than inferred.
 
 ## P2 — Speed improvements with unchanged search semantics where possible
 
@@ -131,22 +137,29 @@ experiment. Keep negative results and reproducing inputs.
 
 ## P3 — A cheap parser aware of encoded cost
 
-- [ ] Reuse the S7 exact fixed-code oracle and counterexamples as diagnostics.
+- [x] Reuse the S7 exact fixed-code oracle and counterexamples as diagnostics.
   Start with bounded alternatives and short lookahead, not full-input DP.
-- [ ] Compare longest/one-step lazy against candidate budgets 4/8/16 and a
+- [x] Compare longest/one-step lazy against candidate budgets 4/8/16 and a
   small set of lookahead or beam widths. Prune redundant alternatives and cap
   work explicitly. Preserve accepted-token checks and the 32768 distance bound.
-- [ ] Evaluate costs using estimated/current literal, length and distance
+- [x] Evaluate costs using estimated/current literal, length and distance
   Huffman lengths plus extra bits. Record estimation error; reconstructed
   dynamic tables and header costs determine the actual output size.
-- [ ] Permit at most one additional bounded cost/refinement pass initially.
+- [x] Permit at most one additional bounded cost/refinement pass initially.
   Measure every pass. Do not claim global optimality from a bounded graph or
   estimated code lengths.
-- [ ] Compare size candidates to both Best and the old size policy, with matched
+- [x] Compare size candidates to both Best and the old size policy, with matched
   timings and memory. Reject savings whose runtime exceeds the size-role budget.
 
 Initial budget: at most 24 canonical variants; select finalists on training,
 confirm on validation. Retain exact witnesses and measured cost breakdowns.
+
+Delivered: [P3 evidence](encoder-bounded-parser.md), 24 training recipes,
+three training-selected validation sentinels, 1023 paired rows, 248 direct
+control rows, 3456 short-oracle checks and 105 RSS processes. All output checks
+pass, but no new recipe satisfies its speed/size role guards. The smallest
+output is +0.704% versus Best on real validation. Rejected prototypes remain
+isolated; P4 continues with regional effort and block selection.
 
 ## P4 — Adaptive compromise and block decisions
 
