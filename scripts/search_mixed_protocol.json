@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "study": "S8 alignment-aware block-type selection on a fixed token partition",
+  "seed": 195118,
+  "training_rounds": 5,
+  "validation_rounds": 7,
+  "minimum_batch_ms": 5,
+  "levels": ["fast", "balanced", "best"],
+  "token_limits": [1024, 4096, 16384],
+  "emissions": ["compressed", "mixed"],
+  "guardrails": {"maximum_file_size_vs_balanced": 1.2, "speed_aggregate_size_vs_balanced": 1.2, "compromise_aggregate_size_vs_balanced": 1.01},
+  "selection": "training only; all predeclared methods are validation sentinels",
+  "optimality": "minimum final padded bits for the existing token partition and checked per-block lengths only; no global splitting or Huffman optimality",
+  "promotion": "none before frozen fresh S9 and applicable model/proof review"
+}

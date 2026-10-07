@@ -62,6 +62,8 @@ in [docs/bayesian-search-report.md](docs/bayesian-search-report.md).
 The exact fixed-cost oracle, native parser and eight hash/history layouts are
 evaluated in [docs/encoded-cost-report.md](docs/encoded-cost-report.md), including
 the rejected size/CPU tradeoff and reproducible synthetic construction witnesses.
+The stored/fixed/dynamic block-type experiment and its Lean model boundary are
+in [docs/mixed-block-report.md](docs/mixed-block-report.md).
 
 The CLI supports raw streams (`-c`, `-d`) and gzip (`-zc`, `-zd`).
 `--stored` selects stored blocks for either compression mode; `--limit N`
