@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "release": "v0.3.0",
+  "archive_sha256": "6e105e5c49187ebf63e0bf62fb3ecb22b628248c0bf55bd40ace434721f394f5",
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "passed",
+      "archive_sha256": "6e105e5c49187ebf63e0bf62fb3ecb22b628248c0bf55bd40ace434721f394f5",
+      "output_directory": "target/new-methods/references-v1/openzl",
+      "scope": "first default-introspection SDK setup; unmeasured"
+    },
+    {
+      "attempt": 2,
+      "status": "failed",
+      "reason": "build step 1 failed (1); see recorded log"
+    }
+  ],
+  "status": "optional reference excluded from this bounded study; no qualified production adapter/oracle",
+  "reason": "production shared-library + upstream CLI build failed at cli/utils/libutils.dylib with unresolved ArgParser symbols on arm64",
+  "performance_measured": false,
+  "retry_budget_used": 2,
+  "retry_budget_cap": 2,
+  "configuration_log_sha256": {
+    "attempt2-step0.log": "5e10eca9668aa8f04d1da72153f7ea0bdfdf76d1eb9e02a34e3841877b2a8757",
+    "attempt2-step1.log": "1e10980fc7b44023c7f5cfedabf8cd20223737db892af19e1df368744d24d0e2"
+  },
+  "scope": "setup feasibility only; library from first setup is not a measured comparator",
+  "production_options": [
+    "OPENZL_ALLOW_INTROSPECTION=OFF",
+    "OPENZL_BUILD_SHARED_LIBS=ON",
+    "OPENZL_BUILD_CPP=ON",
+    "OPENZL_BUILD_CUSTOM_PARSERS=ON",
+    "OPENZL_BUILD_TOOLS=ON",
+    "OPENZL_BUILD_CLI=ON",
+    "OPENZL_BUILD_TESTS=OFF"
+  ],
+  "initial_receipt": "scripts/reports/new-methods-openzl-setup.json"
+}

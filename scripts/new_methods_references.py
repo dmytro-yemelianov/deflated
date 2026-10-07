@@ -25,9 +25,9 @@ RELEASES = {
     "brotli": ("google/brotli", "v1.2.0", ".", ["-DBROTLI_BUILD_TOOLS=OFF", "-DBROTLI_DISABLE_TESTS=ON"]),
     "lzma2": ("tukaani-project/xz", "v5.8.4", ".", ["-DBUILD_TESTING=OFF"]),
     "openzl": ("facebook/openzl", "v0.3.0", ".", ["-DOPENZL_BUILD_SHARED_LIBS=ON",
-               "-DOPENZL_BUILD_CPP=OFF", "-DOPENZL_CPP_INSTALL=OFF", "-DOPENZL_BUILD_CUSTOM_PARSERS=OFF",
-               "-DOPENZL_BUILD_TOOLS=OFF", "-DOPENZL_BUILD_CLI=OFF", "-DOPENZL_BUILD_EXAMPLES=OFF",
-               "-DOPENZL_BUILD_TESTS=OFF"]),
+               "-DOPENZL_BUILD_CPP=ON", "-DOPENZL_CPP_INSTALL=OFF", "-DOPENZL_BUILD_CUSTOM_PARSERS=ON",
+               "-DOPENZL_BUILD_TOOLS=ON", "-DOPENZL_BUILD_CLI=ON", "-DOPENZL_BUILD_EXAMPLES=OFF",
+               "-DOPENZL_BUILD_TESTS=OFF", "-DOPENZL_ALLOW_INTROSPECTION=OFF"]),
 }
 
 

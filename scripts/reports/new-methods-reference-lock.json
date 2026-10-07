@@ -1,0 +1,947 @@
+{
+  "baseline_revision": "b7d5e0fc79f4f72d2ba772312ec9a22497699ed5",
+  "clock": {
+    "C": "mach_absolute_time on Apple; CLOCK_MONOTONIC otherwise",
+    "Rust": "Instant",
+    "measured_minimum_step_ns": 41,
+    "overhead_subtracted": false
+  },
+  "control_tooling_sha256": {
+    "scripts/native_codec_worker.c": "8a9b8c5c8d47fab7e1e9a3b5e999cf3419d577d338e3e2c0161ad6cdb1b46462",
+    "scripts/new_methods_native_build.py": "f8b2e6efe75072aa0b287e565d900eaeeac8a693b371a7e598a46dc0e063857d",
+    "scripts/new_methods_reference_lock.py": "04b2651d47580d072841b7b5586f1eed0c7f016bd0bb4508c67bd8d71028893c",
+    "scripts/new_methods_rust_build.py": "af6881d3c95a354136db0a2917da48ec2e610639fb26af0a874c030be3970b77",
+    "scripts/test_native_codec_workers.py": "69fc19e6b09cc95d87ea05e26991d7fec2ee622bc9f2f2a5ce0a5cfc30d30422",
+    "scripts/test_rust_codec_workers.py": "92923c82a2bc65649303f4ab63c9c71e204d340923c05a872804ecd98712bbc5"
+  },
+  "evidence_sha256": {
+    "scripts/reports/new-methods-baseline-seal.json": "1cde46258587151992a5be63693133be31cb453782624cf674a990ea612d94a9",
+    "scripts/reports/new-methods-native-implementation-ledger.json": "178c05f3f26446db9140acf729f2d0d202312d2024395d3d044562ec2d38c6ee",
+    "scripts/reports/new-methods-native-worker-contracts.json.gz": "aad9833c92473737c8fb9e33a83e470d6567e638c6f90b3cf754ae75a71141a1",
+    "scripts/reports/new-methods-native-workers-build.json": "83194dd77cfd103d7f832d77010d71d9a6167240c1468609b9228105e8ef700c",
+    "scripts/reports/new-methods-openzl-feasibility.json": "04046101b22dc29473cf792eba8ba3832b1288985ce7375b4d93905531a47e84",
+    "scripts/reports/new-methods-openzl-second-setup-logs.json.gz": "c629a9ec7d3334bfc69a99faf726e4df792ff9e1fa32150f2efe20fea512a42e",
+    "scripts/reports/new-methods-openzl-setup.json": "786f37f6bbc93bff15490bbb2029e130e5aa6b0cce494fefcd35757f7624a147",
+    "scripts/reports/new-methods-reference-cache.json": "11c73a682d9aaa2197b0ef1a9f01b60add5810ace2ee5b9a94baca064bfae02a",
+    "scripts/reports/new-methods-reference-compile-commands.json.gz": "f72aaa045634957ff25a35351a33ee82550ade6a93ab3b3bec3662b52232c90a",
+    "scripts/reports/new-methods-reference-sources.json": "8c381b81d6b4628f4989ea8fc81f3cf5471d73c900556c83b68c25563810cf8f",
+    "scripts/reports/new-methods-rust-worker-contracts.json.gz": "eec4d18bd506b7ad1a9c4c4791ad2d3474f021749cdcde0b3ea9615d676fa05f",
+    "scripts/reports/new-methods-rust-workers-build.json": "7214142099f0c6231fb14fe7440f8fffd1a1439f998bc18d6c198dbe293adf98"
+  },
+  "initial_structured_prototype": {
+    "binary": {
+      "bytes": 578624,
+      "sha256": "20cce6f6ee283414bbe0f9073651b1f5d7898541525bfbaaa18f660c993c676e"
+    },
+    "status": "correctness prototype, not performance-qualified or frame-model-proved; all 12 configurations + 2 plain controls fixed by protocol",
+    "tool_binary": {
+      "bytes": 538688,
+      "sha256": "eb29a9ec14edc8f3905943f1f6d61bcbc3dd78f35567f010737425b92f3632cf"
+    },
+    "worker_path": "target/new-methods/rust-workers-v1/structured_worker"
+  },
+  "matched_deflate_framing": {
+    "gzip": {
+      "crc": "paid CRC32",
+      "isize": "paid u32 size",
+      "mtime": 0,
+      "optional_fields": false,
+      "os": 255,
+      "overhead": 18,
+      "xfl": 0
+    },
+    "raw": "one raw DEFLATE member; exact input consumption; expected decoded size supplied by test/controller",
+    "zip": {
+      "central_directory_and_eocd": "paid; one entry",
+      "crc": "paid CRC32",
+      "date": "1980-01-01 00:00:00",
+      "extra_comment_descriptor": false,
+      "filename": "data.bin",
+      "method": 8,
+      "overhead": 114,
+      "version": 20
+    }
+  },
+  "measurements": "none on study data; evidence is shared correctness/timer contracts only",
+  "optional_openzl": {
+    "archive_sha256": "6e105e5c49187ebf63e0bf62fb3ecb22b628248c0bf55bd40ace434721f394f5",
+    "attempts": [
+      {
+        "archive_sha256": "6e105e5c49187ebf63e0bf62fb3ecb22b628248c0bf55bd40ace434721f394f5",
+        "attempt": 1,
+        "output_directory": "target/new-methods/references-v1/openzl",
+        "scope": "first default-introspection SDK setup; unmeasured",
+        "status": "passed"
+      },
+      {
+        "attempt": 2,
+        "reason": "build step 1 failed (1); see recorded log",
+        "status": "failed"
+      }
+    ],
+    "configuration_log_sha256": {
+      "attempt2-step0.log": "5e10eca9668aa8f04d1da72153f7ea0bdfdf76d1eb9e02a34e3841877b2a8757",
+      "attempt2-step1.log": "1e10980fc7b44023c7f5cfedabf8cd20223737db892af19e1df368744d24d0e2"
+    },
+    "initial_receipt": "scripts/reports/new-methods-openzl-setup.json",
+    "performance_measured": false,
+    "production_options": [
+      "OPENZL_ALLOW_INTROSPECTION=OFF",
+      "OPENZL_BUILD_SHARED_LIBS=ON",
+      "OPENZL_BUILD_CPP=ON",
+      "OPENZL_BUILD_CUSTOM_PARSERS=ON",
+      "OPENZL_BUILD_TOOLS=ON",
+      "OPENZL_BUILD_CLI=ON",
+      "OPENZL_BUILD_TESTS=OFF"
+    ],
+    "reason": "production shared-library + upstream CLI build failed at cli/utils/libutils.dylib with unresolved ArgParser symbols on arm64",
+    "release": "v0.3.0",
+    "retry_budget_cap": 2,
+    "retry_budget_used": 2,
+    "schema_version": 1,
+    "scope": "setup feasibility only; library from first setup is not a measured comparator",
+    "status": "optional reference excluded from this bounded study; no qualified production adapter/oracle"
+  },
+  "references": [
+    {
+      "adapter_inputs_sha256": {
+        "Cargo.lock": "cc7a3ba36cacf4b26169baffe6ca8637300216a888cc9e7577b01c27e6e4fca3",
+        "Cargo.toml": "60cece29d520d66a8df76bf5d7d88a2790dffeec348f19daf6ef0e819d0a84cf",
+        "crates/structured-codec/Cargo.toml": "91019fdfa30080c427d7688949d4d5bd2def12347259a2c40642c82542b2656a",
+        "crates/structured-codec/src/bin/structured-tool.rs": "09a605701c981f9ef7e3ccc1e1cd59c45e3ecc0e3ea67a033a149490c68cdef7",
+        "crates/structured-codec/src/decode.rs": "4e93500edda933682c0c63ab21538dc8384c6a552bad90a704b20a11bb47a749",
+        "crates/structured-codec/src/encode.rs": "cd00719359ad76fb7c80864893264caab59daaa67b186466581be95004c29469",
+        "crates/structured-codec/src/lib.rs": "5a8fc4c3a7faa541d4b5021d18aa3088afd01d675ca087b2016dd689f984d535",
+        "crates/structured-codec/src/wire.rs": "00a067ec36465eb16e324dac5815ea21c59e7e4bc12e5861234a22a7058c18ce",
+        "rust-toolchain.toml": "6c04f2e2d44428d94d3b65cc72041c5ed03d97eac18d6cdc13e95d21355a6869",
+        "tools/new-methods-bench/Cargo.toml": "a415cebe02d28fdb8c335cc7a5883987be5be04ec3291be2c2711de78806f9ac",
+        "tools/new-methods-bench/src/bin/core_worker.rs": "11e0fcb8bf57f4cd1c760e69a6e9ddd3fbcf3e2c14a7d2735efe433149991c42",
+        "tools/new-methods-bench/src/bin/miniz_worker.rs": "3b4570ae89cd3ab24ebb6fdeab1aa9acd8624261b5896f5944d291b5e2b86681",
+        "tools/new-methods-bench/src/bin/structured_worker.rs": "02e566b5556e72bb009ddc3c1946e28fa07c35b28aa5d96eb1d477e948a1e724",
+        "tools/new-methods-bench/src/framing.rs": "6690fdf7209215b060e9f3221f2d8002d1c821ad5e0c0d681bcfba4960b94c34",
+        "tools/new-methods-bench/src/lib.rs": "37e7070851a0b698b8c0ccee0a59ae740c147a12b27acdadc3e0599c0bad2f8d",
+        "tools/new-methods-bench/src/worker.rs": "e86e083c29aa6ecbdd4da7e49e19ec33432e52f3b8166ec021fba0289c65b99d"
+      },
+      "baseline_packet_identity_cases": 42,
+      "binary": {
+        "bytes": 540128,
+        "sha256": "03187028b93e9df8ed89823dba8bfca34c73384f5315baae9f706d65851b7804"
+      },
+      "codec": "deflate-core-b7",
+      "compiler": "rustc 1.88.0 (6b00bc388 2025-06-23)\nbinary: rustc\ncommit-hash: 6b00bc3880198600130e1cf62b8f8a93494488cc\ncommit-date: 2025-06-23\nhost: aarch64-apple-darwin\nrelease: 1.88.0\nLLVM version: 20.1.5\n",
+      "decoder_api": "tooling copy of public block driver; exact consumption/size charged; public inflate suffix contract unchanged",
+      "encoder_api": "deflate_with_level",
+      "external_dictionary": false,
+      "flags": "Rust 1.88.0 release opt-level=3; ordinary target; no research-tuning; recorded removed overrides",
+      "frames": [
+        "raw",
+        "gzip",
+        "zip"
+      ],
+      "levels": [
+        "fast",
+        "balanced",
+        "best"
+      ],
+      "ordinary_context": "fresh per-call work state, allocations and framing; no data-history reuse",
+      "primary_framing": "raw-deflate",
+      "release": "b7d5e0fc79f4f72d2ba772312ec9a22497699ed5",
+      "reusable_context": "fresh-no-reuse-adapter",
+      "source_sha256": {
+        "crates/deflate-core/Cargo.toml": "27e824b076208ffe2864e6c1fae8b836429a393c26c62788e36f53acf1ff65e2",
+        "crates/deflate-core/src/bitstream.rs": "95e941fcc379cafd8ae920f12ed4f6327e12062edfe39015f66eb43a9b094186",
+        "crates/deflate-core/src/bitwriter.rs": "e79886707cf12e58f86c26548eedb3ce8dd1023b131a8e17f790b9037b9d6cda",
+        "crates/deflate-core/src/block.rs": "b99d28faf70ea823b251544f2040f0c4850b9871bcbd9e331742661545310eee",
+        "crates/deflate-core/src/compress.rs": "ed3854e0f1c02db1056c465a4740f9c3212b06ebac4406cb59017adcf999a405",
+        "crates/deflate-core/src/crc32.rs": "3166b0a90dc6cded7a07e5beae9b5cee0c843349123e80dd2e7cc898f71e7fad",
+        "crates/deflate-core/src/deflate.rs": "419e757fa99e22675f77628fc652badcfeb0817852835f790eb584aaebc67507",
+        "crates/deflate-core/src/encode_dynamic.rs": "0a10d270561609bcb1c9b883992880734c6395dfd532ad9ecd2bed54bc4a52ec",
+        "crates/deflate-core/src/encode_fixed.rs": "b4459d0cc109c2f50ebd28467ad1923fbf96a527480dd3f64399601cfa459fd1",
+        "crates/deflate-core/src/error.rs": "fe3ac5fc29296fd8e7e0539dc76c615717fe8a72bb3456608edd18efbb21fecd",
+        "crates/deflate-core/src/gzip.rs": "44a8044d6fd55a5f78fab74f75ba5815b004a4e83ffcbf08ae8254909021b5bd",
+        "crates/deflate-core/src/huffman.rs": "326b31f0fda785d2418f24c7348490520f7f869082fed3316f9f870bfe0fd964",
+        "crates/deflate-core/src/huffman_build.rs": "c2eef9c5c7d53eaf435b65cbc2eb6ad19f28e3df1aef87f6952024c8879ccc58",
+        "crates/deflate-core/src/inflate.rs": "ae4c905a7da364c4b05f4f8c4754ca01ad513b695ea82c28a06c2375dfcde272",
+        "crates/deflate-core/src/lib.rs": "82e81c94fbdad579be6157b3f9cd6b73f3d51ec526c68fda8d731d7f23070d68",
+        "crates/deflate-core/src/lz77.rs": "67991a3fb79ef37a65accdff089b3c34d90157e8eed43745fcbba60f432589c1",
+        "crates/deflate-core/src/matcher.rs": "eedea6a0be4d486bab0ce2a8046a982b4f05e5e4d940ef12decb0d092a04f474",
+        "crates/deflate-core/src/matcher_flat.rs": "2cb9257a6b93edce133891c4292690ef78e5edf87ccdbce976667d0d6d587890",
+        "crates/deflate-core/src/research.rs": "63046c8b3f3a85cc5f3148cbf0aee4a2640618e199cde29ca27a3c3035b7179b",
+        "crates/deflate-core/src/tokens.rs": "5e2f16a94e1a8a35400be25e04280ecae25dd550ad7bd92e398715f16f84f839",
+        "crates/deflate-core/src/zip.rs": "e92492d2c4d61be74e8f6f73da43725992ca0c6be807d8da0d104e2e3a6ae731"
+      },
+      "threads": 1,
+      "validation_binary_sha256": "03187028b93e9df8ed89823dba8bfca34c73384f5315baae9f706d65851b7804",
+      "validation_receipt": "scripts/reports/new-methods-rust-worker-contracts.json.gz",
+      "worker_codec": "core",
+      "worker_path": "target/new-methods/rust-workers-v1/core_worker"
+    },
+    {
+      "adapter_inputs_sha256": {
+        "Cargo.lock": "cc7a3ba36cacf4b26169baffe6ca8637300216a888cc9e7577b01c27e6e4fca3",
+        "Cargo.toml": "60cece29d520d66a8df76bf5d7d88a2790dffeec348f19daf6ef0e819d0a84cf",
+        "crates/structured-codec/Cargo.toml": "91019fdfa30080c427d7688949d4d5bd2def12347259a2c40642c82542b2656a",
+        "crates/structured-codec/src/bin/structured-tool.rs": "09a605701c981f9ef7e3ccc1e1cd59c45e3ecc0e3ea67a033a149490c68cdef7",
+        "crates/structured-codec/src/decode.rs": "4e93500edda933682c0c63ab21538dc8384c6a552bad90a704b20a11bb47a749",
+        "crates/structured-codec/src/encode.rs": "cd00719359ad76fb7c80864893264caab59daaa67b186466581be95004c29469",
+        "crates/structured-codec/src/lib.rs": "5a8fc4c3a7faa541d4b5021d18aa3088afd01d675ca087b2016dd689f984d535",
+        "crates/structured-codec/src/wire.rs": "00a067ec36465eb16e324dac5815ea21c59e7e4bc12e5861234a22a7058c18ce",
+        "rust-toolchain.toml": "6c04f2e2d44428d94d3b65cc72041c5ed03d97eac18d6cdc13e95d21355a6869",
+        "tools/new-methods-bench/Cargo.toml": "a415cebe02d28fdb8c335cc7a5883987be5be04ec3291be2c2711de78806f9ac",
+        "tools/new-methods-bench/src/bin/core_worker.rs": "11e0fcb8bf57f4cd1c760e69a6e9ddd3fbcf3e2c14a7d2735efe433149991c42",
+        "tools/new-methods-bench/src/bin/miniz_worker.rs": "3b4570ae89cd3ab24ebb6fdeab1aa9acd8624261b5896f5944d291b5e2b86681",
+        "tools/new-methods-bench/src/bin/structured_worker.rs": "02e566b5556e72bb009ddc3c1946e28fa07c35b28aa5d96eb1d477e948a1e724",
+        "tools/new-methods-bench/src/framing.rs": "6690fdf7209215b060e9f3221f2d8002d1c821ad5e0c0d681bcfba4960b94c34",
+        "tools/new-methods-bench/src/lib.rs": "37e7070851a0b698b8c0ccee0a59ae740c147a12b27acdadc3e0599c0bad2f8d",
+        "tools/new-methods-bench/src/worker.rs": "e86e083c29aa6ecbdd4da7e49e19ec33432e52f3b8166ec021fba0289c65b99d"
+      },
+      "baseline_packet_identity_cases": 42,
+      "binary": {
+        "bytes": 516368,
+        "sha256": "fb0018785539b77d3b2738db26f72adf6d7072d41e261e85b3f57824e56b96df"
+      },
+      "codec": "miniz_oxide",
+      "compiler": "rustc 1.88.0 (6b00bc388 2025-06-23)\nbinary: rustc\ncommit-hash: 6b00bc3880198600130e1cf62b8f8a93494488cc\ncommit-date: 2025-06-23\nhost: aarch64-apple-darwin\nrelease: 1.88.0\nLLVM version: 20.1.5\n",
+      "decoder_api": "miniz_oxide::inflate::core::decompress; same fresh Box state/geometric Vec growth as decompress_to_vec_with_limit; exact final consumption/size charged",
+      "encoder_api": "miniz_oxide::deflate::compress_to_vec",
+      "external_dictionary": false,
+      "flags": "Rust 1.88.0 release opt-level=3; ordinary target; no research-tuning; recorded removed overrides",
+      "frames": [
+        "raw",
+        "gzip",
+        "zip"
+      ],
+      "levels": [
+        1,
+        6,
+        9
+      ],
+      "ordinary_context": "fresh per-call work state, allocations and framing; no data-history reuse",
+      "primary_framing": "raw-deflate",
+      "release": "0.8.9",
+      "reusable_context": "fresh-no-reuse-adapter",
+      "source": "https://static.crates.io/crates/miniz_oxide/miniz_oxide-0.8.9.crate",
+      "source_archive_sha256": "1fa76a2c86f704bdb222d66965fb3d63269ce38518b83cb0575fca855ebb6316",
+      "threads": 1,
+      "validation_binary_sha256": "fb0018785539b77d3b2738db26f72adf6d7072d41e261e85b3f57824e56b96df",
+      "validation_receipt": "scripts/reports/new-methods-rust-worker-contracts.json.gz",
+      "verified_source_files": 15,
+      "version": "0.8.9",
+      "worker_codec": "miniz",
+      "worker_path": "target/new-methods/rust-workers-v1/miniz_worker"
+    },
+    {
+      "adapter_command": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-function",
+        "-DNATIVE_CODEC=1",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib/install/include",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1",
+        "/Users/dmytro/github/deflated/scripts/native_codec_worker.c",
+        "-L",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib/install/lib",
+        "-Wl,-rpath,/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib/install/lib",
+        "-lz",
+        "-o",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/zlib"
+      ],
+      "adapter_sha256": "8a9b8c5c8d47fab7e1e9a3b5e999cf3419d577d338e3e2c0161ad6cdb1b46462",
+      "binary": {
+        "bytes": 37816,
+        "sha256": "43fc5fa4fc6626aa98867a89e0b23bb7862457a565cfb7908ea8f75ccf578def"
+      },
+      "codec": "zlib",
+      "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin27.2.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin",
+      "crc_table_sha256": "f2ebef916fa6f1791ef10f21bbed0f271bee83ff9be763a56db9dd82fbd8fd62",
+      "external_dictionary": false,
+      "frames": [
+        "raw",
+        "gzip",
+        "zip"
+      ],
+      "levels": [
+        1,
+        6,
+        9
+      ],
+      "library_build_commands": [
+        [
+          "cmake",
+          "-S",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib/source",
+          "-B",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib/build",
+          "-G",
+          "Ninja",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DCMAKE_C_COMPILER=/usr/bin/clang",
+          "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
+          "-DCMAKE_C_FLAGS_RELEASE=-O3 -DNDEBUG",
+          "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -DNDEBUG",
+          "-DCMAKE_INSTALL_PREFIX=/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib/install",
+          "-DZLIB_BUILD_TESTING=OFF"
+        ],
+        [
+          "cmake",
+          "--build",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib/build",
+          "--parallel",
+          "4"
+        ],
+        [
+          "cmake",
+          "--install",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib/build"
+        ]
+      ],
+      "library_compile_commands_sha256": "4abea07065518201ef2222355f3e8bb74d6e99d0c74fe63ca74505f2b6a53ced",
+      "library_sha256": {
+        "install/lib/libz.1.3.2.dylib": "30143a51390d3739a70cade369aa61839fb33f886bcc0f27335d513c98bfd241"
+      },
+      "linkage": "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/zlib:\n\t@rpath/libz.1.dylib (compatibility version 1.0.0, current version 1.3.2)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+      "ordinary_context": "fresh codec state + destroy + allocation + checksum/frame inside each call",
+      "primary_framing": "raw-deflate",
+      "release": "v1.3.2",
+      "runtime_version": {
+        "codec": "zlib",
+        "version": "1.3.2"
+      },
+      "settings": {
+        "decoder": "inflateInit2/inflate(Z_FINISH)/inflateEnd",
+        "encoder": "deflateInit2/deflateBound/deflate(Z_FINISH)/deflateEnd",
+        "memory_level": 8,
+        "reuse": "deflateReset/inflateReset",
+        "strategy": "Z_DEFAULT_STRATEGY",
+        "window_bits": -15
+      },
+      "source_archive_sha256": "b99a0b86c0ba9360ec7e78c4f1e43b1cbdf1e6936c8fa0f6835c0cd694a495a1",
+      "source_url": "https://codeload.github.com/madler/zlib/tar.gz/refs/tags/v1.3.2",
+      "threads": 1,
+      "validation_binary_sha256": "43fc5fa4fc6626aa98867a89e0b23bb7862457a565cfb7908ea8f75ccf578def",
+      "validation_receipt": "scripts/reports/new-methods-native-worker-contracts.json.gz",
+      "worker_codec": "zlib",
+      "worker_path": "target/new-methods/native-workers-v1/zlib"
+    },
+    {
+      "adapter_command": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-function",
+        "-DNATIVE_CODEC=2",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib-ng/install/include",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1",
+        "/Users/dmytro/github/deflated/scripts/native_codec_worker.c",
+        "-L",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib-ng/install/lib",
+        "-Wl,-rpath,/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib-ng/install/lib",
+        "-lz-ng",
+        "-o",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/zlib-ng"
+      ],
+      "adapter_sha256": "8a9b8c5c8d47fab7e1e9a3b5e999cf3419d577d338e3e2c0161ad6cdb1b46462",
+      "binary": {
+        "bytes": 37896,
+        "sha256": "1f11cc3f2cd50b699a6a72834d98735331190a5b7f397abcd4a6a115f0b30097"
+      },
+      "codec": "zlib-ng",
+      "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin27.2.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin",
+      "crc_table_sha256": "f2ebef916fa6f1791ef10f21bbed0f271bee83ff9be763a56db9dd82fbd8fd62",
+      "external_dictionary": false,
+      "frames": [
+        "raw",
+        "gzip",
+        "zip"
+      ],
+      "levels": [
+        1,
+        6,
+        9
+      ],
+      "library_build_commands": [
+        [
+          "cmake",
+          "-S",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib-ng/source",
+          "-B",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib-ng/build",
+          "-G",
+          "Ninja",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DCMAKE_C_COMPILER=/usr/bin/clang",
+          "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
+          "-DCMAKE_C_FLAGS_RELEASE=-O3 -DNDEBUG",
+          "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -DNDEBUG",
+          "-DCMAKE_INSTALL_PREFIX=/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib-ng/install",
+          "-DZLIB_COMPAT=OFF",
+          "-DZLIB_ENABLE_TESTS=OFF"
+        ],
+        [
+          "cmake",
+          "--build",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib-ng/build",
+          "--parallel",
+          "4"
+        ],
+        [
+          "cmake",
+          "--install",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib-ng/build"
+        ]
+      ],
+      "library_compile_commands_sha256": "6de6b2eed88ef3f93d00e46fee4d940c2d8cee557a3e78797bee56d3ee2df3ee",
+      "library_sha256": {
+        "install/lib/libz-ng.2.3.3.dylib": "fa72660131a0854e397871d9cdc89c4617f4fd18eae07f1350492eb0573e14b9"
+      },
+      "linkage": "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/zlib-ng:\n\t@rpath/libz-ng.2.dylib (compatibility version 2.0.0, current version 2.3.3)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+      "ordinary_context": "fresh codec state + destroy + allocation + checksum/frame inside each call",
+      "primary_framing": "raw-deflate",
+      "release": "2.3.3",
+      "runtime_version": {
+        "codec": "zlib-ng",
+        "version": "2.3.3"
+      },
+      "settings": {
+        "decoder": "zng_inflateInit2/zng_inflate(Z_FINISH)/zng_inflateEnd",
+        "encoder": "zng_deflateInit2/zng_deflateBound/zng_deflate(Z_FINISH)/zng_deflateEnd",
+        "memory_level": 8,
+        "reuse": "zng_deflateReset/zng_inflateReset",
+        "strategy": "Z_DEFAULT_STRATEGY",
+        "window_bits": -15
+      },
+      "source_archive_sha256": "f9c65aa9c852eb8255b636fd9f07ce1c406f061ec19a2e7d508b318ca0c907d1",
+      "source_url": "https://codeload.github.com/zlib-ng/zlib-ng/tar.gz/refs/tags/2.3.3",
+      "threads": 1,
+      "validation_binary_sha256": "1f11cc3f2cd50b699a6a72834d98735331190a5b7f397abcd4a6a115f0b30097",
+      "validation_receipt": "scripts/reports/new-methods-native-worker-contracts.json.gz",
+      "worker_codec": "zlib-ng",
+      "worker_path": "target/new-methods/native-workers-v1/zlib-ng"
+    },
+    {
+      "adapter_command": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-function",
+        "-DNATIVE_CODEC=3",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/libdeflate/install/include",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1",
+        "/Users/dmytro/github/deflated/scripts/native_codec_worker.c",
+        "-L",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/libdeflate/install/lib",
+        "-Wl,-rpath,/Users/dmytro/github/deflated/target/new-methods/references-v1/libdeflate/install/lib",
+        "-ldeflate",
+        "-o",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/libdeflate"
+      ],
+      "adapter_sha256": "8a9b8c5c8d47fab7e1e9a3b5e999cf3419d577d338e3e2c0161ad6cdb1b46462",
+      "binary": {
+        "bytes": 37688,
+        "sha256": "d5bbbb9a0738a493933d54e20c146c8626339d340bbe0f7668fa429c84b7552a"
+      },
+      "codec": "libdeflate",
+      "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin27.2.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin",
+      "crc_table_sha256": "f2ebef916fa6f1791ef10f21bbed0f271bee83ff9be763a56db9dd82fbd8fd62",
+      "external_dictionary": false,
+      "frames": [
+        "raw",
+        "gzip",
+        "zip"
+      ],
+      "levels": [
+        1,
+        6,
+        9,
+        12
+      ],
+      "library_build_commands": [
+        [
+          "cmake",
+          "-S",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/libdeflate/source",
+          "-B",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/libdeflate/build",
+          "-G",
+          "Ninja",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DCMAKE_C_COMPILER=/usr/bin/clang",
+          "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
+          "-DCMAKE_C_FLAGS_RELEASE=-O3 -DNDEBUG",
+          "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -DNDEBUG",
+          "-DCMAKE_INSTALL_PREFIX=/Users/dmytro/github/deflated/target/new-methods/references-v1/libdeflate/install",
+          "-DLIBDEFLATE_BUILD_GZIP=OFF",
+          "-DLIBDEFLATE_BUILD_TESTS=OFF"
+        ],
+        [
+          "cmake",
+          "--build",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/libdeflate/build",
+          "--parallel",
+          "4"
+        ],
+        [
+          "cmake",
+          "--install",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/libdeflate/build"
+        ]
+      ],
+      "library_compile_commands_sha256": "a997bd23f9dab43204e322448deb50c0f6080a20f85960edcebd3e8224a2400b",
+      "library_sha256": {
+        "install/lib/libdeflate.0.dylib": "6549dad42e5de7911a710b0251ae3f9f66c53a58fb35f8779d8458a70e2cfba4"
+      },
+      "linkage": "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/libdeflate:\n\t@rpath/libdeflate.0.dylib (compatibility version 0.0.0, current version 0.0.0)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+      "ordinary_context": "fresh codec state + destroy + allocation + checksum/frame inside each call",
+      "primary_framing": "raw-deflate",
+      "release": "v1.26",
+      "runtime_version": {
+        "codec": "libdeflate",
+        "version": "1.26",
+        "version_origin": "sealed header; library has no runtime version API"
+      },
+      "settings": {
+        "decoder": "libdeflate_alloc_decompressor/deflate_decompress_ex/free_decompressor",
+        "encoder": "libdeflate_alloc_compressor/deflate_compress_bound/deflate_compress/free_compressor",
+        "reuse": "retained allocation; each call is an independent member"
+      },
+      "source_archive_sha256": "bba03fffc5538576213675ce6968fcff6ce2e67d82e4d5febea2d05f9f13cf85",
+      "source_url": "https://codeload.github.com/ebiggers/libdeflate/tar.gz/refs/tags/v1.26",
+      "threads": 1,
+      "validation_binary_sha256": "d5bbbb9a0738a493933d54e20c146c8626339d340bbe0f7668fa429c84b7552a",
+      "validation_receipt": "scripts/reports/new-methods-native-worker-contracts.json.gz",
+      "worker_codec": "libdeflate",
+      "worker_path": "target/new-methods/native-workers-v1/libdeflate"
+    },
+    {
+      "adapter_command": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-function",
+        "-DNATIVE_CODEC=4",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/zstd/install/include",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1",
+        "/Users/dmytro/github/deflated/scripts/native_codec_worker.c",
+        "-L",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/zstd/install/lib",
+        "-Wl,-rpath,/Users/dmytro/github/deflated/target/new-methods/references-v1/zstd/install/lib",
+        "-lzstd",
+        "-o",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/zstd"
+      ],
+      "adapter_sha256": "8a9b8c5c8d47fab7e1e9a3b5e999cf3419d577d338e3e2c0161ad6cdb1b46462",
+      "binary": {
+        "bytes": 37960,
+        "sha256": "8a034bafbab8cb7e51d18b4f40f8d70b38b5de5a4031248bbf2215b4c2ed43ed"
+      },
+      "codec": "zstd",
+      "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin27.2.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin",
+      "crc_table_sha256": "f2ebef916fa6f1791ef10f21bbed0f271bee83ff9be763a56db9dd82fbd8fd62",
+      "external_dictionary": false,
+      "frames": [
+        "frame"
+      ],
+      "levels": [
+        -1,
+        1,
+        3,
+        9
+      ],
+      "library_build_commands": [
+        [
+          "cmake",
+          "-S",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/zstd/source/build/cmake",
+          "-B",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/zstd/build",
+          "-G",
+          "Ninja",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DCMAKE_C_COMPILER=/usr/bin/clang",
+          "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
+          "-DCMAKE_C_FLAGS_RELEASE=-O3 -DNDEBUG",
+          "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -DNDEBUG",
+          "-DCMAKE_INSTALL_PREFIX=/Users/dmytro/github/deflated/target/new-methods/references-v1/zstd/install",
+          "-DZSTD_BUILD_PROGRAMS=OFF",
+          "-DZSTD_BUILD_TESTS=OFF",
+          "-DZSTD_BUILD_STATIC=OFF"
+        ],
+        [
+          "cmake",
+          "--build",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/zstd/build",
+          "--parallel",
+          "4"
+        ],
+        [
+          "cmake",
+          "--install",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/zstd/build"
+        ]
+      ],
+      "library_compile_commands_sha256": "a230bc185e93bd4443756aabd06e1d26cd2720c83072400a23b68f29e98ce040",
+      "library_sha256": {
+        "install/lib/libzstd.1.5.7.dylib": "59c3cc6ac97450c878af6413111294092b25fde6652026b560313ea5c74aee88"
+      },
+      "linkage": "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/zstd:\n\t@rpath/libzstd.1.dylib (compatibility version 1.0.0, current version 1.5.7)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+      "ordinary_context": "fresh codec state + destroy + allocation + checksum/frame inside each call",
+      "primary_framing": "zstd-frame-content-size-checksum",
+      "release": "v1.5.7",
+      "runtime_version": {
+        "codec": "zstd",
+        "version": "1.5.7"
+      },
+      "settings": {
+        "content_checksum": true,
+        "content_size": true,
+        "decoder": "ZSTD_findFrameCompressedSize/getFrameContentSize/createDCtx/decompressDCtx/freeDCtx",
+        "encoder": "ZSTD_createCCtx/setParameter/compress2/freeCCtx",
+        "nb_workers": 0,
+        "reuse": "session_only reset; settings reapplied inside encode"
+      },
+      "source_archive_sha256": "37d7284556b20954e56e1ca85b80226768902e2edabd3b649e9e72c0c9012ee3",
+      "source_url": "https://codeload.github.com/facebook/zstd/tar.gz/refs/tags/v1.5.7",
+      "threads": 1,
+      "validation_binary_sha256": "8a034bafbab8cb7e51d18b4f40f8d70b38b5de5a4031248bbf2215b4c2ed43ed",
+      "validation_receipt": "scripts/reports/new-methods-native-worker-contracts.json.gz",
+      "worker_codec": "zstd",
+      "worker_path": "target/new-methods/native-workers-v1/zstd"
+    },
+    {
+      "adapter_command": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-function",
+        "-DNATIVE_CODEC=5",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/lz4/install/include",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1",
+        "/Users/dmytro/github/deflated/scripts/native_codec_worker.c",
+        "-L",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/lz4/install/lib",
+        "-Wl,-rpath,/Users/dmytro/github/deflated/target/new-methods/references-v1/lz4/install/lib",
+        "-llz4",
+        "-o",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/lz4"
+      ],
+      "adapter_sha256": "8a9b8c5c8d47fab7e1e9a3b5e999cf3419d577d338e3e2c0161ad6cdb1b46462",
+      "binary": {
+        "bytes": 37920,
+        "sha256": "e93307135faf430b9af68f949c90f46c56e76ca6b87352fd953aac23ec9a4057"
+      },
+      "codec": "lz4",
+      "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin27.2.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin",
+      "crc_table_sha256": "f2ebef916fa6f1791ef10f21bbed0f271bee83ff9be763a56db9dd82fbd8fd62",
+      "external_dictionary": false,
+      "frames": [
+        "frame"
+      ],
+      "levels": [
+        "default",
+        "hc9"
+      ],
+      "library_build_commands": [
+        [
+          "cmake",
+          "-S",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/lz4/source/build/cmake",
+          "-B",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/lz4/build",
+          "-G",
+          "Ninja",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DCMAKE_C_COMPILER=/usr/bin/clang",
+          "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
+          "-DCMAKE_C_FLAGS_RELEASE=-O3 -DNDEBUG",
+          "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -DNDEBUG",
+          "-DCMAKE_INSTALL_PREFIX=/Users/dmytro/github/deflated/target/new-methods/references-v1/lz4/install",
+          "-DLZ4_BUILD_CLI=OFF",
+          "-DLZ4_BUILD_LEGACY_LZ4C=OFF"
+        ],
+        [
+          "cmake",
+          "--build",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/lz4/build",
+          "--parallel",
+          "4"
+        ],
+        [
+          "cmake",
+          "--install",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/lz4/build"
+        ]
+      ],
+      "library_compile_commands_sha256": "e1af51772b937d921a75d8484db430597510dda19133d0af54414689616a2431",
+      "library_sha256": {
+        "install/lib/liblz4.1.10.0.dylib": "95e0a30ddccc6ccc8ace5be87e933528952a92ba273694f5ff9a9574546c7c25"
+      },
+      "linkage": "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/lz4:\n\t@rpath/liblz4.1.dylib (compatibility version 1.0.0, current version 1.10.0)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+      "ordinary_context": "fresh codec state + destroy + allocation + checksum/frame inside each call",
+      "primary_framing": "lz4-frame-content-size-block-and-content-checksums",
+      "release": "v1.10.0",
+      "runtime_version": {
+        "codec": "lz4",
+        "version": "1.10.0"
+      },
+      "settings": {
+        "block_bytes": 65536,
+        "block_checksum": true,
+        "block_mode": "independent <=65536 bytes; linked otherwise",
+        "content_checksum": true,
+        "content_size": "native API omits size for empty input",
+        "decoder": "LZ4F_createDecompressionContext/getFrameInfo/decompress/freeDecompressionContext",
+        "encoder": "LZ4F_compressFrame",
+        "reuse": "compressBegin/Update/End; autoFlush=1, stableSrc=1; resetDecompressionContext"
+      },
+      "source_archive_sha256": "537512904744b35e232912055ccf8ec66d768639ff3abe5788d90d792ec5f48b",
+      "source_url": "https://codeload.github.com/lz4/lz4/tar.gz/refs/tags/v1.10.0",
+      "threads": 1,
+      "validation_binary_sha256": "e93307135faf430b9af68f949c90f46c56e76ca6b87352fd953aac23ec9a4057",
+      "validation_receipt": "scripts/reports/new-methods-native-worker-contracts.json.gz",
+      "worker_codec": "lz4",
+      "worker_path": "target/new-methods/native-workers-v1/lz4"
+    },
+    {
+      "adapter_command": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-function",
+        "-DNATIVE_CODEC=6",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/brotli/install/include",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1",
+        "/Users/dmytro/github/deflated/scripts/native_codec_worker.c",
+        "-L",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/brotli/install/lib",
+        "-Wl,-rpath,/Users/dmytro/github/deflated/target/new-methods/references-v1/brotli/install/lib",
+        "-lbrotlienc",
+        "-lbrotlidec",
+        "-lbrotlicommon",
+        "-o",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/brotli"
+      ],
+      "adapter_sha256": "8a9b8c5c8d47fab7e1e9a3b5e999cf3419d577d338e3e2c0161ad6cdb1b46462",
+      "binary": {
+        "bytes": 36920,
+        "sha256": "83f39f5e54a55a6920dea717b28121373116e8b6fccc26a8a3b29669d91b8aeb"
+      },
+      "codec": "brotli",
+      "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin27.2.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin",
+      "crc_table_sha256": "f2ebef916fa6f1791ef10f21bbed0f271bee83ff9be763a56db9dd82fbd8fd62",
+      "external_dictionary": false,
+      "frames": [
+        "frame"
+      ],
+      "levels": [
+        1,
+        5,
+        9
+      ],
+      "library_build_commands": [
+        [
+          "cmake",
+          "-S",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/brotli/source",
+          "-B",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/brotli/build",
+          "-G",
+          "Ninja",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DCMAKE_C_COMPILER=/usr/bin/clang",
+          "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
+          "-DCMAKE_C_FLAGS_RELEASE=-O3 -DNDEBUG",
+          "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -DNDEBUG",
+          "-DCMAKE_INSTALL_PREFIX=/Users/dmytro/github/deflated/target/new-methods/references-v1/brotli/install",
+          "-DBROTLI_BUILD_TOOLS=OFF",
+          "-DBROTLI_DISABLE_TESTS=ON"
+        ],
+        [
+          "cmake",
+          "--build",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/brotli/build",
+          "--parallel",
+          "4"
+        ],
+        [
+          "cmake",
+          "--install",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/brotli/build"
+        ]
+      ],
+      "library_compile_commands_sha256": "f89966ea22f91defdc8fbed6a158330fef511707ba9d19c54217d3c71a4857dd",
+      "library_sha256": {
+        "install/lib/libbrotlicommon.1.2.0.dylib": "6bcffe14ef101c1017619f485b707591e11338abea27f71ce26c12933d1b1e83",
+        "install/lib/libbrotlidec.1.2.0.dylib": "bbbd4ddd7a3fde0d2231ea0cf523d22aa95abf96251816750e9e2a114d82a7a8",
+        "install/lib/libbrotlienc.1.2.0.dylib": "62322e8b03dd0389b80adc079070cffe310780b86512cac9e426aff34e4d48d7"
+      },
+      "linkage": "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/brotli:\n\t@rpath/libbrotlienc.1.dylib (compatibility version 1.0.0, current version 1.2.0)\n\t@rpath/libbrotlidec.1.dylib (compatibility version 1.0.0, current version 1.2.0)\n\t@rpath/libbrotlicommon.1.dylib (compatibility version 1.0.0, current version 1.2.0)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+      "ordinary_context": "fresh codec state + destroy + allocation + checksum/frame inside each call",
+      "primary_framing": "BRF1-u64-size-u32-crc32-plus-brotli-stream",
+      "release": "v1.2.0",
+      "runtime_version": {
+        "codec": "brotli",
+        "version_integer": 16785408
+      },
+      "settings": {
+        "decoder": "BrotliDecoderCreateInstance/DecompressStream/DestroyInstance",
+        "encoder": "BrotliEncoderMaxCompressedSize/BrotliEncoderCompress",
+        "framing": "BRF1 + little-endian u64 original size + u32 CRC32 + native Brotli stream",
+        "mode": "GENERIC",
+        "reuse": "fresh-no-reset-api",
+        "window_log2": 22
+      },
+      "source_archive_sha256": "816c96e8e8f193b40151dad7e8ff37b1221d019dbcb9c35cd3fadbfe6477dfec",
+      "source_url": "https://codeload.github.com/google/brotli/tar.gz/refs/tags/v1.2.0",
+      "threads": 1,
+      "validation_binary_sha256": "83f39f5e54a55a6920dea717b28121373116e8b6fccc26a8a3b29669d91b8aeb",
+      "validation_receipt": "scripts/reports/new-methods-native-worker-contracts.json.gz",
+      "worker_codec": "brotli",
+      "worker_path": "target/new-methods/native-workers-v1/brotli"
+    },
+    {
+      "adapter_command": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-function",
+        "-DNATIVE_CODEC=7",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/lzma2/install/include",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1",
+        "/Users/dmytro/github/deflated/scripts/native_codec_worker.c",
+        "-L",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/lzma2/install/lib",
+        "-Wl,-rpath,/Users/dmytro/github/deflated/target/new-methods/references-v1/lzma2/install/lib",
+        "-llzma",
+        "-o",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/lzma2"
+      ],
+      "adapter_sha256": "8a9b8c5c8d47fab7e1e9a3b5e999cf3419d577d338e3e2c0161ad6cdb1b46462",
+      "binary": {
+        "bytes": 36632,
+        "sha256": "98584c58582e8f1ac8c8d1bf40f993e81bf0e326486529554a7bffcd47f6718d"
+      },
+      "codec": "lzma2",
+      "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin27.2.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin",
+      "crc_table_sha256": "f2ebef916fa6f1791ef10f21bbed0f271bee83ff9be763a56db9dd82fbd8fd62",
+      "external_dictionary": false,
+      "frames": [
+        "frame"
+      ],
+      "levels": [
+        1,
+        6
+      ],
+      "library_build_commands": [
+        [
+          "cmake",
+          "-S",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/lzma2/source",
+          "-B",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/lzma2/build",
+          "-G",
+          "Ninja",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DCMAKE_C_COMPILER=/usr/bin/clang",
+          "-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
+          "-DCMAKE_C_FLAGS_RELEASE=-O3 -DNDEBUG",
+          "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -DNDEBUG",
+          "-DCMAKE_INSTALL_PREFIX=/Users/dmytro/github/deflated/target/new-methods/references-v1/lzma2/install",
+          "-DBUILD_TESTING=OFF"
+        ],
+        [
+          "cmake",
+          "--build",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/lzma2/build",
+          "--parallel",
+          "4"
+        ],
+        [
+          "cmake",
+          "--install",
+          "/Users/dmytro/github/deflated/target/new-methods/references-v1/lzma2/build"
+        ]
+      ],
+      "library_compile_commands_sha256": "bdd5a9b789110876395564f86020f31da6d401fb5a7e1847ba9e4e438ca1b46e",
+      "library_sha256": {
+        "install/lib/liblzma.5.8.4.dylib": "a7a5355a5bad8cbf44e9cb17e3c6e74aec8db3502d7137ce77558ab37536a434"
+      },
+      "linkage": "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/lzma2:\n\t@rpath/liblzma.5.dylib (compatibility version 14.0.0, current version 14.4.0)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+      "ordinary_context": "fresh codec state + destroy + allocation + checksum/frame inside each call",
+      "primary_framing": "xz-crc32",
+      "release": "v5.8.4",
+      "runtime_version": {
+        "codec": "lzma2",
+        "version": "5.8.4"
+      },
+      "settings": {
+        "check": "CRC32",
+        "container": "XZ",
+        "decoder": "lzma_stream_buffer_decode",
+        "encoder": "lzma_stream_buffer_bound/lzma_easy_buffer_encode",
+        "preset_flags": "ordinary preset; no EXTREME/BCJ",
+        "reuse": "fresh-no-reset-api"
+      },
+      "source_archive_sha256": "b6b34c52e672e810d339db14e0c10b5b6f5f67a30d8d05cdac5d8cb4d82f78d5",
+      "source_url": "https://codeload.github.com/tukaani-project/xz/tar.gz/refs/tags/v5.8.4",
+      "threads": 1,
+      "validation_binary_sha256": "98584c58582e8f1ac8c8d1bf40f993e81bf0e326486529554a7bffcd47f6718d",
+      "validation_receipt": "scripts/reports/new-methods-native-worker-contracts.json.gz",
+      "worker_codec": "lzma2",
+      "worker_path": "target/new-methods/native-workers-v1/lzma2"
+    }
+  ],
+  "schema_version": 1,
+  "scope_limit": "nine verified reference implementations; no superiority claim about unmeasured OpenZL, typed/trained graphs, other versions/settings/platforms",
+  "status": "G0 control roster frozen before any study screening",
+  "study": "new-methods-v1"
+}

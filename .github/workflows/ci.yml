@@ -50,6 +50,7 @@ jobs:
           python3 scripts/test_encoder_final_artifacts.py
           python3 scripts/test_structured_reference.py
           python3 scripts/test_new_methods_worker_artifacts.py
+          python3 scripts/new_methods_reference_lock.py --check
           make research-check
           make research-defaults
           make research-policy-check

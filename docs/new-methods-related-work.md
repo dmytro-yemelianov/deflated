@@ -25,3 +25,28 @@ footprint or a measured frontier may be useful without a new compression
 principle. Record unsuccessful hypotheses and any close prior mechanism found
 during source review. Claims of research novelty need a fuller dedicated search;
 they are not a completion requirement of this bounded goal.
+
+## Pinned implementation review at G0 lock
+
+The locally archived libdeflate v1.26 `lib/hc_matchfinder.h` explicitly separates
+length-three lookup from its length-four hash chains. Its search first checks
+the starting word and, after finding a match, checks the ending and starting
+words before extension (`hc_matchfinder_longest_match`, approximately lines
+244–311 in the pinned release). Consequently, cheap prefix/end rejection and
+separate three/four-byte indexes are established mechanisms, not novelty of A.
+Our proposed cached tag still needs an owner check and the guarded fourth-byte
+rule to preserve this project's scalar candidate/probe semantics.
+
+The archived zlib-ng 2.3.3 `functable.c` dispatches to architecture-specific
+matching/comparison implementations. Its ARM `arch/arm/compare256_neon.c`
+compares 16 bytes per vector and locates the first differing byte before
+returning a length. This supports investigating compiler/load/traversal costs;
+it does not establish that portable grouped candidate loads will be faster.
+These are source observations, not benchmark results.
+
+OpenZL's two-attempt setup resolved negatively for a qualified production
+control/oracle on this host. The library build succeeded, but the final
+production shared-library + upstream CLI setup failed at ARM64 linking. Its
+unmeasured structured/trained graphs remain prior work and an explicit limit
+on any subsequent superiority statement; the setup failure does not establish
+anything about their compression quality or speed.

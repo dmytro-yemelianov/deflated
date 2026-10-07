@@ -3,9 +3,10 @@
 Status: active goal, specifications frozen for the initial roster; baseline
 sealed and independent DSC1/Rust correctness prototype implemented. The seven
 mandatory native workers and three Rust workers pass independent framing and
-resident-input timer contracts. OpenZL's library is built; its optional adapter
-and the complete G0 reference lock remain pending. Fresh data, screening and
-proofs remain pending. No performance or research-novelty claim follows from this plan. Baseline:
+resident-input timer contracts. G0's nine-control reference lock is frozen;
+optional OpenZL qualification was excluded after its two bounded setup attempts.
+Fresh data, screening and proofs remain pending. No performance or
+research-novelty claim follows from this plan. Baseline:
 `b7d5e0fc79f4f72d2ba772312ec9a22497699ed5`.
 
 ## Objective and deliverables
@@ -35,17 +36,17 @@ that reference; they do not justify substituting old numbers.
 
 - [x] Preserve the baseline archive, default/research workers and actual CLI;
   verify core/source/compiler/policy hashes and old byte identities.
-- [ ] Record [related work](new-methods-related-work.md). Read the relevant
+- [x] Record [related work](new-methods-related-work.md). Read the relevant
   implementations before designing a purported new mechanism; identify the
   particular contribution rather than claiming that dictionaries, fingerprints,
   delta encoding or stream separation were invented here.
-- [ ] Build local single-thread native adapters for current baseline presets,
+- [x] Build local single-thread native adapters for current baseline presets,
   miniz_oxide 0.8.9, zlib, zlib-ng, libdeflate, zstd, LZ4/LZ4-HC, Brotli and
   liblzma LZMA2. Lock exact releases/builds before screening. OpenZL is an
   additional structured reference when its bounded setup succeeds; record
   absence explicitly. At most two documented setup/build attempts per adapter
   dependency before narrowing claims to the available verified controls.
-- [ ] Validate adapters against independent decoders, empty/tiny data and
+- [x] Validate adapters against independent decoders, empty/tiny data and
   incorrect/truncated framing. Use resident-input library calls, not CLI
   subprocess startup as encoder time. Charge creation/destruction of codec
   state and output allocation in the ordinary end-to-end track.
@@ -240,9 +241,10 @@ python3 scripts/new_methods_references.py --out target/new-methods/reference-rep
 The last two commands refuse successful-output replacement; use a fresh path.
 The subsequent [worker checkpoint](new-methods-benchmarking.md) documents the
 mandatory resident-input adapters, matched framing, charged state and independent
-contract checks. Next checkpoint: optional OpenZL feasibility and the full G0
-reference lock, G1 fresh source-grouped data/generators, then G2/G3 charged
-training screens. Promotion and G4–G6 completion have not occurred.
+contract checks. G0 is now resolved by the immutable
+`scripts/reports/new-methods-reference-lock.json`; OpenZL's bounded exclusion is
+part of that lock. Next checkpoint: G1 fresh source-grouped data/generators,
+then G2/G3 charged training screens. Promotion and G4–G6 completion have not occurred.
 
 ## G0 budget clarification, before study screening (2026-10-07)
 

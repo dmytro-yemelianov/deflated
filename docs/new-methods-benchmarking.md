@@ -2,7 +2,7 @@
 
 This is a tooling/correctness checkpoint on Apple M5/macOS, not a performance
 study. No study train/validation/holdout encoding has occurred. The complete
-`new-methods-reference-lock.json` is still required before screening. The active
+`new-methods-reference-lock.json` is now frozen before screening. The active
 [plan](new-methods-plan.md) and [protocol](../scripts/new_methods_protocol.json)
 retain their configuration, selection and final-session budgets.
 
@@ -101,13 +101,37 @@ and both 64/256 KiB chunk boundaries. They do not represent independent data
 populations or complete formal refinement. DSC1's existing normative oracle,
 fuzz and CI scope remains described in the specification.
 
-OpenZL v0.3.0 built successfully on the first dependency setup attempt into an
-isolated prefix. Its current receipt records the upstream default introspection
-setting and fetched zstd/LZ4 dependency configuration. No OpenZL measurements
-or qualification are claimed: a production configuration, complete dependency
-hash lock, resident-input adapter and independent roundtrip oracle remain to be
-resolved within the bounded optional setup before screening. Typed numeric or
+OpenZL v0.3.0's library built on the first dependency setup attempt, using the
+upstream default introspection setting. The second and final allowed setup
+attempt disabled introspection and enabled the upstream CLI as an independent
+oracle. That shared-library/CLI build failed while linking
+`cli/utils/libutils.dylib` on ARM64, with unresolved `ArgParser` symbols. Both
+attempts and the second configure/build logs are preserved in
+`new-methods-openzl-feasibility.json` and its compressed log companion.
+OpenZL is therefore excluded from the bounded measured roster: no qualification,
+performance result or superiority over OpenZL is claimed. Typed numeric or
 trained graphs are not substitutes for byte-exact JSON reconstruction.
+
+## Immutable reference lock
+
+`scripts/reports/new-methods-reference-lock.json` binds all nine reference
+implementations to source/archive hashes, release/compiler/build settings,
+APIs, codec levels, single-thread and dictionary rules, worker/library hashes,
+framing and the exact independent validation receipts. It also records the
+initial DSC1 binary separately as an unqualified prototype.
+
+```sh
+python3 scripts/new_methods_reference_lock.py --check
+python3 scripts/new_methods_reference_lock.py --check --local
+```
+
+The first command audits published receipts without requiring installed native
+libraries; the second rechecks actual local libraries, workers and archived b7
+binaries. The miniz source used by Cargo was compared file-for-file with its
+pinned crate archive before locking. Local worker directories carry `.frozen`
+markers and their builders refuse replacement. The study controller must audit
+this lock before timing. Corpus acquisition/deduplication may proceed before
+finalist freeze; held encoding or feature extraction may not.
 
 ## Reproduction
 
