@@ -1,6 +1,6 @@
 # Top-level driver for verified-deflate. Mirrors maked's Makefile.
 .PHONY: all build-rust build-lean test test-axiom-gate test-rust test-lean test-differential test-framing \
-        fmt lint fuzz size perf profile tune research-check research-poc research-search research-defaults research-campaign research-policy-check research-policy research-cost-check research-mixed-check clean
+        fmt lint fuzz size perf profile tune research-check research-poc research-search research-defaults research-campaign research-policy-check research-policy research-cost-check research-mixed-check research-final-check clean
 
 all: build-rust build-lean
 
@@ -74,6 +74,12 @@ research-check:
 	@python3 scripts/test_search_cost_artifacts.py
 	@python3 scripts/test_search_mixed.py
 	@python3 scripts/test_search_mixed_artifacts.py
+	@python3 scripts/test_search_final.py
+	@python3 scripts/test_search_final_artifacts.py
+
+research-final-check:
+	@cargo build --locked -p deflate-core --example final_bench --features research-tuning --release
+	@python3 scripts/test_search_final.py --binary target/release/examples/final_bench
 
 research-mixed-check:
 	@cargo build --locked -p deflate-core --example mixed_blocks --release

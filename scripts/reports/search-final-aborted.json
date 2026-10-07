@@ -1,0 +1,4376 @@
+{
+  "status": "aborted-methodological-error",
+  "reason": "file/session rotations cancelled method and pair rotations for most inputs; not accepted for final performance claims",
+  "rows": 3015,
+  "raw_ledger": "scripts/reports/search-final-aborted-measurements.jsonl.gz",
+  "raw_ledger_sha256": "90449031c069f0dcb794be6b49358e3e372e25798fa56cfc6682e175f22d0af6",
+  "source_sha256": {
+    "Cargo.toml": "d8e747c012cba553ad19cdba4436e5c43dd30a10adce9e89933c3d538c4f4a39",
+    "Cargo.lock": "8ce82932f19c583ec37870d2f01dc9e72cb492b0aa02dde7e14b43142857a15d",
+    "crates/deflate-core/Cargo.toml": "27e824b076208ffe2864e6c1fae8b836429a393c26c62788e36f53acf1ff65e2",
+    "lean-toolchain": "54727eec5cba149c18842e6deb5c41b369d66455c93ce135d7d5347c782b2325",
+    "crates/deflate-core/examples/final_bench.rs": "f4ce0e0b3fe5e85a41d484ad872a0546c6e56c0fc213a09e3c6340377a1eca2a",
+    "crates/deflate-core/examples/final_size.rs": "d43c4978a4449c534016b0fc149f1551aad7e216c9aaa52792da58e696ee967b",
+    "crates/deflate-core/examples/support/final_bench.rs": "4fa18ed9f5f4f0b23b2d65419153707dc033cbecb73bd8c73dc3e03ba069f696",
+    "crates/deflate-core/examples/support/policy.rs": "2a50e4de8569e9df092229790555885407c9764870910c667cffac1b5dca08b6",
+    "scripts/search_final_campaign.py": "087ef02ea8312af42c9e0a3f86a019206033e495a848c1418f2573afe76299e9",
+    "scripts/search_final_protocol.json": "3f07b3d9520b59ee26378d6a16f24d5c572c07c575c1207f3cfe65d415b519bd",
+    "scripts/search_corpus.py": "ff99039e63e31f41805a433777ba454a8e6276706e4357d2f6273febe78f03c3",
+    "scripts/search_cpu.py": "70ec4def9104edfbd593f22052c87c0af9556996f22e8d0696697d3b1ee5c6c3",
+    "scripts/search_poc.py": "bde8f0bb0976f0197281eaa7e9c03445a6b628a28b04f5ab315d7a319d0e1763",
+    "crates/deflate-core/src/bitstream.rs": "95e941fcc379cafd8ae920f12ed4f6327e12062edfe39015f66eb43a9b094186",
+    "crates/deflate-core/src/bitwriter.rs": "0b6ff21ba48422ed34557f9b5e56dd89cd91315cac9a498f9bed306b3cd96588",
+    "crates/deflate-core/src/block.rs": "b99d28faf70ea823b251544f2040f0c4850b9871bcbd9e331742661545310eee",
+    "crates/deflate-core/src/compress.rs": "3977afe7fd649bcf031c999f738fc890b12f6d637064af58e3efd2388c0e51d6",
+    "crates/deflate-core/src/crc32.rs": "3166b0a90dc6cded7a07e5beae9b5cee0c843349123e80dd2e7cc898f71e7fad",
+    "crates/deflate-core/src/deflate.rs": "419e757fa99e22675f77628fc652badcfeb0817852835f790eb584aaebc67507",
+    "crates/deflate-core/src/encode_dynamic.rs": "0a10d270561609bcb1c9b883992880734c6395dfd532ad9ecd2bed54bc4a52ec",
+    "crates/deflate-core/src/encode_fixed.rs": "b4459d0cc109c2f50ebd28467ad1923fbf96a527480dd3f64399601cfa459fd1",
+    "crates/deflate-core/src/error.rs": "fe3ac5fc29296fd8e7e0539dc76c615717fe8a72bb3456608edd18efbb21fecd",
+    "crates/deflate-core/src/gzip.rs": "44a8044d6fd55a5f78fab74f75ba5815b004a4e83ffcbf08ae8254909021b5bd",
+    "crates/deflate-core/src/huffman.rs": "326b31f0fda785d2418f24c7348490520f7f869082fed3316f9f870bfe0fd964",
+    "crates/deflate-core/src/huffman_build.rs": "c2eef9c5c7d53eaf435b65cbc2eb6ad19f28e3df1aef87f6952024c8879ccc58",
+    "crates/deflate-core/src/inflate.rs": "ae4c905a7da364c4b05f4f8c4754ca01ad513b695ea82c28a06c2375dfcde272",
+    "crates/deflate-core/src/lib.rs": "82e81c94fbdad579be6157b3f9cd6b73f3d51ec526c68fda8d731d7f23070d68",
+    "crates/deflate-core/src/lz77.rs": "67991a3fb79ef37a65accdff089b3c34d90157e8eed43745fcbba60f432589c1",
+    "crates/deflate-core/src/matcher.rs": "d6e8f531d34370fde2cc787fbcb2fcd29880163671145a5b632cf167427f1ffd",
+    "crates/deflate-core/src/matcher_flat.rs": "2cb9257a6b93edce133891c4292690ef78e5edf87ccdbce976667d0d6d587890",
+    "crates/deflate-core/src/research.rs": "9359cf4a62664fcbf124ca4b778c09a7c48a2d3e29bfd5fb2bbbec9b21f44ca5",
+    "crates/deflate-core/src/tokens.rs": "5e2f16a94e1a8a35400be25e04280ecae25dd550ad7bd92e398715f16f84f839",
+    "crates/deflate-core/src/zip.rs": "e92492d2c4d61be74e8f6f73da43725992ca0c6be807d8da0d104e2e3a6ae731",
+    "spec/Deflate/Basic.lean": "b65b4c40923322733d93eeff32096857be1f6c19e121de31a46928400e3c109e",
+    "spec/Deflate/BitWriter.lean": "f96ec7b900646e300dd07d858700f904293f025c89a2d1a1c9a2278efe24fd26",
+    "spec/Deflate/Bitstream.lean": "3cd0f3d69709294b53058eb65e356f70ff078f54ef016203524e608313b77920",
+    "spec/Deflate/Block.lean": "46414b01feb17803c4dfaa94f7fe70039575df99681f3948a2d30c535a069949",
+    "spec/Deflate/CRC32.lean": "3ed213a5602b1cb0be54510588b327e66db8e727f6fb477f9378a0f3bf65e454",
+    "spec/Deflate/Canonical.lean": "8e7c17a3b89f687b9864d694f82103eb092e900031ea132ee07b6175a62ee229",
+    "spec/Deflate/Compress.lean": "a85f35c80ea451efe1fd936181a6c2b2f2bb56b970441c12d4cb7edeae6ad470",
+    "spec/Deflate/Decode.lean": "ce1837367026ea291e11b94430b6f9bace759342dabdc91110a2d180c1d272c2",
+    "spec/Deflate/Encode.lean": "026b44cca1af1d4af0088fb543a927aa7872387b45021c39913610fad4e737f0",
+    "spec/Deflate/EncodeDynamic.lean": "33f84fb7600cd0db1ca2bcabd4e59692f6974e82712ed2cb51b039aa52f9be4a",
+    "spec/Deflate/EncodeFixed.lean": "18d851e227b6d841d0b3ee0e84a29849178bb7ee2e90e96003c9839bc4587800",
+    "spec/Deflate/EncodeSplit.lean": "ccb7679b911eaa37d0e9af6929c72ea26d1983c8308538f90770311bdded184e",
+    "spec/Deflate/Framing.lean": "59e2150b4221efd1cabbba80379a4022d836b64013163edb32e7d4f505e3fb3e",
+    "spec/Deflate/Fuel.lean": "e9a8f1cbba185c7e5f3956403e00be4ab493442b36a1aaa339a0f7ea36bd11bd",
+    "spec/Deflate/Gzip.lean": "bee8fbc1fd014f0e0589d3b041a842ae9251525cdd64842664c2a3f4f060aa4c",
+    "spec/Deflate/Huffman.lean": "7bc43381c34bdda230810d4037a55fbecb00de6f69ade9f6a2b0b01b380f4fa1",
+    "spec/Deflate/HuffmanTable.lean": "1c571a38a9b69f0e1b847512f32eeec691c3b179b21d967d2942dfece9ef0b7b",
+    "spec/Deflate/LZ77.lean": "22c8a6f72795532049e324cb9888f5b131142c66ed53f2478fa7d4a5f2467872",
+    "spec/Deflate/Match.lean": "80aa6d61fee5b5cca0a3eecc8f90ebe4ed4649752c2bc7b24cd004dea68e5ae1",
+    "spec/Deflate/Properties.lean": "adeb0ab8c0296bfed05234dd4fb22f48181b9e34bf284225e3b76d226061624d",
+    "spec/Deflate/Tokens.lean": "56c25faca76ae029dbc3cff62fddc089af9a0fbea526748740f99d1247b7be51",
+    "spec/Deflate/Zip.lean": "dac9d8f3d5b1a98ee457d7e464288603f3670b7827cc9141d1f8cfa9f8c37ada",
+    "spec/Deflate.lean": "19a73ad5ff3acd5f16c1a7cf461dae24d3bb1226f0bd8f4e7dc054d06dd88570",
+    "spec/Main.lean": "1c9aab1a3fc3bb8fbca29d8dc3ca2c5ceb9802a1cc61e4fb97c6c460c109ee82",
+    "spec/scripts/axioms.lean": "74ccf9263af4da35162d7859f7e0bc113d1426881d6e80d50c478978c4add2f5"
+  },
+  "finalists": {
+    "methods": {
+      "fast": {
+        "worker": "fast",
+        "origin": "predeclared production/reference control"
+      },
+      "balanced": {
+        "worker": "balanced",
+        "origin": "predeclared production/reference control"
+      },
+      "best": {
+        "worker": "best",
+        "origin": "predeclared production/reference control"
+      },
+      "miniz1": {
+        "worker": "miniz1",
+        "origin": "predeclared production/reference control"
+      },
+      "miniz6": {
+        "worker": "miniz6",
+        "origin": "predeclared production/reference control"
+      },
+      "miniz9": {
+        "worker": "miniz9",
+        "origin": "predeclared production/reference control"
+      },
+      "bayesian-speed": {
+        "worker": "config:1:0:8:trigram:16384",
+        "config": {
+          "probes": 1,
+          "lazy": false,
+          "insert_tail": 8,
+          "index": "trigram",
+          "block_tokens": 16384
+        },
+        "origin": "S3 training-only frozen finalist"
+      },
+      "bayesian-compromise": {
+        "worker": "config:32:0:16:trigram:16384",
+        "config": {
+          "probes": 32,
+          "lazy": false,
+          "insert_tail": 16,
+          "index": "trigram",
+          "block_tokens": 16384
+        },
+        "origin": "S3 training-only frozen finalist"
+      },
+      "bayesian-size": {
+        "worker": "config:128:1:0:trigram:16384",
+        "config": {
+          "probes": 128,
+          "lazy": true,
+          "insert_tail": 0,
+          "index": "trigram",
+          "block_tokens": 16384
+        },
+        "origin": "S3 training-only frozen finalist"
+      },
+      "policy-speed": {
+        "worker": "policy@/Users/dmytro/github/deflated/target/search/final-s9-full/policy-speed.txt",
+        "policy": "policy-v1 features-13 short-balanced-32768\nL config:16:1:0:trigram:16384\n",
+        "policy_sha256": "e1fe8b0d9bdc0a86dd08865432d0d39e02d11d1fdbe32d453437490ee6d3438c",
+        "origin": "S5 grouped training-only frozen policy"
+      },
+      "policy-size": {
+        "worker": "policy@/Users/dmytro/github/deflated/target/search/final-s9-full/policy-size.txt",
+        "policy": "policy-v1 features-13 short-balanced-32768\nB 2 273.5 1 2\nL config:1024:1:0:trigram:16384\nL best\n",
+        "policy_sha256": "f6c93ac5b169db4b84a750564d81dd660d9974a15d4e2a00f9d5c4ccd5cb78cd",
+        "origin": "S5 grouped training-only frozen policy"
+      }
+    },
+    "roles": {
+      "speed": "bayesian-speed",
+      "compromise": "bayesian-compromise",
+      "size": "bayesian-size",
+      "policy-speed": "policy-speed",
+      "policy-size": "policy-size"
+    },
+    "selection_sha256": {
+      "bayesian": "9d053a9a6348676aac15b78b87e7c15e406d725b3131e5c7ba07f6c5a07ded31",
+      "policy": "48610d143ac73e8e823315fa54cbdcc017b284a838a28420e521064f5548e18e",
+      "mixed": "b3e8e6e2c7ca31153fb31359904e0de7bad7469e5e53ccf3e0d2884525ca3511"
+    },
+    "selection": "no fresh/tiny/RSS feedback; retain every frozen role and predeclared control"
+  },
+  "protocol": {
+    "schema_version": 1,
+    "study": "S9 frozen fresh-regime and direct-reference validation",
+    "seed": 195119,
+    "sessions": 10,
+    "warm_minimum_batch_ms": 20,
+    "tiny_minimum_batch_ms": 2,
+    "tiny_sizes": [
+      0,
+      1,
+      2,
+      3,
+      15,
+      31,
+      64,
+      255,
+      1024,
+      4096
+    ],
+    "rss_repeats": 3,
+    "roles": {
+      "speed": "bayesian-speed",
+      "compromise": "bayesian-compromise",
+      "size": "bayesian-size",
+      "policy-speed": "policy-speed",
+      "policy-size": "policy-size"
+    },
+    "controls": [
+      "fast",
+      "balanced",
+      "best",
+      "miniz1",
+      "miniz6",
+      "miniz9"
+    ],
+    "guardrails": {
+      "speed_aggregate_size_vs_balanced": 1.2,
+      "compromise_aggregate_size_vs_balanced": 1.01,
+      "maximum_file_size_vs_balanced": 1.2,
+      "minimum_speed_lower_95pct_vs_balanced": 1.02,
+      "size_maximum_aggregate_size_vs_balanced": 0.998,
+      "size_minimum_speed_lower_95pct_vs_best": 0.5,
+      "maximum_decode_time_vs_baseline": 1.2,
+      "maximum_tiny_encode_time_vs_baseline": 1.2,
+      "maximum_rss_increase_bytes": 8388608,
+      "maximum_release_probe_increase_bytes": 65536
+    },
+    "warm_scope": "resident input, primed methods/decoder, fresh per-call allocations, input I/O and oracle checks outside timer",
+    "cold_scope": "first encode/decode call in separate fresh processes; resident input and parsed policy; no priming; process startup and input I/O excluded, no claim of cold OS/page/disk caches",
+    "confidence": "paired bootstrap of ten entire sessions; file/family population uncertainty is a separate scope",
+    "size_scope": "release/min standalone linked probes retain shared method parser, including policy external payload; conservative prototype accounting, not a measured production integration",
+    "portability": "performance claims only for actually measured host; Linux CI correctness is not second-hardware performance",
+    "promotion": "all role, decode, tiny, RSS, linked-size and correctness gates must pass; new emitter structures additionally require model proof coverage"
+  },
+  "corpus": {
+    "schema_version": 1,
+    "cases": [
+      {
+        "path": "test/fresh-0-syn-033-alphabet.raw",
+        "partition": "test",
+        "family": "alphabet",
+        "params": {
+          "symbols": 2
+        },
+        "seed": 1178932576415791155,
+        "regime": "alphabet:{\"symbols\": 2}",
+        "bytes": 1048576,
+        "sha256": "58f836f817f443c55aa7c70358dba77dae3c19620dbc120eb101d5ac9e8e743f",
+        "features": {
+          "log2_bytes": 20.0,
+          "sample_entropy": 0.9999957004294572,
+          "distinct_bytes": 2,
+          "adjacent_equal_fraction": 0.5047619047619047
+        },
+        "dataset": "previous-test",
+        "policy_features": [
+          20,
+          2,
+          2063,
+          8389058,
+          4096,
+          2042,
+          2044,
+          2071,
+          2078,
+          2061,
+          2050,
+          0,
+          0
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-syn-034-alphabet.raw",
+        "partition": "test",
+        "family": "alphabet",
+        "params": {
+          "symbols": 32
+        },
+        "seed": 9168227409499499674,
+        "regime": "alphabet:{\"symbols\": 32}",
+        "bytes": 1048576,
+        "sha256": "62d9404fc29fbf2a4758204711a24d8c12320a20e314e871860d87edabbea9bc",
+        "features": {
+          "log2_bytes": 20.0,
+          "sample_entropy": 4.995446861321412,
+          "distinct_bytes": 32,
+          "adjacent_equal_fraction": 0.03492063492063492
+        },
+        "dataset": "previous-test",
+        "policy_features": [
+          20,
+          32,
+          153,
+          527092,
+          4096,
+          114,
+          136,
+          119,
+          123,
+          117,
+          120,
+          1896,
+          0
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-syn-035-alphabet.raw",
+        "partition": "test",
+        "family": "alphabet",
+        "params": {
+          "symbols": 256
+        },
+        "seed": 1762714064572330753,
+        "regime": "alphabet:{\"symbols\": 256}",
+        "bytes": 1048576,
+        "sha256": "66ecea060593f227ca847f23dfc5037d40e7e365015631c71bea82158cdd0a78",
+        "features": {
+          "log2_bytes": 20.0,
+          "sample_entropy": 7.957199957600983,
+          "distinct_bytes": 256,
+          "adjacent_equal_fraction": 0.005372405372405372
+        },
+        "dataset": "previous-test",
+        "policy_features": [
+          20,
+          256,
+          29,
+          70056,
+          4096,
+          16,
+          12,
+          16,
+          8,
+          23,
+          14,
+          1535,
+          11
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-syn-036-periodic.raw",
+        "partition": "test",
+        "family": "periodic",
+        "params": {
+          "period": 7,
+          "mutation_stride": 1031
+        },
+        "seed": 14201364983149942213,
+        "regime": "periodic:{\"mutation_stride\": 1031, \"period\": 7}",
+        "bytes": 1048576,
+        "sha256": "6286dddf6128d71027ab231cb900ff7148be4a984f67c24ccae03661547f44dc",
+        "features": {
+          "log2_bytes": 20.0,
+          "sample_entropy": 2.8177391896567494,
+          "distinct_bytes": 11,
+          "adjacent_equal_fraction": 0.0
+        },
+        "dataset": "previous-test",
+        "policy_features": [
+          20,
+          11,
+          589,
+          2392098,
+          4096,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1753,
+          0
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-syn-037-periodic.raw",
+        "partition": "test",
+        "family": "periodic",
+        "params": {
+          "period": 17,
+          "mutation_stride": 1031
+        },
+        "seed": 12354108077265155896,
+        "regime": "periodic:{\"mutation_stride\": 1031, \"period\": 17}",
+        "bytes": 1048576,
+        "sha256": "5f50a3e7ff22a3de0ea57af06b386274b3a362cb8a217c7498d94f197c70edcb",
+        "features": {
+          "log2_bytes": 20.0,
+          "sample_entropy": 4.096595538303888,
+          "distinct_bytes": 21,
+          "adjacent_equal_fraction": 0.0
+        },
+        "dataset": "previous-test",
+        "policy_features": [
+          20,
+          21,
+          244,
+          985084,
+          4096,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1684,
+          0
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-syn-038-periodic.raw",
+        "partition": "test",
+        "family": "periodic",
+        "params": {
+          "period": 258,
+          "mutation_stride": 1031
+        },
+        "seed": 2957453576821252607,
+        "regime": "periodic:{\"mutation_stride\": 1031, \"period\": 258}",
+        "bytes": 1048576,
+        "sha256": "1726cb6edb7536a542a78a837b909f41924972595628a91f55cb90b8e1eee018",
+        "features": {
+          "log2_bytes": 20.0,
+          "sample_entropy": 6.645777618802158,
+          "distinct_bytes": 108,
+          "adjacent_equal_fraction": 0.007814407814407814
+        },
+        "dataset": "previous-test",
+        "policy_features": [
+          20,
+          161,
+          67,
+          131920,
+          4096,
+          46,
+          0,
+          17,
+          15,
+          16,
+          32,
+          1571,
+          0
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-syn-039-distance.raw",
+        "partition": "test",
+        "family": "distance",
+        "params": {
+          "distance": 32768
+        },
+        "seed": 13607227556438523150,
+        "regime": "distance:{\"distance\": 32768}",
+        "bytes": 1048576,
+        "sha256": "49a129fefa4ad3bead004eda86ff3c592103877f7f7610e59e2a4f9704c67de1",
+        "features": {
+          "log2_bytes": 20.0,
+          "sample_entropy": 7.952257818777839,
+          "distinct_bytes": 256,
+          "adjacent_equal_fraction": 0.002686202686202686
+        },
+        "dataset": "previous-test",
+        "policy_features": [
+          20,
+          256,
+          29,
+          69966,
+          4096,
+          14,
+          21,
+          15,
+          17,
+          11,
+          13,
+          1491,
+          16
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-syn-040-distance.raw",
+        "partition": "test",
+        "family": "distance",
+        "params": {
+          "distance": 32769
+        },
+        "seed": 6740922016079825761,
+        "regime": "distance:{\"distance\": 32769}",
+        "bytes": 1048576,
+        "sha256": "61dcf28f8999b29bddba142ef2b36e082f36522db143ab4c2080b015f9d514c7",
+        "features": {
+          "log2_bytes": 20.0,
+          "sample_entropy": 7.953207253422598,
+          "distinct_bytes": 256,
+          "adjacent_equal_fraction": 0.004395604395604396
+        },
+        "dataset": "previous-test",
+        "policy_features": [
+          20,
+          256,
+          29,
+          69618,
+          4096,
+          19,
+          17,
+          27,
+          18,
+          13,
+          15,
+          1554,
+          11
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-syn-041-hash_collision.raw",
+        "partition": "test",
+        "family": "hash_collision",
+        "params": {
+          "keys": 256
+        },
+        "seed": 11390206229412587379,
+        "regime": "hash_collision:{\"keys\": 256}",
+        "bytes": 1048576,
+        "sha256": "3780bcb3f7faaa04be12f128802d6c8b42069ded902b1b9dee122524b88636be",
+        "features": {
+          "log2_bytes": 20.0,
+          "sample_entropy": 7.15357753930783,
+          "distinct_bytes": 165,
+          "adjacent_equal_fraction": 0.007326007326007326
+        },
+        "dataset": "previous-test",
+        "policy_features": [
+          20,
+          252,
+          58,
+          85060,
+          4096,
+          26,
+          13,
+          31,
+          25,
+          36,
+          33,
+          1535,
+          12
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-syn-042-prefix_collision.raw",
+        "partition": "test",
+        "family": "prefix_collision",
+        "params": {
+          "keys": 256
+        },
+        "seed": 2835018852471569628,
+        "regime": "prefix_collision:{\"keys\": 256}",
+        "bytes": 1048576,
+        "sha256": "b8c3539bd2d3d0fad738cb9337d23774b16eebe231408ac2bcabb71d488dc75d",
+        "features": {
+          "log2_bytes": 20.0,
+          "sample_entropy": -0.0,
+          "distinct_bytes": 1,
+          "adjacent_equal_fraction": 1.0
+        },
+        "dataset": "previous-test",
+        "policy_features": [
+          20,
+          255,
+          1028,
+          1360500,
+          4096,
+          526,
+          11,
+          12,
+          1557,
+          1557,
+          1552,
+          963,
+          13
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-syn-043-records.raw",
+        "partition": "test",
+        "family": "records",
+        "params": {
+          "keys": 128,
+          "values": 512
+        },
+        "seed": 3342812221750732865,
+        "regime": "records:{\"keys\": 128, \"values\": 512}",
+        "bytes": 1048576,
+        "sha256": "59df165c95063e0b96250a225fee933101503ad6f26cf88445df46c55b057f29",
+        "features": {
+          "log2_bytes": 20.0,
+          "sample_entropy": 4.48927952143637,
+          "distinct_bytes": 27,
+          "adjacent_equal_fraction": 0.05030525030525031
+        },
+        "dataset": "previous-test",
+        "policy_features": [
+          20,
+          27,
+          739,
+          1037696,
+          4096,
+          109,
+          64,
+          184,
+          162,
+          229,
+          256,
+          3982,
+          0
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-syn-044-mixed.raw",
+        "partition": "test",
+        "family": "mixed",
+        "params": {
+          "segment_bytes": 32768
+        },
+        "seed": 348484655360691382,
+        "regime": "mixed:{\"segment_bytes\": 32768}",
+        "bytes": 1048576,
+        "sha256": "cd40cc87bee392c5f50f7a0a45344719ec1c2b2f4805e96293f6295324ebd1ac",
+        "features": {
+          "log2_bytes": 20.0,
+          "sample_entropy": 7.086442182717331,
+          "distinct_bytes": 254,
+          "adjacent_equal_fraction": 0.020024420024420026
+        },
+        "dataset": "previous-test",
+        "policy_features": [
+          20,
+          256,
+          259,
+          206922,
+          4096,
+          34,
+          61,
+          77,
+          62,
+          67,
+          108,
+          2536,
+          3
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-syn-045-sample_trap.raw",
+        "partition": "test",
+        "family": "sample_trap",
+        "params": {
+          "flat_samples": false,
+          "period": 13
+        },
+        "seed": 14803495882967714589,
+        "regime": "sample_trap:{\"flat_samples\": false, \"period\": 13}",
+        "bytes": 1048576,
+        "sha256": "3243b4bbcda9a84f5592120bebc2a44ada2762ddbe065f668637123bbb93ae84",
+        "features": {
+          "log2_bytes": 20.0,
+          "sample_entropy": 7.947086235337289,
+          "distinct_bytes": 256,
+          "adjacent_equal_fraction": 0.00463980463980464
+        },
+        "dataset": "previous-test",
+        "policy_features": [
+          20,
+          256,
+          28,
+          69564,
+          4096,
+          29,
+          16,
+          10,
+          21,
+          21,
+          22,
+          1475,
+          12
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-syn-046-sample_trap.raw",
+        "partition": "test",
+        "family": "sample_trap",
+        "params": {
+          "flat_samples": true,
+          "period": 13
+        },
+        "seed": 7711809022418142163,
+        "regime": "sample_trap:{\"flat_samples\": true, \"period\": 13}",
+        "bytes": 1048576,
+        "sha256": "97256b7f674ceeb5aad6a873f6fc2a2077ce3bac865fb91b87dbcb0095764fdd",
+        "features": {
+          "log2_bytes": 20.0,
+          "sample_entropy": 1.6273613908990083,
+          "distinct_bytes": 11,
+          "adjacent_equal_fraction": 0.0019536019536019536
+        },
+        "dataset": "previous-test",
+        "policy_features": [
+          20,
+          19,
+          1361,
+          5546102,
+          4096,
+          0,
+          4079,
+          0,
+          0,
+          0,
+          10,
+          2724,
+          0
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-calgary-book2.raw",
+        "partition": "test",
+        "family": "real",
+        "dataset": "fresh-calgary",
+        "source": "https://corpus.canterbury.ac.nz/resources/calgary.tar.gz",
+        "source_file": "calgary-book2",
+        "regime": "real-source:c8538730cf2ce6a243acf3eb299c43d619b5c695d892f4884df796c13081fdf8",
+        "params": {
+          "source_sha256": "c8538730cf2ce6a243acf3eb299c43d619b5c695d892f4884df796c13081fdf8"
+        },
+        "bytes": 610856,
+        "sha256": "c8538730cf2ce6a243acf3eb299c43d619b5c695d892f4884df796c13081fdf8",
+        "policy_features": [
+          19,
+          82,
+          573,
+          929702,
+          4096,
+          78,
+          254,
+          249,
+          247,
+          251,
+          234,
+          3985,
+          0
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-calgary-geo.raw",
+        "partition": "test",
+        "family": "real",
+        "dataset": "fresh-calgary",
+        "source": "https://corpus.canterbury.ac.nz/resources/calgary.tar.gz",
+        "source_file": "calgary-geo",
+        "regime": "real-source:913ff6f45610599020c02f543a0d5a1f46cf772412e25a568b683d23db8c447d",
+        "params": {
+          "source_sha256": "913ff6f45610599020c02f543a0d5a1f46cf772412e25a568b683d23db8c447d"
+        },
+        "bytes": 102400,
+        "sha256": "913ff6f45610599020c02f543a0d5a1f46cf772412e25a568b683d23db8c447d",
+        "policy_features": [
+          16,
+          244,
+          1154,
+          1595444,
+          4096,
+          175,
+          153,
+          1822,
+          1536,
+          1279,
+          1277,
+          1348,
+          1154
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-calgary-obj2.raw",
+        "partition": "test",
+        "family": "real",
+        "dataset": "fresh-calgary",
+        "source": "https://corpus.canterbury.ac.nz/resources/calgary.tar.gz",
+        "source_file": "calgary-obj2",
+        "regime": "real-source:8b3e7f028bfefaebdd48a791060a1ab11d1ffd9bf27e0d63b15e58dda0deb984",
+        "params": {
+          "source_sha256": "8b3e7f028bfefaebdd48a791060a1ab11d1ffd9bf27e0d63b15e58dda0deb984"
+        },
+        "bytes": 246814,
+        "sha256": "8b3e7f028bfefaebdd48a791060a1ab11d1ffd9bf27e0d63b15e58dda0deb984",
+        "policy_features": [
+          17,
+          219,
+          586,
+          586126,
+          4096,
+          217,
+          162,
+          398,
+          439,
+          387,
+          344,
+          1782,
+          586
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-calgary-paper2.raw",
+        "partition": "test",
+        "family": "real",
+        "dataset": "fresh-calgary",
+        "source": "https://corpus.canterbury.ac.nz/resources/calgary.tar.gz",
+        "source_file": "calgary-paper2",
+        "regime": "real-source:dc4b9cf68094c632a920f4e76d0a0a8b9617b624c36928ca46a5d29798c5bbbe",
+        "params": {
+          "source_sha256": "dc4b9cf68094c632a920f4e76d0a0a8b9617b624c36928ca46a5d29798c5bbbe"
+        },
+        "bytes": 82199,
+        "sha256": "dc4b9cf68094c632a920f4e76d0a0a8b9617b624c36928ca46a5d29798c5bbbe",
+        "policy_features": [
+          16,
+          75,
+          620,
+          1015644,
+          4096,
+          78,
+          273,
+          253,
+          227,
+          261,
+          244,
+          4009,
+          0
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-calgary-progl.raw",
+        "partition": "test",
+        "family": "real",
+        "dataset": "fresh-calgary",
+        "source": "https://corpus.canterbury.ac.nz/resources/calgary.tar.gz",
+        "source_file": "calgary-progl",
+        "regime": "real-source:9388db0cfb71ffbe5687d381819a5ff69cdd992d6931e0cf81a310a1caed0ba0",
+        "params": {
+          "source_sha256": "9388db0cfb71ffbe5687d381819a5ff69cdd992d6931e0cf81a310a1caed0ba0"
+        },
+        "bytes": 71646,
+        "sha256": "9388db0cfb71ffbe5687d381819a5ff69cdd992d6931e0cf81a310a1caed0ba0",
+        "policy_features": [
+          16,
+          78,
+          665,
+          924474,
+          4096,
+          607,
+          461,
+          401,
+          374,
+          310,
+          289,
+          3832,
+          0
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-calgary-trans.raw",
+        "partition": "test",
+        "family": "real",
+        "dataset": "fresh-calgary",
+        "source": "https://corpus.canterbury.ac.nz/resources/calgary.tar.gz",
+        "source_file": "calgary-trans",
+        "regime": "real-source:117a00c6af3e1c57f20013a8f1b468158f70634f685a348bedb7e4069cdd576a",
+        "params": {
+          "source_sha256": "117a00c6af3e1c57f20013a8f1b468158f70634f685a348bedb7e4069cdd576a"
+        },
+        "bytes": 93695,
+        "sha256": "117a00c6af3e1c57f20013a8f1b468158f70634f685a348bedb7e4069cdd576a",
+        "policy_features": [
+          16,
+          87,
+          420,
+          533488,
+          4096,
+          360,
+          347,
+          278,
+          227,
+          213,
+          163,
+          3484,
+          158
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-new-zipf_bursts-48.raw",
+        "partition": "test",
+        "family": "zipf_bursts",
+        "dataset": "fresh-synthetic",
+        "seed": 8462054797779161223,
+        "regime": "zipf_bursts:48",
+        "params": {
+          "parameter": 48
+        },
+        "bytes": 262144,
+        "sha256": "6efdc334ea15f27887be84e08e9f2b59260e343eaa1159b05bfd4a5b49496f3e",
+        "policy_features": [
+          18,
+          48,
+          1206,
+          2054620,
+          4096,
+          536,
+          533,
+          572,
+          543,
+          554,
+          511,
+          235,
+          1206
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-new-zipf_bursts-240.raw",
+        "partition": "test",
+        "family": "zipf_bursts",
+        "dataset": "fresh-synthetic",
+        "seed": 15982049310098855568,
+        "regime": "zipf_bursts:240",
+        "params": {
+          "parameter": 240
+        },
+        "bytes": 262144,
+        "sha256": "c031989d2c1a4488b479f5a38f7bc05bcb0c20af2729d812a7ce82fb58f0f119",
+        "policy_features": [
+          18,
+          227,
+          1074,
+          1561102,
+          4096,
+          384,
+          393,
+          413,
+          399,
+          403,
+          357,
+          628,
+          1074
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-new-markov-70.raw",
+        "partition": "test",
+        "family": "markov",
+        "dataset": "fresh-synthetic",
+        "seed": 17104863379702723412,
+        "regime": "markov:70",
+        "params": {
+          "parameter": 70
+        },
+        "bytes": 262144,
+        "sha256": "3f2b2121a03c9a9135fff52ca5797003e4adacc81c3a7316b5184308e92d32c1",
+        "policy_features": [
+          18,
+          256,
+          26,
+          69800,
+          4096,
+          2892,
+          1446,
+          1004,
+          34,
+          17,
+          12,
+          1547,
+          19
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-new-markov-97.raw",
+        "partition": "test",
+        "family": "markov",
+        "dataset": "fresh-synthetic",
+        "seed": 12354067843686632943,
+        "regime": "markov:97",
+        "params": {
+          "parameter": 97
+        },
+        "bytes": 262144,
+        "sha256": "62ba99e9ba393c790a813a8bc36b8a3be8836d1fd3ebea38b2046946efdf6e3f",
+        "policy_features": [
+          18,
+          256,
+          29,
+          71820,
+          4096,
+          3975,
+          3719,
+          3592,
+          2486,
+          568,
+          28,
+          1576,
+          16
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-new-template_edits-127.raw",
+        "partition": "test",
+        "family": "template_edits",
+        "dataset": "fresh-synthetic",
+        "seed": 43070344650209048,
+        "regime": "template_edits:127",
+        "params": {
+          "parameter": 127
+        },
+        "bytes": 262144,
+        "sha256": "de4f19c61295a96c82c561ec7072a735472a70c2b5a1eb70f5740cfe5952f592",
+        "policy_features": [
+          18,
+          124,
+          142,
+          202738,
+          4096,
+          0,
+          28,
+          1,
+          4,
+          31,
+          523,
+          1431,
+          0
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-0-new-template_edits-1021.raw",
+        "partition": "test",
+        "family": "template_edits",
+        "dataset": "fresh-synthetic",
+        "seed": 2198843445612914885,
+        "regime": "template_edits:1021",
+        "params": {
+          "parameter": 1021
+        },
+        "bytes": 262144,
+        "sha256": "b996b8d16c37929f3d991ef2aeed12c885c0ccb4f8f4d815760330ced3a56ef8",
+        "policy_features": [
+          18,
+          253,
+          44,
+          82948,
+          4096,
+          14,
+          20,
+          15,
+          9,
+          7,
+          14,
+          1516,
+          11
+        ],
+        "scope": "fresh",
+        "parent_manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "test/fresh-1-cost_sensitive-5-0.raw",
+        "partition": "test",
+        "family": "cost_sensitive",
+        "params": {
+          "regime": 5,
+          "variant": 0
+        },
+        "seed": 6919726796801264551,
+        "regime": "cost_sensitive:5:0",
+        "bytes": 262144,
+        "sha256": "2913d84e8c6f4bb1efa4b81f854cf257dbb9971aa21a3948bada362232b4cf9d",
+        "features": {
+          "log2_bytes": 18.0,
+          "sample_entropy": 7.953331422798452,
+          "distinct_bytes": 256,
+          "adjacent_equal_fraction": 0.02148962148962149
+        },
+        "pair_id": "test:cost_sensitive:5",
+        "construction": {
+          "injections": [
+            [
+              33005,
+              12,
+              64
+            ],
+            [
+              34031,
+              31,
+              257
+            ],
+            [
+              35057,
+              32,
+              32767
+            ],
+            [
+              36083,
+              33,
+              1
+            ],
+            [
+              37109,
+              63,
+              32
+            ],
+            [
+              38135,
+              64,
+              65
+            ],
+            [
+              39161,
+              127,
+              1024
+            ],
+            [
+              40187,
+              128,
+              32768
+            ],
+            [
+              41213,
+              129,
+              4
+            ],
+            [
+              42239,
+              255,
+              33
+            ],
+            [
+              43265,
+              256,
+              256
+            ],
+            [
+              44291,
+              258,
+              4096
+            ],
+            [
+              45317,
+              3,
+              32769
+            ],
+            [
+              46343,
+              4,
+              16
+            ],
+            [
+              47369,
+              5,
+              64
+            ],
+            [
+              48395,
+              10,
+              257
+            ],
+            [
+              49421,
+              11,
+              32767
+            ],
+            [
+              50447,
+              12,
+              1
+            ],
+            [
+              51473,
+              31,
+              32
+            ],
+            [
+              52499,
+              32,
+              65
+            ],
+            [
+              53525,
+              33,
+              1024
+            ],
+            [
+              54551,
+              63,
+              32768
+            ],
+            [
+              55577,
+              64,
+              4
+            ],
+            [
+              56603,
+              127,
+              33
+            ],
+            [
+              57629,
+              128,
+              256
+            ],
+            [
+              58655,
+              129,
+              4096
+            ],
+            [
+              59681,
+              255,
+              32769
+            ],
+            [
+              60707,
+              256,
+              16
+            ],
+            [
+              61733,
+              258,
+              64
+            ],
+            [
+              62759,
+              3,
+              257
+            ],
+            [
+              63785,
+              4,
+              32767
+            ],
+            [
+              64811,
+              5,
+              1
+            ],
+            [
+              65837,
+              10,
+              32
+            ],
+            [
+              66863,
+              11,
+              65
+            ],
+            [
+              67889,
+              12,
+              1024
+            ],
+            [
+              68915,
+              31,
+              32768
+            ],
+            [
+              69941,
+              32,
+              4
+            ],
+            [
+              70967,
+              33,
+              33
+            ],
+            [
+              71993,
+              63,
+              256
+            ],
+            [
+              73019,
+              64,
+              4096
+            ],
+            [
+              74045,
+              127,
+              32769
+            ],
+            [
+              75071,
+              128,
+              16
+            ],
+            [
+              76097,
+              129,
+              64
+            ],
+            [
+              77123,
+              255,
+              257
+            ],
+            [
+              78149,
+              256,
+              32767
+            ],
+            [
+              79175,
+              258,
+              1
+            ],
+            [
+              80201,
+              3,
+              32
+            ],
+            [
+              81227,
+              4,
+              65
+            ],
+            [
+              82253,
+              5,
+              1024
+            ],
+            [
+              83279,
+              10,
+              32768
+            ],
+            [
+              84305,
+              11,
+              4
+            ],
+            [
+              85331,
+              12,
+              33
+            ],
+            [
+              86357,
+              31,
+              256
+            ],
+            [
+              87383,
+              32,
+              4096
+            ],
+            [
+              88409,
+              33,
+              32769
+            ],
+            [
+              89435,
+              63,
+              16
+            ],
+            [
+              90461,
+              64,
+              64
+            ],
+            [
+              91487,
+              127,
+              257
+            ],
+            [
+              92513,
+              128,
+              32767
+            ],
+            [
+              93539,
+              129,
+              1
+            ],
+            [
+              94565,
+              255,
+              32
+            ],
+            [
+              95591,
+              256,
+              65
+            ],
+            [
+              96617,
+              258,
+              1024
+            ],
+            [
+              97643,
+              3,
+              32768
+            ],
+            [
+              98669,
+              4,
+              4
+            ],
+            [
+              99695,
+              5,
+              33
+            ],
+            [
+              100721,
+              10,
+              256
+            ],
+            [
+              101747,
+              11,
+              4096
+            ],
+            [
+              102773,
+              12,
+              32769
+            ],
+            [
+              103799,
+              31,
+              16
+            ],
+            [
+              104825,
+              32,
+              64
+            ],
+            [
+              105851,
+              33,
+              257
+            ],
+            [
+              106877,
+              63,
+              32767
+            ],
+            [
+              107903,
+              64,
+              1
+            ],
+            [
+              108929,
+              127,
+              32
+            ],
+            [
+              109955,
+              128,
+              65
+            ],
+            [
+              110981,
+              129,
+              1024
+            ],
+            [
+              112007,
+              255,
+              32768
+            ],
+            [
+              113033,
+              256,
+              4
+            ],
+            [
+              114059,
+              258,
+              33
+            ],
+            [
+              115085,
+              3,
+              256
+            ],
+            [
+              116111,
+              4,
+              4096
+            ],
+            [
+              117137,
+              5,
+              32769
+            ],
+            [
+              118163,
+              10,
+              16
+            ],
+            [
+              119189,
+              11,
+              64
+            ],
+            [
+              120215,
+              12,
+              257
+            ],
+            [
+              121241,
+              31,
+              32767
+            ],
+            [
+              122267,
+              32,
+              1
+            ],
+            [
+              123293,
+              33,
+              32
+            ],
+            [
+              124319,
+              63,
+              65
+            ],
+            [
+              125345,
+              64,
+              1024
+            ],
+            [
+              126371,
+              127,
+              32768
+            ],
+            [
+              127397,
+              128,
+              4
+            ],
+            [
+              128423,
+              129,
+              33
+            ],
+            [
+              129449,
+              255,
+              256
+            ],
+            [
+              130475,
+              256,
+              4096
+            ],
+            [
+              131501,
+              258,
+              32769
+            ],
+            [
+              132527,
+              3,
+              16
+            ],
+            [
+              133553,
+              4,
+              64
+            ],
+            [
+              134579,
+              5,
+              257
+            ],
+            [
+              135605,
+              10,
+              32767
+            ],
+            [
+              136631,
+              11,
+              1
+            ],
+            [
+              137657,
+              12,
+              32
+            ],
+            [
+              138683,
+              31,
+              65
+            ],
+            [
+              139709,
+              32,
+              1024
+            ],
+            [
+              140735,
+              33,
+              32768
+            ],
+            [
+              141761,
+              63,
+              4
+            ],
+            [
+              142787,
+              64,
+              33
+            ],
+            [
+              143813,
+              127,
+              256
+            ],
+            [
+              144839,
+              128,
+              4096
+            ],
+            [
+              145865,
+              129,
+              32769
+            ],
+            [
+              146891,
+              255,
+              16
+            ],
+            [
+              147917,
+              256,
+              64
+            ],
+            [
+              148943,
+              258,
+              257
+            ],
+            [
+              149969,
+              3,
+              32767
+            ],
+            [
+              150995,
+              4,
+              1
+            ],
+            [
+              152021,
+              5,
+              32
+            ],
+            [
+              153047,
+              10,
+              65
+            ],
+            [
+              154073,
+              11,
+              1024
+            ],
+            [
+              155099,
+              12,
+              32768
+            ],
+            [
+              156125,
+              31,
+              4
+            ],
+            [
+              157151,
+              32,
+              33
+            ],
+            [
+              158177,
+              33,
+              256
+            ],
+            [
+              159203,
+              63,
+              4096
+            ],
+            [
+              160229,
+              64,
+              32769
+            ],
+            [
+              161255,
+              127,
+              16
+            ],
+            [
+              162281,
+              128,
+              64
+            ],
+            [
+              163307,
+              129,
+              257
+            ],
+            [
+              164333,
+              255,
+              32767
+            ],
+            [
+              165359,
+              256,
+              1
+            ],
+            [
+              166385,
+              258,
+              32
+            ],
+            [
+              167411,
+              3,
+              65
+            ],
+            [
+              168437,
+              4,
+              1024
+            ],
+            [
+              169463,
+              5,
+              32768
+            ],
+            [
+              170489,
+              10,
+              4
+            ],
+            [
+              171515,
+              11,
+              33
+            ],
+            [
+              172541,
+              12,
+              256
+            ],
+            [
+              173567,
+              31,
+              4096
+            ],
+            [
+              174593,
+              32,
+              32769
+            ],
+            [
+              175619,
+              33,
+              16
+            ],
+            [
+              176645,
+              63,
+              64
+            ],
+            [
+              177671,
+              64,
+              257
+            ],
+            [
+              178697,
+              127,
+              32767
+            ],
+            [
+              179723,
+              128,
+              1
+            ],
+            [
+              180749,
+              129,
+              32
+            ],
+            [
+              181775,
+              255,
+              65
+            ],
+            [
+              182801,
+              256,
+              1024
+            ],
+            [
+              183827,
+              258,
+              32768
+            ],
+            [
+              184853,
+              3,
+              4
+            ],
+            [
+              185879,
+              4,
+              33
+            ],
+            [
+              186905,
+              5,
+              256
+            ],
+            [
+              187931,
+              10,
+              4096
+            ],
+            [
+              188957,
+              11,
+              32769
+            ],
+            [
+              189983,
+              12,
+              16
+            ],
+            [
+              191009,
+              31,
+              64
+            ],
+            [
+              192035,
+              32,
+              257
+            ],
+            [
+              193061,
+              33,
+              32767
+            ],
+            [
+              194087,
+              63,
+              1
+            ],
+            [
+              195113,
+              64,
+              32
+            ],
+            [
+              196139,
+              127,
+              65
+            ],
+            [
+              197165,
+              128,
+              1024
+            ],
+            [
+              198191,
+              129,
+              32768
+            ],
+            [
+              199217,
+              255,
+              4
+            ],
+            [
+              200243,
+              256,
+              33
+            ],
+            [
+              201269,
+              258,
+              256
+            ],
+            [
+              202295,
+              3,
+              4096
+            ],
+            [
+              203321,
+              4,
+              32769
+            ],
+            [
+              204347,
+              5,
+              16
+            ],
+            [
+              205373,
+              10,
+              64
+            ],
+            [
+              206399,
+              11,
+              257
+            ],
+            [
+              207425,
+              12,
+              32767
+            ],
+            [
+              208451,
+              31,
+              1
+            ],
+            [
+              209477,
+              32,
+              32
+            ],
+            [
+              210503,
+              33,
+              65
+            ],
+            [
+              211529,
+              63,
+              1024
+            ],
+            [
+              212555,
+              64,
+              32768
+            ],
+            [
+              213581,
+              127,
+              4
+            ],
+            [
+              214607,
+              128,
+              33
+            ],
+            [
+              215633,
+              129,
+              256
+            ],
+            [
+              216659,
+              255,
+              4096
+            ],
+            [
+              217685,
+              256,
+              32769
+            ],
+            [
+              218711,
+              258,
+              16
+            ],
+            [
+              219737,
+              3,
+              64
+            ],
+            [
+              220763,
+              4,
+              257
+            ],
+            [
+              221789,
+              5,
+              32767
+            ],
+            [
+              222815,
+              10,
+              1
+            ],
+            [
+              223841,
+              11,
+              32
+            ],
+            [
+              224867,
+              12,
+              65
+            ],
+            [
+              225893,
+              31,
+              1024
+            ],
+            [
+              226919,
+              32,
+              32768
+            ],
+            [
+              227945,
+              33,
+              4
+            ],
+            [
+              228971,
+              63,
+              33
+            ],
+            [
+              229997,
+              64,
+              256
+            ],
+            [
+              231023,
+              127,
+              4096
+            ],
+            [
+              232049,
+              128,
+              32769
+            ],
+            [
+              233075,
+              129,
+              16
+            ],
+            [
+              234101,
+              255,
+              64
+            ],
+            [
+              235127,
+              256,
+              257
+            ],
+            [
+              236153,
+              258,
+              32767
+            ],
+            [
+              237179,
+              3,
+              1
+            ],
+            [
+              238205,
+              4,
+              32
+            ],
+            [
+              239231,
+              5,
+              65
+            ],
+            [
+              240257,
+              10,
+              1024
+            ],
+            [
+              241283,
+              11,
+              32768
+            ],
+            [
+              242309,
+              12,
+              4
+            ],
+            [
+              243335,
+              31,
+              33
+            ],
+            [
+              244361,
+              32,
+              256
+            ],
+            [
+              245387,
+              33,
+              4096
+            ],
+            [
+              246413,
+              63,
+              32769
+            ],
+            [
+              247439,
+              64,
+              16
+            ],
+            [
+              248465,
+              127,
+              64
+            ],
+            [
+              249491,
+              128,
+              257
+            ],
+            [
+              250517,
+              129,
+              32767
+            ],
+            [
+              251543,
+              255,
+              1
+            ],
+            [
+              252569,
+              256,
+              32
+            ],
+            [
+              253595,
+              258,
+              65
+            ],
+            [
+              254621,
+              3,
+              1024
+            ],
+            [
+              255647,
+              4,
+              32768
+            ],
+            [
+              256673,
+              5,
+              4
+            ],
+            [
+              257699,
+              10,
+              33
+            ],
+            [
+              258725,
+              11,
+              256
+            ],
+            [
+              259751,
+              12,
+              4096
+            ],
+            [
+              260777,
+              31,
+              32769
+            ],
+            [
+              261803,
+              32,
+              16
+            ]
+          ]
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-cost_sensitive-6-0.raw",
+        "partition": "test",
+        "family": "cost_sensitive",
+        "params": {
+          "regime": 6,
+          "variant": 0
+        },
+        "seed": 10431118055500157753,
+        "regime": "cost_sensitive:6:0",
+        "bytes": 262144,
+        "sha256": "e9efdf0687458f77f222a0bbec58b98ffc6c457b1b7cbb4abb6757a51241e003",
+        "features": {
+          "log2_bytes": 18.0,
+          "sample_entropy": 7.948530125942795,
+          "distinct_bytes": 256,
+          "adjacent_equal_fraction": 0.022466422466422466
+        },
+        "pair_id": "test:cost_sensitive:6",
+        "construction": {
+          "injections": [
+            [
+              33006,
+              31,
+              65
+            ],
+            [
+              34033,
+              32,
+              1024
+            ],
+            [
+              35060,
+              33,
+              32768
+            ],
+            [
+              36087,
+              63,
+              4
+            ],
+            [
+              37114,
+              64,
+              33
+            ],
+            [
+              38141,
+              127,
+              256
+            ],
+            [
+              39168,
+              128,
+              4096
+            ],
+            [
+              40195,
+              129,
+              32769
+            ],
+            [
+              41222,
+              255,
+              16
+            ],
+            [
+              42249,
+              256,
+              64
+            ],
+            [
+              43276,
+              258,
+              257
+            ],
+            [
+              44303,
+              3,
+              32767
+            ],
+            [
+              45330,
+              4,
+              1
+            ],
+            [
+              46357,
+              5,
+              32
+            ],
+            [
+              47384,
+              10,
+              65
+            ],
+            [
+              48411,
+              11,
+              1024
+            ],
+            [
+              49438,
+              12,
+              32768
+            ],
+            [
+              50465,
+              31,
+              4
+            ],
+            [
+              51492,
+              32,
+              33
+            ],
+            [
+              52519,
+              33,
+              256
+            ],
+            [
+              53546,
+              63,
+              4096
+            ],
+            [
+              54573,
+              64,
+              32769
+            ],
+            [
+              55600,
+              127,
+              16
+            ],
+            [
+              56627,
+              128,
+              64
+            ],
+            [
+              57654,
+              129,
+              257
+            ],
+            [
+              58681,
+              255,
+              32767
+            ],
+            [
+              59708,
+              256,
+              1
+            ],
+            [
+              60735,
+              258,
+              32
+            ],
+            [
+              61762,
+              3,
+              65
+            ],
+            [
+              62789,
+              4,
+              1024
+            ],
+            [
+              63816,
+              5,
+              32768
+            ],
+            [
+              64843,
+              10,
+              4
+            ],
+            [
+              65870,
+              11,
+              33
+            ],
+            [
+              66897,
+              12,
+              256
+            ],
+            [
+              67924,
+              31,
+              4096
+            ],
+            [
+              68951,
+              32,
+              32769
+            ],
+            [
+              69978,
+              33,
+              16
+            ],
+            [
+              71005,
+              63,
+              64
+            ],
+            [
+              72032,
+              64,
+              257
+            ],
+            [
+              73059,
+              127,
+              32767
+            ],
+            [
+              74086,
+              128,
+              1
+            ],
+            [
+              75113,
+              129,
+              32
+            ],
+            [
+              76140,
+              255,
+              65
+            ],
+            [
+              77167,
+              256,
+              1024
+            ],
+            [
+              78194,
+              258,
+              32768
+            ],
+            [
+              79221,
+              3,
+              4
+            ],
+            [
+              80248,
+              4,
+              33
+            ],
+            [
+              81275,
+              5,
+              256
+            ],
+            [
+              82302,
+              10,
+              4096
+            ],
+            [
+              83329,
+              11,
+              32769
+            ],
+            [
+              84356,
+              12,
+              16
+            ],
+            [
+              85383,
+              31,
+              64
+            ],
+            [
+              86410,
+              32,
+              257
+            ],
+            [
+              87437,
+              33,
+              32767
+            ],
+            [
+              88464,
+              63,
+              1
+            ],
+            [
+              89491,
+              64,
+              32
+            ],
+            [
+              90518,
+              127,
+              65
+            ],
+            [
+              91545,
+              128,
+              1024
+            ],
+            [
+              92572,
+              129,
+              32768
+            ],
+            [
+              93599,
+              255,
+              4
+            ],
+            [
+              94626,
+              256,
+              33
+            ],
+            [
+              95653,
+              258,
+              256
+            ],
+            [
+              96680,
+              3,
+              4096
+            ],
+            [
+              97707,
+              4,
+              32769
+            ],
+            [
+              98734,
+              5,
+              16
+            ],
+            [
+              99761,
+              10,
+              64
+            ],
+            [
+              100788,
+              11,
+              257
+            ],
+            [
+              101815,
+              12,
+              32767
+            ],
+            [
+              102842,
+              31,
+              1
+            ],
+            [
+              103869,
+              32,
+              32
+            ],
+            [
+              104896,
+              33,
+              65
+            ],
+            [
+              105923,
+              63,
+              1024
+            ],
+            [
+              106950,
+              64,
+              32768
+            ],
+            [
+              107977,
+              127,
+              4
+            ],
+            [
+              109004,
+              128,
+              33
+            ],
+            [
+              110031,
+              129,
+              256
+            ],
+            [
+              111058,
+              255,
+              4096
+            ],
+            [
+              112085,
+              256,
+              32769
+            ],
+            [
+              113112,
+              258,
+              16
+            ],
+            [
+              114139,
+              3,
+              64
+            ],
+            [
+              115166,
+              4,
+              257
+            ],
+            [
+              116193,
+              5,
+              32767
+            ],
+            [
+              117220,
+              10,
+              1
+            ],
+            [
+              118247,
+              11,
+              32
+            ],
+            [
+              119274,
+              12,
+              65
+            ],
+            [
+              120301,
+              31,
+              1024
+            ],
+            [
+              121328,
+              32,
+              32768
+            ],
+            [
+              122355,
+              33,
+              4
+            ],
+            [
+              123382,
+              63,
+              33
+            ],
+            [
+              124409,
+              64,
+              256
+            ],
+            [
+              125436,
+              127,
+              4096
+            ],
+            [
+              126463,
+              128,
+              32769
+            ],
+            [
+              127490,
+              129,
+              16
+            ],
+            [
+              128517,
+              255,
+              64
+            ],
+            [
+              129544,
+              256,
+              257
+            ],
+            [
+              130571,
+              258,
+              32767
+            ],
+            [
+              131598,
+              3,
+              1
+            ],
+            [
+              132625,
+              4,
+              32
+            ],
+            [
+              133652,
+              5,
+              65
+            ],
+            [
+              134679,
+              10,
+              1024
+            ],
+            [
+              135706,
+              11,
+              32768
+            ],
+            [
+              136733,
+              12,
+              4
+            ],
+            [
+              137760,
+              31,
+              33
+            ],
+            [
+              138787,
+              32,
+              256
+            ],
+            [
+              139814,
+              33,
+              4096
+            ],
+            [
+              140841,
+              63,
+              32769
+            ],
+            [
+              141868,
+              64,
+              16
+            ],
+            [
+              142895,
+              127,
+              64
+            ],
+            [
+              143922,
+              128,
+              257
+            ],
+            [
+              144949,
+              129,
+              32767
+            ],
+            [
+              145976,
+              255,
+              1
+            ],
+            [
+              147003,
+              256,
+              32
+            ],
+            [
+              148030,
+              258,
+              65
+            ],
+            [
+              149057,
+              3,
+              1024
+            ],
+            [
+              150084,
+              4,
+              32768
+            ],
+            [
+              151111,
+              5,
+              4
+            ],
+            [
+              152138,
+              10,
+              33
+            ],
+            [
+              153165,
+              11,
+              256
+            ],
+            [
+              154192,
+              12,
+              4096
+            ],
+            [
+              155219,
+              31,
+              32769
+            ],
+            [
+              156246,
+              32,
+              16
+            ],
+            [
+              157273,
+              33,
+              64
+            ],
+            [
+              158300,
+              63,
+              257
+            ],
+            [
+              159327,
+              64,
+              32767
+            ],
+            [
+              160354,
+              127,
+              1
+            ],
+            [
+              161381,
+              128,
+              32
+            ],
+            [
+              162408,
+              129,
+              65
+            ],
+            [
+              163435,
+              255,
+              1024
+            ],
+            [
+              164462,
+              256,
+              32768
+            ],
+            [
+              165489,
+              258,
+              4
+            ],
+            [
+              166516,
+              3,
+              33
+            ],
+            [
+              167543,
+              4,
+              256
+            ],
+            [
+              168570,
+              5,
+              4096
+            ],
+            [
+              169597,
+              10,
+              32769
+            ],
+            [
+              170624,
+              11,
+              16
+            ],
+            [
+              171651,
+              12,
+              64
+            ],
+            [
+              172678,
+              31,
+              257
+            ],
+            [
+              173705,
+              32,
+              32767
+            ],
+            [
+              174732,
+              33,
+              1
+            ],
+            [
+              175759,
+              63,
+              32
+            ],
+            [
+              176786,
+              64,
+              65
+            ],
+            [
+              177813,
+              127,
+              1024
+            ],
+            [
+              178840,
+              128,
+              32768
+            ],
+            [
+              179867,
+              129,
+              4
+            ],
+            [
+              180894,
+              255,
+              33
+            ],
+            [
+              181921,
+              256,
+              256
+            ],
+            [
+              182948,
+              258,
+              4096
+            ],
+            [
+              183975,
+              3,
+              32769
+            ],
+            [
+              185002,
+              4,
+              16
+            ],
+            [
+              186029,
+              5,
+              64
+            ],
+            [
+              187056,
+              10,
+              257
+            ],
+            [
+              188083,
+              11,
+              32767
+            ],
+            [
+              189110,
+              12,
+              1
+            ],
+            [
+              190137,
+              31,
+              32
+            ],
+            [
+              191164,
+              32,
+              65
+            ],
+            [
+              192191,
+              33,
+              1024
+            ],
+            [
+              193218,
+              63,
+              32768
+            ],
+            [
+              194245,
+              64,
+              4
+            ],
+            [
+              195272,
+              127,
+              33
+            ],
+            [
+              196299,
+              128,
+              256
+            ],
+            [
+              197326,
+              129,
+              4096
+            ],
+            [
+              198353,
+              255,
+              32769
+            ],
+            [
+              199380,
+              256,
+              16
+            ],
+            [
+              200407,
+              258,
+              64
+            ],
+            [
+              201434,
+              3,
+              257
+            ],
+            [
+              202461,
+              4,
+              32767
+            ],
+            [
+              203488,
+              5,
+              1
+            ],
+            [
+              204515,
+              10,
+              32
+            ],
+            [
+              205542,
+              11,
+              65
+            ],
+            [
+              206569,
+              12,
+              1024
+            ],
+            [
+              207596,
+              31,
+              32768
+            ],
+            [
+              208623,
+              32,
+              4
+            ],
+            [
+              209650,
+              33,
+              33
+            ],
+            [
+              210677,
+              63,
+              256
+            ],
+            [
+              211704,
+              64,
+              4096
+            ],
+            [
+              212731,
+              127,
+              32769
+            ],
+            [
+              213758,
+              128,
+              16
+            ],
+            [
+              214785,
+              129,
+              64
+            ],
+            [
+              215812,
+              255,
+              257
+            ],
+            [
+              216839,
+              256,
+              32767
+            ],
+            [
+              217866,
+              258,
+              1
+            ],
+            [
+              218893,
+              3,
+              32
+            ],
+            [
+              219920,
+              4,
+              65
+            ],
+            [
+              220947,
+              5,
+              1024
+            ],
+            [
+              221974,
+              10,
+              32768
+            ],
+            [
+              223001,
+              11,
+              4
+            ],
+            [
+              224028,
+              12,
+              33
+            ],
+            [
+              225055,
+              31,
+              256
+            ],
+            [
+              226082,
+              32,
+              4096
+            ],
+            [
+              227109,
+              33,
+              32769
+            ],
+            [
+              228136,
+              63,
+              16
+            ],
+            [
+              229163,
+              64,
+              64
+            ],
+            [
+              230190,
+              127,
+              257
+            ],
+            [
+              231217,
+              128,
+              32767
+            ],
+            [
+              232244,
+              129,
+              1
+            ],
+            [
+              233271,
+              255,
+              32
+            ],
+            [
+              234298,
+              256,
+              65
+            ],
+            [
+              235325,
+              258,
+              1024
+            ],
+            [
+              236352,
+              3,
+              32768
+            ],
+            [
+              237379,
+              4,
+              4
+            ],
+            [
+              238406,
+              5,
+              33
+            ],
+            [
+              239433,
+              10,
+              256
+            ],
+            [
+              240460,
+              11,
+              4096
+            ],
+            [
+              241487,
+              12,
+              32769
+            ],
+            [
+              242514,
+              31,
+              16
+            ],
+            [
+              243541,
+              32,
+              64
+            ],
+            [
+              244568,
+              33,
+              257
+            ],
+            [
+              245595,
+              63,
+              32767
+            ],
+            [
+              246622,
+              64,
+              1
+            ],
+            [
+              247649,
+              127,
+              32
+            ],
+            [
+              248676,
+              128,
+              65
+            ],
+            [
+              249703,
+              129,
+              1024
+            ],
+            [
+              250730,
+              255,
+              32768
+            ],
+            [
+              251757,
+              256,
+              4
+            ],
+            [
+              252784,
+              258,
+              33
+            ],
+            [
+              253811,
+              3,
+              256
+            ],
+            [
+              254838,
+              4,
+              4096
+            ],
+            [
+              255865,
+              5,
+              32769
+            ],
+            [
+              256892,
+              10,
+              16
+            ],
+            [
+              257919,
+              11,
+              64
+            ],
+            [
+              258946,
+              12,
+              257
+            ],
+            [
+              259973,
+              31,
+              32767
+            ],
+            [
+              261000,
+              32,
+              1
+            ]
+          ]
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-collision_trigram-5-0.raw",
+        "partition": "test",
+        "family": "collision_trigram",
+        "params": {
+          "regime": 5,
+          "variant": 0
+        },
+        "seed": 12166315827453779938,
+        "regime": "collision_trigram:5:0",
+        "bytes": 262144,
+        "sha256": "62fc490ba89ea6d465dba7e12fb70cbed9cecaa48c01332e5368460768eb1e4b",
+        "features": {
+          "log2_bytes": 18.0,
+          "sample_entropy": 7.557684887666475,
+          "distinct_bytes": 222,
+          "adjacent_equal_fraction": 0.004151404151404151
+        },
+        "pair_id": "test:collision_trigram:5",
+        "construction": {
+          "kind": "trigram",
+          "hash_bits": 17,
+          "bucket": 61063,
+          "key_count": 31,
+          "keys_sha256": "2aee3aca42e73412fd3196a0611a1b53f450e991d0acec4c40a6b581d882ba68",
+          "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide"
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-collision_trigram-6-0.raw",
+        "partition": "test",
+        "family": "collision_trigram",
+        "params": {
+          "regime": 6,
+          "variant": 0
+        },
+        "seed": 13806592197581989505,
+        "regime": "collision_trigram:6:0",
+        "bytes": 262144,
+        "sha256": "b0e99f77229e95d49db8dceea30ec283832a1f836dc1f683c5f4882ded6f9ce0",
+        "features": {
+          "log2_bytes": 18.0,
+          "sample_entropy": 7.273211127713784,
+          "distinct_bytes": 182,
+          "adjacent_equal_fraction": 0.003418803418803419
+        },
+        "pair_id": "test:collision_trigram:6",
+        "construction": {
+          "kind": "trigram",
+          "hash_bits": 18,
+          "bucket": 158843,
+          "key_count": 34,
+          "keys_sha256": "91295b1965621e3e47f7da1888beedbb861d6d1d044b27e088ee5082abd4928b",
+          "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide"
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-collision_fourbyte-5-0.raw",
+        "partition": "test",
+        "family": "collision_fourbyte",
+        "params": {
+          "regime": 5,
+          "variant": 0
+        },
+        "seed": 14081144069110371278,
+        "regime": "collision_fourbyte:5:0",
+        "bytes": 262144,
+        "sha256": "27cb43b9e5d228f9093fb913940f63c5fc21e9c253a45b843d6fc5a1296d7216",
+        "features": {
+          "log2_bytes": 18.0,
+          "sample_entropy": 7.18586036172863,
+          "distinct_bytes": 170,
+          "adjacent_equal_fraction": 0.006105006105006105
+        },
+        "pair_id": "test:collision_fourbyte:5",
+        "construction": {
+          "kind": "fourbyte",
+          "hash_bits": 17,
+          "bucket": 64831,
+          "key_count": 31,
+          "keys_sha256": "05e7c54e1e34780b08a0f4b68616fee20c9e2195e27152f78e4710bc5fea201c",
+          "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide"
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-collision_fourbyte-6-0.raw",
+        "partition": "test",
+        "family": "collision_fourbyte",
+        "params": {
+          "regime": 6,
+          "variant": 0
+        },
+        "seed": 6429582121425941447,
+        "regime": "collision_fourbyte:6:0",
+        "bytes": 262144,
+        "sha256": "bf95382ee4cf45efbf180bf6c0942f5b746ae7f4faecc217603606caa949940d",
+        "features": {
+          "log2_bytes": 18.0,
+          "sample_entropy": 7.694211959648004,
+          "distinct_bytes": 244,
+          "adjacent_equal_fraction": 0.003907203907203907
+        },
+        "pair_id": "test:collision_fourbyte:6",
+        "construction": {
+          "kind": "fourbyte",
+          "hash_bits": 18,
+          "bucket": 224168,
+          "key_count": 34,
+          "keys_sha256": "1a968b971b84bf3af5df10561664327d2606aa0bea075a373100ac413442dd29",
+          "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide"
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-collision_cost_trigram-5-0.raw",
+        "partition": "test",
+        "family": "collision_cost_trigram",
+        "params": {
+          "regime": 5,
+          "variant": 0
+        },
+        "seed": 15570411620268360964,
+        "regime": "collision_cost_trigram:5:0",
+        "bytes": 262144,
+        "sha256": "bc136313f50d2a4416a2db93ee604126c8d549af7d73c0b92a7d8c4d5aa34bf2",
+        "features": {
+          "log2_bytes": 18.0,
+          "sample_entropy": 7.565423932385554,
+          "distinct_bytes": 221,
+          "adjacent_equal_fraction": 0.003907203907203907
+        },
+        "pair_id": "test:collision_cost_trigram:5",
+        "construction": {
+          "kind": "cost_trigram",
+          "hash_bits": 17,
+          "bucket": 77590,
+          "key_count": 31,
+          "keys_sha256": "ade0f1039973fcf712994e74c3afa109b598ffc02141e2d5669ca6f5f934c5db",
+          "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide"
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-collision_cost_trigram-6-0.raw",
+        "partition": "test",
+        "family": "collision_cost_trigram",
+        "params": {
+          "regime": 6,
+          "variant": 0
+        },
+        "seed": 7716953508953708433,
+        "regime": "collision_cost_trigram:6:0",
+        "bytes": 262144,
+        "sha256": "cc42875458794c63b7a554b37afcb33385cf85929989813c6b6274d8c04d57f2",
+        "features": {
+          "log2_bytes": 18.0,
+          "sample_entropy": 7.232718038654066,
+          "distinct_bytes": 175,
+          "adjacent_equal_fraction": 0.005616605616605617
+        },
+        "pair_id": "test:collision_cost_trigram:6",
+        "construction": {
+          "kind": "cost_trigram",
+          "hash_bits": 18,
+          "bucket": 203819,
+          "key_count": 34,
+          "keys_sha256": "c330c6f7b48b4935e81440c8ab8eb0ce523ac52d4246d500b3b0172c2be2bc55",
+          "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide"
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-change_points-5-0.raw",
+        "partition": "test",
+        "family": "change_points",
+        "params": {
+          "regime": 5,
+          "variant": 0
+        },
+        "seed": 13634960097488651551,
+        "regime": "change_points:5:0",
+        "bytes": 262144,
+        "sha256": "1a6c1264494dfc36fc2db55d505e85d95fe0bd469054fbbc5665a01b280f41c7",
+        "features": {
+          "log2_bytes": 18.0,
+          "sample_entropy": 6.145290368475482,
+          "distinct_bytes": 255,
+          "adjacent_equal_fraction": 0.3601953601953602
+        },
+        "pair_id": "test:change_points:5",
+        "construction": {
+          "regime_changes": [
+            [
+              0,
+              4097,
+              2
+            ],
+            [
+              4097,
+              16383,
+              0
+            ],
+            [
+              20480,
+              16384,
+              1
+            ],
+            [
+              36864,
+              16385,
+              2
+            ],
+            [
+              53249,
+              32767,
+              0
+            ],
+            [
+              86016,
+              32768,
+              1
+            ],
+            [
+              118784,
+              32769,
+              2
+            ],
+            [
+              151553,
+              65535,
+              0
+            ],
+            [
+              217088,
+              65536,
+              1
+            ]
+          ]
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-change_points-6-0.raw",
+        "partition": "test",
+        "family": "change_points",
+        "params": {
+          "regime": 6,
+          "variant": 0
+        },
+        "seed": 12226038582181689823,
+        "regime": "change_points:6:0",
+        "bytes": 262144,
+        "sha256": "eb79831aa91aeed0e886f05b393877205a77dbc15cd675766f64a90fc4012b58",
+        "features": {
+          "log2_bytes": 18.0,
+          "sample_entropy": 7.491455154217576,
+          "distinct_bytes": 256,
+          "adjacent_equal_fraction": 0.0017094017094017094
+        },
+        "pair_id": "test:change_points:6",
+        "construction": {
+          "regime_changes": [
+            [
+              0,
+              16383,
+              0
+            ],
+            [
+              16383,
+              16384,
+              1
+            ],
+            [
+              32767,
+              16385,
+              2
+            ],
+            [
+              49152,
+              32767,
+              0
+            ],
+            [
+              81919,
+              32768,
+              1
+            ],
+            [
+              114687,
+              32769,
+              2
+            ],
+            [
+              147456,
+              65535,
+              0
+            ],
+            [
+              212991,
+              65536,
+              1
+            ]
+          ]
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-drift-5-0.raw",
+        "partition": "test",
+        "family": "drift",
+        "params": {
+          "regime": 5,
+          "variant": 0
+        },
+        "seed": 17121467591947678512,
+        "regime": "drift:5:0",
+        "bytes": 262144,
+        "sha256": "cf5ff7d0965baf096a61460af764a69dfaffecdb9106c6f52a068595dfcbc8e6",
+        "features": {
+          "log2_bytes": 18.0,
+          "sample_entropy": 5.685520406408139,
+          "distinct_bytes": 58,
+          "adjacent_equal_fraction": 0.02857142857142857
+        },
+        "pair_id": "test:drift:5",
+        "construction": {
+          "regime_changes": [
+            [
+              0,
+              4097,
+              2
+            ],
+            [
+              4097,
+              16383,
+              0
+            ],
+            [
+              20480,
+              16384,
+              1
+            ],
+            [
+              36864,
+              16385,
+              2
+            ],
+            [
+              53249,
+              32767,
+              0
+            ],
+            [
+              86016,
+              32768,
+              1
+            ],
+            [
+              118784,
+              32769,
+              2
+            ],
+            [
+              151553,
+              65535,
+              0
+            ],
+            [
+              217088,
+              65536,
+              1
+            ]
+          ]
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-drift-6-0.raw",
+        "partition": "test",
+        "family": "drift",
+        "params": {
+          "regime": 6,
+          "variant": 0
+        },
+        "seed": 6587960012303125062,
+        "regime": "drift:6:0",
+        "bytes": 262144,
+        "sha256": "4035dda822cdf3b4402506f629ac028f55738dd5a1298d3445444d928b3968bc",
+        "features": {
+          "log2_bytes": 18.0,
+          "sample_entropy": 5.6729798602742845,
+          "distinct_bytes": 60,
+          "adjacent_equal_fraction": 0.028327228327228327
+        },
+        "pair_id": "test:drift:6",
+        "construction": {
+          "regime_changes": [
+            [
+              0,
+              16383,
+              0
+            ],
+            [
+              16383,
+              16384,
+              1
+            ],
+            [
+              32767,
+              16385,
+              2
+            ],
+            [
+              49152,
+              32767,
+              0
+            ],
+            [
+              81919,
+              32768,
+              1
+            ],
+            [
+              114687,
+              32769,
+              2
+            ],
+            [
+              147456,
+              65535,
+              0
+            ],
+            [
+              212991,
+              65536,
+              1
+            ]
+          ]
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-feature_sampling_trap-5-0.raw",
+        "partition": "test",
+        "family": "feature_sampling_trap",
+        "params": {
+          "regime": 5,
+          "variant": 0
+        },
+        "seed": 7387533524213941145,
+        "regime": "feature_sampling_trap:5:0",
+        "bytes": 262144,
+        "sha256": "5f4a6023f9f567d48485c68fbf7a75a1b5edd9db0064121effe8fd383e03a45a",
+        "features": {
+          "log2_bytes": 18.0,
+          "sample_entropy": 3.3258040271842706,
+          "distinct_bytes": 68,
+          "adjacent_equal_fraction": 0.0
+        },
+        "pair_id": "test:feature_sampling_trap:5",
+        "construction": {
+          "sample_positions": 4096,
+          "poison": "flat samples / periodic background"
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-feature_sampling_trap-6-0.raw",
+        "partition": "test",
+        "family": "feature_sampling_trap",
+        "params": {
+          "regime": 6,
+          "variant": 0
+        },
+        "seed": 6937618126805885441,
+        "regime": "feature_sampling_trap:6:0",
+        "bytes": 262144,
+        "sha256": "7de77d1c7fadf0233ac51cbca21ef403fbc144db495c40d7b97c67d088f2894e",
+        "features": {
+          "log2_bytes": 18.0,
+          "sample_entropy": 7.936369866036835,
+          "distinct_bytes": 256,
+          "adjacent_equal_fraction": 0.0017094017094017094
+        },
+        "pair_id": "test:feature_sampling_trap:6",
+        "construction": {
+          "sample_positions": 4096,
+          "poison": "zero samples / random background"
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-paired_transforms-5-0.raw",
+        "partition": "test",
+        "family": "paired_transforms",
+        "params": {
+          "regime": 5,
+          "variant": 0
+        },
+        "seed": 16647516041408075491,
+        "regime": "paired_transforms:5:0",
+        "bytes": 131072,
+        "sha256": "75f995443f40fb78172f02120db120fcd3f8c8d12bfad5e33894e7f0339e7417",
+        "features": {
+          "log2_bytes": 17.0,
+          "sample_entropy": 7.270159535868207,
+          "distinct_bytes": 172,
+          "adjacent_equal_fraction": 0.003663003663003663
+        },
+        "pair_id": "test:paired_transforms:5",
+        "construction": {
+          "transform": "change_point",
+          "window_wraps_base": 4,
+          "base_sha256": "75f995443f40fb78172f02120db120fcd3f8c8d12bfad5e33894e7f0339e7417"
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-paired_transforms-5-1.raw",
+        "partition": "test",
+        "family": "paired_transforms",
+        "params": {
+          "regime": 5,
+          "variant": 1
+        },
+        "seed": 16647516041408075491,
+        "regime": "paired_transforms:5:1",
+        "bytes": 131072,
+        "sha256": "25ed856bdc8251be566c1788d0175cf54b5522eff7e790b479760616c3e7051c",
+        "features": {
+          "log2_bytes": 17.0,
+          "sample_entropy": 7.808084845541681,
+          "distinct_bytes": 256,
+          "adjacent_equal_fraction": 0.003418803418803419
+        },
+        "pair_id": "test:paired_transforms:5",
+        "construction": {
+          "transform": "change_point",
+          "window_wraps_base": 4,
+          "base_sha256": "75f995443f40fb78172f02120db120fcd3f8c8d12bfad5e33894e7f0339e7417"
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-paired_transforms-6-0.raw",
+        "partition": "test",
+        "family": "paired_transforms",
+        "params": {
+          "regime": 6,
+          "variant": 0
+        },
+        "seed": 15205858556217689450,
+        "regime": "paired_transforms:6:0",
+        "bytes": 131072,
+        "sha256": "179f6a61a237185efb3f9302eb532e63c96ded2ddb77d6de90e5bd581d26a724",
+        "features": {
+          "log2_bytes": 17.0,
+          "sample_entropy": 7.213918385934802,
+          "distinct_bytes": 168,
+          "adjacent_equal_fraction": 0.011233211233211233
+        },
+        "pair_id": "test:paired_transforms:6",
+        "construction": {
+          "transform": "prepend",
+          "window_wraps_base": 4,
+          "base_sha256": "179f6a61a237185efb3f9302eb532e63c96ded2ddb77d6de90e5bd581d26a724"
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "test/fresh-1-paired_transforms-6-1.raw",
+        "partition": "test",
+        "family": "paired_transforms",
+        "params": {
+          "regime": 6,
+          "variant": 1
+        },
+        "seed": 15205858556217689450,
+        "regime": "paired_transforms:6:1",
+        "bytes": 131589,
+        "sha256": "c49bdfbf405b062f87a7e29c9f795e7ff56210c2f7851ca7c26d7c4e1870a7f1",
+        "features": {
+          "log2_bytes": 17.005679368458814,
+          "sample_entropy": 7.222170175855254,
+          "distinct_bytes": 171,
+          "adjacent_equal_fraction": 0.01098901098901099
+        },
+        "pair_id": "test:paired_transforms:6",
+        "construction": {
+          "transform": "prepend",
+          "window_wraps_base": 4,
+          "base_sha256": "179f6a61a237185efb3f9302eb532e63c96ded2ddb77d6de90e5bd581d26a724"
+        },
+        "scope": "fresh",
+        "parent_manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      },
+      {
+        "path": "stress/tiny-random-0.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-random",
+        "regime": "tiny-random:0",
+        "seed": 195119,
+        "params": {
+          "bytes": 0
+        },
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "features": {
+          "log2_bytes": 0.0,
+          "sample_entropy": 0,
+          "distinct_bytes": 0,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-random-1.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-random",
+        "regime": "tiny-random:1",
+        "seed": 195119,
+        "params": {
+          "bytes": 1
+        },
+        "bytes": 1,
+        "sha256": "bb7208bc9b5d7c04f1236a82a0093a5e33f40423d5ba8d4266f7092c3ba43b62",
+        "features": {
+          "log2_bytes": 0.0,
+          "sample_entropy": -0.0,
+          "distinct_bytes": 1,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-periodic-1.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-periodic",
+        "regime": "tiny-periodic:1",
+        "seed": 195119,
+        "params": {
+          "bytes": 1
+        },
+        "bytes": 1,
+        "sha256": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
+        "features": {
+          "log2_bytes": 0.0,
+          "sample_entropy": -0.0,
+          "distinct_bytes": 1,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-random-2.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-random",
+        "regime": "tiny-random:2",
+        "seed": 195119,
+        "params": {
+          "bytes": 2
+        },
+        "bytes": 2,
+        "sha256": "5117ffcbbc0199d3c5ba87a26d56614b85fb929a4028d1786c00e2aa44c37ca0",
+        "features": {
+          "log2_bytes": 1.0,
+          "sample_entropy": 1.0,
+          "distinct_bytes": 2,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-periodic-2.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-periodic",
+        "regime": "tiny-periodic:2",
+        "seed": 195119,
+        "params": {
+          "bytes": 2
+        },
+        "bytes": 2,
+        "sha256": "fb8e20fc2e4c3f248c60c39bd652f3c1347298bb977b8b4d5903b85055620603",
+        "features": {
+          "log2_bytes": 1.0,
+          "sample_entropy": 1.0,
+          "distinct_bytes": 2,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-random-3.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-random",
+        "regime": "tiny-random:3",
+        "seed": 195119,
+        "params": {
+          "bytes": 3
+        },
+        "bytes": 3,
+        "sha256": "2005f5bf1c91e377ef8f6eb3464b467005c80a6e978e78ef95813953cf200f04",
+        "features": {
+          "log2_bytes": 1.584962500721156,
+          "sample_entropy": 1.584962500721156,
+          "distinct_bytes": 3,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-periodic-3.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-periodic",
+        "regime": "tiny-periodic:3",
+        "seed": 195119,
+        "params": {
+          "bytes": 3
+        },
+        "bytes": 3,
+        "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "features": {
+          "log2_bytes": 1.584962500721156,
+          "sample_entropy": 1.584962500721156,
+          "distinct_bytes": 3,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-random-15.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-random",
+        "regime": "tiny-random:15",
+        "seed": 195119,
+        "params": {
+          "bytes": 15
+        },
+        "bytes": 15,
+        "sha256": "94831ed2e27080f12b1370201a06aa4c80a11c173b7aa1741436adba9f69891d",
+        "features": {
+          "log2_bytes": 3.9068905956085187,
+          "sample_entropy": 3.906890595608519,
+          "distinct_bytes": 15,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-periodic-15.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-periodic",
+        "regime": "tiny-periodic:15",
+        "seed": 195119,
+        "params": {
+          "bytes": 15
+        },
+        "bytes": 15,
+        "sha256": "a917d2e9c028a69f620f879b34123a1eb67fd13ebc763ab107f99bc2cf599b7c",
+        "features": {
+          "log2_bytes": 3.9068905956085187,
+          "sample_entropy": 1.584962500721156,
+          "distinct_bytes": 3,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-random-31.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-random",
+        "regime": "tiny-random:31",
+        "seed": 195119,
+        "params": {
+          "bytes": 31
+        },
+        "bytes": 31,
+        "sha256": "882be359b05fa1e54cddd626506adee4dad6b74bf8bd893b5aca6de5a793de15",
+        "features": {
+          "log2_bytes": 4.954196310386875,
+          "sample_entropy": 4.954196310386874,
+          "distinct_bytes": 31,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-periodic-31.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-periodic",
+        "regime": "tiny-periodic:31",
+        "seed": 195119,
+        "params": {
+          "bytes": 31
+        },
+        "bytes": 31,
+        "sha256": "34e5be87c070bea115cda0a7693eb81802b8b9d31b1bfd0ba6ce3810ea8bca8a",
+        "features": {
+          "log2_bytes": 4.954196310386875,
+          "sample_entropy": 1.5834766425559876,
+          "distinct_bytes": 3,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-random-64.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-random",
+        "regime": "tiny-random:64",
+        "seed": 195119,
+        "params": {
+          "bytes": 64
+        },
+        "bytes": 64,
+        "sha256": "a1cdfd27e3f4ab77cc702205d27c1b5c09a3674a851f3fdcbdda63e49a60b25f",
+        "features": {
+          "log2_bytes": 6.0,
+          "sample_entropy": 5.769454882778696,
+          "distinct_bytes": 57,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-periodic-64.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-periodic",
+        "regime": "tiny-periodic:64",
+        "seed": 195119,
+        "params": {
+          "bytes": 64
+        },
+        "bytes": 64,
+        "sha256": "9ed060c766efa8e4a9e451aef0915daf135de966d62728466cc7215baf33c0a2",
+        "features": {
+          "log2_bytes": 6.0,
+          "sample_entropy": 1.5846120723948678,
+          "distinct_bytes": 3,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-random-255.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-random",
+        "regime": "tiny-random:255",
+        "seed": 195119,
+        "params": {
+          "bytes": 255
+        },
+        "bytes": 255,
+        "sha256": "933773c4df49b183c63332536bb67b6510b46b0a11005ab7b5a4645fa5744be5",
+        "features": {
+          "log2_bytes": 7.994353436858858,
+          "sample_entropy": 7.116754589881751,
+          "distinct_bytes": 155,
+          "adjacent_equal_fraction": 0.007874015748031496
+        }
+      },
+      {
+        "path": "stress/tiny-periodic-255.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-periodic",
+        "regime": "tiny-periodic:255",
+        "seed": 195119,
+        "params": {
+          "bytes": 255
+        },
+        "bytes": 255,
+        "sha256": "dab40d8f89177a79a4d5ffad0a8821faf45b42a774f5cf9525543a0b174ed153",
+        "features": {
+          "log2_bytes": 7.994353436858858,
+          "sample_entropy": 1.584962500721156,
+          "distinct_bytes": 3,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-random-1024.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-random",
+        "regime": "tiny-random:1024",
+        "seed": 195119,
+        "params": {
+          "bytes": 1024
+        },
+        "bytes": 1024,
+        "sha256": "a86196f6e2e48de534f6441d4e3a1771ef89dfdad32dea4ae9a4fd4e441591ca",
+        "features": {
+          "log2_bytes": 10.0,
+          "sample_entropy": 7.825723130583575,
+          "distinct_bytes": 251,
+          "adjacent_equal_fraction": 0.0039100684261974585
+        }
+      },
+      {
+        "path": "stress/tiny-periodic-1024.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-periodic",
+        "regime": "tiny-periodic:1024",
+        "seed": 195119,
+        "params": {
+          "bytes": 1024
+        },
+        "bytes": 1024,
+        "sha256": "956928530dcc5571c83472a0255d58e6ca395fa65ac52f264bbdc2d0c28cb1fa",
+        "features": {
+          "log2_bytes": 10.0,
+          "sample_entropy": 1.5849611253071654,
+          "distinct_bytes": 3,
+          "adjacent_equal_fraction": 0.0
+        }
+      },
+      {
+        "path": "stress/tiny-random-4096.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-random",
+        "regime": "tiny-random:4096",
+        "seed": 195119,
+        "params": {
+          "bytes": 4096
+        },
+        "bytes": 4096,
+        "sha256": "ea7c7181e704c01b27d76be872fc3a9534521a0d15f5c10436ac9ba0980cf732",
+        "features": {
+          "log2_bytes": 12.0,
+          "sample_entropy": 7.950660139229333,
+          "distinct_bytes": 256,
+          "adjacent_equal_fraction": 0.0031746031746031746
+        }
+      },
+      {
+        "path": "stress/tiny-periodic-4096.raw",
+        "partition": "stress",
+        "scope": "tiny",
+        "family": "tiny-periodic",
+        "regime": "tiny-periodic:4096",
+        "seed": 195119,
+        "params": {
+          "bytes": 4096
+        },
+        "bytes": 4096,
+        "sha256": "35df7542580c3c4dd4a101dd29be156c44f8343bd96fd3e703ac048a01daf3df",
+        "features": {
+          "log2_bytes": 12.0,
+          "sample_entropy": 1.5849624147368262,
+          "distinct_bytes": 3,
+          "adjacent_equal_fraction": 0.0
+        }
+      }
+    ],
+    "parents": [
+      {
+        "path": "target/search/corpus-policy-s5-final",
+        "manifest_sha256": "7188541f2e047885435616e657cc4c853d74a29328bf6143b85efe58716b0579"
+      },
+      {
+        "path": "target/search/corpus-extended-s7-checked",
+        "manifest_sha256": "2b8faf53378389c3b964df3b693ac0b9dd279bb1491cdb4e9b6018a3ba228240"
+      }
+    ],
+    "policy": "reserved test regimes only; no training/validation labels or adaptive selection"
+  },
+  "failure": {
+    "phase": "timing",
+    "session": 4,
+    "input": "test/fresh-1-cost_sensitive-5-0.raw",
+    "method": "miniz9",
+    "error": ""
+  },
+  "measurements_used_for_selection_or_threshold_changes": false,
+  "finalists_sha256": "008015f931aa3f163c48ca750f1da3473c8525bc23a3b6934b6204897b50b74b",
+  "manifest_sha256": "db517b2bcbc81fd67e59fe9fa3205c9250b6fe6edeef56bd191bc5364052888e",
+  "protocol_sha256": "3f07b3d9520b59ee26378d6a16f24d5c572c07c575c1207f3cfe65d415b519bd",
+  "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)",
+  "build_overrides": {},
+  "binary_path": "target/search/final-builds/7eb1d3cde33433865f9d/release/examples/final_bench",
+  "binary_sha256": "52906b4f7880f7882634f150230e52a44cd3814bf0ac9b3f52306b49aef1bea9"
+}

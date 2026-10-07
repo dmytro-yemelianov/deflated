@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "study": "S9 frozen fresh-regime and direct-reference validation",
+  "seed": 195119,
+  "sessions": 10,
+  "warm_minimum_batch_ms": 20,
+  "tiny_minimum_batch_ms": 2,
+  "tiny_sizes": [0, 1, 2, 3, 15, 31, 64, 255, 1024, 4096],
+  "rss_repeats": 3,
+  "roles": {"speed": "bayesian-speed", "compromise": "bayesian-compromise", "size": "bayesian-size", "policy-speed": "policy-speed", "policy-size": "policy-size"},
+  "controls": ["fast", "balanced", "best", "miniz1", "miniz6", "miniz9"],
+  "guardrails": {
+    "speed_aggregate_size_vs_balanced": 1.2,
+    "compromise_aggregate_size_vs_balanced": 1.01,
+    "maximum_file_size_vs_balanced": 1.2,
+    "minimum_speed_lower_95pct_vs_balanced": 1.02,
+    "size_maximum_aggregate_size_vs_balanced": 0.998,
+    "size_minimum_speed_lower_95pct_vs_best": 0.5,
+    "maximum_decode_time_vs_baseline": 1.2,
+    "maximum_tiny_encode_time_vs_baseline": 1.2,
+    "maximum_rss_increase_bytes": 8388608,
+    "maximum_release_probe_increase_bytes": 65536
+  },
+  "warm_scope": "resident input, primed methods/decoder, fresh per-call allocations, input I/O and oracle checks outside timer",
+  "cold_scope": "first encode/decode call in separate fresh processes; resident input and parsed policy; no priming; process startup and input I/O excluded, no claim of cold OS/page/disk caches",
+  "confidence": "paired bootstrap of ten entire sessions; file/family population uncertainty is a separate scope",
+  "size_scope": "release/min standalone linked probes retain shared method parser, including policy external payload; conservative prototype accounting, not a measured production integration",
+  "portability": "performance claims only for actually measured host; Linux CI correctness is not second-hardware performance",
+  "promotion": "all role, decode, tiny, RSS, linked-size and correctness gates must pass; new emitter structures additionally require model proof coverage"
+}

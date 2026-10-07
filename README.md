@@ -64,6 +64,8 @@ evaluated in [docs/encoded-cost-report.md](docs/encoded-cost-report.md), includi
 the rejected size/CPU tradeoff and reproducible synthetic construction witnesses.
 The stored/fixed/dynamic block-type experiment and its Lean model boundary are
 in [docs/mixed-block-report.md](docs/mixed-block-report.md).
+The frozen ten-session final evaluation, direct miniz comparisons, RSS/linked-size
+gates and retained size policy are in [docs/final-tuning-report.md](docs/final-tuning-report.md).
 
 The CLI supports raw streams (`-c`, `-d`) and gzip (`-zc`, `-zd`).
 `--stored` selects stored blocks for either compression mode; `--limit N`

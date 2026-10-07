@@ -48,6 +48,7 @@ jobs:
           make research-policy-check
           make research-cost-check
           make research-mixed-check
+          make research-final-check
 
       - name: Optional CPU optimizer adapter
         run: |
@@ -77,6 +78,9 @@ jobs:
           lake build
           python3 oracles/differential.py
           python3 oracles/framing.py
+
+      - name: Research emitter model witnesses
+        run: python3 scripts/search_final_correspondence.py --published-only
 
       - name: Fuzz smoke (60s per target)
         run: |
