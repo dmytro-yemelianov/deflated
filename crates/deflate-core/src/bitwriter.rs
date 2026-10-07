@@ -43,10 +43,13 @@ impl BitWriter {
     /// code (Lean `writeCode`). `len` is at most 15 for DEFLATE.
     pub fn write_code(&mut self, code: u32, len: u32) {
         let len = len.min(32);
-        let mut rev = 0u32;
-        for i in 0..len {
-            rev |= ((code >> i) & 1) << (len - 1 - i);
-        }
+        // Reversing the word then shifting retains only the low len bits.
+        // Width zero avoids shifting a u32 by 32.
+        let rev = if len == 0 {
+            0
+        } else {
+            code.reverse_bits() >> (32 - len)
+        };
         self.write_bits(rev, len);
     }
 
@@ -61,5 +64,46 @@ impl BitWriter {
             self.bytes.push((self.acc & 0xFF) as u8);
         }
         self.bytes
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::BitWriter;
+    fn compare(code: u32, width: u32, offset: u32) {
+        let mut actual = BitWriter::new();
+        let mut reference = BitWriter::new();
+        actual.write_bits(0b10101010, offset);
+        reference.write_bits(0b10101010, offset);
+        actual.write_code(code, width);
+        // Independent scalar MSB-first definition, including API clamping.
+        for bit in (0..width.min(32)).rev() {
+            reference.write_bits((code >> bit) & 1, 1);
+        }
+        actual.write_bits(0b1110011, 7);
+        reference.write_bits(0b1110011, 7);
+        assert_eq!(actual.bit_len(), reference.bit_len());
+        assert_eq!(
+            actual.finish(),
+            reference.finish(),
+            "code={code} width={width} offset={offset}"
+        );
+    }
+    #[test]
+    fn code_reversal_matches_scalar_codes_wide_clamped_widths_and_open_bytes() {
+        for code in 0..=u16::MAX as u32 {
+            for width in 0..=16 {
+                compare(code, width, code % 8);
+            }
+        }
+        let mut word = 43_u32;
+        for _ in 0..512 {
+            word = word.wrapping_mul(1664525).wrapping_add(1013904223);
+            for width in (0..=40).chain([u32::MAX]) {
+                for offset in 0..8 {
+                    compare(word, width, offset);
+                }
+            }
+        }
     }
 }
