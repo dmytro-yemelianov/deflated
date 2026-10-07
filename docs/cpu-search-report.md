@@ -168,3 +168,7 @@ Keep separate speed, compression and compromise finalists. Fit a surrogate
 and consider GPU proposals after enough CPU observations establish a useful
 prediction baseline; the earlier GPU kernel result alone cannot justify an
 end-to-end GPU search claim.
+
+The follow-up S2/S3 campaign is recorded in
+[cpu-search-campaign-report.md](cpu-search-campaign-report.md). It preserves
+this first pilot as historical evidence rather than replacing its timings.

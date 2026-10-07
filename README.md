@@ -37,8 +37,10 @@ checked policy, alongside initial gzip and ZIP framing proofs.
     make research-poc   # seeded synthetic corpus and finite tuning pilot
     make research-search # bounded CPU parameter search and frozen validation
     make research-defaults # compare feature-enabled presets with frozen bytes
+    make research-campaign # mixed workloads, three-seed search, reference/RSS checks
 
 Needs Rust 1.88 (edition 2024), elan with Lean v4.30.0, and Python 3.
+The optional optimizer campaign needs Python 3.12+ and a local research venv.
 
 The next tuning investigation covers multidimensional parameter search,
 GPU-assisted proposals, synthetic generators and verification gates. Its
@@ -46,6 +48,8 @@ bounded spikes and runnable PoC are in
 [docs/autotuning-investigation.md](docs/autotuning-investigation.md).
 The validated parameter adapter, CPU search commands and first synthetic
 results are in [docs/cpu-search-report.md](docs/cpu-search-report.md).
+The larger mixed-workload experiment and full-file validation are in
+[docs/cpu-search-campaign-report.md](docs/cpu-search-campaign-report.md).
 
 The CLI supports raw streams (`-c`, `-d`) and gzip (`-zc`, `-zd`).
 `--stored` selects stored blocks for either compression mode; `--limit N`

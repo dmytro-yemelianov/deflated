@@ -9,6 +9,7 @@ enum Method {
     Preset(deflate_core::CompressionLevel),
     Stored,
     Configured(Config),
+    Reference(u8),
 }
 
 impl Method {
@@ -19,6 +20,9 @@ impl Method {
             "balanced" => return Ok(Self::Preset(CompressionLevel::Balanced)),
             "best" => return Ok(Self::Preset(CompressionLevel::Best)),
             "stored" => return Ok(Self::Stored),
+            "miniz1" => return Ok(Self::Reference(1)),
+            "miniz6" => return Ok(Self::Reference(6)),
+            "miniz9" => return Ok(Self::Reference(9)),
             _ => {}
         }
         let fields: Vec<_> = text.split(':').collect();
@@ -52,6 +56,7 @@ impl Method {
             Self::Preset(level) => deflate_core::deflate_with_level(raw, level),
             Self::Stored => deflate_core::deflate_stored(raw),
             Self::Configured(config) => deflate_core::research::deflate(raw, config),
+            Self::Reference(level) => miniz_oxide::deflate::compress_to_vec(raw, level),
         }
     }
 }
@@ -71,8 +76,22 @@ fn sample(mut encode: impl FnMut() -> Vec<u8>, minimum: Duration) -> f64 {
 
 fn main() -> Result<(), String> {
     let args: Vec<_> = std::env::args().skip(1).collect();
-    if args.len() != 5 {
-        return Err("tune_config CORPUS STREAMS ROUNDS MIN_MS METHOD".into());
+    if args.first().is_some_and(|arg| arg == "--memory") {
+        if args.len() != 4 {
+            return Err("tune_config --memory INPUT OUTPUT METHOD".into());
+        }
+        let raw = std::fs::read(&args[1]).map_err(|e| e.to_string())?;
+        let packed = Method::parse(&args[3])?.encode(black_box(&raw));
+        std::fs::write(&args[2], &packed).map_err(|e| e.to_string())?;
+        println!(
+            "{{\"raw_bytes\": {}, \"packed_bytes\": {}}}",
+            raw.len(),
+            packed.len()
+        );
+        return Ok(());
+    }
+    if !(5..=6).contains(&args.len()) {
+        return Err("tune_config CORPUS STREAMS ROUNDS MIN_MS METHOD [BASELINE]".into());
     }
     let rounds: usize = args[2].parse().map_err(|_| "invalid rounds")?;
     let min_ms = args[3].parse().map_err(|_| "invalid batch duration")?;
@@ -80,6 +99,7 @@ fn main() -> Result<(), String> {
         return Err("need at least three rounds and positive batch duration".into());
     }
     let method = Method::parse(&args[4])?;
+    let baseline_method = Method::parse(args.get(5).map_or("balanced", String::as_str))?;
     let output = Path::new(&args[1]);
     std::fs::create_dir_all(output).map_err(|e| e.to_string())?;
     let mut files: Vec<_> = std::fs::read_dir(&args[0])
@@ -114,8 +134,14 @@ fn main() -> Result<(), String> {
         assert_eq!(method.encode(&raw), packed, "nondeterministic output");
         std::fs::write(output.join(format!("{name}.deflate")), &packed)
             .map_err(|e| e.to_string())?;
-        let baseline =
-            deflate_core::deflate_with_level(&raw, deflate_core::CompressionLevel::Balanced);
+        let baseline = baseline_method.encode(&raw);
+        assert_eq!(deflate_core::inflate(&baseline).unwrap(), raw);
+        assert_eq!(
+            miniz_oxide::inflate::decompress_to_vec(&baseline).unwrap(),
+            raw
+        );
+        std::fs::write(output.join(format!("{name}.baseline.deflate")), &baseline)
+            .map_err(|e| e.to_string())?;
         let mut candidate_ns = Vec::new();
         let mut baseline_ns = Vec::new();
         for round in 0..rounds {
@@ -127,12 +153,7 @@ fn main() -> Result<(), String> {
                     ));
                 } else {
                     baseline_ns.push(sample(
-                        || {
-                            deflate_core::deflate_with_level(
-                                black_box(&raw),
-                                deflate_core::CompressionLevel::Balanced,
-                            )
-                        },
+                        || baseline_method.encode(black_box(&raw)),
                         Duration::from_millis(min_ms),
                     ));
                 }

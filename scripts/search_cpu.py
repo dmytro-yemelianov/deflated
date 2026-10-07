@@ -28,7 +28,10 @@ CONTROLS = [{"preset": name} for name in ("balanced", "fast", "best", "stored")]
 
 
 def canonical(config):
-    if set(config) == {"preset"}:
+    if set(config) == {"reference"}:
+        if config["reference"] not in ("miniz1", "miniz6", "miniz9"):
+            raise ValueError("unknown reference")
+    elif set(config) == {"preset"}:
         if config["preset"] not in ("balanced", "fast", "best", "stored"):
             raise ValueError("unknown preset")
     elif set(config) == set(AXES):
@@ -50,6 +53,8 @@ def worker_method(config):
     canonical(config)
     if "preset" in config:
         return config["preset"]
+    if "reference" in config:
+        return config["reference"]
     return f"config:{config['probes']}:{int(config['lazy'])}:{config['insert_tail']}:{config['index']}:{config['block_tokens']}"
 
 
@@ -62,7 +67,7 @@ def frontier(trials):
 
 
 def propose(rng, strategy, trials, seen):
-    parents = [t for t in frontier(trials) if "preset" not in t["config"]]
+    parents = [t for t in frontier(trials) if set(t["config"]) == set(AXES)]
     for _ in range(10000):
         if strategy == "pareto-mutation" and parents and rng.random() < 0.7:
             config = dict(rng.choice(parents)["config"])
@@ -88,7 +93,7 @@ def aggregate(rows):
             "size_vs_balanced": size / base_size}
 
 
-def validate_measurements(rows, cases, streams, rounds, corpus):
+def validate_measurements(rows, cases, streams, rounds, corpus, require_baseline=False):
     expected = {pathlib.PurePosixPath(c["path"]).name: c for c in cases}
     seen = set()
     for row in rows:
@@ -106,12 +111,19 @@ def validate_measurements(rows, cases, streams, rounds, corpus):
         raw = (corpus / expected[name]["path"]).read_bytes()
         decode_exact(packed, raw)
         row["packed_sha256"] = hashlib.sha256(packed).hexdigest()
+        baseline_path = streams / (name + ".baseline.deflate")
+        if require_baseline or baseline_path.exists():
+            baseline = baseline_path.read_bytes()
+            if len(baseline) != row["baseline_bytes"]:
+                raise ValueError("invalid baseline size")
+            decode_exact(baseline, raw)
+            row["baseline_packed_sha256"] = hashlib.sha256(baseline).hexdigest()
     if seen != set(expected):
         raise ValueError("incomplete measurement matrix")
 
 
 def select_finalists(trials, size_tolerance):
-    useful = [t for t in trials if t["config"].get("preset") != "stored"]
+    useful = [t for t in trials if t["config"].get("preset") != "stored" and "reference" not in t["config"]]
     feasible = [t for t in useful if t["aggregate"]["size_vs_balanced"] <= 1 + size_tolerance]
     if not useful or not feasible:
         raise ValueError("no valid finalist under the declared size constraint")
@@ -129,8 +141,21 @@ def write_json(path, value):
 def source_files():
     fixed = ["Cargo.toml", "Cargo.lock", "crates/deflate-core/Cargo.toml",
              "crates/deflate-core/examples/tune_config.rs", "scripts/search_cpu.py",
-             "scripts/search_corpus.py", "scripts/search_poc.py"]
+             "scripts/search_corpus.py", "scripts/search_poc.py", "scripts/search_workloads.py",
+             "scripts/search_optimizer.py", "scripts/search_campaign.py", "scripts/search_protocol.json"]
+    fixed.append("scripts/optimizer-requirements.txt")
     return fixed + [str(p.relative_to(ROOT)) for p in sorted((ROOT / "crates/deflate-core/src").rglob("*.rs"))]
+
+
+def measure_rows(binary, config, corpus, partition, cases, trial, rounds, min_ms, timeout, baseline="balanced"):
+    streams = trial / "streams"
+    with (trial / "measurements.jsonl").open("w") as output, (trial / "stderr.log").open("w") as errors:
+        subprocess.run([str(binary), str(corpus / partition), str(streams), str(rounds),
+                        str(min_ms), worker_method(config), baseline], stdout=output,
+                       stderr=errors, timeout=timeout, check=True)
+    rows = [json.loads(line) for line in (trial / "measurements.jsonl").read_text().splitlines()]
+    validate_measurements(rows, cases, streams, rounds, corpus, require_baseline=True)
+    return rows
 
 
 def run_study(args):
@@ -142,6 +167,13 @@ def run_study(args):
     validation = [c for c in manifest["cases"] if c["partition"] == "validation"]
     if not training or not validation:
         raise ValueError("training and validation partitions required")
+    fixed = None
+    if args.fixed_configs:
+        fixed = json.loads(args.fixed_configs.read_text())
+        if args.strategy != "fixed" or len(fixed) != args.trials or any(set(c) != set(AXES) for c in fixed) or len({identity(c) for c in fixed}) != len(fixed):
+            raise ValueError("fixed schedule must match the budget and contain distinct valid configs")
+    elif args.strategy == "fixed":
+        raise ValueError("fixed strategy requires --fixed-configs")
     run_id = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "-" + uuid.uuid4().hex[:8]
     out = (args.out or ROOT / "target/search/cpu-studies" / run_id).resolve()
     if out.exists():
@@ -161,10 +193,13 @@ def run_study(args):
                   "git_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
                   "rustc": rustc, "cpu": cpu, "platform": platform.platform(),
                   "python": platform.python_version(), "features": ["research-tuning"],
-                  "build_overrides": {k: v for k, v in os.environ.items() if k.startswith("CARGO_PROFILE_RELEASE_") or k == "RUSTFLAGS"},
+                  "build_overrides": {k: v for k, v in os.environ.items() if k.startswith("CARGO_PROFILE_RELEASE_") or k in ("RUSTFLAGS", "CARGO_ENCODED_RUSTFLAGS")},
                   "objectives": ["time_vs_paired_balanced", "packed_bytes"],
                   "memory": "configured table capacities reported; peak memory unmeasured and not optimized",
-                  "test_partition_measured": False, "promotion": "none"}
+                  "test_partition_measured": False, "promotion": "none",
+                  "validation_measured": not args.training_only,
+                  "fixed_schedule": fixed,
+                  "fixed_schedule_sha256": sha(args.fixed_configs) if fixed is not None else None}
     write_json(out / "provenance.json", provenance)
     started = time.perf_counter()
     build_key = hashlib.sha256(json.dumps([hashes, rustc, provenance["build_overrides"]], sort_keys=True).encode()).hexdigest()[:16]
@@ -173,6 +208,7 @@ def run_study(args):
                    cwd=ROOT, env={**os.environ, "CARGO_TARGET_DIR": str(target)}, check=True)
     binary = target / "release/examples/tune_config"
     provenance["binary_sha256"] = sha(binary)
+    provenance["binary_path"] = str(binary.relative_to(ROOT))
     provenance["build_seconds"] = time.perf_counter() - started
     write_json(out / "provenance.json", provenance)
     ledger_path = out / "trials.jsonl"
@@ -187,13 +223,8 @@ def run_study(args):
         with ledger_path.open("a") as ledger:
             ledger.write(json.dumps(event) + "\n")
         try:
-            streams = trial / "streams"
-            with (trial / "measurements.jsonl").open("w") as output, (trial / "stderr.log").open("w") as errors:
-                subprocess.run([str(binary), str(corpus / partition), str(streams), str(args.rounds),
-                                str(args.min_ms), worker_method(config)], stdout=output,
-                               stderr=errors, timeout=args.trial_timeout, check=True)
-            rows = [json.loads(line) for line in (trial / "measurements.jsonl").read_text().splitlines()]
-            validate_measurements(rows, cases, streams, args.rounds, corpus)
+            rows = measure_rows(binary, config, corpus, partition, cases, trial,
+                                args.rounds, args.min_ms, args.trial_timeout)
             if hashes != {p: sha(ROOT / p) for p in sources} or provenance["manifest_sha256"] != sha(manifest_path) or provenance["binary_sha256"] != sha(binary):
                 raise ValueError("sources, binary or corpus manifest changed during study")
             validate(corpus, manifest)
@@ -201,7 +232,7 @@ def run_study(args):
                       "status": "complete", "aggregate": aggregate(rows), "rows": rows,
                       "elapsed_seconds": time.perf_counter() - begun,
                       "verified_streams": len(rows), "decoders": ["deflate-core", "miniz_oxide", "zlib"],
-                      "matcher_table_bytes": None if "preset" in config else (192 << 10) * (2 if config["index"] == "dual" else 1)}
+                      "matcher_table_bytes": None if set(config) != set(AXES) else (192 << 10) * (2 if config["index"] == "dual" else 1)}
             write_json(trial / "result.json", result)
             with ledger_path.open("a") as ledger:
                 ledger.write(json.dumps({k: v for k, v in result.items() if k != "rows"}, allow_nan=False) + "\n")
@@ -215,11 +246,27 @@ def run_study(args):
             raise
 
     trials = [measure(config, "train", training) for config in CONTROLS]
+    optimizer_started = time.perf_counter()
+    optimizer = None
+    if args.strategy == "nsga2":
+        from search_optimizer import NSGAProposer
+        optimizer = NSGAProposer(args.seed)
+    optimizer_setup_seconds = time.perf_counter() - optimizer_started
+    proposal_seconds = 0.0
     rng = random.Random(args.seed)
     seen = {t["id"] for t in trials}
-    for _ in range(args.trials):
-        config = propose(rng, args.strategy, trials, seen)
-        result = measure(config, "train", training)
+    for index in range(args.trials):
+        proposal_started = time.perf_counter()
+        config = fixed[index] if fixed is not None else (optimizer.ask(trials) if optimizer else propose(rng, args.strategy, trials, seen))
+        proposal_seconds += time.perf_counter() - proposal_started
+        try:
+            result = measure(config, "train", training)
+        except BaseException:
+            if optimizer:
+                optimizer.fail()
+            raise
+        if optimizer:
+            optimizer.tell(result)
         seen.add(result["id"])
         trials.append(result)
     roles = select_finalists(trials, args.size_tolerance)
@@ -230,13 +277,16 @@ def run_study(args):
     write_json(out / "finalists.json", frozen)
     frozen_hash = sha(out / "finalists.json")
     by_id = {t["id"]: t for t in trials}
-    checked = [measure(by_id[trial_id]["config"], "validation", validation) for trial_id in sorted(set(roles.values()))]
+    checked = [] if args.training_only else [measure(by_id[trial_id]["config"], "validation", validation) for trial_id in sorted(set(roles.values()))]
     if sha(out / "finalists.json") != frozen_hash:
         raise ValueError("finalists changed during validation")
     result = {**provenance, "training": [{k: v for k, v in t.items() if k != "rows"} for t in trials],
               "provisional_frontier": [t["id"] for t in frontier(trials)],
               "finalists": frozen, "finalists_sha256": frozen_hash,
               "validation": [{k: v for k, v in t.items() if k != "rows"} for t in checked],
+              "optimizer_setup_seconds": optimizer_setup_seconds,
+              "proposal_seconds": proposal_seconds,
+              "optimizer": optimizer.evidence() if optimizer else None,
               "total_verified_streams": sum(t["verified_streams"] for t in trials + checked),
               "total_seconds": time.perf_counter() - started}
     write_json(out / "result.json", result)
@@ -247,7 +297,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--corpus", type=pathlib.Path, default=ROOT / "target/search/corpus-smoke")
     parser.add_argument("--out", type=pathlib.Path)
-    parser.add_argument("--strategy", choices=["random", "pareto-mutation"], default="random")
+    parser.add_argument("--strategy", choices=["random", "pareto-mutation", "nsga2", "fixed"], default="random")
+    parser.add_argument("--training-only", action="store_true")
+    parser.add_argument("--fixed-configs", type=pathlib.Path)
     parser.add_argument("--seed", type=int, default=195108)
     parser.add_argument("--trials", type=int, default=32)
     parser.add_argument("--rounds", type=int, default=5)

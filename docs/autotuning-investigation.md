@@ -1,10 +1,13 @@
 # Investigation: automatic encoder tuning and GPU-assisted search
 
-Status: runnable phase-zero pilot, validated parameter adapter and initial
-CPU search baseline. Production presets and the Lean model are unchanged.
+Status: runnable phase-zero pilot, validated parameter adapter, controlled
+factorial and initial three-seed CPU optimizer comparison. Production presets
+and the Lean model are unchanged.
 The adapter exposes five bounded axes behind `research-tuning`; model fitting,
 latent-space learning and Bayesian optimization remain future spikes. See
-[the CPU search report](cpu-search-report.md) for implementation and evidence.
+[the CPU search report](cpu-search-report.md) for the initial implementation
+and [the campaign report](cpu-search-campaign-report.md) for mixed workloads,
+full-file regression checks and process RSS.
 
 The aim is to discover useful speed/size/memory tradeoffs and then decide
 whether adaptive selection and GPU-assisted optimization are worth their
@@ -131,10 +134,13 @@ and choose the next action from the evidence.
 | S8: mixed-block emission | 1–2 days plus any required proof work | Header/alignment-aware stored/fixed/dynamic selection on regime changes; review Lean emitter scope before promotion |
 | S9: validation and portability | 1 day per finalist/hardware set | Paired repeated measurements, decode/framing/fuzz checks, memory and size results; only publish claims for measured hardware and references |
 
-S0, S1 and the device-scoring part of S4 are implemented here. S3 has a
-random-search baseline and a simple Pareto-mutation pilot; the planned
-three-seed comparison with stronger optimizers is still outstanding. S2
-sensitivity analysis comes next.
+S0, S1 and the device-scoring part of S4 are implemented here. S2 has a
+128-configuration controlled factorial. The initial S3 comparison runs random,
+Pareto mutation and Optuna NSGA-II at 32 unique configured evaluations per
+strategy across three seeds. It includes full-file regression validation,
+direct paired miniz comparisons and three process-RSS repeats on two selected
+cases. These are bounded pilots; Bayesian acquisition, fresh-test promotion
+and broader hardware/memory coverage remain outstanding.
 S6 depends on S3 producing enough observations and on S5 establishing a
 simple prediction baseline. S7/S8 may introduce genuinely better methods;
 an optimizer cannot invent an algorithm absent from its candidate space.
@@ -366,8 +372,10 @@ every case and was excluded from frontier selection. No reserved test
 performance was measured, and no candidate was promoted.
 
 Phase-zero decision: proceed with S1 knob exposure and the CPU baseline in
-S3. These are now available in [the CPU search report](cpu-search-report.md).
+S3. Those initial results are available in [the CPU search report](cpu-search-report.md),
+followed by the [S2/S3 campaign](cpu-search-campaign-report.md).
 Keep GPU scoring optional and batch it only if whole-loop measurements
 support it. Model fitting, prediction quality, latent-space learning, wider
-parameter spaces, memory measurements and final-test evaluation remain
-unimplemented research spikes.
+parameter spaces and final-test evaluation remain unimplemented research
+spikes. Process RSS is now measured separately on two validation cases; it
+has not become a third optimized objective or a general memory guarantee.

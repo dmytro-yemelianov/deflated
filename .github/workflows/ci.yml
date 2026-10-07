@@ -46,6 +46,12 @@ jobs:
           make research-check
           make research-defaults
 
+      - name: Optional CPU optimizer adapter
+        run: |
+          python3 -m venv target/search/optimizer-venv
+          target/search/optimizer-venv/bin/python -m pip install -r scripts/optimizer-requirements.txt
+          target/search/optimizer-venv/bin/python scripts/test_search_optimizer.py
+
       - name: No unsafe, no std in the core
         run: |
           ! grep -rnw 'unsafe' crates/deflate-core/src/

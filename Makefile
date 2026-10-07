@@ -1,6 +1,6 @@
 # Top-level driver for verified-deflate. Mirrors maked's Makefile.
 .PHONY: all build-rust build-lean test test-axiom-gate test-rust test-lean test-differential test-framing \
-        fmt lint fuzz size perf profile tune research-check research-poc research-search research-defaults clean
+        fmt lint fuzz size perf profile tune research-check research-poc research-search research-defaults research-campaign clean
 
 all: build-rust build-lean
 
@@ -61,6 +61,8 @@ tune:
 research-check:
 	@python3 scripts/test_search_tools.py
 	@python3 scripts/test_search_cpu.py
+	@python3 scripts/test_search_campaign.py
+	@python3 scripts/test_search_campaign_artifacts.py
 
 research-poc:
 	@python3 scripts/search_corpus.py --profile smoke
@@ -73,6 +75,13 @@ research-search:
 research-defaults:
 	@python3 scripts/search_corpus.py --profile smoke
 	@python3 scripts/check_research_defaults.py
+
+research-campaign:
+	@python3 -m venv target/search/optimizer-venv
+	@target/search/optimizer-venv/bin/python -m pip install -r scripts/optimizer-requirements.txt
+	@python3 scripts/tuning_corpus.py
+	@python3 scripts/search_workloads.py
+	@target/search/optimizer-venv/bin/python scripts/search_campaign.py
 
 profile: perf
 	@bash scripts/profile_report.sh
