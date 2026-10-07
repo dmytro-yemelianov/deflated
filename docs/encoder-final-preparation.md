@@ -31,3 +31,35 @@ visible. Any later tuning needs a new holdout or an explicit regression label.
 The v1 serialization removes unused features without changing the selected
 branch or leaf. Its lower overhead is a hypothesis until the assembled native
 measurement. P6 integration and exact-revision CI remain required after P5.
+
+The assembled validation pilot at commit `d977bb5` completed 93 paired rows
+and 62 direct controls in 13.561 seconds. Every candidate packet also matches
+the same policy executed by the sealed original worker (93 independent
+component-identity checks). Internal Balanced packets remain identical too.
+This is one warm session at a 5 ms minimum, without final confidence,
+first-call, tiny or RSS conclusions.
+
+| Role | Real validation speed / original Balanced | Real bytes / original Balanced | Largest real file ratio |
+| --- | --- | --- | --- |
+| Maximum speed | 2.175× | +7.593% | 1.299× |
+| Compromise | 1.170× | +0.325% | 1.021× |
+| Minimum size | 0.690× | -0.339% | 1.000× |
+
+Speed violates the 20% file cap (and reaches 1.950× bytes on the old outlier
+scope). The compromise speed target remains unmet. Size is 1.224× original
+Best but +0.012% larger, missing the -0.2% size target. These are pre-final
+warnings; the role guards will not be relaxed.
+
+Evidence: [pilot summary](../scripts/reports/encoder-p5-combinations.json),
+[pairs](../scripts/reports/encoder-p5-combinations-measurements.jsonl.gz),
+[controls](../scripts/reports/encoder-p5-combinations-controls.jsonl.gz),
+[diagnostics](../scripts/reports/encoder-p5-combinations-diagnostics.json.gz),
+[component identities](../scripts/reports/encoder-p5-combinations-component-identity.json.gz).
+The exact binary and source archive are sealed at the local pilot directory.
+The final-test freeze is still pending. The [actual default portable CLI
+size check](../scripts/reports/encoder-p5-portable-size.json) uses the same
+Rust 1.88.0 compiler and default release flags for original archived source
+and commit `d977bb5`: 542336 →542304 bytes (-32), passing the +64 KiB guard.
+Policy payloads are separately 72/99/96 bytes and remain research-worker
+inputs. This size result covers the portable core optimization and default
+CLI; a future release CLI exposing new presets must be measured separately.

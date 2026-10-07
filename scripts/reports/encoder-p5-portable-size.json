@@ -1,0 +1,26 @@
+{
+  "binary_growth_bytes": -32,
+  "build_overrides": {},
+  "candidate": {
+    "binary_bytes": 542304,
+    "binary_sha256": "8909ef77aba682880acebbc6f7b5e0da25c3635ddce19180fb9858fde168d61c"
+  },
+  "candidate_source_commit": "d977bb5",
+  "guard_bytes": 65536,
+  "guard_passed": true,
+  "limitation": "role policies remain opt-in research-worker inputs; this measures the actual default CLI and portable core optimization, not a release CLI with new preset APIs",
+  "original": {
+    "binary_bytes": 542336,
+    "binary_sha256": "55f836a48319358ec80942c502a9816fbad937ae80e7608e2e80702ba5e04788"
+  },
+  "original_commit": "14f15e63e1a8955c5cfebf869ce065f29dd950fc",
+  "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+  "purpose": "actual default portable CLI size before final-test encoding; no native CPU flags",
+  "research_policy_payload_bytes": {
+    "compromise": 99,
+    "size": 96,
+    "speed": 72
+  },
+  "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)",
+  "source_archive_sha256": "961c97f84921f632260573da8830164626afadd2d6ac1435bbc404c1e667e056"
+}
