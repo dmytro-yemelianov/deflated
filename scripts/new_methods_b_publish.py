@@ -4,6 +4,7 @@ import argparse
 import collections
 import gzip
 import json
+import math
 from pathlib import Path
 
 from encoder_corpus import ROOT, digest, write_json
@@ -28,6 +29,25 @@ def scope_scores(rows):
                        **{field: sum(row[field] for row in selected) for field in
                           ("raw_bytes", "packed_bytes", "warm_encode_ns", "first_encode_ns", "warm_decode_ns", "first_decode_ns")}})
     return {"schema_version": 1, "scope": "training/shared stress only; complete per-scope sums, no confidence intervals", "scores": scores}
+
+
+def assert_recomputed(stored, calculated, path):
+    """Allow four float ULPs across Python versions; keep decisions/counts exact."""
+    assert type(stored) is type(calculated), path
+    if isinstance(stored, float):
+        assert math.isfinite(stored) and math.isfinite(calculated), path
+        tolerance = 4 * max(math.ulp(stored), math.ulp(calculated))
+        assert abs(stored - calculated) <= tolerance, path
+    elif isinstance(stored, dict):
+        assert stored.keys() == calculated.keys(), path
+        for key in stored:
+            assert_recomputed(stored[key], calculated[key], f"{path}.{key}")
+    elif isinstance(stored, list):
+        assert len(stored) == len(calculated), path
+        for index, (left, right) in enumerate(zip(stored, calculated)):
+            assert_recomputed(left, right, f"{path}[{index}]")
+    else:
+        assert stored == calculated, path
 
 
 def audit(local=None):
@@ -75,10 +95,10 @@ def audit(local=None):
             assert digest((local / row["packet_path"]).read_bytes()) == row["packet_sha256"]
             assert digest((ROOT / case["path"]).read_bytes()) == case["sha256"]
     calculated = summarize(rows, intent["methods"])
-    assert all(summary[key] == value for key, value in calculated.items())
+    assert_recomputed({key: summary[key] for key in calculated}, calculated, "summary")
     assert summary["sentinel"] is None and len(summary["candidates"]) == 12
     assert all(not c["size_role_training_point_guards"] for c in summary["candidates"])
-    assert json.loads(read(PREFIX + "-scopes.json")) == scope_scores(rows)
+    assert_recomputed(json.loads(read(PREFIX + "-scopes.json")), scope_scores(rows), "scopes")
     print("Published B one-session roster/timers/guard/negative audit passed" + ("; local packet/raw hashes checked" if local else ""))
 
 

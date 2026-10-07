@@ -112,6 +112,10 @@ The publication audit binds source/protocol/reference/data hashes, the exact
 73×40 roster, timer fields, decoder-only zero-encode contracts, scope sums and
 the rederived negative selection. It audits existing rows without rescreening:
 
+Recomputed floating aggregates allow at most four ULPs for Python-version
+rounding differences. Counts, strings, booleans, selection decisions and
+content hashes remain exact; the original report bytes are not rewritten.
+
 ```sh
 python3 scripts/new_methods_b_publish.py --check
 # Original local cache only: also verify each raw input and encoded packet.
