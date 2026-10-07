@@ -1,0 +1,12 @@
+{
+  "adaptive_test_feedback": false,
+  "cpu": "Apple M5",
+  "elapsed_seconds": 787.8770877080096,
+  "freeze_sha256": "1c816c225c24bc4eccc12d5d26d55a47febf9ad84b872905ca10ed49105bfa6a",
+  "measurement_sha256": "267abd962576d9ff8e4262dd9f9aaee251e2f21deb1d05210a91a253b2e7196e",
+  "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+  "promotion": "pending full guard and verification audit",
+  "rss_processes": 513,
+  "rss_sha256": "61ae16c898a76657eed817201619917e595a81c61e5648c5651f28045cf6d209",
+  "verified_rows": 8700
+}

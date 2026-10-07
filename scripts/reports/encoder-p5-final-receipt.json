@@ -1,0 +1,66 @@
+{
+  "cases": 58,
+  "exported_at_utc": "2026-10-07T13:18:06Z",
+  "files": {
+    "encoder-p5-correspondence.json.gz": {
+      "bytes": 9460,
+      "sha256": "1ba93c9666961dd7ee355dcc07b06a9a0a728bcc336120e7b7c70a6a03829a03",
+      "uncompressed_sha256": "fc92d1cdab12c0117b76a05444f9ee02886acafe7bc236ef335b2ad7d352524d"
+    },
+    "encoder-p5-freeze.json": {
+      "bytes": 18266,
+      "sha256": "1c816c225c24bc4eccc12d5d26d55a47febf9ad84b872905ca10ed49105bfa6a",
+      "uncompressed_sha256": "1c816c225c24bc4eccc12d5d26d55a47febf9ad84b872905ca10ed49105bfa6a"
+    },
+    "encoder-p5-manifest.json": {
+      "bytes": 94887,
+      "sha256": "e32c58e816f9189b52089d292f612034a30e34b1c5ff20a7e5e362d337b5d748",
+      "uncompressed_sha256": "e32c58e816f9189b52089d292f612034a30e34b1c5ff20a7e5e362d337b5d748"
+    },
+    "encoder-p5-measurements.jsonl.gz": {
+      "bytes": 1125651,
+      "sha256": "01deebc3f8cc436f7ebc5849f2b2d07b1343effa17d9bfe70f56d8c54952068a",
+      "uncompressed_sha256": "267abd962576d9ff8e4262dd9f9aaee251e2f21deb1d05210a91a253b2e7196e"
+    },
+    "encoder-p5-portable-size.json": {
+      "bytes": 1054,
+      "sha256": "69371fb23a42a9de714fda36e06105a9f9aace0b454b7ec6316e0480afab4e4a",
+      "uncompressed_sha256": "69371fb23a42a9de714fda36e06105a9f9aace0b454b7ec6316e0480afab4e4a"
+    },
+    "encoder-p5-result.json": {
+      "bytes": 522,
+      "sha256": "5b631e442df0b117084620ee05ba1440dea0e4219309757528079cf3a624cc09",
+      "uncompressed_sha256": "5b631e442df0b117084620ee05ba1440dea0e4219309757528079cf3a624cc09"
+    },
+    "encoder-p5-rss.json.gz": {
+      "bytes": 21437,
+      "sha256": "6dfe223313cf24e80b8598e7dd9093563326ac3f9fd8437d17aa9a2fdbdc0352",
+      "uncompressed_sha256": "61ae16c898a76657eed817201619917e595a81c61e5648c5651f28045cf6d209"
+    },
+    "encoder-p5-started.json": {
+      "bytes": 134,
+      "sha256": "c8c719e7b7387dd8e2c4e21d19e909dbcd91f835d246862d8ee3aabef26e5cc7",
+      "uncompressed_sha256": "c8c719e7b7387dd8e2c4e21d19e909dbcd91f835d246862d8ee3aabef26e5cc7"
+    },
+    "encoder-p5-statistics.json.gz": {
+      "bytes": 215462,
+      "sha256": "f51e3b0f7fbabccd28f87ec86562a69f5e189a86bd50d4d9b40b4156c048feac",
+      "uncompressed_sha256": "816f4b86b895ce00aed1609a0e5573800fda3cbaa17239a0fc9dcb52160a66c7"
+    },
+    "encoder-prototype-correspondence.json.gz": {
+      "bytes": 73612,
+      "sha256": "272d3d3d2843935871fbfc037a8bdee18fed784b489cb1f0e0be72a459549db9",
+      "uncompressed_sha256": "cc4444690f8d5820a33a7d6c935ff66ebbc803da8e9d5d6b6c62af3a6f480080"
+    }
+  },
+  "final_model_packets": 232,
+  "freeze_publication_commit": "34febbcb61d72121ceeab5706d2b1e9e266ece3f",
+  "limitation": "finite workload and M5 timings; archived commits and local sealed binaries retain build provenance; repeated workloads are regression evidence",
+  "methods": 15,
+  "paired_rows": 8700,
+  "prototype_model_packets": 6165,
+  "retuning_on_holdout": false,
+  "rss_processes": 513,
+  "schema": 1,
+  "source_commit": "6c1cd1f4f8d69df79fd39609ab17ee82bceb385e"
+}

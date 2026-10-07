@@ -47,6 +47,7 @@ jobs:
           python3 scripts/test_encoder_parse.py
           python3 scripts/test_encoder_selector.py
           python3 scripts/test_encoder_final.py
+          python3 scripts/test_encoder_final_artifacts.py
           make research-check
           make research-defaults
           make research-policy-check

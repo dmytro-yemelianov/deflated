@@ -1,8 +1,9 @@
 # Next goal: encoder performance and compression improvements
 
-Status: active. P0 corpus/control contract and P1 profiling are implemented;
-P2 isolated speed pilots and P3 bounded-cost investigation are complete;
-P4 adaptive-policy/block investigation is complete; P5–P6 remain pending.
+Status: complete. P0–P6 investigations, final independent validation and
+conditional integration are resolved. The main 1.5×/+1% target is not achieved;
+default reversal passes its separate semantics-preserving improvement gate.
+Final evidence: [encoder improvement report](encoder-improvement-report.md).
 Evidence: [refreshed encoder profiles](encoder-profile-report.md).
 Initial implementation evidence: [isolated speed spikes](encoder-speed-spikes.md).
 Bounded parser prototype: [P3 investigation](encoder-bounded-parser.md).
@@ -220,18 +221,18 @@ finite native/Lean packet agreement remains test evidence, not refinement.
 
 ## P5 — Freeze finalists and validate independently
 
-- [ ] Freeze role candidates, source/binary/policy hashes, guards and corpus
+- [x] Freeze role candidates, source/binary/policy hashes, guards and corpus
   manifest before any final-test encoding. Never retune on that final test;
   another revision needs a new holdout or an explicitly non-blind regression.
-- [ ] Run the paired warm/first-call protocol and direct native references.
+- [x] Run the paired warm/first-call protocol and direct native references.
   Validate every accepted output with deflate-core, miniz and exact-consumption
   zlib. Preserve failures, timeouts and aborted runs in the ledger.
-- [ ] Measure RSS in separate processes on representative large real/synthetic
+- [x] Measure RSS in separate processes on representative large real/synthetic
   inputs (three repetitions), and tiny-input latency per case. Measure actual
   integrated binary sizes separately from research workers and policy payloads.
-- [ ] Check new emitted packets through the actual Lean and Rust CLI decoders;
+- [x] Check new emitted packets through the actual Lean and Rust CLI decoders;
   add targeted correspondence/model tests where token/emitter contracts change.
-- [ ] Publish all roles, family/file regressions and native-reference tradeoffs,
+- [x] Publish all roles, family/file regressions and native-reference tradeoffs,
   including candidates that miss a target. Do not hide negative results in an
   aggregate or substitute an easier comparator.
 
@@ -258,18 +259,18 @@ to the measured cases and builds. Report missing evidence as missing.
 
 ## P6 — Integrate qualifying changes and finish
 
-- [ ] Integrate useful candidates through appropriate existing APIs or explicit
+- [x] Integrate useful candidates through appropriate existing APIs or explicit
   opt-in profiles. Change defaults only when their preregistered guards pass.
   Keep rejected prototypes isolated and documented; preserve raw-stream/framing
   contracts and the default build without research dependencies.
-- [ ] Run formatting/Clippy, applicable default/all-feature Rust tests, research
+- [x] Run formatting/Clippy, applicable default/all-feature Rust tests, research
   checks, Lean/model/axiom gates, differential/framing suites and the existing
   bounded fuzz targets. Add tests for changed contracts or counterexamples,
   not mirror tests for every implementation detail.
-- [ ] Recheck the integrated build when its hot path differs from the measured
+- [x] Recheck the integrated build when its hot path differs from the measured
   finalist. Require relevant CI on the final exact revision before release
   claims, and retain source/build/corpus provenance with raw compressed ledgers.
-- [ ] Publish `docs/encoder-improvement-report.md`: achieved targets, direct
+- [x] Publish `docs/encoder-improvement-report.md`: achieved targets, direct
   references, remaining gaps, profile-guided explanations and next hypotheses.
   Update this checklist and link accepted/rejected artifacts; commit the scoped
   work without touching the unrelated preexisting `memory/` directory.
@@ -278,3 +279,11 @@ Completion requires P0–P6 and the GPU/Lean decisions to be resolved with
 evidence. Successful performance promotion is conditional on the frozen
 guards; investigated negative results may complete the research objective
 but never count as achieved speed/size targets.
+
+Final P5 has 8700 paired observations, 513 RSS processes and 232 checked
+Lean/Rust packets; an additional 6165 rejected-prototype packets agree with
+Lean/Rust/zlib. No role candidate qualifies. P6 retains only scalar-equivalent
+portable reversal: 1.032× warm/1.038× first-call original default Balanced,
+identical packets and all supplementary guards. Exact integrated CLI matches
+the frozen portable binary. Artifact/CI gates are required on the final
+report revision before goal completion; no further source change is needed.

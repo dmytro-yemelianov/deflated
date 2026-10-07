@@ -1,0 +1,9 @@
+{
+  "binary_bytes": 542304,
+  "binary_growth_bytes": -32,
+  "binary_sha256": "8909ef77aba682880acebbc6f7b5e0da25c3635ddce19180fb9858fde168d61c",
+  "build_overrides": {},
+  "matches_frozen_portable_cli": true,
+  "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)",
+  "scope": "actual integrated default CLI after make all; byte-identical to the sealed P5 portable CLI; research policies not added to release APIs"
+}

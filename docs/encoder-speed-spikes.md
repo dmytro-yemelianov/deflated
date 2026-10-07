@@ -2,7 +2,8 @@
 
 Status: P2 training/validation and auxiliary pilots complete; code reversal
 is retained for later candidates. The other rewrites are rejected.
-The current production core is unchanged. The principal 1.5×/+1% goal is
+The production core was unchanged during these pilots. Final default integration
+and its independent guards are recorded in [the improvement report](encoder-improvement-report.md). The principal 1.5×/+1% goal is
 not established by these results.
 
 All variants are built from the sealed S9 source archive with rustc 1.88.0

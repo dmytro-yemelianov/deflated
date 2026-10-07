@@ -1,6 +1,7 @@
 # P5 preparation: frozen role combinations
 
-Status: preparation only. No new final-test encoding or feature extraction.
+Status: historical preparation record. The final freeze was published before
+held encoding; final results are in [the improvement report](encoder-improvement-report.md).
 The [original contract](encoder_protocol.json) and all role guards stay fixed.
 
 After the initial P4 budget, prepare three combinations with the independently
@@ -108,4 +109,5 @@ configurations passed a separate private-probe warm/first-call decoder check,
 and the default-only harness passed all four native contract tests. Neither
 check accessed held inputs. Nine RSS cases cover all six real classes plus
 large synthetic, drift and the old collision outlier. The earlier v1
-preparation remains unencoded. Final results and qualification remain pending.
+preparation remains unencoded. At freeze publication, final results and qualification were still pending.
+The completed results are now in [the improvement report](encoder-improvement-report.md).
