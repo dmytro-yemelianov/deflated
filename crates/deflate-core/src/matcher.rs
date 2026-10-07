@@ -452,11 +452,12 @@ impl<P: SearchPolicy> Matcher<'_, P> {
         let mut best = None;
         if self.three_only {
             let h = hash(bytes[0], bytes[1], bytes[2]);
-            for (_probe, c) in self
-                .short
-                .candidates(i, h, self.level.probes(true))
-                .enumerate()
-            {
+            let candidates = self.short.candidates(i, h, self.level.probes(true));
+            #[cfg(feature = "research-tuning")]
+            let candidates = candidates.enumerate();
+            #[cfg(not(feature = "research-tuning"))]
+            let candidates = candidates.map(|c| (0, c));
+            for (_probe, c) in candidates {
                 if best.is_none_or(|(len, _)| self.input[c + len] == bytes[len]) {
                     let len = self.common(c, i, limit);
                     if len >= MIN_MATCH && best.is_none_or(|(bl, _)| len > bl) {
@@ -477,11 +478,14 @@ impl<P: SearchPolicy> Matcher<'_, P> {
             return best.filter(|&(len, dist)| accept(self.input, i, len, dist));
         }
         if limit >= 4 {
-            for (_probe, c) in self
+            let candidates = self
                 .long
-                .candidates(i, hash4(bytes), self.level.probes(false))
-                .enumerate()
-            {
+                .candidates(i, hash4(bytes), self.level.probes(false));
+            #[cfg(feature = "research-tuning")]
+            let candidates = candidates.enumerate();
+            #[cfg(not(feature = "research-tuning"))]
+            let candidates = candidates.map(|c| (0, c));
+            for (_probe, c) in candidates {
                 if best.is_none_or(|(len, _)| self.input[c + len] == bytes[len]) {
                     let len = self.common(c, i, limit);
                     if len >= 4 && best.is_none_or(|(bl, _)| len > bl) {
