@@ -114,6 +114,27 @@ trained graphs are not substitutes for byte-exact JSON reconstruction.
 
 ## Immutable reference lock
 
+The decoder-only supplement is frozen separately in
+`scripts/reports/new-methods-decoder-lock.json`. The original workers' cold
+`first_decode_ns` follows an encoder call in the same process; that field is
+paired first-decode timing, not fully cold decoder initialization. Study
+first-decode measurements therefore use the supplement's separate process,
+which reads a resident packet and calls no encoder before the timer. Its C
+entrypoint includes the unchanged v1 decoder/framing routines; the Rust
+entrypoints include the unchanged v1 adapters. Warm loops create fresh decoder
+state and pay output allocation/destruction, CRC and exact consumption.
+This changes executable layout, explicitly recorded in the supplement, without
+rebuilding or replacing the v1 control binaries or their reference lock.
+
+All 73 codec/level/frame settings pass cold/warm checks on two shared witnesses:
+292 timer/output contracts and 584 truncation/suffix/concatenation/size rejects.
+The Rust timer's unit witness panics if an encoder is invoked. Static call-path
+inspection supports the corresponding C no-encoder boundary; this is finite
+evidence rather than machine-code refinement. The sixth common C compiler check
+and second contract-fix round were used, before study screening; original G0
+receipts remain unchanged. Audit with
+`python3 scripts/new_methods_decoder_lock.py --check --local`.
+
 `scripts/reports/new-methods-reference-lock.json` binds all nine reference
 implementations to source/archive hashes, release/compiler/build settings,
 APIs, codec levels, single-thread and dictionary rules, worker/library hashes,

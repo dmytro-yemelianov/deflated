@@ -1,0 +1,10 @@
+{
+  "compile_checks_cumulative": 6,
+  "contract_fix_rounds_cumulative": 2,
+  "note": "Sixth C compile check / second contract-fix round: decoder-only cold/warm supplement, before screening",
+  "previous_ledger_sha256": "178c05f3f26446db9140acf729f2d0d202312d2024395d3d044562ec2d38c6ee",
+  "schema_version": 1,
+  "status": "compiled and decoder-only contracts passed; before study screening",
+  "study_screening_started": false,
+  "utc": "2026-10-07T19:53:40.419280+00:00"
+}

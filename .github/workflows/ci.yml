@@ -53,7 +53,9 @@ jobs:
           python3 scripts/test_new_methods_corpus.py
           python3 scripts/test_new_methods_synthetic.py
           python3 scripts/test_new_methods_data_artifacts.py
+          python3 scripts/test_new_methods_b_screen.py
           python3 scripts/new_methods_reference_lock.py --check
+          python3 scripts/new_methods_decoder_lock.py --check
           make research-check
           make research-defaults
           make research-policy-check
@@ -83,6 +85,14 @@ jobs:
         run: |
           cargo build --locked --release -p new-methods-bench
           python3 scripts/test_rust_codec_workers.py
+
+      - name: Decoder-only cold/warm timers
+        run: |
+          cargo fmt --manifest-path tools/new-methods-decode/Cargo.toml --check
+          cargo clippy --manifest-path tools/new-methods-decode/Cargo.toml --all-targets --all-features --locked -- -D warnings
+          cargo test --manifest-path tools/new-methods-decode/Cargo.toml --locked
+          cargo build --manifest-path tools/new-methods-decode/Cargo.toml --release --locked
+          python3 scripts/test_new_methods_decoder_workers.py --rust-only --encoders target/release --workers tools/new-methods-decode/target/release
 
       - name: Lean model (lake build, no sorry/native_decide, axiom gate)
         run: |

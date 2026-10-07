@@ -1,0 +1,18 @@
+[workspace]
+
+[package]
+name = "new-methods-decode"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[dependencies]
+new-methods-bench = { path = "../new-methods-bench" }
+deflate-core = { path = "../../crates/deflate-core" }
+structured-codec = { path = "../../crates/structured-codec" }
+miniz_oxide = "=0.8.9"
+
+[profile.release]
+opt-level = 3

@@ -1,0 +1,14 @@
+{
+  "evidence_sha256": {
+    "scripts/reports/new-methods-decoder-build.json": "a3a7818c66fb636306c8785f33a0b78647c8ac587d8d82908dcc0ece7a0314c6",
+    "scripts/reports/new-methods-decoder-contracts.json.gz": "71cdcd919bcfc12978e841bb76e74c6266b8d841bd4ad46b553a836f9c979c63",
+    "scripts/reports/new-methods-decoder-ledger.json": "80ed3d2cce79c018f4ade11099c60b418722d7e314617e2a595695f5776bde3f"
+  },
+  "lock_tool_sha256": "149235e68661335c72cc942f5e565402c49e23272b658aa4db2c781684f1fa3d",
+  "schema_version": 1,
+  "scope": "same sealed v1 codec and framing routines; separate decoder-only executable layout. Existing v1 cold first_decode_ns follows encoding and is not used as fully cold decode.",
+  "status": "frozen before any study measurement",
+  "timing": "cold decode supplies only resident compressed packet; no preceding encoder/decoder. Warm decode pays fresh state, output allocation/destruction and checksums. No startup/IO or guessed subtraction.",
+  "v1_reference_lock_sha256": "9ec4fd7751b9c9b3344e3052dcc003e62458bcf94b06027f08f73f411de5e9f7",
+  "workers": "target/new-methods/decode-workers-v1"
+}
