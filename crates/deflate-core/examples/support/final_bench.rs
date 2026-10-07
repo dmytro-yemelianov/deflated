@@ -21,7 +21,7 @@ pub(crate) enum BaseMethod {
 impl BaseMethod {
     fn parse(text: &str) -> Result<Self, String> {
         use deflate_core::CompressionLevel;
-        if text.starts_with("adaptive:") {
+        if text.starts_with("adaptive:") || text.starts_with("adaptive-entropy:") {
             return adaptive::Settings::parse(text).map(Self::Adaptive);
         }
         if text.starts_with("bounded:") {
@@ -138,7 +138,7 @@ pub fn run() -> Result<(), String> {
         }
         let raw = std::fs::read(&args[1]).map_err(|e| e.to_string())?;
         let settings = adaptive::Settings::parse(&args[3])?;
-        let hint = adaptive::hint(&raw, settings.samples);
+        let hint = adaptive::hint(&raw, settings.samples, settings.entropy_guard);
         let regional = deflate_core::research::deflate_adaptive(&raw, settings.regional);
         let baseline = deflate_core::deflate(&raw);
         let packet = adaptive::encode(&raw, settings);
@@ -148,7 +148,7 @@ pub fn run() -> Result<(), String> {
         }
         write_packets(&args[2], &packet, Some(&baseline))?;
         println!(
-            "{{\"raw_bytes\":{},\"packed_bytes\":{},\"baseline_bytes\":{},\"regional_bytes\":{},\"samples\":{},\"sample_repeats\":{},\"stored_prediction\":{},\"exact_cap_percent\":{}}}",
+            "{{\"raw_bytes\":{},\"packed_bytes\":{},\"baseline_bytes\":{},\"regional_bytes\":{},\"samples\":{},\"sample_repeats\":{},\"stored_prediction\":{},\"exact_cap_percent\":{},\"used_symbols\":{},\"peak_count\":{},\"entropy_guard\":{}}}",
             raw.len(),
             packet.len(),
             baseline.len(),
@@ -156,7 +156,10 @@ pub fn run() -> Result<(), String> {
             hint.samples,
             hint.repeats,
             hint.stored,
-            settings.exact_cap_percent
+            settings.exact_cap_percent,
+            hint.used_symbols,
+            hint.peak_count,
+            settings.entropy_guard
         );
         return Ok(());
     }

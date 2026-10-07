@@ -13,6 +13,10 @@ def methods():
         f"adaptive:4:8:trigram:{samples}:0:16" for samples in (4096,16384,65536)]
 
 
+def corrected_methods():
+    return [f"adaptive-entropy:4:8:trigram:{samples}:0:16" for samples in (4096,16384,65536)]
+
+
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out",type=Path,required=True)
@@ -26,4 +30,4 @@ if __name__=="__main__":
     parser.add_argument("--methods",nargs="+",default=methods())
     args=parser.parse_args()
     run(args.out.resolve(),args.binary.resolve(),args.real.resolve(),args.synthetic.resolve(),args.baseline.resolve(),args.partition,args.rounds,args.minimum_ms,args.methods,
-        allowed_methods=methods(),inspector="--adaptive-inspect",run_oracle=False,extra_sources=(Path(__file__),),label="P4 adaptive")
+        allowed_methods=methods()+corrected_methods(),inspector="--adaptive-inspect",run_oracle=False,extra_sources=(Path(__file__),),label="P4 adaptive")

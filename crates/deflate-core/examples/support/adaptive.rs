@@ -7,12 +7,13 @@ pub struct Settings {
     pub regional: AdaptiveConfig,
     pub samples: usize,
     pub exact_cap_percent: usize,
+    pub entropy_guard: bool,
 }
 
 impl Settings {
     pub fn parse(text: &str) -> Result<Self, String> {
         let fields: Vec<_> = text.split(':').collect();
-        if fields.len() != 7 || fields[0] != "adaptive" {
+        if fields.len() != 7 || !["adaptive", "adaptive-entropy"].contains(&fields[0]) {
             return Err("expected adaptive:LIGHT:STOP_LENGTH:INDEX:SAMPLE_BUDGET:EXACT_CAP_PERCENT:LAZY_LIMIT".into());
         }
         let integer = |n: usize| {
@@ -37,6 +38,7 @@ impl Settings {
             regional,
             samples,
             exact_cap_percent,
+            entropy_guard: fields[0] == "adaptive-entropy",
         })
     }
 }
@@ -46,9 +48,11 @@ pub struct Hint {
     pub samples: usize,
     pub repeats: usize,
     pub stored: bool,
+    pub used_symbols: usize,
+    pub peak_count: usize,
 }
 
-pub fn hint(raw: &[u8], budget: usize) -> Hint {
+pub fn hint(raw: &[u8], budget: usize, entropy_guard: bool) -> Hint {
     if budget == 0 || raw.len() < 32768 || raw.len() >= u32::MAX as usize {
         return Hint::default();
     }
@@ -56,6 +60,7 @@ pub fn hint(raw: &[u8], budget: usize) -> Hint {
     let stride = (raw.len() / budget).max(1);
     let mut word = 0x19510401u32;
     let mut result = Hint::default();
+    let mut histogram = [0usize; 256];
     for start in (0..raw.len().saturating_sub(3)).step_by(stride) {
         word ^= word << 13;
         word ^= word >> 17;
@@ -65,6 +70,7 @@ pub fn hint(raw: &[u8], budget: usize) -> Hint {
             break;
         }
         let tag = u32::from_le_bytes(raw[pos..pos + 4].try_into().unwrap());
+        histogram[raw[pos] as usize] += 1;
         let slot = (tag.wrapping_mul(0x1e35_a7bd) >> 17) as usize;
         let old = tags[slot];
         if old != 0 && old as u32 == tag {
@@ -76,12 +82,17 @@ pub fn hint(raw: &[u8], budget: usize) -> Hint {
         tags[slot] = u64::from(tag) | ((pos as u64 + 1) << 32);
         result.samples += 1;
     }
-    result.stored = result.samples >= 2048 && result.repeats * 256 < result.samples;
+    result.used_symbols = histogram.iter().filter(|&&n| n != 0).count();
+    result.peak_count = histogram.iter().copied().max().unwrap_or(0);
+    result.stored = result.samples >= 2048
+        && result.repeats * 256 < result.samples
+        && (!entropy_guard
+            || (result.used_symbols >= 240 && result.peak_count * 50 <= result.samples));
     result
 }
 
 pub fn encode(raw: &[u8], settings: Settings) -> Vec<u8> {
-    let prediction = hint(raw, settings.samples);
+    let prediction = hint(raw, settings.samples, settings.entropy_guard);
     let candidate = if prediction.stored {
         deflate_core::deflate_stored(raw)
     } else {
@@ -116,10 +127,12 @@ mod tests {
             .collect();
         let periodic: Vec<u8> = (0..4 * 32768).map(|i| random[i % 271]).collect();
         for budget in [4096, 16384, 65536] {
-            assert!(hint(&random, budget).stored);
-            assert!(!hint(&periodic, budget).stored);
+            assert!(hint(&random, budget, true).stored);
+            assert!(!hint(&periodic, budget, true).stored);
         }
-        assert!(!hint(&random[..259], 4096).stored);
+        assert!(!hint(&random[..259], 4096, true).stored);
+        let small_alphabet: Vec<u8> = random.iter().map(|b| b % 16).collect();
+        assert!(!hint(&small_alphabet, 4096, true).stored);
     }
     #[test]
     fn exact_fallback_caps_actual_packets_and_keeps_decoder_agreement() {
