@@ -2,6 +2,8 @@
 use deflate_core::research::{Config, Index};
 use std::hint::black_box;
 use std::time::{Duration, Instant};
+#[path = "bounded_parse.rs"]
+mod bounded_parse;
 #[path = "policy.rs"]
 mod policy;
 #[derive(Clone, Copy)]
@@ -10,11 +12,15 @@ pub(crate) enum BaseMethod {
     Stored,
     Configured(Config),
     Reference(u8),
+    Bounded(bounded_parse::Settings),
 }
 
 impl BaseMethod {
     fn parse(text: &str) -> Result<Self, String> {
         use deflate_core::CompressionLevel;
+        if text.starts_with("bounded:") {
+            return bounded_parse::Settings::parse(text).map(Self::Bounded);
+        }
         match text {
             "fast" => return Ok(Self::Preset(CompressionLevel::Fast)),
             "balanced" => return Ok(Self::Preset(CompressionLevel::Balanced)),
@@ -57,6 +63,7 @@ impl BaseMethod {
             Self::Stored => deflate_core::deflate_stored(raw),
             Self::Configured(config) => deflate_core::research::deflate(raw, config),
             Self::Reference(level) => miniz_oxide::deflate::compress_to_vec(raw, level),
+            Self::Bounded(settings) => bounded_parse::encode::<false>(raw, settings).packet,
         }
     }
 }
@@ -118,6 +125,69 @@ pub fn memory(method: &str, input: &str, output: &str) -> Result<(), String> {
 
 pub fn run() -> Result<(), String> {
     let args: Vec<_> = std::env::args().skip(1).collect();
+    if args.first().is_some_and(|a| a == "--bounded-inspect") {
+        if args.len() != 4 {
+            return Err("final_bench --bounded-inspect INPUT OUT METHOD".into());
+        }
+        let raw = std::fs::read(&args[1]).map_err(|e| e.to_string())?;
+        let settings = bounded_parse::Settings::parse(&args[3])?;
+        let output = bounded_parse::encode::<true>(&raw, settings);
+        assert_eq!(deflate_core::inflate(&output.packet).unwrap(), raw);
+        assert_eq!(
+            miniz_oxide::inflate::decompress_to_vec(&output.packet).unwrap(),
+            raw
+        );
+        write_packets(&args[2], &output.packet, None)?;
+        let s = output.stats;
+        let mut fixed_bits = None;
+        if raw.len() <= 4096 {
+            use deflate_core::tokens::Token;
+            let tokens = bounded_parse::short_tokens(&raw, settings)?;
+            assert_eq!(deflate_core::tokens::expand(&tokens).unwrap(), raw);
+            let mut writer = deflate_core::bitwriter::BitWriter::new();
+            deflate_core::encode_fixed::emit_fixed_block(&mut writer, true, tokens.iter().copied());
+            fixed_bits = Some(writer.bit_len());
+            let json = tokens
+                .iter()
+                .map(|token| match token {
+                    Token::Literal(b) => format!("{{\"lit\":{b}}}"),
+                    Token::Match { len, dist } => format!("{{\"len\":{len},\"dist\":{dist}}}"),
+                })
+                .collect::<Vec<_>>()
+                .join(",");
+            std::fs::write(
+                std::path::Path::new(&args[2]).join("tokens.json"),
+                format!("[{json}]\n"),
+            )
+            .map_err(|e| e.to_string())?;
+            std::fs::write(
+                std::path::Path::new(&args[2]).join("fixed.deflate"),
+                writer.finish(),
+            )
+            .map_err(|e| e.to_string())?;
+        }
+        let fixed_json = fixed_bits.map_or_else(|| "null".to_string(), |n| n.to_string());
+        println!(
+            "{{\"raw_bytes\":{},\"packed_bytes\":{},\"fixed_bits\":{fixed_json},\"candidate_visits\":{},\"comparison_bytes_examined\":{},\"insertions\":{},\"lookahead_queries\":{},\"rejected_unprofitable\":{},\"tokens\":{},\"blocks\":{},\"huffman_analyses\":{},\"refinement_blocks_kept\":{},\"estimated_payload_bits\":{},\"actual_payload_bits\":{},\"header_and_eob_bits\":{},\"attempted_stream_bits\":{},\"stored_selected\":{}}}",
+            raw.len(),
+            output.packet.len(),
+            s.candidate_visits,
+            s.comparison_bytes_examined,
+            s.insertions,
+            s.lookahead_queries,
+            s.rejected_unprofitable,
+            s.tokens,
+            s.blocks,
+            s.huffman_analyses,
+            s.refinement_blocks_kept,
+            s.estimated_payload_bits,
+            s.actual_payload_bits,
+            s.header_and_eob_bits,
+            s.attempted_stream_bits,
+            s.stored_selected
+        );
+        return Ok(());
+    }
     if args.first().is_some_and(|a| a == "--memory") {
         if args.len() != 4 {
             return Err("final_bench --memory INPUT OUTPUT METHOD".into());

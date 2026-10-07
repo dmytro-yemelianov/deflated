@@ -1,9 +1,10 @@
 # Next goal: encoder performance and compression improvements
 
 Status: active. P0 corpus/control contract and P1 profiling are implemented;
-P2 isolated speed pilots are complete, with P3–P6 still pending.
+P2 isolated speed pilots are complete, P3 is underway, and P4–P6 are pending.
 Evidence: [refreshed encoder profiles](encoder-profile-report.md).
 Initial implementation evidence: [isolated speed spikes](encoder-speed-spikes.md).
+Bounded parser prototype: [P3 investigation](encoder-bounded-parser.md).
 Baseline: `14f15e63e1a8955c5cfebf869ce065f29dd950fc` (completed S0–S9).
 
 ## Objective
