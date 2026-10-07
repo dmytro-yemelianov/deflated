@@ -1,0 +1,722 @@
+{
+  "elapsed_seconds": 68.88454016699689,
+  "limitations": [
+    "five-session warm pilot by default; no cold/RSS/final promotion evidence",
+    "fixed measured cases on this machine"
+  ],
+  "metrics": {
+    "new-real-train": {
+      "balanced": {
+        "encode_median_ns_sum": 132976236.16666667,
+        "packed_bytes": 3141918,
+        "packed_size_change_pct": 0.0,
+        "raw_bytes": 7265702,
+        "warm_speed_vs_paired_balanced": 0.9974463444763589,
+        "worst_file_size_ratio": 1.0
+      },
+      "bayesian-compromise": {
+        "encode_median_ns_sum": 90583028.16666667,
+        "packed_bytes": 3263759,
+        "packed_size_change_pct": 3.877917883280202,
+        "raw_bytes": 7265702,
+        "warm_speed_vs_paired_balanced": 1.4723476510920868,
+        "worst_file_size_ratio": 1.1365484383271571
+      },
+      "bayesian-size": {
+        "encode_median_ns_sum": 178195278.66666666,
+        "packed_bytes": 3140946,
+        "packed_size_change_pct": -0.030936517121071816,
+        "raw_bytes": 7265702,
+        "warm_speed_vs_paired_balanced": 0.7548392153809329,
+        "worst_file_size_ratio": 1.0009075453318894
+      },
+      "bayesian-speed": {
+        "encode_median_ns_sum": 68509528.08333333,
+        "packed_bytes": 3467053,
+        "packed_size_change_pct": 10.348296804690648,
+        "raw_bytes": 7265702,
+        "warm_speed_vs_paired_balanced": 1.9638021614991008,
+        "worst_file_size_ratio": 1.438310234795447
+      },
+      "best": {
+        "encode_median_ns_sum": 266729831.5,
+        "packed_bytes": 3126812,
+        "packed_size_change_pct": -0.48078912307705224,
+        "raw_bytes": 7265702,
+        "warm_speed_vs_paired_balanced": 0.49604028949170365,
+        "worst_file_size_ratio": 1.0
+      },
+      "fast": {
+        "encode_median_ns_sum": 99914652.92857142,
+        "packed_bytes": 3297712,
+        "packed_size_change_pct": 4.958563527119431,
+        "raw_bytes": 7265702,
+        "warm_speed_vs_paired_balanced": 1.3306782582568923,
+        "worst_file_size_ratio": 1.1625184550173835
+      },
+      "miniz1": {
+        "encode_median_ns_sum": 20736254.938235294,
+        "packed_bytes": 3617454,
+        "packed_size_change_pct": 15.13521358609613,
+        "raw_bytes": 7265702,
+        "warm_speed_vs_paired_balanced": 6.451370248153953,
+        "worst_file_size_ratio": 1.569862361289708
+      },
+      "miniz6": {
+        "encode_median_ns_sum": 119075864.0,
+        "packed_bytes": 3186993,
+        "packed_size_change_pct": 1.4346332399508777,
+        "raw_bytes": 7265702,
+        "warm_speed_vs_paired_balanced": 1.1219369905222774,
+        "worst_file_size_ratio": 1.0722604552673372
+      },
+      "miniz9": {
+        "encode_median_ns_sum": 221843624.5,
+        "packed_bytes": 3182407,
+        "packed_size_change_pct": 1.2886714420936585,
+        "raw_bytes": 7265702,
+        "warm_speed_vs_paired_balanced": 0.5978754072030289,
+        "worst_file_size_ratio": 1.0698755955532027
+      },
+      "policy-size": {
+        "encode_median_ns_sum": 246130937.5,
+        "packed_bytes": 3126812,
+        "packed_size_change_pct": -0.48078912307705224,
+        "raw_bytes": 7265702,
+        "warm_speed_vs_paired_balanced": 0.5420887611903725,
+        "worst_file_size_ratio": 1.0
+      },
+      "policy-speed": {
+        "encode_median_ns_sum": 107978594.25,
+        "packed_bytes": 3165461,
+        "packed_size_change_pct": 0.7493193647956531,
+        "raw_bytes": 7265702,
+        "warm_speed_vs_paired_balanced": 1.2427251570743616,
+        "worst_file_size_ratio": 1.032985664618755
+      }
+    },
+    "old-regression": {
+      "balanced": {
+        "encode_median_ns_sum": 6980702.666666666,
+        "packed_bytes": 41534,
+        "packed_size_change_pct": 0.0,
+        "raw_bytes": 786432,
+        "warm_speed_vs_paired_balanced": 0.9995227881821367,
+        "worst_file_size_ratio": 1.0
+      },
+      "bayesian-compromise": {
+        "encode_median_ns_sum": 2440542.660952381,
+        "packed_bytes": 49323,
+        "packed_size_change_pct": 18.75331054076179,
+        "raw_bytes": 786432,
+        "warm_speed_vs_paired_balanced": 2.888205752199873,
+        "worst_file_size_ratio": 1.4561705793667887
+      },
+      "bayesian-size": {
+        "encode_median_ns_sum": 8395096.833333332,
+        "packed_bytes": 41076,
+        "packed_size_change_pct": -1.1027110319256517,
+        "raw_bytes": 786432,
+        "warm_speed_vs_paired_balanced": 0.8440254309024813,
+        "worst_file_size_ratio": 1.0
+      },
+      "bayesian-speed": {
+        "encode_median_ns_sum": 1173075.8509615385,
+        "packed_bytes": 69739,
+        "packed_size_change_pct": 67.90821977175325,
+        "raw_bytes": 786432,
+        "warm_speed_vs_paired_balanced": 6.058056936788223,
+        "worst_file_size_ratio": 1.9504268149424386
+      },
+      "best": {
+        "encode_median_ns_sum": 14382923.166666666,
+        "packed_bytes": 35697,
+        "packed_size_change_pct": -14.053546492030621,
+        "raw_bytes": 786432,
+        "warm_speed_vs_paired_balanced": 0.48398187938025805,
+        "worst_file_size_ratio": 0.9877234546629334
+      },
+      "fast": {
+        "encode_median_ns_sum": 1290431.6764705882,
+        "packed_bytes": 48329,
+        "packed_size_change_pct": 16.360090528241923,
+        "raw_bytes": 786432,
+        "warm_speed_vs_paired_balanced": 5.504465274193653,
+        "worst_file_size_ratio": 1.4841697178548352
+      },
+      "miniz1": {
+        "encode_median_ns_sum": 344209.7513888889,
+        "packed_bytes": 56650,
+        "packed_size_change_pct": 36.394279385563635,
+        "raw_bytes": 786432,
+        "warm_speed_vs_paired_balanced": 20.508697773437444,
+        "worst_file_size_ratio": 2.3558044367865603
+      },
+      "miniz6": {
+        "encode_median_ns_sum": 2554941.5987804877,
+        "packed_bytes": 36376,
+        "packed_size_change_pct": -12.41874127221072,
+        "raw_bytes": 786432,
+        "warm_speed_vs_paired_balanced": 2.7938956658212657,
+        "worst_file_size_ratio": 1.003680789411857
+      },
+      "miniz9": {
+        "encode_median_ns_sum": 6719271.996515679,
+        "packed_bytes": 35827,
+        "packed_size_change_pct": -13.740549910916355,
+        "raw_bytes": 786432,
+        "warm_speed_vs_paired_balanced": 1.05631633902852,
+        "worst_file_size_ratio": 1.0006461339651087
+      },
+      "policy-size": {
+        "encode_median_ns_sum": 30899824.65,
+        "packed_bytes": 37434,
+        "packed_size_change_pct": -9.871430635142298,
+        "raw_bytes": 786432,
+        "warm_speed_vs_paired_balanced": 0.22917530866479696,
+        "worst_file_size_ratio": 1.0
+      },
+      "policy-speed": {
+        "encode_median_ns_sum": 2861930.226190476,
+        "packed_bytes": 46929,
+        "packed_size_change_pct": 12.989358116242112,
+        "raw_bytes": 786432,
+        "warm_speed_vs_paired_balanced": 2.517351650241903,
+        "worst_file_size_ratio": 1.2066163668020893
+      }
+    }
+  },
+  "native_rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)",
+  "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+  "protocol": {
+    "cases": [
+      {
+        "archive_member": null,
+        "bytes": 227286,
+        "class": "source",
+        "extracted_source_bytes": 227286,
+        "extracted_source_sha256": "a16a4a62d2c19e579eb4ac6da140a417507023c87fdd6d41f208c68985493621",
+        "extraction_range": [
+          0,
+          227286
+        ],
+        "family": "real",
+        "license": "PSF-2.0 and bundled terms",
+        "license_path": "licenses/cpython.txt",
+        "partition": "train",
+        "path": "train/cpython.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:34.318748+00:00",
+          "commit": "bcee1c322115c581da27600f2ae55e5439c027eb",
+          "download": {
+            "bytes": 227286,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"b99a0cf1ee872abb5f5c4ea813b15071fb349b4102f89a098898591dc8993095\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/python/cpython/bcee1c322115c581da27600f2ae55e5439c027eb/Lib/_pydecimal.py",
+            "resolved_url": "https://raw.githubusercontent.com/python/cpython/bcee1c322115c581da27600f2ae55e5439c027eb/Lib/_pydecimal.py",
+            "sha256": "a16a4a62d2c19e579eb4ac6da140a417507023c87fdd6d41f208c68985493621"
+          },
+          "license_download": {
+            "bytes": 13809,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"dd08b19024cb0e3760db08b764f91d561be71251ae2020046c53ab4236afa08a\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/python/cpython/bcee1c322115c581da27600f2ae55e5439c027eb/LICENSE",
+            "resolved_url": "https://raw.githubusercontent.com/python/cpython/bcee1c322115c581da27600f2ae55e5439c027eb/LICENSE",
+            "sha256": "78b12c3a81360b357002334f0e70ea0e92eebf7a9b358805c03c48484945f3bb"
+          },
+          "source": {
+            "class": "source",
+            "file": "Lib/_pydecimal.py",
+            "id": "cpython",
+            "license": "PSF-2.0 and bundled terms",
+            "license_file": "LICENSE",
+            "partition": "train",
+            "ref": "v3.13.7",
+            "repo": "python/cpython"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/train/cpython.raw",
+        "scope": "new-real-train",
+        "sha256": "a16a4a62d2c19e579eb4ac6da140a417507023c87fdd6d41f208c68985493621",
+        "source_group": "cpython"
+      },
+      {
+        "archive_member": null,
+        "bytes": 1048576,
+        "class": "source",
+        "extracted_source_bytes": 1094042,
+        "extracted_source_sha256": "7a25359817edc9738ff0694ab566df87a47692448cce1eb80866ff598f1c025f",
+        "extraction_range": [
+          0,
+          1048576
+        ],
+        "family": "real",
+        "license": "Apache-2.0 WITH LLVM-exception",
+        "license_path": "licenses/llvm.txt",
+        "partition": "train",
+        "path": "train/llvm.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:35.388840+00:00",
+          "commit": "87f0227cb60147a26a1eeb4fb06e3b505e9c7261",
+          "download": {
+            "bytes": 1094042,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"b5f28615d7d0952b7bd62a7d8dc82ece11ce15449a10a26501eb9a043d472060\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/llvm/llvm-project/87f0227cb60147a26a1eeb4fb06e3b505e9c7261/llvm/docs/LangRef.rst",
+            "resolved_url": "https://raw.githubusercontent.com/llvm/llvm-project/87f0227cb60147a26a1eeb4fb06e3b505e9c7261/llvm/docs/LangRef.rst",
+            "sha256": "7a25359817edc9738ff0694ab566df87a47692448cce1eb80866ff598f1c025f"
+          },
+          "license_download": {
+            "bytes": 15141,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"1d880dc428d0196d76eaba80541e1c33f1ca8c99574554724fdafd65245e514e\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/llvm/llvm-project/87f0227cb60147a26a1eeb4fb06e3b505e9c7261/LICENSE.TXT",
+            "resolved_url": "https://raw.githubusercontent.com/llvm/llvm-project/87f0227cb60147a26a1eeb4fb06e3b505e9c7261/LICENSE.TXT",
+            "sha256": "8d85c1057d742e597985c7d4e6320b015a9139385cff4cbae06ffc0ebe89afee"
+          },
+          "source": {
+            "class": "source",
+            "file": "llvm/docs/LangRef.rst",
+            "id": "llvm",
+            "license": "Apache-2.0 WITH LLVM-exception",
+            "license_file": "LICENSE.TXT",
+            "partition": "train",
+            "ref": "llvmorg-20.1.8",
+            "repo": "llvm/llvm-project"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/train/llvm.raw",
+        "scope": "new-real-train",
+        "sha256": "5068eca107efa4fba573f358903d2ac1050e4f13fa07c342060074bf64bd6ff7",
+        "source_group": "llvm"
+      },
+      {
+        "archive_member": null,
+        "bytes": 1048576,
+        "class": "structured",
+        "extracted_source_bytes": 3165406,
+        "extracted_source_sha256": "e8d9eac13935eb9f781882142e5ecdf253368efd078b4693bf974867bc79de76",
+        "extraction_range": [
+          0,
+          1048576
+        ],
+        "family": "real",
+        "license": "Apache-2.0",
+        "license_path": "licenses/aws-ec2-api.txt",
+        "partition": "train",
+        "path": "train/aws-ec2-api.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:06:15.492046+00:00",
+          "commit": "9d3c66eca8c4416a9d347d0703f27b65775d65ef",
+          "download": {
+            "bytes": 3165406,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"d1e01a640273a475275ec603f75c1cc925aa41ca65bf4e8a504f644e6a2f6af7\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/aws/aws-sdk-js/9d3c66eca8c4416a9d347d0703f27b65775d65ef/apis/ec2-2016-11-15.normal.json",
+            "resolved_url": "https://raw.githubusercontent.com/aws/aws-sdk-js/9d3c66eca8c4416a9d347d0703f27b65775d65ef/apis/ec2-2016-11-15.normal.json",
+            "sha256": "e8d9eac13935eb9f781882142e5ecdf253368efd078b4693bf974867bc79de76"
+          },
+          "license_download": {
+            "bytes": 11392,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"03eb707b128da89d9082a4cffac64ab8b8a22f9b3bcdd099ca1a6563f4b10b04\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/aws/aws-sdk-js/9d3c66eca8c4416a9d347d0703f27b65775d65ef/LICENSE.txt",
+            "resolved_url": "https://raw.githubusercontent.com/aws/aws-sdk-js/9d3c66eca8c4416a9d347d0703f27b65775d65ef/LICENSE.txt",
+            "sha256": "3cab190d5926a01be5bee75df5be9519909e795c0d590d2b8ec93eda5909f788"
+          },
+          "source": {
+            "class": "structured",
+            "file": "apis/ec2-2016-11-15.normal.json",
+            "id": "aws-ec2-api",
+            "license": "Apache-2.0",
+            "license_file": "LICENSE.txt",
+            "partition": "train",
+            "ref": "HEAD",
+            "repo": "aws/aws-sdk-js"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/train/aws-ec2-api.raw",
+        "scope": "new-real-train",
+        "sha256": "3fb57873aaf9f956fe46a79ce3eb70cb4c4e339a5a566252b4c729e77b72f084",
+        "source_group": "aws-ec2-api"
+      },
+      {
+        "archive_member": null,
+        "bytes": 787920,
+        "class": "markup",
+        "extracted_source_bytes": 787920,
+        "extracted_source_sha256": "341c3b61eacea240611cf16a2e564b024627b379a4a4e8a810cef2deca0948f0",
+        "extraction_range": [
+          0,
+          787920
+        ],
+        "family": "real",
+        "license": "WHATWG document terms",
+        "license_path": "licenses/whatwg-html.txt",
+        "partition": "train",
+        "path": "train/whatwg-html.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:35.453221+00:00",
+          "commit": null,
+          "download": {
+            "bytes": 787920,
+            "content_type": "text/html; charset=utf-8",
+            "etag": "\"6ac4bb9e-c05d0\"",
+            "last_modified": "Tue, 06 Oct 2026 09:13:02 GMT",
+            "requested_url": "https://html.spec.whatwg.org/multipage/parsing.html",
+            "resolved_url": "https://html.spec.whatwg.org/multipage/parsing.html",
+            "sha256": "341c3b61eacea240611cf16a2e564b024627b379a4a4e8a810cef2deca0948f0"
+          },
+          "license_download": {
+            "bytes": 36038,
+            "content_type": "text/html; charset=utf-8",
+            "etag": "\"6ac53528-8cc6\"",
+            "last_modified": "Tue, 06 Oct 2026 17:51:36 GMT",
+            "requested_url": "https://whatwg.org/ipr-policy",
+            "resolved_url": "https://whatwg.org/ipr-policy",
+            "sha256": "7cc4d98fe3179995010bc00e64ec6b64dd782aae8c6de7dd9c7533b901107227"
+          },
+          "source": {
+            "class": "markup",
+            "id": "whatwg-html",
+            "license": "WHATWG document terms",
+            "license_url": "https://whatwg.org/ipr-policy",
+            "partition": "train",
+            "url": "https://html.spec.whatwg.org/multipage/parsing.html"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/train/whatwg-html.raw",
+        "scope": "new-real-train",
+        "sha256": "341c3b61eacea240611cf16a2e564b024627b379a4a4e8a810cef2deca0948f0",
+        "source_group": "whatwg-html"
+      },
+      {
+        "archive_member": null,
+        "bytes": 1048576,
+        "class": "executable",
+        "extracted_source_bytes": 1131168,
+        "extracted_source_sha256": "6e123e7f3202a8c1e9b1f94d8941580a25135382b99e8d3e34fb858bba311348",
+        "extraction_range": [
+          0,
+          1048576
+        ],
+        "family": "real",
+        "license": "GPL-2.0",
+        "license_path": "licenses/busybox.txt",
+        "partition": "train",
+        "path": "train/busybox.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:51.362307+00:00",
+          "commit": null,
+          "download": {
+            "bytes": 1131168,
+            "content_type": null,
+            "etag": "\"1142a0-5d5cbaa45688c\"",
+            "last_modified": "Mon, 17 Jan 2022 18:53:15 GMT",
+            "requested_url": "https://busybox.net/downloads/binaries/1.35.0-x86_64-linux-musl/busybox",
+            "resolved_url": "https://busybox.net/downloads/binaries/1.35.0-x86_64-linux-musl/busybox",
+            "sha256": "6e123e7f3202a8c1e9b1f94d8941580a25135382b99e8d3e34fb858bba311348"
+          },
+          "license_download": {
+            "bytes": 20511,
+            "content_type": "text/html",
+            "etag": null,
+            "last_modified": null,
+            "requested_url": "https://busybox.net/license.html",
+            "resolved_url": "https://busybox.net/license.html",
+            "sha256": "dd0965f2b7ed1db66bbe36b5f32f3eb9cfa7c87f3edc635d3c010532bfab0593"
+          },
+          "source": {
+            "class": "executable",
+            "id": "busybox",
+            "license": "GPL-2.0",
+            "license_url": "https://busybox.net/license.html",
+            "partition": "train",
+            "url": "https://busybox.net/downloads/binaries/1.35.0-x86_64-linux-musl/busybox"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/train/busybox.raw",
+        "scope": "new-real-train",
+        "sha256": "a0637c5aedce0a44d02c127242c9fd3c1c47d68608e1250b47aaeb434e47fd3f",
+        "source_group": "busybox"
+      },
+      {
+        "archive_member": null,
+        "bytes": 1048576,
+        "class": "compressed",
+        "extracted_source_bytes": 1512791,
+        "extracted_source_sha256": "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23",
+        "extraction_range": [
+          0,
+          1048576
+        ],
+        "family": "real",
+        "license": "Zlib and bundled component terms",
+        "license_path": "licenses/zlib-archive.txt",
+        "partition": "train",
+        "path": "train/zlib-archive.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:36.506748+00:00",
+          "commit": null,
+          "download": {
+            "bytes": 1512791,
+            "content_type": "application/x-gzip",
+            "etag": "\"4401f6d-171557-60f8e30cc00a9\"",
+            "last_modified": "Mon, 22 Jan 2024 19:53:58 GMT",
+            "requested_url": "https://zlib.net/fossils/zlib-1.3.1.tar.gz",
+            "resolved_url": "https://zlib.net/fossils/zlib-1.3.1.tar.gz",
+            "sha256": "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23"
+          },
+          "license_download": {
+            "bytes": 2899,
+            "content_type": "text/html",
+            "etag": "\"de8555-b53-64b069242c400\"",
+            "last_modified": "Tue, 17 Feb 2026 15:17:36 GMT",
+            "requested_url": "https://zlib.net/zlib_license.html",
+            "resolved_url": "https://zlib.net/zlib_license.html",
+            "sha256": "d16e1e49584a44abccebc8fc9eda5378ce0e08d25d8fb00d99f7e4c40a84e594"
+          },
+          "source": {
+            "class": "compressed",
+            "id": "zlib-archive",
+            "license": "Zlib and bundled component terms",
+            "license_url": "https://zlib.net/zlib_license.html",
+            "partition": "train",
+            "url": "https://zlib.net/fossils/zlib-1.3.1.tar.gz"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/train/zlib-archive.raw",
+        "scope": "new-real-train",
+        "sha256": "ed063466fffe6ed447b5263e511373b42ebb8fd6f62c74e95891e18b07abe8fa",
+        "source_group": "zlib-archive"
+      },
+      {
+        "archive_member": null,
+        "bytes": 1007616,
+        "class": "mixed-binary",
+        "extracted_source_bytes": 1007616,
+        "extracted_source_sha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15",
+        "extraction_range": [
+          0,
+          1007616
+        ],
+        "family": "real",
+        "license": "MIT",
+        "license_path": "licenses/chinook.txt",
+        "partition": "train",
+        "path": "train/chinook.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:36.900406+00:00",
+          "commit": "7f67772503d71ba90f19283c38e93923addb43fa",
+          "download": {
+            "bytes": 1007616,
+            "content_type": "application/octet-stream",
+            "etag": "\"9b44f810743356375b16548765a9ea25c2bd48037b605f10020d40d1dc658101\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/lerocha/chinook-database/7f67772503d71ba90f19283c38e93923addb43fa/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite",
+            "resolved_url": "https://raw.githubusercontent.com/lerocha/chinook-database/7f67772503d71ba90f19283c38e93923addb43fa/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite",
+            "sha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15"
+          },
+          "license_download": {
+            "bytes": 1117,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"d5a35e103f5c533f1afecc4aafbaf39f703c9caeed151e9227fd9d64a8f31cdb\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/lerocha/chinook-database/7f67772503d71ba90f19283c38e93923addb43fa/LICENSE.md",
+            "resolved_url": "https://raw.githubusercontent.com/lerocha/chinook-database/7f67772503d71ba90f19283c38e93923addb43fa/LICENSE.md",
+            "sha256": "5064d720db431474b0a0b0cef9d2b5e362b6c6f80602b35c6443b07cbc979f77"
+          },
+          "source": {
+            "class": "mixed-binary",
+            "file": "ChinookDatabase/DataSources/Chinook_Sqlite.sqlite",
+            "id": "chinook",
+            "license": "MIT",
+            "license_file": "LICENSE.md",
+            "partition": "train",
+            "ref": "HEAD",
+            "repo": "lerocha/chinook-database"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/train/chinook.raw",
+        "scope": "new-real-train",
+        "sha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15",
+        "source_group": "chinook"
+      },
+      {
+        "archive_member": null,
+        "bytes": 1048576,
+        "class": "mixed-binary",
+        "extracted_source_bytes": 2049096,
+        "extracted_source_sha256": "bfb7bb691513f12e734dc346c03a03f784912432d7e3fa8e56efcf906fe86b3d",
+        "extraction_range": [
+          0,
+          1048576
+        ],
+        "family": "real",
+        "license": "OFL-1.1",
+        "license_path": "licenses/noto-sans.txt",
+        "partition": "train",
+        "path": "train/noto-sans.raw",
+        "provenance": {
+          "acquired_utc": "2026-10-07T09:02:37.300894+00:00",
+          "commit": "7085eb89a950e85db5b166b7a58d414544b4140c",
+          "download": {
+            "bytes": 2049096,
+            "content_type": "application/octet-stream",
+            "etag": "\"8c0947babd4b16bd7fea3c199e9a8cb8083bdcc2e09257ba7a335989fa10c62a\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/notosans/NotoSans%5Bwdth%2Cwght%5D.ttf",
+            "resolved_url": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/notosans/NotoSans%5Bwdth%2Cwght%5D.ttf",
+            "sha256": "bfb7bb691513f12e734dc346c03a03f784912432d7e3fa8e56efcf906fe86b3d"
+          },
+          "license_download": {
+            "bytes": 4396,
+            "content_type": "text/plain; charset=utf-8",
+            "etag": "\"d87ff0edc74633e3d6ed0dbcd81ebbcec62a1b16ead26cba9a791296528dba97\"",
+            "last_modified": null,
+            "requested_url": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/notosans/OFL.txt",
+            "resolved_url": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/notosans/OFL.txt",
+            "sha256": "cee9892f9f0cc8fe882c9e9537ee6a89621d86ee7ceaf70b02e2b2b1c25c061a"
+          },
+          "source": {
+            "class": "mixed-binary",
+            "file": "ofl/notosans/NotoSans[wdth,wght].ttf",
+            "id": "noto-sans",
+            "license": "OFL-1.1",
+            "license_file": "ofl/notosans/OFL.txt",
+            "partition": "train",
+            "ref": "HEAD",
+            "repo": "google/fonts"
+          }
+        },
+        "raw_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/train/noto-sans.raw",
+        "scope": "new-real-train",
+        "sha256": "2247bebd8f2417980f270672cfd655ec73b4a66da7bbd2792f2333e2b91f0cf4",
+        "source_group": "noto-sans"
+      },
+      {
+        "bytes": 262144,
+        "class": "synthetic",
+        "family": "feature_sampling_trap",
+        "partition": "regression",
+        "path": "test/fresh-1-feature_sampling_trap-5-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/search/final-s9-rotated/corpus/test/fresh-1-feature_sampling_trap-5-0.raw",
+        "scope": "old-regression",
+        "sha256": "5f4a6023f9f567d48485c68fbf7a75a1b5edd9db0064121effe8fd383e03a45a",
+        "source_group": "s9-feature_sampling_trap"
+      },
+      {
+        "bytes": 262144,
+        "class": "synthetic",
+        "family": "template_edits",
+        "partition": "regression",
+        "path": "test/fresh-0-new-template_edits-1021.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/search/final-s9-rotated/corpus/test/fresh-0-new-template_edits-1021.raw",
+        "scope": "old-regression",
+        "sha256": "b996b8d16c37929f3d991ef2aeed12c885c0ccb4f8f4d815760330ced3a56ef8",
+        "source_group": "s9-template_edits"
+      },
+      {
+        "bytes": 262144,
+        "class": "synthetic",
+        "family": "collision_trigram",
+        "partition": "regression",
+        "path": "test/fresh-1-collision_trigram-5-0.raw",
+        "raw_path": "/Users/dmytro/github/deflated/target/search/final-s9-rotated/corpus/test/fresh-1-collision_trigram-5-0.raw",
+        "scope": "old-regression",
+        "sha256": "62fc490ba89ea6d465dba7e12fb70cbed9cecaa48c01332e5368460768eb1e4b",
+        "source_group": "s9-collision_trigram"
+      }
+    ],
+    "frozen": {
+      "baseline_metadata_sha256": "f17e4cb88c625ac11906b4da5736dcaf4e1bb31f2cb6fd0a2b3c4fad3c64fb69",
+      "binary_sha256": "52906b4f7880f7882634f150230e52a44cd3814bf0ac9b3f52306b49aef1bea9",
+      "corpus_sha256": "7e2e2eec698be421e4e933b5117bc11defe74b042d45b1a9f5dd4e4f0aefde85",
+      "methods_sha256": "20a84cde20464566f94b638d59d1e33b407a26906cc37549fe13539cc3b5c0a0"
+    },
+    "methods": {
+      "balanced": {
+        "origin": "predeclared production/reference control",
+        "worker": "balanced"
+      },
+      "bayesian-compromise": {
+        "config": {
+          "block_tokens": 16384,
+          "index": "trigram",
+          "insert_tail": 16,
+          "lazy": false,
+          "probes": 32
+        },
+        "origin": "S3 training-only frozen finalist",
+        "worker": "config:32:0:16:trigram:16384"
+      },
+      "bayesian-size": {
+        "config": {
+          "block_tokens": 16384,
+          "index": "trigram",
+          "insert_tail": 0,
+          "lazy": true,
+          "probes": 128
+        },
+        "origin": "S3 training-only frozen finalist",
+        "worker": "config:128:1:0:trigram:16384"
+      },
+      "bayesian-speed": {
+        "config": {
+          "block_tokens": 16384,
+          "index": "trigram",
+          "insert_tail": 8,
+          "lazy": false,
+          "probes": 1
+        },
+        "origin": "S3 training-only frozen finalist",
+        "worker": "config:1:0:8:trigram:16384"
+      },
+      "best": {
+        "origin": "predeclared production/reference control",
+        "worker": "best"
+      },
+      "fast": {
+        "origin": "predeclared production/reference control",
+        "worker": "fast"
+      },
+      "miniz1": {
+        "origin": "predeclared production/reference control",
+        "worker": "miniz1"
+      },
+      "miniz6": {
+        "origin": "predeclared production/reference control",
+        "worker": "miniz6"
+      },
+      "miniz9": {
+        "origin": "predeclared production/reference control",
+        "worker": "miniz9"
+      },
+      "policy-size": {
+        "origin": "S5 grouped training-only frozen policy",
+        "policy": "policy-v1 features-13 short-balanced-32768\nB 2 273.5 1 2\nL config:1024:1:0:trigram:16384\nL best\n",
+        "policy_sha256": "f6c93ac5b169db4b84a750564d81dd660d9974a15d4e2a00f9d5c4ccd5cb78cd",
+        "worker": "policy@/Users/dmytro/github/deflated/target/encoder-performance/baseline/policy-size.policy"
+      },
+      "policy-speed": {
+        "origin": "S5 grouped training-only frozen policy",
+        "policy": "policy-v1 features-13 short-balanced-32768\nL config:16:1:0:trigram:16384\n",
+        "policy_sha256": "e1fe8b0d9bdc0a86dd08865432d0d39e02d11d1fdbe32d453437490ee6d3438c",
+        "worker": "policy@/Users/dmytro/github/deflated/target/encoder-performance/baseline/policy-speed.policy"
+      }
+    },
+    "minimum_ms": 10,
+    "partition": "train",
+    "purpose": "warm baseline pilot; no final-test encoding or promotion decision",
+    "rounds": 5
+  },
+  "python": "3.14.7",
+  "raw_ledger_sha256": "c552be5f3f7357edbf09b55abbf6e2d1460fb319cec6076fb8bdbd84f88e6515",
+  "rows": 605
+}

@@ -1,0 +1,1191 @@
+{
+  "cap_bytes": 1048576,
+  "cases": [
+    {
+      "archive_member": null,
+      "bytes": 227286,
+      "class": "source",
+      "extracted_source_bytes": 227286,
+      "extracted_source_sha256": "a16a4a62d2c19e579eb4ac6da140a417507023c87fdd6d41f208c68985493621",
+      "extraction_range": [
+        0,
+        227286
+      ],
+      "family": "real",
+      "license": "PSF-2.0 and bundled terms",
+      "license_path": "licenses/cpython.txt",
+      "partition": "train",
+      "path": "train/cpython.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:34.318748+00:00",
+        "commit": "bcee1c322115c581da27600f2ae55e5439c027eb",
+        "download": {
+          "bytes": 227286,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"b99a0cf1ee872abb5f5c4ea813b15071fb349b4102f89a098898591dc8993095\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/python/cpython/bcee1c322115c581da27600f2ae55e5439c027eb/Lib/_pydecimal.py",
+          "resolved_url": "https://raw.githubusercontent.com/python/cpython/bcee1c322115c581da27600f2ae55e5439c027eb/Lib/_pydecimal.py",
+          "sha256": "a16a4a62d2c19e579eb4ac6da140a417507023c87fdd6d41f208c68985493621"
+        },
+        "license_download": {
+          "bytes": 13809,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"dd08b19024cb0e3760db08b764f91d561be71251ae2020046c53ab4236afa08a\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/python/cpython/bcee1c322115c581da27600f2ae55e5439c027eb/LICENSE",
+          "resolved_url": "https://raw.githubusercontent.com/python/cpython/bcee1c322115c581da27600f2ae55e5439c027eb/LICENSE",
+          "sha256": "78b12c3a81360b357002334f0e70ea0e92eebf7a9b358805c03c48484945f3bb"
+        },
+        "source": {
+          "class": "source",
+          "file": "Lib/_pydecimal.py",
+          "id": "cpython",
+          "license": "PSF-2.0 and bundled terms",
+          "license_file": "LICENSE",
+          "partition": "train",
+          "ref": "v3.13.7",
+          "repo": "python/cpython"
+        }
+      },
+      "sha256": "a16a4a62d2c19e579eb4ac6da140a417507023c87fdd6d41f208c68985493621",
+      "source_group": "cpython"
+    },
+    {
+      "archive_member": null,
+      "bytes": 1048576,
+      "class": "source",
+      "extracted_source_bytes": 1094042,
+      "extracted_source_sha256": "7a25359817edc9738ff0694ab566df87a47692448cce1eb80866ff598f1c025f",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "Apache-2.0 WITH LLVM-exception",
+      "license_path": "licenses/llvm.txt",
+      "partition": "train",
+      "path": "train/llvm.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:35.388840+00:00",
+        "commit": "87f0227cb60147a26a1eeb4fb06e3b505e9c7261",
+        "download": {
+          "bytes": 1094042,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"b5f28615d7d0952b7bd62a7d8dc82ece11ce15449a10a26501eb9a043d472060\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/llvm/llvm-project/87f0227cb60147a26a1eeb4fb06e3b505e9c7261/llvm/docs/LangRef.rst",
+          "resolved_url": "https://raw.githubusercontent.com/llvm/llvm-project/87f0227cb60147a26a1eeb4fb06e3b505e9c7261/llvm/docs/LangRef.rst",
+          "sha256": "7a25359817edc9738ff0694ab566df87a47692448cce1eb80866ff598f1c025f"
+        },
+        "license_download": {
+          "bytes": 15141,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"1d880dc428d0196d76eaba80541e1c33f1ca8c99574554724fdafd65245e514e\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/llvm/llvm-project/87f0227cb60147a26a1eeb4fb06e3b505e9c7261/LICENSE.TXT",
+          "resolved_url": "https://raw.githubusercontent.com/llvm/llvm-project/87f0227cb60147a26a1eeb4fb06e3b505e9c7261/LICENSE.TXT",
+          "sha256": "8d85c1057d742e597985c7d4e6320b015a9139385cff4cbae06ffc0ebe89afee"
+        },
+        "source": {
+          "class": "source",
+          "file": "llvm/docs/LangRef.rst",
+          "id": "llvm",
+          "license": "Apache-2.0 WITH LLVM-exception",
+          "license_file": "LICENSE.TXT",
+          "partition": "train",
+          "ref": "llvmorg-20.1.8",
+          "repo": "llvm/llvm-project"
+        }
+      },
+      "sha256": "5068eca107efa4fba573f358903d2ac1050e4f13fa07c342060074bf64bd6ff7",
+      "source_group": "llvm"
+    },
+    {
+      "archive_member": null,
+      "bytes": 1048576,
+      "class": "structured",
+      "extracted_source_bytes": 3165406,
+      "extracted_source_sha256": "e8d9eac13935eb9f781882142e5ecdf253368efd078b4693bf974867bc79de76",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "Apache-2.0",
+      "license_path": "licenses/aws-ec2-api.txt",
+      "partition": "train",
+      "path": "train/aws-ec2-api.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:06:15.492046+00:00",
+        "commit": "9d3c66eca8c4416a9d347d0703f27b65775d65ef",
+        "download": {
+          "bytes": 3165406,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"d1e01a640273a475275ec603f75c1cc925aa41ca65bf4e8a504f644e6a2f6af7\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/aws/aws-sdk-js/9d3c66eca8c4416a9d347d0703f27b65775d65ef/apis/ec2-2016-11-15.normal.json",
+          "resolved_url": "https://raw.githubusercontent.com/aws/aws-sdk-js/9d3c66eca8c4416a9d347d0703f27b65775d65ef/apis/ec2-2016-11-15.normal.json",
+          "sha256": "e8d9eac13935eb9f781882142e5ecdf253368efd078b4693bf974867bc79de76"
+        },
+        "license_download": {
+          "bytes": 11392,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"03eb707b128da89d9082a4cffac64ab8b8a22f9b3bcdd099ca1a6563f4b10b04\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/aws/aws-sdk-js/9d3c66eca8c4416a9d347d0703f27b65775d65ef/LICENSE.txt",
+          "resolved_url": "https://raw.githubusercontent.com/aws/aws-sdk-js/9d3c66eca8c4416a9d347d0703f27b65775d65ef/LICENSE.txt",
+          "sha256": "3cab190d5926a01be5bee75df5be9519909e795c0d590d2b8ec93eda5909f788"
+        },
+        "source": {
+          "class": "structured",
+          "file": "apis/ec2-2016-11-15.normal.json",
+          "id": "aws-ec2-api",
+          "license": "Apache-2.0",
+          "license_file": "LICENSE.txt",
+          "partition": "train",
+          "ref": "HEAD",
+          "repo": "aws/aws-sdk-js"
+        }
+      },
+      "sha256": "3fb57873aaf9f956fe46a79ce3eb70cb4c4e339a5a566252b4c729e77b72f084",
+      "source_group": "aws-ec2-api"
+    },
+    {
+      "archive_member": null,
+      "bytes": 787920,
+      "class": "markup",
+      "extracted_source_bytes": 787920,
+      "extracted_source_sha256": "341c3b61eacea240611cf16a2e564b024627b379a4a4e8a810cef2deca0948f0",
+      "extraction_range": [
+        0,
+        787920
+      ],
+      "family": "real",
+      "license": "WHATWG document terms",
+      "license_path": "licenses/whatwg-html.txt",
+      "partition": "train",
+      "path": "train/whatwg-html.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:35.453221+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 787920,
+          "content_type": "text/html; charset=utf-8",
+          "etag": "\"6ac4bb9e-c05d0\"",
+          "last_modified": "Tue, 06 Oct 2026 09:13:02 GMT",
+          "requested_url": "https://html.spec.whatwg.org/multipage/parsing.html",
+          "resolved_url": "https://html.spec.whatwg.org/multipage/parsing.html",
+          "sha256": "341c3b61eacea240611cf16a2e564b024627b379a4a4e8a810cef2deca0948f0"
+        },
+        "license_download": {
+          "bytes": 36038,
+          "content_type": "text/html; charset=utf-8",
+          "etag": "\"6ac53528-8cc6\"",
+          "last_modified": "Tue, 06 Oct 2026 17:51:36 GMT",
+          "requested_url": "https://whatwg.org/ipr-policy",
+          "resolved_url": "https://whatwg.org/ipr-policy",
+          "sha256": "7cc4d98fe3179995010bc00e64ec6b64dd782aae8c6de7dd9c7533b901107227"
+        },
+        "source": {
+          "class": "markup",
+          "id": "whatwg-html",
+          "license": "WHATWG document terms",
+          "license_url": "https://whatwg.org/ipr-policy",
+          "partition": "train",
+          "url": "https://html.spec.whatwg.org/multipage/parsing.html"
+        }
+      },
+      "sha256": "341c3b61eacea240611cf16a2e564b024627b379a4a4e8a810cef2deca0948f0",
+      "source_group": "whatwg-html"
+    },
+    {
+      "archive_member": null,
+      "bytes": 1048576,
+      "class": "executable",
+      "extracted_source_bytes": 1131168,
+      "extracted_source_sha256": "6e123e7f3202a8c1e9b1f94d8941580a25135382b99e8d3e34fb858bba311348",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "GPL-2.0",
+      "license_path": "licenses/busybox.txt",
+      "partition": "train",
+      "path": "train/busybox.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:51.362307+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 1131168,
+          "content_type": null,
+          "etag": "\"1142a0-5d5cbaa45688c\"",
+          "last_modified": "Mon, 17 Jan 2022 18:53:15 GMT",
+          "requested_url": "https://busybox.net/downloads/binaries/1.35.0-x86_64-linux-musl/busybox",
+          "resolved_url": "https://busybox.net/downloads/binaries/1.35.0-x86_64-linux-musl/busybox",
+          "sha256": "6e123e7f3202a8c1e9b1f94d8941580a25135382b99e8d3e34fb858bba311348"
+        },
+        "license_download": {
+          "bytes": 20511,
+          "content_type": "text/html",
+          "etag": null,
+          "last_modified": null,
+          "requested_url": "https://busybox.net/license.html",
+          "resolved_url": "https://busybox.net/license.html",
+          "sha256": "dd0965f2b7ed1db66bbe36b5f32f3eb9cfa7c87f3edc635d3c010532bfab0593"
+        },
+        "source": {
+          "class": "executable",
+          "id": "busybox",
+          "license": "GPL-2.0",
+          "license_url": "https://busybox.net/license.html",
+          "partition": "train",
+          "url": "https://busybox.net/downloads/binaries/1.35.0-x86_64-linux-musl/busybox"
+        }
+      },
+      "sha256": "a0637c5aedce0a44d02c127242c9fd3c1c47d68608e1250b47aaeb434e47fd3f",
+      "source_group": "busybox"
+    },
+    {
+      "archive_member": null,
+      "bytes": 1048576,
+      "class": "compressed",
+      "extracted_source_bytes": 1512791,
+      "extracted_source_sha256": "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "Zlib and bundled component terms",
+      "license_path": "licenses/zlib-archive.txt",
+      "partition": "train",
+      "path": "train/zlib-archive.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:36.506748+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 1512791,
+          "content_type": "application/x-gzip",
+          "etag": "\"4401f6d-171557-60f8e30cc00a9\"",
+          "last_modified": "Mon, 22 Jan 2024 19:53:58 GMT",
+          "requested_url": "https://zlib.net/fossils/zlib-1.3.1.tar.gz",
+          "resolved_url": "https://zlib.net/fossils/zlib-1.3.1.tar.gz",
+          "sha256": "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23"
+        },
+        "license_download": {
+          "bytes": 2899,
+          "content_type": "text/html",
+          "etag": "\"de8555-b53-64b069242c400\"",
+          "last_modified": "Tue, 17 Feb 2026 15:17:36 GMT",
+          "requested_url": "https://zlib.net/zlib_license.html",
+          "resolved_url": "https://zlib.net/zlib_license.html",
+          "sha256": "d16e1e49584a44abccebc8fc9eda5378ce0e08d25d8fb00d99f7e4c40a84e594"
+        },
+        "source": {
+          "class": "compressed",
+          "id": "zlib-archive",
+          "license": "Zlib and bundled component terms",
+          "license_url": "https://zlib.net/zlib_license.html",
+          "partition": "train",
+          "url": "https://zlib.net/fossils/zlib-1.3.1.tar.gz"
+        }
+      },
+      "sha256": "ed063466fffe6ed447b5263e511373b42ebb8fd6f62c74e95891e18b07abe8fa",
+      "source_group": "zlib-archive"
+    },
+    {
+      "archive_member": null,
+      "bytes": 1007616,
+      "class": "mixed-binary",
+      "extracted_source_bytes": 1007616,
+      "extracted_source_sha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15",
+      "extraction_range": [
+        0,
+        1007616
+      ],
+      "family": "real",
+      "license": "MIT",
+      "license_path": "licenses/chinook.txt",
+      "partition": "train",
+      "path": "train/chinook.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:36.900406+00:00",
+        "commit": "7f67772503d71ba90f19283c38e93923addb43fa",
+        "download": {
+          "bytes": 1007616,
+          "content_type": "application/octet-stream",
+          "etag": "\"9b44f810743356375b16548765a9ea25c2bd48037b605f10020d40d1dc658101\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/lerocha/chinook-database/7f67772503d71ba90f19283c38e93923addb43fa/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite",
+          "resolved_url": "https://raw.githubusercontent.com/lerocha/chinook-database/7f67772503d71ba90f19283c38e93923addb43fa/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite",
+          "sha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15"
+        },
+        "license_download": {
+          "bytes": 1117,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"d5a35e103f5c533f1afecc4aafbaf39f703c9caeed151e9227fd9d64a8f31cdb\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/lerocha/chinook-database/7f67772503d71ba90f19283c38e93923addb43fa/LICENSE.md",
+          "resolved_url": "https://raw.githubusercontent.com/lerocha/chinook-database/7f67772503d71ba90f19283c38e93923addb43fa/LICENSE.md",
+          "sha256": "5064d720db431474b0a0b0cef9d2b5e362b6c6f80602b35c6443b07cbc979f77"
+        },
+        "source": {
+          "class": "mixed-binary",
+          "file": "ChinookDatabase/DataSources/Chinook_Sqlite.sqlite",
+          "id": "chinook",
+          "license": "MIT",
+          "license_file": "LICENSE.md",
+          "partition": "train",
+          "ref": "HEAD",
+          "repo": "lerocha/chinook-database"
+        }
+      },
+      "sha256": "7651ba378ac2fcd0dfc3c66fb101f7a7eed3ba39a612ec642b96e20702061f15",
+      "source_group": "chinook"
+    },
+    {
+      "archive_member": null,
+      "bytes": 1048576,
+      "class": "mixed-binary",
+      "extracted_source_bytes": 2049096,
+      "extracted_source_sha256": "bfb7bb691513f12e734dc346c03a03f784912432d7e3fa8e56efcf906fe86b3d",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "OFL-1.1",
+      "license_path": "licenses/noto-sans.txt",
+      "partition": "train",
+      "path": "train/noto-sans.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:37.300894+00:00",
+        "commit": "7085eb89a950e85db5b166b7a58d414544b4140c",
+        "download": {
+          "bytes": 2049096,
+          "content_type": "application/octet-stream",
+          "etag": "\"8c0947babd4b16bd7fea3c199e9a8cb8083bdcc2e09257ba7a335989fa10c62a\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/notosans/NotoSans%5Bwdth%2Cwght%5D.ttf",
+          "resolved_url": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/notosans/NotoSans%5Bwdth%2Cwght%5D.ttf",
+          "sha256": "bfb7bb691513f12e734dc346c03a03f784912432d7e3fa8e56efcf906fe86b3d"
+        },
+        "license_download": {
+          "bytes": 4396,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"d87ff0edc74633e3d6ed0dbcd81ebbcec62a1b16ead26cba9a791296528dba97\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/notosans/OFL.txt",
+          "resolved_url": "https://raw.githubusercontent.com/google/fonts/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/notosans/OFL.txt",
+          "sha256": "cee9892f9f0cc8fe882c9e9537ee6a89621d86ee7ceaf70b02e2b2b1c25c061a"
+        },
+        "source": {
+          "class": "mixed-binary",
+          "file": "ofl/notosans/NotoSans[wdth,wght].ttf",
+          "id": "noto-sans",
+          "license": "OFL-1.1",
+          "license_file": "ofl/notosans/OFL.txt",
+          "partition": "train",
+          "ref": "HEAD",
+          "repo": "google/fonts"
+        }
+      },
+      "sha256": "2247bebd8f2417980f270672cfd655ec73b4a66da7bbd2792f2333e2b91f0cf4",
+      "source_group": "noto-sans"
+    },
+    {
+      "archive_member": null,
+      "bytes": 105355,
+      "class": "source",
+      "extracted_source_bytes": 105355,
+      "extracted_source_sha256": "ceead71cf9baad16b4f7d19405f9e38350f009432196165a727b6b81802b0994",
+      "extraction_range": [
+        0,
+        105355
+      ],
+      "family": "real",
+      "license": "MIT OR Apache-2.0",
+      "license_path": "licenses/rust.txt",
+      "partition": "validation",
+      "path": "validation/rust.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:39.144760+00:00",
+        "commit": "6b00bc3880198600130e1cf62b8f8a93494488cc",
+        "download": {
+          "bytes": 105355,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"b2c73a95302432cab7d7790e1c0675a701bba80f0aca865085ec57f17d3a34ae\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/rust-lang/rust/6b00bc3880198600130e1cf62b8f8a93494488cc/library/core/src/str/mod.rs",
+          "resolved_url": "https://raw.githubusercontent.com/rust-lang/rust/6b00bc3880198600130e1cf62b8f8a93494488cc/library/core/src/str/mod.rs",
+          "sha256": "ceead71cf9baad16b4f7d19405f9e38350f009432196165a727b6b81802b0994"
+        },
+        "license_download": {
+          "bytes": 1068,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"6d9a1a6e3773aed7a994e6c78b043d1984934b1629a3a1677a506a392dd23e24\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/rust-lang/rust/6b00bc3880198600130e1cf62b8f8a93494488cc/LICENSE-MIT",
+          "resolved_url": "https://raw.githubusercontent.com/rust-lang/rust/6b00bc3880198600130e1cf62b8f8a93494488cc/LICENSE-MIT",
+          "sha256": "b71bd43a069ca0641a9ecfe585ca7b3c53b5cc1608f8b68321168698e28b5ea1"
+        },
+        "source": {
+          "class": "source",
+          "file": "library/core/src/str/mod.rs",
+          "id": "rust",
+          "license": "MIT OR Apache-2.0",
+          "license_file": "LICENSE-MIT",
+          "partition": "validation",
+          "ref": "1.88.0",
+          "repo": "rust-lang/rust"
+        }
+      },
+      "sha256": "ceead71cf9baad16b4f7d19405f9e38350f009432196165a727b6b81802b0994",
+      "source_group": "rust"
+    },
+    {
+      "archive_member": null,
+      "bytes": 501908,
+      "class": "source",
+      "extracted_source_bytes": 501908,
+      "extracted_source_sha256": "ba8ad5a6e1df5768dee7dbca5f2594400a741806b4f671579ecf806969b9e3bf",
+      "extraction_range": [
+        0,
+        501908
+      ],
+      "family": "real",
+      "license": "PostgreSQL",
+      "license_path": "licenses/postgresql.txt",
+      "partition": "validation",
+      "path": "validation/postgresql.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:38.585473+00:00",
+        "commit": "7885b94dd81b98bbab9ed878680d156df7bf857f",
+        "download": {
+          "bytes": 501908,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"be67b2eef2e5bcfcf2bc6bb04352441d58b10e2cff3c159bf9b77e7ace8fcbe1\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/postgres/postgres/7885b94dd81b98bbab9ed878680d156df7bf857f/src/backend/parser/gram.y",
+          "resolved_url": "https://raw.githubusercontent.com/postgres/postgres/7885b94dd81b98bbab9ed878680d156df7bf857f/src/backend/parser/gram.y",
+          "sha256": "ba8ad5a6e1df5768dee7dbca5f2594400a741806b4f671579ecf806969b9e3bf"
+        },
+        "license_download": {
+          "bytes": 1198,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"1cc812bf7f7006038dc3afe3fa61ef61aee126a4e3923ae807828ce4a11515e2\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/postgres/postgres/7885b94dd81b98bbab9ed878680d156df7bf857f/COPYRIGHT",
+          "resolved_url": "https://raw.githubusercontent.com/postgres/postgres/7885b94dd81b98bbab9ed878680d156df7bf857f/COPYRIGHT",
+          "sha256": "5ed3ce5c9373dff7f98b1fae7a6c7ccd98df7d734d46d24c1bcebf1240be8307"
+        },
+        "source": {
+          "class": "source",
+          "file": "src/backend/parser/gram.y",
+          "id": "postgresql",
+          "license": "PostgreSQL",
+          "license_file": "COPYRIGHT",
+          "partition": "validation",
+          "ref": "REL_17_6",
+          "repo": "postgres/postgres"
+        }
+      },
+      "sha256": "ba8ad5a6e1df5768dee7dbca5f2594400a741806b4f671579ecf806969b9e3bf",
+      "source_group": "postgresql"
+    },
+    {
+      "archive_member": null,
+      "bytes": 838726,
+      "class": "structured",
+      "extracted_source_bytes": 838726,
+      "extracted_source_sha256": "6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f",
+      "extraction_range": [
+        0,
+        838726
+      ],
+      "family": "real",
+      "license": "public domain",
+      "license_path": "licenses/natural-earth.txt",
+      "partition": "validation",
+      "path": "validation/natural-earth.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:39.653376+00:00",
+        "commit": "ca96624a56bd078437bca8184e78163e5039ad19",
+        "download": {
+          "bytes": 838726,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"e2d9d73e03bb65f28bbc4b83cc136b667337ec9e6316d7e58d6334916b70dacb\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_admin_0_countries.geojson",
+          "resolved_url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_admin_0_countries.geojson",
+          "sha256": "6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f"
+        },
+        "license_download": {
+          "bytes": 38013,
+          "content_type": "text/html; charset=UTF-8",
+          "etag": null,
+          "last_modified": "Wed, 07 Oct 2026 08:59:52 GMT",
+          "requested_url": "https://www.naturalearthdata.com/about/terms-of-use/",
+          "resolved_url": "https://www.naturalearthdata.com/about/terms-of-use/",
+          "sha256": "76ff08520d4f4c78b45525cab2706bcca97ede0dc15d739ae8cae20e23c0e86e"
+        },
+        "source": {
+          "class": "structured",
+          "file": "geojson/ne_110m_admin_0_countries.geojson",
+          "id": "natural-earth",
+          "license": "public domain",
+          "license_url": "https://www.naturalearthdata.com/about/terms-of-use/",
+          "partition": "validation",
+          "ref": "HEAD",
+          "repo": "nvkelso/natural-earth-vector"
+        }
+      },
+      "sha256": "6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f",
+      "source_group": "natural-earth"
+    },
+    {
+      "archive_member": null,
+      "bytes": 51937,
+      "class": "markup",
+      "extracted_source_bytes": 51937,
+      "extracted_source_sha256": "d0fe40614aff13d18750e6f449ba2a033209713e2b73be09a0bad73c90bcb894",
+      "extraction_range": [
+        0,
+        51937
+      ],
+      "family": "real",
+      "license": "W3C document terms",
+      "license_path": "licenses/w3c-svg.txt",
+      "partition": "validation",
+      "path": "validation/w3c-svg.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:39.077001+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 51937,
+          "content_type": "text/html; charset=utf-8",
+          "etag": null,
+          "last_modified": "Wed, 10 Aug 2011 03:35:27 GMT",
+          "requested_url": "https://www.w3.org/TR/SVG11/intro.html",
+          "resolved_url": "https://www.w3.org/TR/SVG11/intro.html",
+          "sha256": "d0fe40614aff13d18750e6f449ba2a033209713e2b73be09a0bad73c90bcb894"
+        },
+        "license_download": {
+          "bytes": 27473,
+          "content_type": "text/html; charset=UTF-8",
+          "etag": null,
+          "last_modified": null,
+          "requested_url": "https://www.w3.org/copyright/document-license/",
+          "resolved_url": "https://www.w3.org/copyright/document-license-2023/",
+          "sha256": "888bd32d1e7b386edd688a588b70873d794563bd8ae9cdeb09089ea50d0da29d"
+        },
+        "source": {
+          "class": "markup",
+          "id": "w3c-svg",
+          "license": "W3C document terms",
+          "license_url": "https://www.w3.org/copyright/document-license/",
+          "partition": "validation",
+          "url": "https://www.w3.org/TR/SVG11/intro.html"
+        }
+      },
+      "sha256": "d0fe40614aff13d18750e6f449ba2a033209713e2b73be09a0bad73c90bcb894",
+      "source_group": "w3c-svg"
+    },
+    {
+      "archive_member": "fd-v10.2.0-x86_64-unknown-linux-gnu/fd",
+      "bytes": 1048576,
+      "class": "executable",
+      "extracted_source_bytes": 4025736,
+      "extracted_source_sha256": "eea818be74986760a1436c72135041c6ac3d709eea268554a11356e71f066a8e",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "MIT OR Apache-2.0",
+      "license_path": "licenses/fd.txt",
+      "partition": "validation",
+      "path": "validation/fd.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:40.228752+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 1629598,
+          "content_type": "application/octet-stream",
+          "etag": "\"0x8DCC33E417535F2\"",
+          "last_modified": "Fri, 23 Aug 2024 06:38:53 GMT",
+          "requested_url": "https://github.com/sharkdp/fd/releases/download/v10.2.0/fd-v10.2.0-x86_64-unknown-linux-gnu.tar.gz",
+          "resolved_url": "https://release-assets.githubusercontent.com/github-production-release-asset/90793418/c857fb09-278f-408e-8144-9c0f4d9eb5d3?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-10-07T09%3A55%3A25Z&rscd=attachment%3B+filename%3Dfd-v10.2.0-x86_64-unknown-linux-gnu.tar.gz&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-10-07T08%3A54%3A27Z&ske=2026-10-07T09%3A55%3A25Z&sks=b&skv=2018-11-09&sig=e%2FX2bLz0JOvY1fR7lZdXSIaecjqdNyMi0GJ0TXwQMRc%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MTM2NDA1OSwibmJmIjoxNzkxMzYzNzU5LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.rwmCXrvGjiutWNTuUza7P_60HIZMEPMtC6eTjH0NPwM&response-content-disposition=attachment%3B%20filename%3Dfd-v10.2.0-x86_64-unknown-linux-gnu.tar.gz&response-content-type=application%2Foctet-stream",
+          "sha256": "5f9030bcb0e1d03818521ed2e3d74fdb046480a45a4418ccff4f070241b4ed25"
+        },
+        "license_download": {
+          "bytes": 1082,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"766ab1d156b06d61ee49a9a963fadd70e190eb21a94ee99ce89257e888123afb\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/sharkdp/fd/v10.2.0/LICENSE-MIT",
+          "resolved_url": "https://raw.githubusercontent.com/sharkdp/fd/v10.2.0/LICENSE-MIT",
+          "sha256": "322cfc7aa0c774d0eca3b2610f1d414de3ddbd7d8dd4b9dea941a13a6eb07455"
+        },
+        "source": {
+          "class": "executable",
+          "id": "fd",
+          "license": "MIT OR Apache-2.0",
+          "license_url": "https://raw.githubusercontent.com/sharkdp/fd/v10.2.0/LICENSE-MIT",
+          "member_suffix": "/fd",
+          "partition": "validation",
+          "url": "https://github.com/sharkdp/fd/releases/download/v10.2.0/fd-v10.2.0-x86_64-unknown-linux-gnu.tar.gz"
+        }
+      },
+      "sha256": "8c8d3b7b5a7ea2938b2c88a6a2df51ca24fd7f5421ae8e1de91192a0dae7f57a",
+      "source_group": "fd"
+    },
+    {
+      "archive_member": null,
+      "bytes": 810029,
+      "class": "compressed",
+      "extracted_source_bytes": 810029,
+      "extracted_source_sha256": "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269",
+      "extraction_range": [
+        0,
+        810029
+      ],
+      "family": "real",
+      "license": "bzip2-1.0.6",
+      "license_path": "licenses/bzip2-archive.txt",
+      "partition": "validation",
+      "path": "validation/bzip2-archive.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:44.323733+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 810029,
+          "content_type": "application/x-gzip",
+          "etag": "\"c5c2d-58d93aafd7700\"",
+          "last_modified": "Sat, 13 Jul 2019 17:50:52 GMT",
+          "requested_url": "https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz",
+          "resolved_url": "https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz",
+          "sha256": "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269"
+        },
+        "license_download": {
+          "bytes": 1896,
+          "content_type": "text/plain; charset=ISO-8859-1",
+          "etag": null,
+          "last_modified": null,
+          "requested_url": "https://sourceware.org/git/?p=bzip2.git;a=blob_plain;f=LICENSE;hb=bzip2-1.0.8",
+          "resolved_url": "https://sourceware.org/git/?p=bzip2.git;a=blob_plain;f=LICENSE;hb=bzip2-1.0.8",
+          "sha256": "c6dbbf828498be844a89eaa3b84adbab3199e342eb5cb2ed2f0d4ba7ec0f38a3"
+        },
+        "source": {
+          "class": "compressed",
+          "id": "bzip2-archive",
+          "license": "bzip2-1.0.6",
+          "license_url": "https://sourceware.org/git/?p=bzip2.git;a=blob_plain;f=LICENSE;hb=bzip2-1.0.8",
+          "partition": "validation",
+          "url": "https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz"
+        }
+      },
+      "sha256": "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269",
+      "source_group": "bzip2-archive"
+    },
+    {
+      "archive_member": null,
+      "bytes": 641763,
+      "class": "mixed-binary",
+      "extracted_source_bytes": 641763,
+      "extracted_source_sha256": "ecef13f225de55549ee5214f70cca30998f3251dee65c6b00931aae18b7736c2",
+      "extraction_range": [
+        0,
+        641763
+      ],
+      "family": "real",
+      "license": "GPL-2.0",
+      "license_path": "licenses/lshort.txt",
+      "partition": "validation",
+      "path": "validation/lshort.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:41.904146+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 641763,
+          "content_type": "application/pdf",
+          "etag": "\"9cae3-5bd19fc671780\"",
+          "last_modified": "Tue, 09 Mar 2021 12:49:50 GMT",
+          "requested_url": "https://mirrors.ctan.org/info/lshort/english/lshort.pdf",
+          "resolved_url": "https://ftp.cvut.cz/CTAN/info/lshort/english/lshort.pdf",
+          "sha256": "ecef13f225de55549ee5214f70cca30998f3251dee65c6b00931aae18b7736c2"
+        },
+        "license_download": {
+          "bytes": 17405,
+          "content_type": "text/html;charset=UTF-8",
+          "etag": null,
+          "last_modified": null,
+          "requested_url": "https://ctan.org/pkg/lshort-english",
+          "resolved_url": "https://ctan.org/pkg/lshort-english",
+          "sha256": "8a67f70c984e0308e00839d78f395457ffd9eb6219970dbf5b5ebbd2b0df4c5a"
+        },
+        "source": {
+          "class": "mixed-binary",
+          "id": "lshort",
+          "license": "GPL-2.0",
+          "license_url": "https://ctan.org/pkg/lshort-english",
+          "partition": "validation",
+          "url": "https://mirrors.ctan.org/info/lshort/english/lshort.pdf"
+        }
+      },
+      "sha256": "ecef13f225de55549ee5214f70cca30998f3251dee65c6b00931aae18b7736c2",
+      "source_group": "lshort"
+    },
+    {
+      "archive_member": "dejavu-fonts-ttf-2.37/ttf/DejaVuSans.ttf",
+      "bytes": 757076,
+      "class": "mixed-binary",
+      "extracted_source_bytes": 757076,
+      "extracted_source_sha256": "7da195a74c55bef988d0d48f9508bd5d849425c1770dba5d7bfc6ce9ed848954",
+      "extraction_range": [
+        0,
+        757076
+      ],
+      "family": "real",
+      "license": "Bitstream Vera and DejaVu terms",
+      "license_path": "licenses/dejavu.txt",
+      "partition": "validation",
+      "path": "validation/dejavu.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:41.570205+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 5429777,
+          "content_type": "application/octet-stream",
+          "etag": "\"0x8D9B9CBE1F7F464\"",
+          "last_modified": "Tue, 07 Dec 2021 21:52:37 GMT",
+          "requested_url": "https://github.com/dejavu-fonts/dejavu-fonts/releases/download/version_2_37/dejavu-fonts-ttf-2.37.tar.bz2",
+          "resolved_url": "https://release-assets.githubusercontent.com/github-production-release-asset/35780815/409cca4c-5655-11e6-91b7-15d1661045d3?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-10-07T09%3A57%3A29Z&rscd=attachment%3B+filename%3Ddejavu-fonts-ttf-2.37.tar.bz2&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-10-07T08%3A56%3A48Z&ske=2026-10-07T09%3A57%3A29Z&sks=b&skv=2018-11-09&sig=TbAXdiabfRiRLQErordydYI9UXBSqPzCgk8q4p8FFAU%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MTM2NDA2MCwibmJmIjoxNzkxMzYzNzYwLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.L0mJCh19pGWiwO1BtSJhr9f8YOof74q4HTqzMOwjI6A&response-content-disposition=attachment%3B%20filename%3Ddejavu-fonts-ttf-2.37.tar.bz2&response-content-type=application%2Foctet-stream",
+          "sha256": "fa9ca4d13871dd122f61258a80d01751d603b4d3ee14095d65453b4e846e17d7"
+        },
+        "license_download": {
+          "bytes": 8816,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"b40b446010bc6736a1a697f71260696fcc2af9dd9422f2ad1119a9a9b7e3242d\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/version_2_37/LICENSE",
+          "resolved_url": "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/version_2_37/LICENSE",
+          "sha256": "7a083b136e64d064794c3419751e5c7dd10d2f64c108fe5ba161eae5e5958a93"
+        },
+        "source": {
+          "class": "mixed-binary",
+          "id": "dejavu",
+          "license": "Bitstream Vera and DejaVu terms",
+          "license_url": "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/version_2_37/LICENSE",
+          "member_suffix": "/DejaVuSans.ttf",
+          "partition": "validation",
+          "url": "https://github.com/dejavu-fonts/dejavu-fonts/releases/download/version_2_37/dejavu-fonts-ttf-2.37.tar.bz2"
+        }
+      },
+      "sha256": "7da195a74c55bef988d0d48f9508bd5d849425c1770dba5d7bfc6ce9ed848954",
+      "source_group": "dejavu"
+    },
+    {
+      "archive_member": null,
+      "bytes": 373040,
+      "class": "source",
+      "extracted_source_bytes": 373040,
+      "extracted_source_sha256": "48c485811e4d20cca0204ea75a24da71777e42a66b6ce158f8ece09132635d7d",
+      "extraction_range": [
+        0,
+        373040
+      ],
+      "family": "real",
+      "license": "GPL-2.0-only and Linux terms",
+      "license_path": "licenses/linux.txt",
+      "partition": "test",
+      "path": "test/linux.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:43.301383+00:00",
+        "commit": "adc218676eef25575469234709c2d87185ca223a",
+        "download": {
+          "bytes": 373040,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"09126309c690e644e09cdae01711a39585005419cbe25760a2cc6dcdf300d2e0\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/kernel/sched/fair.c",
+          "resolved_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/kernel/sched/fair.c",
+          "sha256": "48c485811e4d20cca0204ea75a24da71777e42a66b6ce158f8ece09132635d7d"
+        },
+        "license_download": {
+          "bytes": 496,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"a18e9da94312dd207e651e68bbf84047825e6a30f00839e0c57e36ef91e456a3\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/COPYING",
+          "resolved_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/COPYING",
+          "sha256": "fb5a425bd3b3cd6071a3a9aff9909a859e7c1158d54d32e07658398cd67eb6a0"
+        },
+        "source": {
+          "class": "source",
+          "file": "kernel/sched/fair.c",
+          "id": "linux",
+          "license": "GPL-2.0-only and Linux terms",
+          "license_file": "COPYING",
+          "partition": "test",
+          "ref": "v6.12",
+          "repo": "torvalds/linux"
+        }
+      },
+      "sha256": "48c485811e4d20cca0204ea75a24da71777e42a66b6ce158f8ece09132635d7d",
+      "source_group": "linux"
+    },
+    {
+      "archive_member": null,
+      "bytes": 77487,
+      "class": "source",
+      "extracted_source_bytes": 77487,
+      "extracted_source_sha256": "5594e1fcad9b19fdfb2720fe5ef3f9a444946716fb27975c2288a8384a75ca85",
+      "extraction_range": [
+        0,
+        77487
+      ],
+      "family": "real",
+      "license": "Apache-2.0",
+      "license_path": "licenses/openssl.txt",
+      "partition": "test",
+      "path": "test/openssl.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:43.915455+00:00",
+        "commit": "636dfadc70ce26f2473870570bfd9ec352806b1d",
+        "download": {
+          "bytes": 77487,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"db4b261ef0e1d5a548d9c5d5e8440d6e0e8efc2306b691f3f805820b38acc4d7\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/openssl/openssl/636dfadc70ce26f2473870570bfd9ec352806b1d/crypto/aes/asm/aes-x86_64.pl",
+          "resolved_url": "https://raw.githubusercontent.com/openssl/openssl/636dfadc70ce26f2473870570bfd9ec352806b1d/crypto/aes/asm/aes-x86_64.pl",
+          "sha256": "5594e1fcad9b19fdfb2720fe5ef3f9a444946716fb27975c2288a8384a75ca85"
+        },
+        "license_download": {
+          "bytes": 10175,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"5e3834ad31ec375cb727e16cc0a8e259823d801652b606d88055b5ae93bc4689\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/openssl/openssl/636dfadc70ce26f2473870570bfd9ec352806b1d/LICENSE.txt",
+          "resolved_url": "https://raw.githubusercontent.com/openssl/openssl/636dfadc70ce26f2473870570bfd9ec352806b1d/LICENSE.txt",
+          "sha256": "7d5450cb2d142651b8afa315b5f238efc805dad827d91ba367d8516bc9d49e7a"
+        },
+        "source": {
+          "class": "source",
+          "file": "crypto/aes/asm/aes-x86_64.pl",
+          "id": "openssl",
+          "license": "Apache-2.0",
+          "license_file": "LICENSE.txt",
+          "partition": "test",
+          "ref": "openssl-3.5.0",
+          "repo": "openssl/openssl"
+        }
+      },
+      "sha256": "5594e1fcad9b19fdfb2720fe5ef3f9a444946716fb27975c2288a8384a75ca85",
+      "source_group": "openssl"
+    },
+    {
+      "archive_member": null,
+      "bytes": 408368,
+      "class": "structured",
+      "extracted_source_bytes": 408368,
+      "extracted_source_sha256": "3fb813039e4ab5041afc78c27fe35704b48e114513f008722e3e366473ed10b4",
+      "extraction_range": [
+        0,
+        408368
+      ],
+      "family": "real",
+      "license": "Unicode-3.0",
+      "license_path": "licenses/cldr.txt",
+      "partition": "test",
+      "path": "test/cldr.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:45.058727+00:00",
+        "commit": "2ef784e3a4168bc2a43cd1b5b9839b6636f5899c",
+        "download": {
+          "bytes": 408368,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"8dd5287010c06071f52cc19df10668ede58283f6885caf06d1179a32f0ee0861\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/unicode-org/cldr/2ef784e3a4168bc2a43cd1b5b9839b6636f5899c/common/supplemental/supplementalData.xml",
+          "resolved_url": "https://raw.githubusercontent.com/unicode-org/cldr/2ef784e3a4168bc2a43cd1b5b9839b6636f5899c/common/supplemental/supplementalData.xml",
+          "sha256": "3fb813039e4ab5041afc78c27fe35704b48e114513f008722e3e366473ed10b4"
+        },
+        "license_download": {
+          "bytes": 2033,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"5c649fea846a601e451889448fbcb6cb2d1d308f7c70f82896f0fc64cfb8bf5e\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/unicode-org/cldr/2ef784e3a4168bc2a43cd1b5b9839b6636f5899c/LICENSE",
+          "resolved_url": "https://raw.githubusercontent.com/unicode-org/cldr/2ef784e3a4168bc2a43cd1b5b9839b6636f5899c/LICENSE",
+          "sha256": "b4c0ae8ef04f7059f96ce5bbe0467f9fe6f6d81bbe13517701dfeb961fb4d0b6"
+        },
+        "source": {
+          "class": "structured",
+          "file": "common/supplemental/supplementalData.xml",
+          "id": "cldr",
+          "license": "Unicode-3.0",
+          "license_file": "LICENSE",
+          "partition": "test",
+          "ref": "release-47",
+          "repo": "unicode-org/cldr"
+        }
+      },
+      "sha256": "3fb813039e4ab5041afc78c27fe35704b48e114513f008722e3e366473ed10b4",
+      "source_group": "cldr"
+    },
+    {
+      "archive_member": null,
+      "bytes": 1048576,
+      "class": "markup",
+      "extracted_source_bytes": 3090319,
+      "extracted_source_sha256": "44904910b60005aa95ccd974a0b16165328b8139e80f301022a0dd3d2e981a64",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "ECMAScript specification terms",
+      "license_path": "licenses/ecma262.txt",
+      "partition": "test",
+      "path": "test/ecma262.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:06:15.140131+00:00",
+        "commit": "6db9135b3d77fd38a81a5a1f1bb6ed77fcca9066",
+        "download": {
+          "bytes": 3090319,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"8a649b14e4533bd218296c37c0ba2ea4973fabcfa173a3b383884303f07f7ca2\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/tc39/ecma262/6db9135b3d77fd38a81a5a1f1bb6ed77fcca9066/spec.html",
+          "resolved_url": "https://raw.githubusercontent.com/tc39/ecma262/6db9135b3d77fd38a81a5a1f1bb6ed77fcca9066/spec.html",
+          "sha256": "44904910b60005aa95ccd974a0b16165328b8139e80f301022a0dd3d2e981a64"
+        },
+        "license_download": {
+          "bytes": 804,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"1f9f36610a5098933d7a920561ca36cf6fe83319d8de8d5ad08083d6268822ed\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/tc39/ecma262/6db9135b3d77fd38a81a5a1f1bb6ed77fcca9066/LICENSE.md",
+          "resolved_url": "https://raw.githubusercontent.com/tc39/ecma262/6db9135b3d77fd38a81a5a1f1bb6ed77fcca9066/LICENSE.md",
+          "sha256": "484d4a9e3e4bab42e5e2f8703c34ed46e861fb62662e1818b4534d1e34584967"
+        },
+        "source": {
+          "class": "markup",
+          "file": "spec.html",
+          "id": "ecma262",
+          "license": "ECMAScript specification terms",
+          "license_file": "LICENSE.md",
+          "partition": "test",
+          "ref": "HEAD",
+          "repo": "tc39/ecma262"
+        }
+      },
+      "sha256": "29bb5103377a89092e18263805d1271436cb1698c6c8f79c8e29edde93b33816",
+      "source_group": "ecma262"
+    },
+    {
+      "archive_member": "ripgrep-14.1.1-x86_64-unknown-linux-musl/rg",
+      "bytes": 1048576,
+      "class": "executable",
+      "extracted_source_bytes": 6597984,
+      "extracted_source_sha256": "f401154e2393f9002ac77e419f9ee5521c18f4f8cd3e32293972f493ba06fce7",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "MIT OR Unlicense",
+      "license_path": "licenses/ripgrep.txt",
+      "partition": "test",
+      "path": "test/ripgrep.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:45.367664+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 2566310,
+          "content_type": "application/octet-stream",
+          "etag": "\"0x8DCD0765F32CA10\"",
+          "last_modified": "Mon, 09 Sep 2024 02:23:20 GMT",
+          "requested_url": "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz",
+          "resolved_url": "https://release-assets.githubusercontent.com/github-production-release-asset/53631945/c3fb96a4-463b-40d5-8a6b-ee77f4cd30fd?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-10-07T09%3A36%3A24Z&rscd=attachment%3B+filename%3Dripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-10-07T08%3A36%3A12Z&ske=2026-10-07T09%3A36%3A24Z&sks=b&skv=2018-11-09&sig=iDHxjJrn1Qh5e9rfpHbates7QWyBpe9UOlviYjrK89o%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MTM2NDA2NCwibmJmIjoxNzkxMzYzNzY0LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.3_-fuh9Z8wnZ1W_nFUFwDLTzD7VDv3plqI7-4wouBus&response-content-disposition=attachment%3B%20filename%3Dripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz&response-content-type=application%2Foctet-stream",
+          "sha256": "4cf9f2741e6c465ffdb7c26f38056a59e2a2544b51f7cc128ef28337eeae4d8e"
+        },
+        "license_download": {
+          "bytes": 1081,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"5948a2d520f4c848b33350a8dd32b61eff0f89311d606a8e59266dc9d51d4ff6\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/BurntSushi/ripgrep/14.1.1/LICENSE-MIT",
+          "resolved_url": "https://raw.githubusercontent.com/BurntSushi/ripgrep/14.1.1/LICENSE-MIT",
+          "sha256": "0f96a83840e146e43c0ec96a22ec1f392e0680e6c1226e6f3ba87e0740af850f"
+        },
+        "source": {
+          "class": "executable",
+          "id": "ripgrep",
+          "license": "MIT OR Unlicense",
+          "license_url": "https://raw.githubusercontent.com/BurntSushi/ripgrep/14.1.1/LICENSE-MIT",
+          "member_suffix": "/rg",
+          "partition": "test",
+          "url": "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz"
+        }
+      },
+      "sha256": "ef2a433b5194189c5f16e4bded20bf9c4d5be20e6b519aaed0e148e7184c3c47",
+      "source_group": "ripgrep"
+    },
+    {
+      "archive_member": null,
+      "bytes": 1048576,
+      "class": "compressed",
+      "extracted_source_bytes": 1340516,
+      "extracted_source_sha256": "829ccfe79d769748f7557e7a4429a64d06858e27e1e362e25d01ab7b931d9c95",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "XZ per-component public-domain/GPL/LGPL terms",
+      "license_path": "licenses/xz-archive.txt",
+      "partition": "test",
+      "path": "test/xz-archive.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:46.133712+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 1340516,
+          "content_type": "application/octet-stream",
+          "etag": "\"0x8DD3BD8063D73CA\"",
+          "last_modified": "Thu, 23 Jan 2025 18:01:56 GMT",
+          "requested_url": "https://github.com/tukaani-project/xz/releases/download/v5.6.4/xz-5.6.4.tar.xz",
+          "resolved_url": "https://release-assets.githubusercontent.com/github-production-release-asset/553665726/5603ef28-0d53-4bce-ab51-6e273ef01d38?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-10-07T09%3A50%3A44Z&rscd=attachment%3B+filename%3Dxz-5.6.4.tar.xz&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-10-07T08%3A50%3A44Z&ske=2026-10-07T09%3A50%3A44Z&sks=b&skv=2018-11-09&sig=v%2BGYxT79%2FQbWGV7FWses%2BbhTNmBkU%2BaeZi48GL4OkM0%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MTM2NDA2NSwibmJmIjoxNzkxMzYzNzY1LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.5ooCRCh5nWfx0E52Tsk6R2T8Ca2GC4jwzpfE6FMdXqQ&response-content-disposition=attachment%3B%20filename%3Dxz-5.6.4.tar.xz&response-content-type=application%2Foctet-stream",
+          "sha256": "829ccfe79d769748f7557e7a4429a64d06858e27e1e362e25d01ab7b931d9c95"
+        },
+        "license_download": {
+          "bytes": 3885,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"de1c50973fe3266950871e0d6edd2ec5bd81818130ce59b85f0479e5dc1c84df\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/tukaani-project/xz/v5.6.4/COPYING",
+          "resolved_url": "https://raw.githubusercontent.com/tukaani-project/xz/v5.6.4/COPYING",
+          "sha256": "ee3b35b82f7bb0ba5fd9f13ca34ebbe757a59c05bfde5ab9d50ff4188ed33396"
+        },
+        "source": {
+          "class": "compressed",
+          "id": "xz-archive",
+          "license": "XZ per-component public-domain/GPL/LGPL terms",
+          "license_url": "https://raw.githubusercontent.com/tukaani-project/xz/v5.6.4/COPYING",
+          "partition": "test",
+          "url": "https://github.com/tukaani-project/xz/releases/download/v5.6.4/xz-5.6.4.tar.xz"
+        }
+      },
+      "sha256": "89180e90fa2f02072ba3e919ad2b9b863863ac8d133eff8cdae230728d5dc4e4",
+      "source_group": "xz-archive"
+    },
+    {
+      "archive_member": null,
+      "bytes": 1048576,
+      "class": "mixed-binary",
+      "extracted_source_bytes": 1178451,
+      "extracted_source_sha256": "84f3a121667157efcbf012c3566a6065df6f8e0312c678cb2f29cd72cc9c0f10",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "NYC terms of use",
+      "license_path": "licenses/nyc-tlc.txt",
+      "partition": "test",
+      "path": "test/nyc-tlc.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:47.184779+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 1178451,
+          "content_type": "binary/octet-stream",
+          "etag": "\"110776612e1b020e9c4a0e41f16da597\"",
+          "last_modified": "Wed, 23 Apr 2025 16:31:56 GMT",
+          "requested_url": "https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2025-01.parquet",
+          "resolved_url": "https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2025-01.parquet",
+          "sha256": "84f3a121667157efcbf012c3566a6065df6f8e0312c678cb2f29cd72cc9c0f10"
+        },
+        "license_download": {
+          "bytes": 504584,
+          "content_type": "text/html;charset=utf-8",
+          "etag": null,
+          "last_modified": null,
+          "requested_url": "https://www.nyc.gov/home/terms-of-use.page",
+          "resolved_url": "https://www.nyc.gov/main/terms-of-use",
+          "sha256": "a88865af39d7166f9893f51a47b3a76f84e3be20922e89801069a805ed2350e3"
+        },
+        "source": {
+          "class": "mixed-binary",
+          "id": "nyc-tlc",
+          "license": "NYC terms of use",
+          "license_url": "https://www.nyc.gov/home/terms-of-use.page",
+          "partition": "test",
+          "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2025-01.parquet"
+        }
+      },
+      "sha256": "cb9ab57f0282634cb2c83247e6ea336604f4a53a8602c2ffec9cc93f22a86a0f",
+      "source_group": "nyc-tlc"
+    },
+    {
+      "archive_member": "liberation-fonts-ttf-2.1.5/LiberationSans-Regular.ttf",
+      "bytes": 410712,
+      "class": "mixed-binary",
+      "extracted_source_bytes": 410712,
+      "extracted_source_sha256": "76d04c18ea243f426b7de1f3ad208e927008f961dc5945e5aad352d0dfde8ee8",
+      "extraction_range": [
+        0,
+        410712
+      ],
+      "family": "real",
+      "license": "OFL-1.1",
+      "license_path": "licenses/liberation.txt",
+      "partition": "test",
+      "path": "test/liberation.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:47.381920+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 2385008,
+          "content_type": "application/gzip",
+          "etag": "\"0x8DD5AA6B91AC738\"",
+          "last_modified": "Mon, 03 Mar 2025 22:57:07 GMT",
+          "requested_url": "https://github.com/liberationfonts/liberation-fonts/files/7261482/liberation-fonts-ttf-2.1.5.tar.gz",
+          "resolved_url": "https://objects.githubusercontent.com/github-production-repository-file-5c1aeb/129408471/7261482?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20261007%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261007T090246Z&X-Amz-Expires=300&X-Amz-Signature=2889d37e87d982b9b0250d73d9581575454da156e91f05e75c7d42b7a924349d&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3Bfilename%3Dliberation-fonts-ttf-2.1.5.tar.gz&response-content-type=application%2Fgzip",
+          "sha256": "7191c669bf38899f73a2094ed00f7b800553364f90e2637010a69c0e268f25d0"
+        },
+        "license_download": {
+          "bytes": 4414,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"64212213166d1e45b492067934d60f74bf35dff71e03036b616c49b5e60d4124\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/liberationfonts/liberation-fonts/2.1.5/LICENSE",
+          "resolved_url": "https://raw.githubusercontent.com/liberationfonts/liberation-fonts/2.1.5/LICENSE",
+          "sha256": "93fed46019c38bbe566b479d22148e2e8a1e85ada614accb0211c37b2c61c19b"
+        },
+        "source": {
+          "class": "mixed-binary",
+          "id": "liberation",
+          "license": "OFL-1.1",
+          "license_url": "https://raw.githubusercontent.com/liberationfonts/liberation-fonts/2.1.5/LICENSE",
+          "member_suffix": "/LiberationSans-Regular.ttf",
+          "partition": "test",
+          "url": "https://github.com/liberationfonts/liberation-fonts/files/7261482/liberation-fonts-ttf-2.1.5.tar.gz"
+        }
+      },
+      "sha256": "76d04c18ea243f426b7de1f3ad208e927008f961dc5945e5aad352d0dfde8ee8",
+      "source_group": "liberation"
+    }
+  ],
+  "dedup_policy": "distinct declared lineage, exact hash, >=80% shared aligned 4KiB chunks rejected",
+  "inventory_sha256": "124e6ddf962e1dc72f37a03754d6a4138125f74c1b844ccface59ec1442373aa",
+  "sampling_policy": "complete files <=1MiB; otherwise first 1MiB recorded as a bounded real-file slice",
+  "schema_version": 1,
+  "test_policy": "reserved; integrity hashes only; no selector features or encoder measurements",
+  "tool_sha256": "7c7cce08e46fce09a6ed3b1ea8f6f5e726a96f9587229ca6c4e070b9eca49645"
+}

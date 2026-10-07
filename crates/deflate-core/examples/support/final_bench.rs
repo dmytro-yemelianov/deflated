@@ -125,9 +125,9 @@ pub fn run() -> Result<(), String> {
         return memory(&args[3], &args[1], &args[2]);
     }
     if args.len() != 6 {
-        return Err("final_bench warm|cold INPUT OUT MIN_MS METHOD ORDER".into());
+        return Err("final_bench warm|cold|profile INPUT OUT MIN_MS METHOD ORDER".into());
     }
-    if !["warm", "cold"].contains(&args[0].as_str()) {
+    if !["warm", "cold", "profile"].contains(&args[0].as_str()) {
         return Err("invalid workload".into());
     }
     let raw = std::fs::read(&args[1]).map_err(|e| e.to_string())?;
@@ -136,6 +136,25 @@ pub fn run() -> Result<(), String> {
     let order: usize = args[5].parse().map_err(|_| "invalid order")?;
     if min_ms == 0 || order > 1 {
         return Err("invalid batch or order".into());
+    }
+    if args[0] == "profile" {
+        // Sampling-only workload: disk/policy parsing precede the loop and
+        // no decoder/oracle runs contaminate the encoder samples. The driver
+        // validates the emitted packet separately. This is not a benchmark.
+        let packet = method.encode(black_box(&raw));
+        let start = Instant::now();
+        let mut iterations = 0_u64;
+        while start.elapsed() < Duration::from_millis(min_ms) {
+            black_box(method.encode(black_box(&raw)));
+            iterations += 1;
+        }
+        write_packets(&args[2], &packet, None)?;
+        println!(
+            "{{\"raw_bytes\":{},\"packed_bytes\":{},\"profile_iterations\":{iterations}}}",
+            raw.len(),
+            packet.len()
+        );
+        return Ok(());
     }
     if args[0] == "cold" {
         // No encode/decode priming. The candidate has a fresh process/allocator;
