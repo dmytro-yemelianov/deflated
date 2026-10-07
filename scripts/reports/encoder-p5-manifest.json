@@ -1,0 +1,4098 @@
+{
+  "cases": [
+    {
+      "archive_member": null,
+      "bytes": 373040,
+      "class": "source",
+      "extracted_source_bytes": 373040,
+      "extracted_source_sha256": "48c485811e4d20cca0204ea75a24da71777e42a66b6ce158f8ece09132635d7d",
+      "extraction_range": [
+        0,
+        373040
+      ],
+      "family": "real",
+      "license": "GPL-2.0-only and Linux terms",
+      "license_path": "licenses/linux.txt",
+      "partition": "test",
+      "path": "real/test/linux.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:43.301383+00:00",
+        "commit": "adc218676eef25575469234709c2d87185ca223a",
+        "download": {
+          "bytes": 373040,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"09126309c690e644e09cdae01711a39585005419cbe25760a2cc6dcdf300d2e0\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/kernel/sched/fair.c",
+          "resolved_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/kernel/sched/fair.c",
+          "sha256": "48c485811e4d20cca0204ea75a24da71777e42a66b6ce158f8ece09132635d7d"
+        },
+        "license_download": {
+          "bytes": 496,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"a18e9da94312dd207e651e68bbf84047825e6a30f00839e0c57e36ef91e456a3\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/COPYING",
+          "resolved_url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/COPYING",
+          "sha256": "fb5a425bd3b3cd6071a3a9aff9909a859e7c1158d54d32e07658398cd67eb6a0"
+        },
+        "source": {
+          "class": "source",
+          "file": "kernel/sched/fair.c",
+          "id": "linux",
+          "license": "GPL-2.0-only and Linux terms",
+          "license_file": "COPYING",
+          "partition": "test",
+          "ref": "v6.12",
+          "repo": "torvalds/linux"
+        }
+      },
+      "scope": "new-real-test",
+      "sha256": "48c485811e4d20cca0204ea75a24da71777e42a66b6ce158f8ece09132635d7d",
+      "source_group": "linux",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/test/linux.raw"
+    },
+    {
+      "archive_member": null,
+      "bytes": 77487,
+      "class": "source",
+      "extracted_source_bytes": 77487,
+      "extracted_source_sha256": "5594e1fcad9b19fdfb2720fe5ef3f9a444946716fb27975c2288a8384a75ca85",
+      "extraction_range": [
+        0,
+        77487
+      ],
+      "family": "real",
+      "license": "Apache-2.0",
+      "license_path": "licenses/openssl.txt",
+      "partition": "test",
+      "path": "real/test/openssl.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:43.915455+00:00",
+        "commit": "636dfadc70ce26f2473870570bfd9ec352806b1d",
+        "download": {
+          "bytes": 77487,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"db4b261ef0e1d5a548d9c5d5e8440d6e0e8efc2306b691f3f805820b38acc4d7\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/openssl/openssl/636dfadc70ce26f2473870570bfd9ec352806b1d/crypto/aes/asm/aes-x86_64.pl",
+          "resolved_url": "https://raw.githubusercontent.com/openssl/openssl/636dfadc70ce26f2473870570bfd9ec352806b1d/crypto/aes/asm/aes-x86_64.pl",
+          "sha256": "5594e1fcad9b19fdfb2720fe5ef3f9a444946716fb27975c2288a8384a75ca85"
+        },
+        "license_download": {
+          "bytes": 10175,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"5e3834ad31ec375cb727e16cc0a8e259823d801652b606d88055b5ae93bc4689\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/openssl/openssl/636dfadc70ce26f2473870570bfd9ec352806b1d/LICENSE.txt",
+          "resolved_url": "https://raw.githubusercontent.com/openssl/openssl/636dfadc70ce26f2473870570bfd9ec352806b1d/LICENSE.txt",
+          "sha256": "7d5450cb2d142651b8afa315b5f238efc805dad827d91ba367d8516bc9d49e7a"
+        },
+        "source": {
+          "class": "source",
+          "file": "crypto/aes/asm/aes-x86_64.pl",
+          "id": "openssl",
+          "license": "Apache-2.0",
+          "license_file": "LICENSE.txt",
+          "partition": "test",
+          "ref": "openssl-3.5.0",
+          "repo": "openssl/openssl"
+        }
+      },
+      "scope": "new-real-test",
+      "sha256": "5594e1fcad9b19fdfb2720fe5ef3f9a444946716fb27975c2288a8384a75ca85",
+      "source_group": "openssl",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/test/openssl.raw"
+    },
+    {
+      "archive_member": null,
+      "bytes": 408368,
+      "class": "structured",
+      "extracted_source_bytes": 408368,
+      "extracted_source_sha256": "3fb813039e4ab5041afc78c27fe35704b48e114513f008722e3e366473ed10b4",
+      "extraction_range": [
+        0,
+        408368
+      ],
+      "family": "real",
+      "license": "Unicode-3.0",
+      "license_path": "licenses/cldr.txt",
+      "partition": "test",
+      "path": "real/test/cldr.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:45.058727+00:00",
+        "commit": "2ef784e3a4168bc2a43cd1b5b9839b6636f5899c",
+        "download": {
+          "bytes": 408368,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"8dd5287010c06071f52cc19df10668ede58283f6885caf06d1179a32f0ee0861\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/unicode-org/cldr/2ef784e3a4168bc2a43cd1b5b9839b6636f5899c/common/supplemental/supplementalData.xml",
+          "resolved_url": "https://raw.githubusercontent.com/unicode-org/cldr/2ef784e3a4168bc2a43cd1b5b9839b6636f5899c/common/supplemental/supplementalData.xml",
+          "sha256": "3fb813039e4ab5041afc78c27fe35704b48e114513f008722e3e366473ed10b4"
+        },
+        "license_download": {
+          "bytes": 2033,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"5c649fea846a601e451889448fbcb6cb2d1d308f7c70f82896f0fc64cfb8bf5e\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/unicode-org/cldr/2ef784e3a4168bc2a43cd1b5b9839b6636f5899c/LICENSE",
+          "resolved_url": "https://raw.githubusercontent.com/unicode-org/cldr/2ef784e3a4168bc2a43cd1b5b9839b6636f5899c/LICENSE",
+          "sha256": "b4c0ae8ef04f7059f96ce5bbe0467f9fe6f6d81bbe13517701dfeb961fb4d0b6"
+        },
+        "source": {
+          "class": "structured",
+          "file": "common/supplemental/supplementalData.xml",
+          "id": "cldr",
+          "license": "Unicode-3.0",
+          "license_file": "LICENSE",
+          "partition": "test",
+          "ref": "release-47",
+          "repo": "unicode-org/cldr"
+        }
+      },
+      "scope": "new-real-test",
+      "sha256": "3fb813039e4ab5041afc78c27fe35704b48e114513f008722e3e366473ed10b4",
+      "source_group": "cldr",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/test/cldr.raw"
+    },
+    {
+      "archive_member": null,
+      "bytes": 1048576,
+      "class": "markup",
+      "extracted_source_bytes": 3090319,
+      "extracted_source_sha256": "44904910b60005aa95ccd974a0b16165328b8139e80f301022a0dd3d2e981a64",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "ECMAScript specification terms",
+      "license_path": "licenses/ecma262.txt",
+      "partition": "test",
+      "path": "real/test/ecma262.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:06:15.140131+00:00",
+        "commit": "6db9135b3d77fd38a81a5a1f1bb6ed77fcca9066",
+        "download": {
+          "bytes": 3090319,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"8a649b14e4533bd218296c37c0ba2ea4973fabcfa173a3b383884303f07f7ca2\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/tc39/ecma262/6db9135b3d77fd38a81a5a1f1bb6ed77fcca9066/spec.html",
+          "resolved_url": "https://raw.githubusercontent.com/tc39/ecma262/6db9135b3d77fd38a81a5a1f1bb6ed77fcca9066/spec.html",
+          "sha256": "44904910b60005aa95ccd974a0b16165328b8139e80f301022a0dd3d2e981a64"
+        },
+        "license_download": {
+          "bytes": 804,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"1f9f36610a5098933d7a920561ca36cf6fe83319d8de8d5ad08083d6268822ed\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/tc39/ecma262/6db9135b3d77fd38a81a5a1f1bb6ed77fcca9066/LICENSE.md",
+          "resolved_url": "https://raw.githubusercontent.com/tc39/ecma262/6db9135b3d77fd38a81a5a1f1bb6ed77fcca9066/LICENSE.md",
+          "sha256": "484d4a9e3e4bab42e5e2f8703c34ed46e861fb62662e1818b4534d1e34584967"
+        },
+        "source": {
+          "class": "markup",
+          "file": "spec.html",
+          "id": "ecma262",
+          "license": "ECMAScript specification terms",
+          "license_file": "LICENSE.md",
+          "partition": "test",
+          "ref": "HEAD",
+          "repo": "tc39/ecma262"
+        }
+      },
+      "scope": "new-real-test",
+      "sha256": "29bb5103377a89092e18263805d1271436cb1698c6c8f79c8e29edde93b33816",
+      "source_group": "ecma262",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/test/ecma262.raw"
+    },
+    {
+      "archive_member": "ripgrep-14.1.1-x86_64-unknown-linux-musl/rg",
+      "bytes": 1048576,
+      "class": "executable",
+      "extracted_source_bytes": 6597984,
+      "extracted_source_sha256": "f401154e2393f9002ac77e419f9ee5521c18f4f8cd3e32293972f493ba06fce7",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "MIT OR Unlicense",
+      "license_path": "licenses/ripgrep.txt",
+      "partition": "test",
+      "path": "real/test/ripgrep.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:45.367664+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 2566310,
+          "content_type": "application/octet-stream",
+          "etag": "\"0x8DCD0765F32CA10\"",
+          "last_modified": "Mon, 09 Sep 2024 02:23:20 GMT",
+          "requested_url": "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz",
+          "resolved_url": "https://release-assets.githubusercontent.com/github-production-release-asset/53631945/c3fb96a4-463b-40d5-8a6b-ee77f4cd30fd?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-10-07T09%3A36%3A24Z&rscd=attachment%3B+filename%3Dripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-10-07T08%3A36%3A12Z&ske=2026-10-07T09%3A36%3A24Z&sks=b&skv=2018-11-09&sig=iDHxjJrn1Qh5e9rfpHbates7QWyBpe9UOlviYjrK89o%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MTM2NDA2NCwibmJmIjoxNzkxMzYzNzY0LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.3_-fuh9Z8wnZ1W_nFUFwDLTzD7VDv3plqI7-4wouBus&response-content-disposition=attachment%3B%20filename%3Dripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz&response-content-type=application%2Foctet-stream",
+          "sha256": "4cf9f2741e6c465ffdb7c26f38056a59e2a2544b51f7cc128ef28337eeae4d8e"
+        },
+        "license_download": {
+          "bytes": 1081,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"5948a2d520f4c848b33350a8dd32b61eff0f89311d606a8e59266dc9d51d4ff6\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/BurntSushi/ripgrep/14.1.1/LICENSE-MIT",
+          "resolved_url": "https://raw.githubusercontent.com/BurntSushi/ripgrep/14.1.1/LICENSE-MIT",
+          "sha256": "0f96a83840e146e43c0ec96a22ec1f392e0680e6c1226e6f3ba87e0740af850f"
+        },
+        "source": {
+          "class": "executable",
+          "id": "ripgrep",
+          "license": "MIT OR Unlicense",
+          "license_url": "https://raw.githubusercontent.com/BurntSushi/ripgrep/14.1.1/LICENSE-MIT",
+          "member_suffix": "/rg",
+          "partition": "test",
+          "url": "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz"
+        }
+      },
+      "scope": "new-real-test",
+      "sha256": "ef2a433b5194189c5f16e4bded20bf9c4d5be20e6b519aaed0e148e7184c3c47",
+      "source_group": "ripgrep",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/test/ripgrep.raw"
+    },
+    {
+      "archive_member": null,
+      "bytes": 1048576,
+      "class": "compressed",
+      "extracted_source_bytes": 1340516,
+      "extracted_source_sha256": "829ccfe79d769748f7557e7a4429a64d06858e27e1e362e25d01ab7b931d9c95",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "XZ per-component public-domain/GPL/LGPL terms",
+      "license_path": "licenses/xz-archive.txt",
+      "partition": "test",
+      "path": "real/test/xz-archive.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:46.133712+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 1340516,
+          "content_type": "application/octet-stream",
+          "etag": "\"0x8DD3BD8063D73CA\"",
+          "last_modified": "Thu, 23 Jan 2025 18:01:56 GMT",
+          "requested_url": "https://github.com/tukaani-project/xz/releases/download/v5.6.4/xz-5.6.4.tar.xz",
+          "resolved_url": "https://release-assets.githubusercontent.com/github-production-release-asset/553665726/5603ef28-0d53-4bce-ab51-6e273ef01d38?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-10-07T09%3A50%3A44Z&rscd=attachment%3B+filename%3Dxz-5.6.4.tar.xz&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-10-07T08%3A50%3A44Z&ske=2026-10-07T09%3A50%3A44Z&sks=b&skv=2018-11-09&sig=v%2BGYxT79%2FQbWGV7FWses%2BbhTNmBkU%2BaeZi48GL4OkM0%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MTM2NDA2NSwibmJmIjoxNzkxMzYzNzY1LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.5ooCRCh5nWfx0E52Tsk6R2T8Ca2GC4jwzpfE6FMdXqQ&response-content-disposition=attachment%3B%20filename%3Dxz-5.6.4.tar.xz&response-content-type=application%2Foctet-stream",
+          "sha256": "829ccfe79d769748f7557e7a4429a64d06858e27e1e362e25d01ab7b931d9c95"
+        },
+        "license_download": {
+          "bytes": 3885,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"de1c50973fe3266950871e0d6edd2ec5bd81818130ce59b85f0479e5dc1c84df\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/tukaani-project/xz/v5.6.4/COPYING",
+          "resolved_url": "https://raw.githubusercontent.com/tukaani-project/xz/v5.6.4/COPYING",
+          "sha256": "ee3b35b82f7bb0ba5fd9f13ca34ebbe757a59c05bfde5ab9d50ff4188ed33396"
+        },
+        "source": {
+          "class": "compressed",
+          "id": "xz-archive",
+          "license": "XZ per-component public-domain/GPL/LGPL terms",
+          "license_url": "https://raw.githubusercontent.com/tukaani-project/xz/v5.6.4/COPYING",
+          "partition": "test",
+          "url": "https://github.com/tukaani-project/xz/releases/download/v5.6.4/xz-5.6.4.tar.xz"
+        }
+      },
+      "scope": "new-real-test",
+      "sha256": "89180e90fa2f02072ba3e919ad2b9b863863ac8d133eff8cdae230728d5dc4e4",
+      "source_group": "xz-archive",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/test/xz-archive.raw"
+    },
+    {
+      "archive_member": null,
+      "bytes": 1048576,
+      "class": "mixed-binary",
+      "extracted_source_bytes": 1178451,
+      "extracted_source_sha256": "84f3a121667157efcbf012c3566a6065df6f8e0312c678cb2f29cd72cc9c0f10",
+      "extraction_range": [
+        0,
+        1048576
+      ],
+      "family": "real",
+      "license": "NYC terms of use",
+      "license_path": "licenses/nyc-tlc.txt",
+      "partition": "test",
+      "path": "real/test/nyc-tlc.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:47.184779+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 1178451,
+          "content_type": "binary/octet-stream",
+          "etag": "\"110776612e1b020e9c4a0e41f16da597\"",
+          "last_modified": "Wed, 23 Apr 2025 16:31:56 GMT",
+          "requested_url": "https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2025-01.parquet",
+          "resolved_url": "https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2025-01.parquet",
+          "sha256": "84f3a121667157efcbf012c3566a6065df6f8e0312c678cb2f29cd72cc9c0f10"
+        },
+        "license_download": {
+          "bytes": 504584,
+          "content_type": "text/html;charset=utf-8",
+          "etag": null,
+          "last_modified": null,
+          "requested_url": "https://www.nyc.gov/home/terms-of-use.page",
+          "resolved_url": "https://www.nyc.gov/main/terms-of-use",
+          "sha256": "a88865af39d7166f9893f51a47b3a76f84e3be20922e89801069a805ed2350e3"
+        },
+        "source": {
+          "class": "mixed-binary",
+          "id": "nyc-tlc",
+          "license": "NYC terms of use",
+          "license_url": "https://www.nyc.gov/home/terms-of-use.page",
+          "partition": "test",
+          "url": "https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2025-01.parquet"
+        }
+      },
+      "scope": "new-real-test",
+      "sha256": "cb9ab57f0282634cb2c83247e6ea336604f4a53a8602c2ffec9cc93f22a86a0f",
+      "source_group": "nyc-tlc",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/test/nyc-tlc.raw"
+    },
+    {
+      "archive_member": "liberation-fonts-ttf-2.1.5/LiberationSans-Regular.ttf",
+      "bytes": 410712,
+      "class": "mixed-binary",
+      "extracted_source_bytes": 410712,
+      "extracted_source_sha256": "76d04c18ea243f426b7de1f3ad208e927008f961dc5945e5aad352d0dfde8ee8",
+      "extraction_range": [
+        0,
+        410712
+      ],
+      "family": "real",
+      "license": "OFL-1.1",
+      "license_path": "licenses/liberation.txt",
+      "partition": "test",
+      "path": "real/test/liberation.raw",
+      "provenance": {
+        "acquired_utc": "2026-10-07T09:02:47.381920+00:00",
+        "commit": null,
+        "download": {
+          "bytes": 2385008,
+          "content_type": "application/gzip",
+          "etag": "\"0x8DD5AA6B91AC738\"",
+          "last_modified": "Mon, 03 Mar 2025 22:57:07 GMT",
+          "requested_url": "https://github.com/liberationfonts/liberation-fonts/files/7261482/liberation-fonts-ttf-2.1.5.tar.gz",
+          "resolved_url": "https://objects.githubusercontent.com/github-production-repository-file-5c1aeb/129408471/7261482?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20261007%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261007T090246Z&X-Amz-Expires=300&X-Amz-Signature=2889d37e87d982b9b0250d73d9581575454da156e91f05e75c7d42b7a924349d&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3Bfilename%3Dliberation-fonts-ttf-2.1.5.tar.gz&response-content-type=application%2Fgzip",
+          "sha256": "7191c669bf38899f73a2094ed00f7b800553364f90e2637010a69c0e268f25d0"
+        },
+        "license_download": {
+          "bytes": 4414,
+          "content_type": "text/plain; charset=utf-8",
+          "etag": "\"64212213166d1e45b492067934d60f74bf35dff71e03036b616c49b5e60d4124\"",
+          "last_modified": null,
+          "requested_url": "https://raw.githubusercontent.com/liberationfonts/liberation-fonts/2.1.5/LICENSE",
+          "resolved_url": "https://raw.githubusercontent.com/liberationfonts/liberation-fonts/2.1.5/LICENSE",
+          "sha256": "93fed46019c38bbe566b479d22148e2e8a1e85ada614accb0211c37b2c61c19b"
+        },
+        "source": {
+          "class": "mixed-binary",
+          "id": "liberation",
+          "license": "OFL-1.1",
+          "license_url": "https://raw.githubusercontent.com/liberationfonts/liberation-fonts/2.1.5/LICENSE",
+          "member_suffix": "/LiberationSans-Regular.ttf",
+          "partition": "test",
+          "url": "https://github.com/liberationfonts/liberation-fonts/files/7261482/liberation-fonts-ttf-2.1.5.tar.gz"
+        }
+      },
+      "scope": "new-real-test",
+      "sha256": "76d04c18ea243f426b7de1f3ad208e927008f961dc5945e5aad352d0dfde8ee8",
+      "source_group": "liberation",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1/test/liberation.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "injections": [
+          [
+            33009,
+            63,
+            1024
+          ],
+          [
+            34039,
+            64,
+            32768
+          ],
+          [
+            35069,
+            127,
+            4
+          ],
+          [
+            36099,
+            128,
+            33
+          ],
+          [
+            37129,
+            129,
+            256
+          ],
+          [
+            38159,
+            255,
+            4096
+          ],
+          [
+            39189,
+            256,
+            32769
+          ],
+          [
+            40219,
+            258,
+            16
+          ],
+          [
+            41249,
+            3,
+            64
+          ],
+          [
+            42279,
+            4,
+            257
+          ],
+          [
+            43309,
+            5,
+            32767
+          ],
+          [
+            44339,
+            10,
+            1
+          ],
+          [
+            45369,
+            11,
+            32
+          ],
+          [
+            46399,
+            12,
+            65
+          ],
+          [
+            47429,
+            31,
+            1024
+          ],
+          [
+            48459,
+            32,
+            32768
+          ],
+          [
+            49489,
+            33,
+            4
+          ],
+          [
+            50519,
+            63,
+            33
+          ],
+          [
+            51549,
+            64,
+            256
+          ],
+          [
+            52579,
+            127,
+            4096
+          ],
+          [
+            53609,
+            128,
+            32769
+          ],
+          [
+            54639,
+            129,
+            16
+          ],
+          [
+            55669,
+            255,
+            64
+          ],
+          [
+            56699,
+            256,
+            257
+          ],
+          [
+            57729,
+            258,
+            32767
+          ],
+          [
+            58759,
+            3,
+            1
+          ],
+          [
+            59789,
+            4,
+            32
+          ],
+          [
+            60819,
+            5,
+            65
+          ],
+          [
+            61849,
+            10,
+            1024
+          ],
+          [
+            62879,
+            11,
+            32768
+          ],
+          [
+            63909,
+            12,
+            4
+          ],
+          [
+            64939,
+            31,
+            33
+          ],
+          [
+            65969,
+            32,
+            256
+          ],
+          [
+            66999,
+            33,
+            4096
+          ],
+          [
+            68029,
+            63,
+            32769
+          ],
+          [
+            69059,
+            64,
+            16
+          ],
+          [
+            70089,
+            127,
+            64
+          ],
+          [
+            71119,
+            128,
+            257
+          ],
+          [
+            72149,
+            129,
+            32767
+          ],
+          [
+            73179,
+            255,
+            1
+          ],
+          [
+            74209,
+            256,
+            32
+          ],
+          [
+            75239,
+            258,
+            65
+          ],
+          [
+            76269,
+            3,
+            1024
+          ],
+          [
+            77299,
+            4,
+            32768
+          ],
+          [
+            78329,
+            5,
+            4
+          ],
+          [
+            79359,
+            10,
+            33
+          ],
+          [
+            80389,
+            11,
+            256
+          ],
+          [
+            81419,
+            12,
+            4096
+          ],
+          [
+            82449,
+            31,
+            32769
+          ],
+          [
+            83479,
+            32,
+            16
+          ],
+          [
+            84509,
+            33,
+            64
+          ],
+          [
+            85539,
+            63,
+            257
+          ],
+          [
+            86569,
+            64,
+            32767
+          ],
+          [
+            87599,
+            127,
+            1
+          ],
+          [
+            88629,
+            128,
+            32
+          ],
+          [
+            89659,
+            129,
+            65
+          ],
+          [
+            90689,
+            255,
+            1024
+          ],
+          [
+            91719,
+            256,
+            32768
+          ],
+          [
+            92749,
+            258,
+            4
+          ],
+          [
+            93779,
+            3,
+            33
+          ],
+          [
+            94809,
+            4,
+            256
+          ],
+          [
+            95839,
+            5,
+            4096
+          ],
+          [
+            96869,
+            10,
+            32769
+          ],
+          [
+            97899,
+            11,
+            16
+          ],
+          [
+            98929,
+            12,
+            64
+          ],
+          [
+            99959,
+            31,
+            257
+          ],
+          [
+            100989,
+            32,
+            32767
+          ],
+          [
+            102019,
+            33,
+            1
+          ],
+          [
+            103049,
+            63,
+            32
+          ],
+          [
+            104079,
+            64,
+            65
+          ],
+          [
+            105109,
+            127,
+            1024
+          ],
+          [
+            106139,
+            128,
+            32768
+          ],
+          [
+            107169,
+            129,
+            4
+          ],
+          [
+            108199,
+            255,
+            33
+          ],
+          [
+            109229,
+            256,
+            256
+          ],
+          [
+            110259,
+            258,
+            4096
+          ],
+          [
+            111289,
+            3,
+            32769
+          ],
+          [
+            112319,
+            4,
+            16
+          ],
+          [
+            113349,
+            5,
+            64
+          ],
+          [
+            114379,
+            10,
+            257
+          ],
+          [
+            115409,
+            11,
+            32767
+          ],
+          [
+            116439,
+            12,
+            1
+          ],
+          [
+            117469,
+            31,
+            32
+          ],
+          [
+            118499,
+            32,
+            65
+          ],
+          [
+            119529,
+            33,
+            1024
+          ],
+          [
+            120559,
+            63,
+            32768
+          ],
+          [
+            121589,
+            64,
+            4
+          ],
+          [
+            122619,
+            127,
+            33
+          ],
+          [
+            123649,
+            128,
+            256
+          ],
+          [
+            124679,
+            129,
+            4096
+          ],
+          [
+            125709,
+            255,
+            32769
+          ],
+          [
+            126739,
+            256,
+            16
+          ],
+          [
+            127769,
+            258,
+            64
+          ],
+          [
+            128799,
+            3,
+            257
+          ],
+          [
+            129829,
+            4,
+            32767
+          ],
+          [
+            130859,
+            5,
+            1
+          ],
+          [
+            131889,
+            10,
+            32
+          ],
+          [
+            132919,
+            11,
+            65
+          ],
+          [
+            133949,
+            12,
+            1024
+          ],
+          [
+            134979,
+            31,
+            32768
+          ],
+          [
+            136009,
+            32,
+            4
+          ],
+          [
+            137039,
+            33,
+            33
+          ],
+          [
+            138069,
+            63,
+            256
+          ],
+          [
+            139099,
+            64,
+            4096
+          ],
+          [
+            140129,
+            127,
+            32769
+          ],
+          [
+            141159,
+            128,
+            16
+          ],
+          [
+            142189,
+            129,
+            64
+          ],
+          [
+            143219,
+            255,
+            257
+          ],
+          [
+            144249,
+            256,
+            32767
+          ],
+          [
+            145279,
+            258,
+            1
+          ],
+          [
+            146309,
+            3,
+            32
+          ],
+          [
+            147339,
+            4,
+            65
+          ],
+          [
+            148369,
+            5,
+            1024
+          ],
+          [
+            149399,
+            10,
+            32768
+          ],
+          [
+            150429,
+            11,
+            4
+          ],
+          [
+            151459,
+            12,
+            33
+          ],
+          [
+            152489,
+            31,
+            256
+          ],
+          [
+            153519,
+            32,
+            4096
+          ],
+          [
+            154549,
+            33,
+            32769
+          ],
+          [
+            155579,
+            63,
+            16
+          ],
+          [
+            156609,
+            64,
+            64
+          ],
+          [
+            157639,
+            127,
+            257
+          ],
+          [
+            158669,
+            128,
+            32767
+          ],
+          [
+            159699,
+            129,
+            1
+          ],
+          [
+            160729,
+            255,
+            32
+          ],
+          [
+            161759,
+            256,
+            65
+          ],
+          [
+            162789,
+            258,
+            1024
+          ],
+          [
+            163819,
+            3,
+            32768
+          ],
+          [
+            164849,
+            4,
+            4
+          ],
+          [
+            165879,
+            5,
+            33
+          ],
+          [
+            166909,
+            10,
+            256
+          ],
+          [
+            167939,
+            11,
+            4096
+          ],
+          [
+            168969,
+            12,
+            32769
+          ],
+          [
+            169999,
+            31,
+            16
+          ],
+          [
+            171029,
+            32,
+            64
+          ],
+          [
+            172059,
+            33,
+            257
+          ],
+          [
+            173089,
+            63,
+            32767
+          ],
+          [
+            174119,
+            64,
+            1
+          ],
+          [
+            175149,
+            127,
+            32
+          ],
+          [
+            176179,
+            128,
+            65
+          ],
+          [
+            177209,
+            129,
+            1024
+          ],
+          [
+            178239,
+            255,
+            32768
+          ],
+          [
+            179269,
+            256,
+            4
+          ],
+          [
+            180299,
+            258,
+            33
+          ],
+          [
+            181329,
+            3,
+            256
+          ],
+          [
+            182359,
+            4,
+            4096
+          ],
+          [
+            183389,
+            5,
+            32769
+          ],
+          [
+            184419,
+            10,
+            16
+          ],
+          [
+            185449,
+            11,
+            64
+          ],
+          [
+            186479,
+            12,
+            257
+          ],
+          [
+            187509,
+            31,
+            32767
+          ],
+          [
+            188539,
+            32,
+            1
+          ],
+          [
+            189569,
+            33,
+            32
+          ],
+          [
+            190599,
+            63,
+            65
+          ],
+          [
+            191629,
+            64,
+            1024
+          ],
+          [
+            192659,
+            127,
+            32768
+          ],
+          [
+            193689,
+            128,
+            4
+          ],
+          [
+            194719,
+            129,
+            33
+          ],
+          [
+            195749,
+            255,
+            256
+          ],
+          [
+            196779,
+            256,
+            4096
+          ],
+          [
+            197809,
+            258,
+            32769
+          ],
+          [
+            198839,
+            3,
+            16
+          ],
+          [
+            199869,
+            4,
+            64
+          ],
+          [
+            200899,
+            5,
+            257
+          ],
+          [
+            201929,
+            10,
+            32767
+          ],
+          [
+            202959,
+            11,
+            1
+          ],
+          [
+            203989,
+            12,
+            32
+          ],
+          [
+            205019,
+            31,
+            65
+          ],
+          [
+            206049,
+            32,
+            1024
+          ],
+          [
+            207079,
+            33,
+            32768
+          ],
+          [
+            208109,
+            63,
+            4
+          ],
+          [
+            209139,
+            64,
+            33
+          ],
+          [
+            210169,
+            127,
+            256
+          ],
+          [
+            211199,
+            128,
+            4096
+          ],
+          [
+            212229,
+            129,
+            32769
+          ],
+          [
+            213259,
+            255,
+            16
+          ],
+          [
+            214289,
+            256,
+            64
+          ],
+          [
+            215319,
+            258,
+            257
+          ],
+          [
+            216349,
+            3,
+            32767
+          ],
+          [
+            217379,
+            4,
+            1
+          ],
+          [
+            218409,
+            5,
+            32
+          ],
+          [
+            219439,
+            10,
+            65
+          ],
+          [
+            220469,
+            11,
+            1024
+          ],
+          [
+            221499,
+            12,
+            32768
+          ],
+          [
+            222529,
+            31,
+            4
+          ],
+          [
+            223559,
+            32,
+            33
+          ],
+          [
+            224589,
+            33,
+            256
+          ],
+          [
+            225619,
+            63,
+            4096
+          ],
+          [
+            226649,
+            64,
+            32769
+          ],
+          [
+            227679,
+            127,
+            16
+          ],
+          [
+            228709,
+            128,
+            64
+          ],
+          [
+            229739,
+            129,
+            257
+          ],
+          [
+            230769,
+            255,
+            32767
+          ],
+          [
+            231799,
+            256,
+            1
+          ],
+          [
+            232829,
+            258,
+            32
+          ],
+          [
+            233859,
+            3,
+            65
+          ],
+          [
+            234889,
+            4,
+            1024
+          ],
+          [
+            235919,
+            5,
+            32768
+          ],
+          [
+            236949,
+            10,
+            4
+          ],
+          [
+            237979,
+            11,
+            33
+          ],
+          [
+            239009,
+            12,
+            256
+          ],
+          [
+            240039,
+            31,
+            4096
+          ],
+          [
+            241069,
+            32,
+            32769
+          ],
+          [
+            242099,
+            33,
+            16
+          ],
+          [
+            243129,
+            63,
+            64
+          ],
+          [
+            244159,
+            64,
+            257
+          ],
+          [
+            245189,
+            127,
+            32767
+          ],
+          [
+            246219,
+            128,
+            1
+          ],
+          [
+            247249,
+            129,
+            32
+          ],
+          [
+            248279,
+            255,
+            65
+          ],
+          [
+            249309,
+            256,
+            1024
+          ],
+          [
+            250339,
+            258,
+            32768
+          ],
+          [
+            251369,
+            3,
+            4
+          ],
+          [
+            252399,
+            4,
+            33
+          ],
+          [
+            253429,
+            5,
+            256
+          ],
+          [
+            254459,
+            10,
+            4096
+          ],
+          [
+            255489,
+            11,
+            32769
+          ],
+          [
+            256519,
+            12,
+            16
+          ],
+          [
+            257549,
+            31,
+            64
+          ],
+          [
+            258579,
+            32,
+            257
+          ],
+          [
+            259609,
+            33,
+            32767
+          ],
+          [
+            260639,
+            63,
+            1
+          ],
+          [
+            261669,
+            64,
+            32
+          ]
+        ]
+      },
+      "family": "cost_sensitive",
+      "pair_id": "test:cost_sensitive:9",
+      "params": {
+        "regime": 9,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/cost_sensitive-9-0.raw",
+      "regime": "encoder:cost_sensitive:9:0",
+      "scope": "new-synthetic-test",
+      "seed": 12779062890370420553,
+      "sha256": "f223a2420fc54bdea698fb6c884fa7a07b092fac72e1244a97829bd5ba6d6c8e",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/cost_sensitive-9-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "injections": [
+          [
+            33012,
+            128,
+            32768
+          ],
+          [
+            34045,
+            129,
+            4
+          ],
+          [
+            35078,
+            255,
+            33
+          ],
+          [
+            36111,
+            256,
+            256
+          ],
+          [
+            37144,
+            258,
+            4096
+          ],
+          [
+            38177,
+            3,
+            32769
+          ],
+          [
+            39210,
+            4,
+            16
+          ],
+          [
+            40243,
+            5,
+            64
+          ],
+          [
+            41276,
+            10,
+            257
+          ],
+          [
+            42309,
+            11,
+            32767
+          ],
+          [
+            43342,
+            12,
+            1
+          ],
+          [
+            44375,
+            31,
+            32
+          ],
+          [
+            45408,
+            32,
+            65
+          ],
+          [
+            46441,
+            33,
+            1024
+          ],
+          [
+            47474,
+            63,
+            32768
+          ],
+          [
+            48507,
+            64,
+            4
+          ],
+          [
+            49540,
+            127,
+            33
+          ],
+          [
+            50573,
+            128,
+            256
+          ],
+          [
+            51606,
+            129,
+            4096
+          ],
+          [
+            52639,
+            255,
+            32769
+          ],
+          [
+            53672,
+            256,
+            16
+          ],
+          [
+            54705,
+            258,
+            64
+          ],
+          [
+            55738,
+            3,
+            257
+          ],
+          [
+            56771,
+            4,
+            32767
+          ],
+          [
+            57804,
+            5,
+            1
+          ],
+          [
+            58837,
+            10,
+            32
+          ],
+          [
+            59870,
+            11,
+            65
+          ],
+          [
+            60903,
+            12,
+            1024
+          ],
+          [
+            61936,
+            31,
+            32768
+          ],
+          [
+            62969,
+            32,
+            4
+          ],
+          [
+            64002,
+            33,
+            33
+          ],
+          [
+            65035,
+            63,
+            256
+          ],
+          [
+            66068,
+            64,
+            4096
+          ],
+          [
+            67101,
+            127,
+            32769
+          ],
+          [
+            68134,
+            128,
+            16
+          ],
+          [
+            69167,
+            129,
+            64
+          ],
+          [
+            70200,
+            255,
+            257
+          ],
+          [
+            71233,
+            256,
+            32767
+          ],
+          [
+            72266,
+            258,
+            1
+          ],
+          [
+            73299,
+            3,
+            32
+          ],
+          [
+            74332,
+            4,
+            65
+          ],
+          [
+            75365,
+            5,
+            1024
+          ],
+          [
+            76398,
+            10,
+            32768
+          ],
+          [
+            77431,
+            11,
+            4
+          ],
+          [
+            78464,
+            12,
+            33
+          ],
+          [
+            79497,
+            31,
+            256
+          ],
+          [
+            80530,
+            32,
+            4096
+          ],
+          [
+            81563,
+            33,
+            32769
+          ],
+          [
+            82596,
+            63,
+            16
+          ],
+          [
+            83629,
+            64,
+            64
+          ],
+          [
+            84662,
+            127,
+            257
+          ],
+          [
+            85695,
+            128,
+            32767
+          ],
+          [
+            86728,
+            129,
+            1
+          ],
+          [
+            87761,
+            255,
+            32
+          ],
+          [
+            88794,
+            256,
+            65
+          ],
+          [
+            89827,
+            258,
+            1024
+          ],
+          [
+            90860,
+            3,
+            32768
+          ],
+          [
+            91893,
+            4,
+            4
+          ],
+          [
+            92926,
+            5,
+            33
+          ],
+          [
+            93959,
+            10,
+            256
+          ],
+          [
+            94992,
+            11,
+            4096
+          ],
+          [
+            96025,
+            12,
+            32769
+          ],
+          [
+            97058,
+            31,
+            16
+          ],
+          [
+            98091,
+            32,
+            64
+          ],
+          [
+            99124,
+            33,
+            257
+          ],
+          [
+            100157,
+            63,
+            32767
+          ],
+          [
+            101190,
+            64,
+            1
+          ],
+          [
+            102223,
+            127,
+            32
+          ],
+          [
+            103256,
+            128,
+            65
+          ],
+          [
+            104289,
+            129,
+            1024
+          ],
+          [
+            105322,
+            255,
+            32768
+          ],
+          [
+            106355,
+            256,
+            4
+          ],
+          [
+            107388,
+            258,
+            33
+          ],
+          [
+            108421,
+            3,
+            256
+          ],
+          [
+            109454,
+            4,
+            4096
+          ],
+          [
+            110487,
+            5,
+            32769
+          ],
+          [
+            111520,
+            10,
+            16
+          ],
+          [
+            112553,
+            11,
+            64
+          ],
+          [
+            113586,
+            12,
+            257
+          ],
+          [
+            114619,
+            31,
+            32767
+          ],
+          [
+            115652,
+            32,
+            1
+          ],
+          [
+            116685,
+            33,
+            32
+          ],
+          [
+            117718,
+            63,
+            65
+          ],
+          [
+            118751,
+            64,
+            1024
+          ],
+          [
+            119784,
+            127,
+            32768
+          ],
+          [
+            120817,
+            128,
+            4
+          ],
+          [
+            121850,
+            129,
+            33
+          ],
+          [
+            122883,
+            255,
+            256
+          ],
+          [
+            123916,
+            256,
+            4096
+          ],
+          [
+            124949,
+            258,
+            32769
+          ],
+          [
+            125982,
+            3,
+            16
+          ],
+          [
+            127015,
+            4,
+            64
+          ],
+          [
+            128048,
+            5,
+            257
+          ],
+          [
+            129081,
+            10,
+            32767
+          ],
+          [
+            130114,
+            11,
+            1
+          ],
+          [
+            131147,
+            12,
+            32
+          ],
+          [
+            132180,
+            31,
+            65
+          ],
+          [
+            133213,
+            32,
+            1024
+          ],
+          [
+            134246,
+            33,
+            32768
+          ],
+          [
+            135279,
+            63,
+            4
+          ],
+          [
+            136312,
+            64,
+            33
+          ],
+          [
+            137345,
+            127,
+            256
+          ],
+          [
+            138378,
+            128,
+            4096
+          ],
+          [
+            139411,
+            129,
+            32769
+          ],
+          [
+            140444,
+            255,
+            16
+          ],
+          [
+            141477,
+            256,
+            64
+          ],
+          [
+            142510,
+            258,
+            257
+          ],
+          [
+            143543,
+            3,
+            32767
+          ],
+          [
+            144576,
+            4,
+            1
+          ],
+          [
+            145609,
+            5,
+            32
+          ],
+          [
+            146642,
+            10,
+            65
+          ],
+          [
+            147675,
+            11,
+            1024
+          ],
+          [
+            148708,
+            12,
+            32768
+          ],
+          [
+            149741,
+            31,
+            4
+          ],
+          [
+            150774,
+            32,
+            33
+          ],
+          [
+            151807,
+            33,
+            256
+          ],
+          [
+            152840,
+            63,
+            4096
+          ],
+          [
+            153873,
+            64,
+            32769
+          ],
+          [
+            154906,
+            127,
+            16
+          ],
+          [
+            155939,
+            128,
+            64
+          ],
+          [
+            156972,
+            129,
+            257
+          ],
+          [
+            158005,
+            255,
+            32767
+          ],
+          [
+            159038,
+            256,
+            1
+          ],
+          [
+            160071,
+            258,
+            32
+          ],
+          [
+            161104,
+            3,
+            65
+          ],
+          [
+            162137,
+            4,
+            1024
+          ],
+          [
+            163170,
+            5,
+            32768
+          ],
+          [
+            164203,
+            10,
+            4
+          ],
+          [
+            165236,
+            11,
+            33
+          ],
+          [
+            166269,
+            12,
+            256
+          ],
+          [
+            167302,
+            31,
+            4096
+          ],
+          [
+            168335,
+            32,
+            32769
+          ],
+          [
+            169368,
+            33,
+            16
+          ],
+          [
+            170401,
+            63,
+            64
+          ],
+          [
+            171434,
+            64,
+            257
+          ],
+          [
+            172467,
+            127,
+            32767
+          ],
+          [
+            173500,
+            128,
+            1
+          ],
+          [
+            174533,
+            129,
+            32
+          ],
+          [
+            175566,
+            255,
+            65
+          ],
+          [
+            176599,
+            256,
+            1024
+          ],
+          [
+            177632,
+            258,
+            32768
+          ],
+          [
+            178665,
+            3,
+            4
+          ],
+          [
+            179698,
+            4,
+            33
+          ],
+          [
+            180731,
+            5,
+            256
+          ],
+          [
+            181764,
+            10,
+            4096
+          ],
+          [
+            182797,
+            11,
+            32769
+          ],
+          [
+            183830,
+            12,
+            16
+          ],
+          [
+            184863,
+            31,
+            64
+          ],
+          [
+            185896,
+            32,
+            257
+          ],
+          [
+            186929,
+            33,
+            32767
+          ],
+          [
+            187962,
+            63,
+            1
+          ],
+          [
+            188995,
+            64,
+            32
+          ],
+          [
+            190028,
+            127,
+            65
+          ],
+          [
+            191061,
+            128,
+            1024
+          ],
+          [
+            192094,
+            129,
+            32768
+          ],
+          [
+            193127,
+            255,
+            4
+          ],
+          [
+            194160,
+            256,
+            33
+          ],
+          [
+            195193,
+            258,
+            256
+          ],
+          [
+            196226,
+            3,
+            4096
+          ],
+          [
+            197259,
+            4,
+            32769
+          ],
+          [
+            198292,
+            5,
+            16
+          ],
+          [
+            199325,
+            10,
+            64
+          ],
+          [
+            200358,
+            11,
+            257
+          ],
+          [
+            201391,
+            12,
+            32767
+          ],
+          [
+            202424,
+            31,
+            1
+          ],
+          [
+            203457,
+            32,
+            32
+          ],
+          [
+            204490,
+            33,
+            65
+          ],
+          [
+            205523,
+            63,
+            1024
+          ],
+          [
+            206556,
+            64,
+            32768
+          ],
+          [
+            207589,
+            127,
+            4
+          ],
+          [
+            208622,
+            128,
+            33
+          ],
+          [
+            209655,
+            129,
+            256
+          ],
+          [
+            210688,
+            255,
+            4096
+          ],
+          [
+            211721,
+            256,
+            32769
+          ],
+          [
+            212754,
+            258,
+            16
+          ],
+          [
+            213787,
+            3,
+            64
+          ],
+          [
+            214820,
+            4,
+            257
+          ],
+          [
+            215853,
+            5,
+            32767
+          ],
+          [
+            216886,
+            10,
+            1
+          ],
+          [
+            217919,
+            11,
+            32
+          ],
+          [
+            218952,
+            12,
+            65
+          ],
+          [
+            219985,
+            31,
+            1024
+          ],
+          [
+            221018,
+            32,
+            32768
+          ],
+          [
+            222051,
+            33,
+            4
+          ],
+          [
+            223084,
+            63,
+            33
+          ],
+          [
+            224117,
+            64,
+            256
+          ],
+          [
+            225150,
+            127,
+            4096
+          ],
+          [
+            226183,
+            128,
+            32769
+          ],
+          [
+            227216,
+            129,
+            16
+          ],
+          [
+            228249,
+            255,
+            64
+          ],
+          [
+            229282,
+            256,
+            257
+          ],
+          [
+            230315,
+            258,
+            32767
+          ],
+          [
+            231348,
+            3,
+            1
+          ],
+          [
+            232381,
+            4,
+            32
+          ],
+          [
+            233414,
+            5,
+            65
+          ],
+          [
+            234447,
+            10,
+            1024
+          ],
+          [
+            235480,
+            11,
+            32768
+          ],
+          [
+            236513,
+            12,
+            4
+          ],
+          [
+            237546,
+            31,
+            33
+          ],
+          [
+            238579,
+            32,
+            256
+          ],
+          [
+            239612,
+            33,
+            4096
+          ],
+          [
+            240645,
+            63,
+            32769
+          ],
+          [
+            241678,
+            64,
+            16
+          ],
+          [
+            242711,
+            127,
+            64
+          ],
+          [
+            243744,
+            128,
+            257
+          ],
+          [
+            244777,
+            129,
+            32767
+          ],
+          [
+            245810,
+            255,
+            1
+          ],
+          [
+            246843,
+            256,
+            32
+          ],
+          [
+            247876,
+            258,
+            65
+          ],
+          [
+            248909,
+            3,
+            1024
+          ],
+          [
+            249942,
+            4,
+            32768
+          ],
+          [
+            250975,
+            5,
+            4
+          ],
+          [
+            252008,
+            10,
+            33
+          ],
+          [
+            253041,
+            11,
+            256
+          ],
+          [
+            254074,
+            12,
+            4096
+          ],
+          [
+            255107,
+            31,
+            32769
+          ],
+          [
+            256140,
+            32,
+            16
+          ],
+          [
+            257173,
+            33,
+            64
+          ],
+          [
+            258206,
+            63,
+            257
+          ],
+          [
+            259239,
+            64,
+            32767
+          ],
+          [
+            260272,
+            127,
+            1
+          ],
+          [
+            261305,
+            128,
+            32
+          ]
+        ]
+      },
+      "family": "cost_sensitive",
+      "pair_id": "test:cost_sensitive:12",
+      "params": {
+        "regime": 12,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/cost_sensitive-12-0.raw",
+      "regime": "encoder:cost_sensitive:12:0",
+      "scope": "new-synthetic-test",
+      "seed": 7265212127329755024,
+      "sha256": "c94afa24b613a2201bb6abd6b6bf1595d782ff82fc07ebf6d3011d9b2cffa480",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/cost_sensitive-12-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "actual_production_hash_bits": 15,
+        "bucket": 15629,
+        "hash_bits": 15,
+        "key_count": 23,
+        "keys_sha256": "a2ff73112d9996efd8c2deb01b14c6825f9f8d93265ef0282cc456dc39ea6aa0",
+        "kind": "trigram",
+        "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide",
+        "suffix_bytes": 28
+      },
+      "family": "collision_trigram",
+      "pair_id": "test:collision_trigram:9",
+      "params": {
+        "regime": 9,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/collision_trigram-9-0.raw",
+      "regime": "encoder:collision_trigram:9:0",
+      "scope": "new-synthetic-test",
+      "seed": 6973877700752647711,
+      "sha256": "fdd27d076e6d0eebae547ac6e0e963b815da44b954c226425ea9a1f77609c927",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/collision_trigram-9-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "actual_production_hash_bits": 15,
+        "bucket": 28257,
+        "hash_bits": 15,
+        "key_count": 29,
+        "keys_sha256": "b53c75f6f6e5226e6cd83bbb1499c751ac4622ff2183fdd997472b183f5e750f",
+        "kind": "trigram",
+        "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide",
+        "suffix_bytes": 31
+      },
+      "family": "collision_trigram",
+      "pair_id": "test:collision_trigram:12",
+      "params": {
+        "regime": 12,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/collision_trigram-12-0.raw",
+      "regime": "encoder:collision_trigram:12:0",
+      "scope": "new-synthetic-test",
+      "seed": 16657028501097969414,
+      "sha256": "21c0def2c1559d68f46475f8d624f83019e56d4f71c86fc25a6c7ebcda09b527",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/collision_trigram-12-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "actual_production_hash_bits": 15,
+        "bucket": 32095,
+        "hash_bits": 15,
+        "key_count": 23,
+        "keys_sha256": "09c050aa8dc3ec67dea0a4ed0800fc9bc239f8aa92331fa6057753affd758591",
+        "kind": "fourbyte",
+        "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide",
+        "suffix_bytes": 28
+      },
+      "family": "collision_fourbyte",
+      "pair_id": "test:collision_fourbyte:9",
+      "params": {
+        "regime": 9,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/collision_fourbyte-9-0.raw",
+      "regime": "encoder:collision_fourbyte:9:0",
+      "scope": "new-synthetic-test",
+      "seed": 13448894498990337017,
+      "sha256": "be28106e4a22faa6f3e2090400d4f42067e9a3b9e3b2f0a9c7573c4df8dd7dc2",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/collision_fourbyte-9-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "actual_production_hash_bits": 15,
+        "bucket": 30706,
+        "hash_bits": 15,
+        "key_count": 29,
+        "keys_sha256": "8c667eb27eee7b9561af86618084ca79817695c8ae86f80eee060c5b6c4f8408",
+        "kind": "fourbyte",
+        "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide",
+        "suffix_bytes": 31
+      },
+      "family": "collision_fourbyte",
+      "pair_id": "test:collision_fourbyte:12",
+      "params": {
+        "regime": 12,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/collision_fourbyte-12-0.raw",
+      "regime": "encoder:collision_fourbyte:12:0",
+      "scope": "new-synthetic-test",
+      "seed": 16276960353422747401,
+      "sha256": "18cc5857bddee9d122d22b60dbed241c85537ff9fa9bf07439941739191c94a9",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/collision_fourbyte-12-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "actual_production_hash_bits": 15,
+        "bucket": 18733,
+        "hash_bits": 15,
+        "key_count": 23,
+        "keys_sha256": "0028ff3d60199d1925ea8ca9e25f49c610e79caddf54afa264a81404497c8084",
+        "kind": "cost_trigram",
+        "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide",
+        "suffix_bytes": 28
+      },
+      "family": "collision_cost_trigram",
+      "pair_id": "test:collision_cost_trigram:9",
+      "params": {
+        "regime": 9,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/collision_cost_trigram-9-0.raw",
+      "regime": "encoder:collision_cost_trigram:9:0",
+      "scope": "new-synthetic-test",
+      "seed": 10710966569470681741,
+      "sha256": "30fcff86044e75d77ec022b864b8fd9b0879f6bfabdcf4bdb8b826793ca2d672",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/collision_cost_trigram-9-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "actual_production_hash_bits": 15,
+        "bucket": 6079,
+        "hash_bits": 15,
+        "key_count": 29,
+        "keys_sha256": "394d62fc9a2db1ca4bfad54654f586dbc4b664b8314adcfe80de24a30347daa0",
+        "kind": "cost_trigram",
+        "scope": "aligned keys only; intervening suffix/unaligned prefixes need not collide",
+        "suffix_bytes": 31
+      },
+      "family": "collision_cost_trigram",
+      "pair_id": "test:collision_cost_trigram:12",
+      "params": {
+        "regime": 12,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/collision_cost_trigram-12-0.raw",
+      "regime": "encoder:collision_cost_trigram:12:0",
+      "scope": "new-synthetic-test",
+      "seed": 4020921720845527241,
+      "sha256": "56f4aa57590047da88da4be69e12d13fac1136458378953e84301b1919fb40f1",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/collision_cost_trigram-12-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "regime_changes": [
+          [
+            0,
+            32767,
+            0
+          ],
+          [
+            32767,
+            32768,
+            1
+          ],
+          [
+            65535,
+            32769,
+            2
+          ],
+          [
+            98304,
+            65535,
+            0
+          ],
+          [
+            163839,
+            65536,
+            1
+          ],
+          [
+            229375,
+            65537,
+            2
+          ]
+        ]
+      },
+      "family": "change_points",
+      "pair_id": "test:change_points:9",
+      "params": {
+        "regime": 9,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/change_points-9-0.raw",
+      "regime": "encoder:change_points:9:0",
+      "scope": "new-synthetic-test",
+      "seed": 18061994364630058221,
+      "sha256": "b569556d6982f9651123e2b88423f2ffb8ec8b92150cc2fa23cc4a72e9122a6f",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/change_points-9-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "regime_changes": [
+          [
+            0,
+            65535,
+            0
+          ],
+          [
+            65535,
+            65536,
+            1
+          ],
+          [
+            131071,
+            65537,
+            2
+          ],
+          [
+            196608,
+            511,
+            0
+          ],
+          [
+            197119,
+            512,
+            1
+          ],
+          [
+            197631,
+            513,
+            2
+          ],
+          [
+            198144,
+            4095,
+            0
+          ],
+          [
+            202239,
+            4096,
+            1
+          ],
+          [
+            206335,
+            4097,
+            2
+          ],
+          [
+            210432,
+            16383,
+            0
+          ],
+          [
+            226815,
+            16384,
+            1
+          ],
+          [
+            243199,
+            16385,
+            2
+          ],
+          [
+            259584,
+            32767,
+            0
+          ]
+        ]
+      },
+      "family": "change_points",
+      "pair_id": "test:change_points:12",
+      "params": {
+        "regime": 12,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/change_points-12-0.raw",
+      "regime": "encoder:change_points:12:0",
+      "scope": "new-synthetic-test",
+      "seed": 7522959347652337917,
+      "sha256": "2782f3be209c8e5f4fd1ffe30bf9d49bc9bdaecaadf883f22f8eb3a7de1e302b",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/change_points-12-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "regime_changes": [
+          [
+            0,
+            32767,
+            0
+          ],
+          [
+            32767,
+            32768,
+            1
+          ],
+          [
+            65535,
+            32769,
+            2
+          ],
+          [
+            98304,
+            65535,
+            0
+          ],
+          [
+            163839,
+            65536,
+            1
+          ],
+          [
+            229375,
+            65537,
+            2
+          ]
+        ]
+      },
+      "family": "drift",
+      "pair_id": "test:drift:9",
+      "params": {
+        "regime": 9,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/drift-9-0.raw",
+      "regime": "encoder:drift:9:0",
+      "scope": "new-synthetic-test",
+      "seed": 224996118174671338,
+      "sha256": "1b1ab075b34f2a49e3384d58721005635f34441c27dd686ea6185442512c8c8c",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/drift-9-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "regime_changes": [
+          [
+            0,
+            65535,
+            0
+          ],
+          [
+            65535,
+            65536,
+            1
+          ],
+          [
+            131071,
+            65537,
+            2
+          ],
+          [
+            196608,
+            511,
+            0
+          ],
+          [
+            197119,
+            512,
+            1
+          ],
+          [
+            197631,
+            513,
+            2
+          ],
+          [
+            198144,
+            4095,
+            0
+          ],
+          [
+            202239,
+            4096,
+            1
+          ],
+          [
+            206335,
+            4097,
+            2
+          ],
+          [
+            210432,
+            16383,
+            0
+          ],
+          [
+            226815,
+            16384,
+            1
+          ],
+          [
+            243199,
+            16385,
+            2
+          ],
+          [
+            259584,
+            32767,
+            0
+          ]
+        ]
+      },
+      "family": "drift",
+      "pair_id": "test:drift:12",
+      "params": {
+        "regime": 12,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/drift-12-0.raw",
+      "regime": "encoder:drift:12:0",
+      "scope": "new-synthetic-test",
+      "seed": 8417834357905110385,
+      "sha256": "ef33db27c1d0d9eb19986eed9773f951596b1383eea4c2cf28b3188103b7be0e",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/drift-12-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "poison": "flat samples / periodic background",
+        "sample_positions": 4096
+      },
+      "family": "feature_sampling_trap",
+      "pair_id": "test:feature_sampling_trap:9",
+      "params": {
+        "regime": 9,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/feature_sampling_trap-9-0.raw",
+      "regime": "encoder:feature_sampling_trap:9:0",
+      "scope": "new-synthetic-test",
+      "seed": 16428873007182422470,
+      "sha256": "cacd4f68d3036aa126a7cfe3a560b134e7a56183fc2206d29ef5c763737736bc",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/feature_sampling_trap-9-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "poison": "zero samples / random background",
+        "sample_positions": 4096
+      },
+      "family": "feature_sampling_trap",
+      "pair_id": "test:feature_sampling_trap:12",
+      "params": {
+        "regime": 12,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/feature_sampling_trap-12-0.raw",
+      "regime": "encoder:feature_sampling_trap:12:0",
+      "scope": "new-synthetic-test",
+      "seed": 14010460348174195266,
+      "sha256": "99faccb90b5ab601df3fa5dc9fd30393708082d137e5a37a228a15398d85b446",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/feature_sampling_trap-12-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "period": 49,
+        "random_islands": [
+          [
+            520,
+            64
+          ],
+          [
+            4895,
+            64
+          ],
+          [
+            9270,
+            64
+          ],
+          [
+            13645,
+            64
+          ],
+          [
+            18020,
+            64
+          ],
+          [
+            22395,
+            64
+          ],
+          [
+            26770,
+            64
+          ],
+          [
+            31145,
+            64
+          ],
+          [
+            35520,
+            64
+          ],
+          [
+            39895,
+            64
+          ],
+          [
+            44270,
+            64
+          ],
+          [
+            48645,
+            64
+          ],
+          [
+            53020,
+            64
+          ],
+          [
+            57395,
+            64
+          ],
+          [
+            61770,
+            64
+          ],
+          [
+            66145,
+            64
+          ],
+          [
+            70520,
+            64
+          ],
+          [
+            74895,
+            64
+          ],
+          [
+            79270,
+            64
+          ],
+          [
+            83645,
+            64
+          ],
+          [
+            88020,
+            64
+          ],
+          [
+            92395,
+            64
+          ],
+          [
+            96770,
+            64
+          ],
+          [
+            101145,
+            64
+          ],
+          [
+            105520,
+            64
+          ],
+          [
+            109895,
+            64
+          ],
+          [
+            114270,
+            64
+          ],
+          [
+            118645,
+            64
+          ],
+          [
+            123020,
+            64
+          ],
+          [
+            127395,
+            64
+          ],
+          [
+            131770,
+            64
+          ],
+          [
+            136145,
+            64
+          ],
+          [
+            140520,
+            64
+          ],
+          [
+            144895,
+            64
+          ],
+          [
+            149270,
+            64
+          ],
+          [
+            153645,
+            64
+          ],
+          [
+            158020,
+            64
+          ],
+          [
+            162395,
+            64
+          ],
+          [
+            166770,
+            64
+          ],
+          [
+            171145,
+            64
+          ],
+          [
+            175520,
+            64
+          ],
+          [
+            179895,
+            64
+          ],
+          [
+            184270,
+            64
+          ],
+          [
+            188645,
+            64
+          ],
+          [
+            193020,
+            64
+          ],
+          [
+            197395,
+            64
+          ],
+          [
+            201770,
+            64
+          ],
+          [
+            206145,
+            64
+          ],
+          [
+            210520,
+            64
+          ],
+          [
+            214895,
+            64
+          ],
+          [
+            219270,
+            64
+          ],
+          [
+            223645,
+            64
+          ],
+          [
+            228020,
+            64
+          ],
+          [
+            232395,
+            64
+          ],
+          [
+            236770,
+            64
+          ],
+          [
+            241145,
+            64
+          ],
+          [
+            245520,
+            64
+          ],
+          [
+            249895,
+            64
+          ],
+          [
+            254270,
+            64
+          ],
+          [
+            258645,
+            64
+          ]
+        ],
+        "window_wraps": 8
+      },
+      "family": "random_islands",
+      "pair_id": "test:random_islands:9",
+      "params": {
+        "regime": 9,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/random_islands-9-0.raw",
+      "regime": "encoder:random_islands:9:0",
+      "scope": "new-synthetic-test",
+      "seed": 618815199979245032,
+      "sha256": "c57b8cd25c0fca1274f93fb0cc0d40792c20f549aafe8969c06898863bce4b52",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/random_islands-9-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "period": 55,
+        "random_islands": [
+          [
+            523,
+            85
+          ],
+          [
+            4991,
+            85
+          ],
+          [
+            9459,
+            85
+          ],
+          [
+            13927,
+            85
+          ],
+          [
+            18395,
+            85
+          ],
+          [
+            22863,
+            85
+          ],
+          [
+            27331,
+            85
+          ],
+          [
+            31799,
+            85
+          ],
+          [
+            36267,
+            85
+          ],
+          [
+            40735,
+            85
+          ],
+          [
+            45203,
+            85
+          ],
+          [
+            49671,
+            85
+          ],
+          [
+            54139,
+            85
+          ],
+          [
+            58607,
+            85
+          ],
+          [
+            63075,
+            85
+          ],
+          [
+            67543,
+            85
+          ],
+          [
+            72011,
+            85
+          ],
+          [
+            76479,
+            85
+          ],
+          [
+            80947,
+            85
+          ],
+          [
+            85415,
+            85
+          ],
+          [
+            89883,
+            85
+          ],
+          [
+            94351,
+            85
+          ],
+          [
+            98819,
+            85
+          ],
+          [
+            103287,
+            85
+          ],
+          [
+            107755,
+            85
+          ],
+          [
+            112223,
+            85
+          ],
+          [
+            116691,
+            85
+          ],
+          [
+            121159,
+            85
+          ],
+          [
+            125627,
+            85
+          ],
+          [
+            130095,
+            85
+          ],
+          [
+            134563,
+            85
+          ],
+          [
+            139031,
+            85
+          ],
+          [
+            143499,
+            85
+          ],
+          [
+            147967,
+            85
+          ],
+          [
+            152435,
+            85
+          ],
+          [
+            156903,
+            85
+          ],
+          [
+            161371,
+            85
+          ],
+          [
+            165839,
+            85
+          ],
+          [
+            170307,
+            85
+          ],
+          [
+            174775,
+            85
+          ],
+          [
+            179243,
+            85
+          ],
+          [
+            183711,
+            85
+          ],
+          [
+            188179,
+            85
+          ],
+          [
+            192647,
+            85
+          ],
+          [
+            197115,
+            85
+          ],
+          [
+            201583,
+            85
+          ],
+          [
+            206051,
+            85
+          ],
+          [
+            210519,
+            85
+          ],
+          [
+            214987,
+            85
+          ],
+          [
+            219455,
+            85
+          ],
+          [
+            223923,
+            85
+          ],
+          [
+            228391,
+            85
+          ],
+          [
+            232859,
+            85
+          ],
+          [
+            237327,
+            85
+          ],
+          [
+            241795,
+            85
+          ],
+          [
+            246263,
+            85
+          ],
+          [
+            250731,
+            85
+          ],
+          [
+            255199,
+            85
+          ],
+          [
+            259667,
+            85
+          ]
+        ],
+        "window_wraps": 8
+      },
+      "family": "random_islands",
+      "pair_id": "test:random_islands:12",
+      "params": {
+        "regime": 12,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/random_islands-12-0.raw",
+      "regime": "encoder:random_islands:12:0",
+      "scope": "new-synthetic-test",
+      "seed": 7309656255523299295,
+      "sha256": "d2259a8d987b4f2c7a710f14ace481429251faae0dd88e65bda0d0b31fe6de4f",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/random_islands-12-0.raw"
+    },
+    {
+      "bytes": 131072,
+      "construction": {
+        "base_sha256": "052a771037329cf5bc9627aaf1c45b1bb88c9d08f997bfc37c3a9e2e6798f3f4",
+        "period": 275,
+        "transform": "duplicate",
+        "window_wraps_base": 4
+      },
+      "family": "paired_transforms",
+      "pair_id": "test:paired_transforms:9",
+      "params": {
+        "regime": 9,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/paired_transforms-9-0.raw",
+      "regime": "encoder:paired_transforms:9:0",
+      "scope": "new-synthetic-test",
+      "seed": 1277923236299218779,
+      "sha256": "052a771037329cf5bc9627aaf1c45b1bb88c9d08f997bfc37c3a9e2e6798f3f4",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/paired_transforms-9-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "construction": {
+        "base_sha256": "052a771037329cf5bc9627aaf1c45b1bb88c9d08f997bfc37c3a9e2e6798f3f4",
+        "period": 275,
+        "transform": "duplicate",
+        "window_wraps_base": 4
+      },
+      "family": "paired_transforms",
+      "pair_id": "test:paired_transforms:9",
+      "params": {
+        "regime": 9,
+        "variant": 1,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/paired_transforms-9-1.raw",
+      "regime": "encoder:paired_transforms:9:1",
+      "scope": "new-synthetic-test",
+      "seed": 1277923236299218779,
+      "sha256": "a0c196303f524dcf30b1bff074519383ee0f0a77cb8e0d4d13ccde003e819220",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/paired_transforms-9-1.raw"
+    },
+    {
+      "bytes": 131072,
+      "construction": {
+        "base_sha256": "c9005b5f5b33d9b53f1605bc0581f21f202f6915cef2427f3349c62438a3e0d0",
+        "period": 281,
+        "transform": "prepend",
+        "window_wraps_base": 4
+      },
+      "family": "paired_transforms",
+      "pair_id": "test:paired_transforms:12",
+      "params": {
+        "regime": 12,
+        "variant": 0,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/paired_transforms-12-0.raw",
+      "regime": "encoder:paired_transforms:12:0",
+      "scope": "new-synthetic-test",
+      "seed": 17174225993149621971,
+      "sha256": "c9005b5f5b33d9b53f1605bc0581f21f202f6915cef2427f3349c62438a3e0d0",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/paired_transforms-12-0.raw"
+    },
+    {
+      "bytes": 131595,
+      "construction": {
+        "base_sha256": "c9005b5f5b33d9b53f1605bc0581f21f202f6915cef2427f3349c62438a3e0d0",
+        "period": 281,
+        "transform": "prepend",
+        "window_wraps_base": 4
+      },
+      "family": "paired_transforms",
+      "pair_id": "test:paired_transforms:12",
+      "params": {
+        "regime": 12,
+        "variant": 1,
+        "version": 1
+      },
+      "partition": "test",
+      "path": "synthetic/test/paired_transforms-12-1.raw",
+      "regime": "encoder:paired_transforms:12:1",
+      "scope": "new-synthetic-test",
+      "seed": 17174225993149621971,
+      "sha256": "e8ee516d13fc563615b33ab128ae0bafedc988b8a49293880393a6cdd1d83e3c",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1/test/paired_transforms-12-1.raw"
+    },
+    {
+      "bytes": 262144,
+      "class": "synthetic",
+      "family": "feature_sampling_trap",
+      "partition": "regression",
+      "path": "regression/fresh-1-feature_sampling_trap-5-0.raw",
+      "raw_path": "/Users/dmytro/github/deflated/target/search/final-s9-rotated/corpus/test/fresh-1-feature_sampling_trap-5-0.raw",
+      "scope": "old-regression",
+      "sha256": "5f4a6023f9f567d48485c68fbf7a75a1b5edd9db0064121effe8fd383e03a45a",
+      "source_group": "s9-feature_sampling_trap",
+      "source_path": "/Users/dmytro/github/deflated/target/search/final-s9-rotated/corpus/test/fresh-1-feature_sampling_trap-5-0.raw"
+    },
+    {
+      "bytes": 262144,
+      "class": "synthetic",
+      "family": "template_edits",
+      "partition": "regression",
+      "path": "regression/fresh-0-new-template_edits-1021.raw",
+      "raw_path": "/Users/dmytro/github/deflated/target/search/final-s9-rotated/corpus/test/fresh-0-new-template_edits-1021.raw",
+      "scope": "old-regression",
+      "sha256": "b996b8d16c37929f3d991ef2aeed12c885c0ccb4f8f4d815760330ced3a56ef8",
+      "source_group": "s9-template_edits",
+      "source_path": "/Users/dmytro/github/deflated/target/search/final-s9-rotated/corpus/test/fresh-0-new-template_edits-1021.raw"
+    },
+    {
+      "bytes": 262144,
+      "class": "synthetic",
+      "family": "collision_trigram",
+      "partition": "regression",
+      "path": "regression/fresh-1-collision_trigram-5-0.raw",
+      "raw_path": "/Users/dmytro/github/deflated/target/search/final-s9-rotated/corpus/test/fresh-1-collision_trigram-5-0.raw",
+      "scope": "old-regression",
+      "sha256": "62fc490ba89ea6d465dba7e12fb70cbed9cecaa48c01332e5368460768eb1e4b",
+      "source_group": "s9-collision_trigram",
+      "source_path": "/Users/dmytro/github/deflated/target/search/final-s9-rotated/corpus/test/fresh-1-collision_trigram-5-0.raw"
+    },
+    {
+      "bytes": 0,
+      "family": "tiny-random",
+      "partition": "stress",
+      "path": "tiny/tiny-random-0.raw",
+      "scope": "tiny",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_group": "tiny-random",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-random-0.raw"
+    },
+    {
+      "bytes": 1,
+      "family": "tiny-random",
+      "partition": "stress",
+      "path": "tiny/tiny-random-1.raw",
+      "scope": "tiny",
+      "sha256": "e7ac0786668e0ff0f02b62bd04f45ff636fd82db63b1104601c975dc005f3a67",
+      "source_group": "tiny-random",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-random-1.raw"
+    },
+    {
+      "bytes": 1,
+      "family": "tiny-periodic",
+      "partition": "stress",
+      "path": "tiny/tiny-periodic-1.raw",
+      "scope": "tiny",
+      "sha256": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
+      "source_group": "tiny-periodic",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-periodic-1.raw"
+    },
+    {
+      "bytes": 2,
+      "family": "tiny-random",
+      "partition": "stress",
+      "path": "tiny/tiny-random-2.raw",
+      "scope": "tiny",
+      "sha256": "39105fe1e208e050b7606c01fc44a91e1fadf7cb855a3f65c59247d4444132cc",
+      "source_group": "tiny-random",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-random-2.raw"
+    },
+    {
+      "bytes": 2,
+      "family": "tiny-periodic",
+      "partition": "stress",
+      "path": "tiny/tiny-periodic-2.raw",
+      "scope": "tiny",
+      "sha256": "fb8e20fc2e4c3f248c60c39bd652f3c1347298bb977b8b4d5903b85055620603",
+      "source_group": "tiny-periodic",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-periodic-2.raw"
+    },
+    {
+      "bytes": 3,
+      "family": "tiny-random",
+      "partition": "stress",
+      "path": "tiny/tiny-random-3.raw",
+      "scope": "tiny",
+      "sha256": "c5fe49dcd3c2516241840b16e832c725970991fc0fd21798523fb0d8c538effe",
+      "source_group": "tiny-random",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-random-3.raw"
+    },
+    {
+      "bytes": 3,
+      "family": "tiny-periodic",
+      "partition": "stress",
+      "path": "tiny/tiny-periodic-3.raw",
+      "scope": "tiny",
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+      "source_group": "tiny-periodic",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-periodic-3.raw"
+    },
+    {
+      "bytes": 4,
+      "family": "tiny-random",
+      "partition": "stress",
+      "path": "tiny/tiny-random-4.raw",
+      "scope": "tiny",
+      "sha256": "2bd7117c94a226889657c049593f1ce29ab0c6ee3aac88f352a6e295e7647373",
+      "source_group": "tiny-random",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-random-4.raw"
+    },
+    {
+      "bytes": 4,
+      "family": "tiny-periodic",
+      "partition": "stress",
+      "path": "tiny/tiny-periodic-4.raw",
+      "scope": "tiny",
+      "sha256": "5c3f67b7fa84dfbe1118387cad14793929845a5bc7c0080c4d8309d37baa68d0",
+      "source_group": "tiny-periodic",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-periodic-4.raw"
+    },
+    {
+      "bytes": 15,
+      "family": "tiny-random",
+      "partition": "stress",
+      "path": "tiny/tiny-random-15.raw",
+      "scope": "tiny",
+      "sha256": "f39ff64120dd2db70c85357c995590b8d15737d2267112a9630d47144fded3f2",
+      "source_group": "tiny-random",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-random-15.raw"
+    },
+    {
+      "bytes": 15,
+      "family": "tiny-periodic",
+      "partition": "stress",
+      "path": "tiny/tiny-periodic-15.raw",
+      "scope": "tiny",
+      "sha256": "a917d2e9c028a69f620f879b34123a1eb67fd13ebc763ab107f99bc2cf599b7c",
+      "source_group": "tiny-periodic",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-periodic-15.raw"
+    },
+    {
+      "bytes": 31,
+      "family": "tiny-random",
+      "partition": "stress",
+      "path": "tiny/tiny-random-31.raw",
+      "scope": "tiny",
+      "sha256": "7c8fc84d8a56c5e7160f1ea8a36542d16d9d878e09fbb1dd53314702e3f2976e",
+      "source_group": "tiny-random",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-random-31.raw"
+    },
+    {
+      "bytes": 31,
+      "family": "tiny-periodic",
+      "partition": "stress",
+      "path": "tiny/tiny-periodic-31.raw",
+      "scope": "tiny",
+      "sha256": "34e5be87c070bea115cda0a7693eb81802b8b9d31b1bfd0ba6ce3810ea8bca8a",
+      "source_group": "tiny-periodic",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-periodic-31.raw"
+    },
+    {
+      "bytes": 64,
+      "family": "tiny-random",
+      "partition": "stress",
+      "path": "tiny/tiny-random-64.raw",
+      "scope": "tiny",
+      "sha256": "41d8c2d61ec40e6062f28d26ab87b21e717e9a15929f12c9e36366643e1d43d6",
+      "source_group": "tiny-random",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-random-64.raw"
+    },
+    {
+      "bytes": 64,
+      "family": "tiny-periodic",
+      "partition": "stress",
+      "path": "tiny/tiny-periodic-64.raw",
+      "scope": "tiny",
+      "sha256": "9ed060c766efa8e4a9e451aef0915daf135de966d62728466cc7215baf33c0a2",
+      "source_group": "tiny-periodic",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-periodic-64.raw"
+    },
+    {
+      "bytes": 255,
+      "family": "tiny-random",
+      "partition": "stress",
+      "path": "tiny/tiny-random-255.raw",
+      "scope": "tiny",
+      "sha256": "9911ba69cdd65963774dfaa4f6ca23ee842f532bc961a594e1d9843d97931daa",
+      "source_group": "tiny-random",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-random-255.raw"
+    },
+    {
+      "bytes": 255,
+      "family": "tiny-periodic",
+      "partition": "stress",
+      "path": "tiny/tiny-periodic-255.raw",
+      "scope": "tiny",
+      "sha256": "dab40d8f89177a79a4d5ffad0a8821faf45b42a774f5cf9525543a0b174ed153",
+      "source_group": "tiny-periodic",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-periodic-255.raw"
+    },
+    {
+      "bytes": 257,
+      "family": "tiny-random",
+      "partition": "stress",
+      "path": "tiny/tiny-random-257.raw",
+      "scope": "tiny",
+      "sha256": "d88bced5a7d36144be62922fee9c9e9e4b1a2aaaa3dd804a69296cc546af9eb0",
+      "source_group": "tiny-random",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-random-257.raw"
+    },
+    {
+      "bytes": 257,
+      "family": "tiny-periodic",
+      "partition": "stress",
+      "path": "tiny/tiny-periodic-257.raw",
+      "scope": "tiny",
+      "sha256": "98e0aa8982232fc47a4a3715066071eecb6e96c2daf20d127afb0281fb7b3d97",
+      "source_group": "tiny-periodic",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-periodic-257.raw"
+    },
+    {
+      "bytes": 258,
+      "family": "tiny-random",
+      "partition": "stress",
+      "path": "tiny/tiny-random-258.raw",
+      "scope": "tiny",
+      "sha256": "170eb2a683fe4e596bad529e3015d8610b3255b48c07b333c919f3b6cbbc65db",
+      "source_group": "tiny-random",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-random-258.raw"
+    },
+    {
+      "bytes": 258,
+      "family": "tiny-periodic",
+      "partition": "stress",
+      "path": "tiny/tiny-periodic-258.raw",
+      "scope": "tiny",
+      "sha256": "389743c0d5040754c5b08e47030f40506c10b7e8a2265e366eb416b54c955f2b",
+      "source_group": "tiny-periodic",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-periodic-258.raw"
+    },
+    {
+      "bytes": 259,
+      "family": "tiny-random",
+      "partition": "stress",
+      "path": "tiny/tiny-random-259.raw",
+      "scope": "tiny",
+      "sha256": "6e62d9e6987098b089b12ee8acbf121c52b7280076066f06de53d27266d6c114",
+      "source_group": "tiny-random",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-random-259.raw"
+    },
+    {
+      "bytes": 259,
+      "family": "tiny-periodic",
+      "partition": "stress",
+      "path": "tiny/tiny-periodic-259.raw",
+      "scope": "tiny",
+      "sha256": "57bdf7f6c42ba1c125751ed01269fa46d2b8c80cc8c62de03f596a33eff531a2",
+      "source_group": "tiny-periodic",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-periodic-259.raw"
+    },
+    {
+      "bytes": 1024,
+      "family": "tiny-random",
+      "partition": "stress",
+      "path": "tiny/tiny-random-1024.raw",
+      "scope": "tiny",
+      "sha256": "318beece5142cf5b6e935b2e01a003f5be50a2e69c05f5cb88c66a5628edd327",
+      "source_group": "tiny-random",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-random-1024.raw"
+    },
+    {
+      "bytes": 1024,
+      "family": "tiny-periodic",
+      "partition": "stress",
+      "path": "tiny/tiny-periodic-1024.raw",
+      "scope": "tiny",
+      "sha256": "956928530dcc5571c83472a0255d58e6ca395fa65ac52f264bbdc2d0c28cb1fa",
+      "source_group": "tiny-periodic",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-periodic-1024.raw"
+    },
+    {
+      "bytes": 4096,
+      "family": "tiny-random",
+      "partition": "stress",
+      "path": "tiny/tiny-random-4096.raw",
+      "scope": "tiny",
+      "sha256": "0ada2a828733c28cc9978f6ff4bd78ee99ff2330307afd8b29ab535d87747484",
+      "source_group": "tiny-random",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-random-4096.raw"
+    },
+    {
+      "bytes": 4096,
+      "family": "tiny-periodic",
+      "partition": "stress",
+      "path": "tiny/tiny-periodic-4096.raw",
+      "scope": "tiny",
+      "sha256": "35df7542580c3c4dd4a101dd29be156c44f8343bd96fd3e703ac048a01daf3df",
+      "source_group": "tiny-periodic",
+      "source_path": "/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/corpus/tiny/tiny-periodic-4096.raw"
+    }
+  ],
+  "real_manifest_sha256": "7e2e2eec698be421e4e933b5117bc11defe74b042d45b1a9f5dd4e4f0aefde85",
+  "synthetic_manifest_sha256": "a0ce2bef055f0c82ff57c923305f457c502b1f23ee449505e4db7cc7560568e6",
+  "tiny_scope": "shared deterministic latency/boundary stress, not independent holdout",
+  "tiny_sizes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    15,
+    31,
+    64,
+    255,
+    257,
+    258,
+    259,
+    1024,
+    4096
+  ]
+}

@@ -1,0 +1,346 @@
+{
+  "artifacts": {
+    "candidate-default.build.log": "44a6c20a6d0ea572c5f61e780d673aa47771adce67ea3abf721358c5a1125492",
+    "candidate-research.build.log": "ba8570217376205724aa3bd9af3105171a6be2771a05787b9cb67eb5ebb44233",
+    "compromise.policy": "55814b0dff22445318006b60e89f47e9a1020c1181ca0a9c5d7b1f3ab4cf6d69",
+    "default_bench": "0fddb0222dadb2235cbf969e69f523c5aa1b72427d9f57b4f4de765bcbd7374b",
+    "final_bench": "1cadbfd00db2839727ff0e0e900793860085ca7eac52d8990c9d4365d0b46380",
+    "manifest.json": "e32c58e816f9189b52089d292f612034a30e34b1c5ff20a7e5e362d337b5d748",
+    "original-default.build.log": "91c51fa8c67ad2cec67f8de3ae1377e9fda2120ce7d2d62f1f6c87a0e8df4ee8",
+    "original-policy-size.policy": "f6c93ac5b169db4b84a750564d81dd660d9974a15d4e2a00f9d5c4ccd5cb78cd",
+    "original-policy-speed.policy": "e1fe8b0d9bdc0a86dd08865432d0d39e02d11d1fdbe32d453437490ee6d3438c",
+    "original_bench": "52906b4f7880f7882634f150230e52a44cd3814bf0ac9b3f52306b49aef1bea9",
+    "original_default_bench": "1d7d642f229ce0536a5fde180a453f9a2529e4249ece163a197815fc869331d5",
+    "original_portable_vdeflate": "55f836a48319358ec80942c502a9816fbad937ae80e7608e2e80702ba5e04788",
+    "portable-size.json": "69371fb23a42a9de714fda36e06105a9f9aace0b454b7ec6316e0480afab4e4a",
+    "portable_vdeflate": "8909ef77aba682880acebbc6f7b5e0da25c3635ddce19180fb9858fde168d61c",
+    "size.policy": "f6c93ac5b169db4b84a750564d81dd660d9974a15d4e2a00f9d5c4ccd5cb78cd",
+    "source.tar.gz": "13709a56a6aeec8091ae58201f44279fc4d10f8cbbe8c8f42dbb1386bca17daf",
+    "speed.policy": "d73d640250e2b8ff172dd21a5414c0335ec515681301bc40af69a142cc30ff4d"
+  },
+  "baseline_metadata_sha256": "f17e4cb88c625ac11906b4da5736dcaf4e1bb31f2cb6fd0a2b3c4fad3c64fb69",
+  "baseline_path": "/Users/dmytro/github/deflated/target/encoder-performance/baseline",
+  "build_overrides": {},
+  "contract": {
+    "baseline_commit": "14f15e63e1a8955c5cfebf869ce065f29dd950fc",
+    "common_guards": {
+      "decoder_time_upper_95_ratio_max": 1.2,
+      "max_per_case_median_process_rss_increase_bytes": 8388608,
+      "portable_release_binary_growth_bytes_max": 65536,
+      "require_new_frontier_point_among_same_guard_qualifying_profiles": true,
+      "size_guards_apply_to_synthetic_and_regression_scopes": true,
+      "worst_tiny_warm_median_ratio_max": 1.2
+    },
+    "completion": "resolve P0-P6 and GPU/Lean decisions with evidence; promotion conditional on guards; missed numerical targets explicitly reported",
+    "controls": [
+      "fast",
+      "balanced",
+      "best",
+      "miniz1",
+      "miniz6",
+      "miniz9",
+      "bayesian-speed",
+      "bayesian-compromise",
+      "bayesian-size",
+      "policy-speed",
+      "policy-size"
+    ],
+    "corpus_manifest_sha256": "7e2e2eec698be421e4e933b5117bc11defe74b042d45b1a9f5dd4e4f0aefde85",
+    "freeze": {
+      "forbid_final_test_feedback": true,
+      "pilot_and_profile_partitions": [
+        "train",
+        "validation",
+        "old-regression"
+      ],
+      "previous_final_tests_are_regressions": true,
+      "required_before_test_encoding": [
+        "candidate sources and binaries",
+        "policies",
+        "corpus manifest",
+        "protocol",
+        "baseline artifacts"
+      ]
+    },
+    "gpu_reopen_optimizer_fraction_min": 0.05,
+    "measurement": {
+      "bootstrap_repetitions": 10000,
+      "exclude": [
+        "input I/O",
+        "oracle checks",
+        "process startup"
+      ],
+      "first_call": "separate process; resident input and parsed policy; no encode/decode priming; startup and disk I/O excluded",
+      "headline_speed_estimator": "sum paired per-file baseline medians / sum candidate per-file medians",
+      "include": [
+        "allocations",
+        "matching",
+        "features",
+        "policy selection",
+        "all retry/refinement/fallback passes",
+        "emission"
+      ],
+      "rotate_files_methods_and_pair_order": true,
+      "rss_repeats": 3,
+      "seed": 20261007,
+      "serial_native_runs": true,
+      "sessions": 10,
+      "speed_guard_estimator": "paired session-mean ratio lower bootstrap 95% bound; reported separately",
+      "tiny_minimum_batch_ms": 2,
+      "warm_minimum_batch_ms": 20
+    },
+    "primary_scope": "new-real-test",
+    "reference": {
+      "framing": "raw DEFLATE",
+      "levels": [
+        1,
+        6,
+        9
+      ],
+      "name": "miniz_oxide",
+      "version": "0.8.9"
+    },
+    "roles": {
+      "compromise": {
+        "aggregate_size_ratio_max": 1.01,
+        "baseline": "balanced",
+        "first_call_speed_lower_95_min": 1.5,
+        "per_file_size_ratio_max": 1.2,
+        "warm_speed_lower_95_min": 1.5
+      },
+      "size": {
+        "aggregate_size_ratio_max": 0.998,
+        "baseline": "best",
+        "first_call_speed_lower_95_min": 0.5,
+        "per_file_size_ratio_max": 1.2,
+        "warm_speed_lower_95_min": 0.5
+      },
+      "speed": {
+        "aggregate_size_ratio_max": 1.2,
+        "baseline": "balanced",
+        "first_call_speed_lower_95_min": 1.5,
+        "per_file_size_ratio_max": 1.2,
+        "warm_speed_lower_95_min": 1.5
+      }
+    },
+    "schema_version": 1,
+    "secondary_scopes": [
+      "new-synthetic-test",
+      "old-regression",
+      "tiny",
+      "per-family",
+      "per-file"
+    ],
+    "synthetic_manifest_sha256": "a0ce2bef055f0c82ff57c923305f457c502b1f23ee449505e4db7cc7560568e6"
+  },
+  "contract_sha256": "df393728890557fed0560b971ce35bfe7f5dd66811005bae873103548b23080a",
+  "held_encoded_before_freeze": false,
+  "held_features_before_freeze": false,
+  "methods": {
+    "balanced": {
+      "baseline_binary": "original_bench",
+      "baseline_worker": "balanced",
+      "binary": "original_bench",
+      "origin": "original control",
+      "worker": "balanced"
+    },
+    "bayesian-compromise": {
+      "baseline_binary": "original_bench",
+      "baseline_worker": "balanced",
+      "binary": "original_bench",
+      "origin": "original control",
+      "worker": "config:32:0:16:trigram:16384"
+    },
+    "bayesian-size": {
+      "baseline_binary": "original_bench",
+      "baseline_worker": "balanced",
+      "binary": "original_bench",
+      "origin": "original control",
+      "worker": "config:128:1:0:trigram:16384"
+    },
+    "bayesian-speed": {
+      "baseline_binary": "original_bench",
+      "baseline_worker": "balanced",
+      "binary": "original_bench",
+      "origin": "original control",
+      "worker": "config:1:0:8:trigram:16384"
+    },
+    "best": {
+      "baseline_binary": "original_bench",
+      "baseline_worker": "balanced",
+      "binary": "original_bench",
+      "origin": "original control",
+      "worker": "best"
+    },
+    "core-reversal": {
+      "baseline_binary": "original_default_bench",
+      "baseline_worker": "balanced",
+      "binary": "default_bench",
+      "origin": "actual default core; identical harness on original archived core; no research feature",
+      "worker": "balanced"
+    },
+    "fast": {
+      "baseline_binary": "original_bench",
+      "baseline_worker": "balanced",
+      "binary": "original_bench",
+      "origin": "original control",
+      "worker": "fast"
+    },
+    "miniz1": {
+      "baseline_binary": "original_bench",
+      "baseline_worker": "balanced",
+      "binary": "original_bench",
+      "origin": "original control",
+      "worker": "miniz1"
+    },
+    "miniz6": {
+      "baseline_binary": "original_bench",
+      "baseline_worker": "balanced",
+      "binary": "original_bench",
+      "origin": "original control",
+      "worker": "miniz6"
+    },
+    "miniz9": {
+      "baseline_binary": "original_bench",
+      "baseline_worker": "balanced",
+      "binary": "original_bench",
+      "origin": "original control",
+      "worker": "miniz9"
+    },
+    "new-compromise": {
+      "baseline_binary": "original_bench",
+      "baseline_worker": "balanced",
+      "binary": "final_bench",
+      "origin": "frozen P2/P4 combination",
+      "role": "compromise",
+      "worker": "policy@/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/compromise.policy"
+    },
+    "new-size": {
+      "baseline_binary": "original_bench",
+      "baseline_worker": "best",
+      "binary": "final_bench",
+      "origin": "frozen P2/P4 combination",
+      "role": "size",
+      "worker": "policy@/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/size.policy"
+    },
+    "new-speed": {
+      "baseline_binary": "original_bench",
+      "baseline_worker": "balanced",
+      "binary": "final_bench",
+      "origin": "frozen P2/P4 combination",
+      "role": "speed",
+      "worker": "policy@/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/speed.policy"
+    },
+    "policy-size": {
+      "baseline_binary": "original_bench",
+      "baseline_worker": "balanced",
+      "binary": "original_bench",
+      "origin": "original control",
+      "worker": "policy@/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/original-policy-size.policy"
+    },
+    "policy-speed": {
+      "baseline_binary": "original_bench",
+      "baseline_worker": "balanced",
+      "binary": "original_bench",
+      "origin": "original control",
+      "worker": "policy@/Users/dmytro/github/deflated/target/encoder-performance/p5-final-v2/original-policy-speed.policy"
+    }
+  },
+  "original_default_harness_sha256": "5130ffaa3c83bd08679d290468f04f0d6cf5db969c8e8ed7d710023d6bac127c",
+  "original_source_archive_sha256": "961c97f84921f632260573da8830164626afadd2d6ac1435bbc404c1e667e056",
+  "prepared_at_utc": "2026-10-07T12:56:29Z",
+  "real_path": "/Users/dmytro/github/deflated/target/encoder-performance/corpus-v1",
+  "rss_cases": [
+    "real/test/ecma262.raw",
+    "real/test/nyc-tlc.raw",
+    "real/test/ripgrep.raw",
+    "real/test/xz-archive.raw",
+    "real/test/cldr.raw",
+    "real/test/linux.raw",
+    "synthetic/test/change_points-12-0.raw",
+    "synthetic/test/drift-12-0.raw",
+    "regression/fresh-1-collision_trigram-5-0.raw"
+  ],
+  "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)",
+  "schema": 1,
+  "source_commit": "6c1cd1f4f8d69df79fd39609ab17ee82bceb385e",
+  "source_sha256": {
+    "Cargo.lock": "8ce82932f19c583ec37870d2f01dc9e72cb492b0aa02dde7e14b43142857a15d",
+    "Cargo.toml": "d8e747c012cba553ad19cdba4436e5c43dd30a10adce9e89933c3d538c4f4a39",
+    "crates/deflate-core/Cargo.toml": "27e824b076208ffe2864e6c1fae8b836429a393c26c62788e36f53acf1ff65e2",
+    "crates/deflate-core/examples/default_bench.rs": "5130ffaa3c83bd08679d290468f04f0d6cf5db969c8e8ed7d710023d6bac127c",
+    "crates/deflate-core/examples/final_bench.rs": "f4ce0e0b3fe5e85a41d484ad872a0546c6e56c0fc213a09e3c6340377a1eca2a",
+    "crates/deflate-core/examples/support/adaptive.rs": "3743d7e174adfee696d3dcb87d5aff7ca1851e4b7c336ec307927d69448b5bac",
+    "crates/deflate-core/examples/support/bounded_parse.rs": "e7545af7442856c491e6eabedc90879d364f6848031659467ce2a0ecb2635262",
+    "crates/deflate-core/examples/support/final_bench.rs": "b30b948a3d1341d3b2f3b85f32d7703a716852f668e0dfdac29aa1c40d6aff70",
+    "crates/deflate-core/examples/support/policy.rs": "529af50ef1222ddaa864c6ab16aba044ee42f3f5c1954365244cd0f0ff4d30b4",
+    "crates/deflate-core/examples/support/streaming_blocks.rs": "cf4db02f87fef283002c5b8028b2e75c0d2f2faea9ccaac71046e97e4470e595",
+    "crates/deflate-core/src/bitstream.rs": "95e941fcc379cafd8ae920f12ed4f6327e12062edfe39015f66eb43a9b094186",
+    "crates/deflate-core/src/bitwriter.rs": "e79886707cf12e58f86c26548eedb3ce8dd1023b131a8e17f790b9037b9d6cda",
+    "crates/deflate-core/src/block.rs": "b99d28faf70ea823b251544f2040f0c4850b9871bcbd9e331742661545310eee",
+    "crates/deflate-core/src/compress.rs": "ed3854e0f1c02db1056c465a4740f9c3212b06ebac4406cb59017adcf999a405",
+    "crates/deflate-core/src/crc32.rs": "3166b0a90dc6cded7a07e5beae9b5cee0c843349123e80dd2e7cc898f71e7fad",
+    "crates/deflate-core/src/deflate.rs": "419e757fa99e22675f77628fc652badcfeb0817852835f790eb584aaebc67507",
+    "crates/deflate-core/src/encode_dynamic.rs": "0a10d270561609bcb1c9b883992880734c6395dfd532ad9ecd2bed54bc4a52ec",
+    "crates/deflate-core/src/encode_fixed.rs": "b4459d0cc109c2f50ebd28467ad1923fbf96a527480dd3f64399601cfa459fd1",
+    "crates/deflate-core/src/error.rs": "fe3ac5fc29296fd8e7e0539dc76c615717fe8a72bb3456608edd18efbb21fecd",
+    "crates/deflate-core/src/gzip.rs": "44a8044d6fd55a5f78fab74f75ba5815b004a4e83ffcbf08ae8254909021b5bd",
+    "crates/deflate-core/src/huffman.rs": "326b31f0fda785d2418f24c7348490520f7f869082fed3316f9f870bfe0fd964",
+    "crates/deflate-core/src/huffman_build.rs": "c2eef9c5c7d53eaf435b65cbc2eb6ad19f28e3df1aef87f6952024c8879ccc58",
+    "crates/deflate-core/src/inflate.rs": "ae4c905a7da364c4b05f4f8c4754ca01ad513b695ea82c28a06c2375dfcde272",
+    "crates/deflate-core/src/lib.rs": "82e81c94fbdad579be6157b3f9cd6b73f3d51ec526c68fda8d731d7f23070d68",
+    "crates/deflate-core/src/lz77.rs": "67991a3fb79ef37a65accdff089b3c34d90157e8eed43745fcbba60f432589c1",
+    "crates/deflate-core/src/matcher.rs": "eedea6a0be4d486bab0ce2a8046a982b4f05e5e4d940ef12decb0d092a04f474",
+    "crates/deflate-core/src/matcher_flat.rs": "2cb9257a6b93edce133891c4292690ef78e5edf87ccdbce976667d0d6d587890",
+    "crates/deflate-core/src/research.rs": "63046c8b3f3a85cc5f3148cbf0aee4a2640618e199cde29ca27a3c3035b7179b",
+    "crates/deflate-core/src/tokens.rs": "5e2f16a94e1a8a35400be25e04280ecae25dd550ad7bd92e398715f16f84f839",
+    "crates/deflate-core/src/zip.rs": "e92492d2c4d61be74e8f6f73da43725992ca0c6be807d8da0d104e2e3a6ae731",
+    "crates/vdeflate/Cargo.toml": "71abd61cc86c5308d53b788d39dfd598545c8945eef7d3aeceb17c5fe880dd68",
+    "crates/vdeflate/src/main.rs": "f338ce2fc11f3c836c7afe447470566b5fa86d04875fc3e9b26ac0fb9d9a05e1",
+    "lean-toolchain": "54727eec5cba149c18842e6deb5c41b369d66455c93ce135d7d5347c782b2325",
+    "scripts/encoder_baseline.py": "d1b5d7a5bb0b8c47e301b447744ac6029955f405247584094112fa13e4dc590d",
+    "scripts/encoder_corpus.py": "7c7cce08e46fce09a6ed3b1ea8f6f5e726a96f9587229ca6c4e070b9eca49645",
+    "scripts/encoder_final_campaign.py": "14d7c367832f8a315596d299cdfe885c18d7896f8accb42b9a6c385da721aa8d",
+    "scripts/encoder_final_correspondence.py": "c17a17eba3537e34e3b1d1e87d2a2eb4859614aab3353fcfff8ce12b7e64a742",
+    "scripts/encoder_final_stats.py": "b97c65e48a42a99300accb495b5cd60566aa47bf1a7e6b84b3b17af30759edd2",
+    "scripts/encoder_measure.py": "e56985aa311e173f2cf79432c5aa6428c3545811caa8ea8e36f76f4c16649c0c",
+    "scripts/encoder_parse_campaign.py": "c88fbd2bbc0a2ab789b877b337416cfa4baed7d1c7298ef069ccf998d16fb55a",
+    "scripts/encoder_protocol.json": "df393728890557fed0560b971ce35bfe7f5dd66811005bae873103548b23080a",
+    "scripts/reports/encoder-final-compromise.policy": "55814b0dff22445318006b60e89f47e9a1020c1181ca0a9c5d7b1f3ab4cf6d69",
+    "scripts/reports/encoder-final-size.policy": "f6c93ac5b169db4b84a750564d81dd660d9974a15d4e2a00f9d5c4ccd5cb78cd",
+    "scripts/reports/encoder-final-speed.policy": "d73d640250e2b8ff172dd21a5414c0335ec515681301bc40af69a142cc30ff4d",
+    "scripts/reports/encoder-p5-portable-size.json": "69371fb23a42a9de714fda36e06105a9f9aace0b454b7ec6316e0480afab4e4a",
+    "scripts/search_corpus.py": "ff99039e63e31f41805a433777ba454a8e6276706e4357d2f6273febe78f03c3",
+    "scripts/search_cost_oracle.py": "484c4740ab6b6fbe8febb1c1b43e2b1d92696a76bc7107cbb92dcc3d66527bdd",
+    "scripts/search_cpu.py": "2d2a3f4589f513ca859a6497cb4ae851128b5293a381c9f1dfecd8a7dd6a6af4",
+    "scripts/search_final_campaign.py": "3af9229d26cc1dd57804f5f723ffc5a2da03009ef83ab7181a71751530f5c4b2",
+    "scripts/search_final_stats.py": "563525db442b46054c4cc1ca034fb4d273246af54cd169a34638be4113fe0441",
+    "scripts/search_poc.py": "bde8f0bb0976f0197281eaa7e9c03445a6b628a28b04f5ab315d7a319d0e1763",
+    "spec/Deflate.lean": "19a73ad5ff3acd5f16c1a7cf461dae24d3bb1226f0bd8f4e7dc054d06dd88570",
+    "spec/Deflate/Basic.lean": "b65b4c40923322733d93eeff32096857be1f6c19e121de31a46928400e3c109e",
+    "spec/Deflate/BitWriter.lean": "f96ec7b900646e300dd07d858700f904293f025c89a2d1a1c9a2278efe24fd26",
+    "spec/Deflate/Bitstream.lean": "3cd0f3d69709294b53058eb65e356f70ff078f54ef016203524e608313b77920",
+    "spec/Deflate/Block.lean": "46414b01feb17803c4dfaa94f7fe70039575df99681f3948a2d30c535a069949",
+    "spec/Deflate/CRC32.lean": "3ed213a5602b1cb0be54510588b327e66db8e727f6fb477f9378a0f3bf65e454",
+    "spec/Deflate/Canonical.lean": "8e7c17a3b89f687b9864d694f82103eb092e900031ea132ee07b6175a62ee229",
+    "spec/Deflate/Compress.lean": "a85f35c80ea451efe1fd936181a6c2b2f2bb56b970441c12d4cb7edeae6ad470",
+    "spec/Deflate/Decode.lean": "ce1837367026ea291e11b94430b6f9bace759342dabdc91110a2d180c1d272c2",
+    "spec/Deflate/Encode.lean": "026b44cca1af1d4af0088fb543a927aa7872387b45021c39913610fad4e737f0",
+    "spec/Deflate/EncodeDynamic.lean": "33f84fb7600cd0db1ca2bcabd4e59692f6974e82712ed2cb51b039aa52f9be4a",
+    "spec/Deflate/EncodeFixed.lean": "18d851e227b6d841d0b3ee0e84a29849178bb7ee2e90e96003c9839bc4587800",
+    "spec/Deflate/EncodeSplit.lean": "ccb7679b911eaa37d0e9af6929c72ea26d1983c8308538f90770311bdded184e",
+    "spec/Deflate/Framing.lean": "59e2150b4221efd1cabbba80379a4022d836b64013163edb32e7d4f505e3fb3e",
+    "spec/Deflate/Fuel.lean": "e9a8f1cbba185c7e5f3956403e00be4ab493442b36a1aaa339a0f7ea36bd11bd",
+    "spec/Deflate/Gzip.lean": "bee8fbc1fd014f0e0589d3b041a842ae9251525cdd64842664c2a3f4f060aa4c",
+    "spec/Deflate/Huffman.lean": "7bc43381c34bdda230810d4037a55fbecb00de6f69ade9f6a2b0b01b380f4fa1",
+    "spec/Deflate/HuffmanTable.lean": "1c571a38a9b69f0e1b847512f32eeec691c3b179b21d967d2942dfece9ef0b7b",
+    "spec/Deflate/LZ77.lean": "22c8a6f72795532049e324cb9888f5b131142c66ed53f2478fa7d4a5f2467872",
+    "spec/Deflate/Match.lean": "80aa6d61fee5b5cca0a3eecc8f90ebe4ed4649752c2bc7b24cd004dea68e5ae1",
+    "spec/Deflate/Properties.lean": "adeb0ab8c0296bfed05234dd4fb22f48181b9e34bf284225e3b76d226061624d",
+    "spec/Deflate/Tokens.lean": "56c25faca76ae029dbc3cff62fddc089af9a0fbea526748740f99d1247b7be51",
+    "spec/Deflate/Zip.lean": "dac9d8f3d5b1a98ee457d7e464288603f3670b7827cc9141d1f8cfa9f8c37ada",
+    "spec/Main.lean": "1c9aab1a3fc3bb8fbca29d8dc3ca2c5ceb9802a1cc61e4fb97c6c460c109ee82",
+    "spec/scripts/axioms.lean": "74ccf9263af4da35162d7859f7e0bc113d1426881d6e80d50c478978c4add2f5"
+  },
+  "synthetic_path": "/Users/dmytro/github/deflated/target/encoder-performance/synthetic-v1"
+}

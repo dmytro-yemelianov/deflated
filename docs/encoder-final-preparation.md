@@ -56,7 +56,7 @@ Evidence: [pilot summary](../scripts/reports/encoder-p5-combinations.json),
 [diagnostics](../scripts/reports/encoder-p5-combinations-diagnostics.json.gz),
 [component identities](../scripts/reports/encoder-p5-combinations-component-identity.json.gz).
 The exact binary and source archive are sealed at the local pilot directory.
-The final-test freeze is still pending. The [actual default portable CLI
+The final-test freeze is now recorded below. The [actual default portable CLI
 size check](../scripts/reports/encoder-p5-portable-size.json) uses the same
 Rust 1.88.0 compiler and default release flags for original archived source
 and commit `d977bb5`: 542336 →542304 bytes (-32), passing the +64 KiB guard.
@@ -99,3 +99,13 @@ RSS selection was expanded from two real cases to one per real class so the
 memory gate covers all six acquisition classes. The authoritative final
 freeze is `p5-final-v2`; the earlier preparation is retained, not restarted
 as a partially observed measurement.
+
+The pre-test freeze is committed before the first held encoding: [source,
+binary, policy and protocol hashes](../scripts/reports/encoder-p5-freeze.json)
+and [58-case snapshot manifest](../scripts/reports/encoder-p5-manifest.json).
+Source revision is `6c1cd1f4f8d69df79fd39609ab17ee82bceb385e`; all 15 worker
+configurations passed a separate private-probe warm/first-call decoder check,
+and the default-only harness passed all four native contract tests. Neither
+check accessed held inputs. Nine RSS cases cover all six real classes plus
+large synthetic, drift and the old collision outlier. The earlier v1
+preparation remains unencoded. Final results and qualification remain pending.
