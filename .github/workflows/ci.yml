@@ -45,6 +45,7 @@ jobs:
           python3 scripts/tuning_report.py --check
           make research-check
           make research-defaults
+          make research-policy-check
 
       - name: Optional CPU optimizer adapter
         run: |

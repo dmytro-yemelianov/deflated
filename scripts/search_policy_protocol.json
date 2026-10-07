@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "study": "S5 bounded native workload policy and nested grouped validation",
+  "cv_seed": 195113,
+  "outer_folds": 5,
+  "inner_folds": 3,
+  "depths": [-1, 0, 1, 2, 3],
+  "minimum_leaf_cases": 3,
+  "training_rounds": 5,
+  "training_minimum_batch_ms": 5,
+  "validation_rounds": 7,
+  "validation_minimum_batch_ms": 10,
+  "roles": {"speed": 0.2, "balanced": 0.01, "size": null},
+  "short_input_fallback": "Balanced below 32768 bytes before extracting features",
+  "features": "13 integer features, at most 4096 staggered input samples",
+  "vocabulary": [
+    {"preset": "balanced"}, {"preset": "fast"}, {"preset": "best"}, {"preset": "stored"},
+    {"probes": 1, "lazy": false, "insert_tail": 4, "index": "trigram", "block_tokens": 16384},
+    {"probes": 32, "lazy": false, "insert_tail": 32, "index": "trigram", "block_tokens": 16384},
+    {"probes": 1024, "lazy": true, "insert_tail": 0, "index": "trigram", "block_tokens": 16384},
+    {"probes": 4, "lazy": true, "insert_tail": 16, "index": "trigram", "block_tokens": 16384},
+    {"probes": 16, "lazy": true, "insert_tail": 0, "index": "trigram", "block_tokens": 16384},
+    {"probes": 64, "lazy": true, "insert_tail": 0, "index": "dual", "block_tokens": 16384},
+    {"probes": 128, "lazy": false, "insert_tail": 32, "index": "trigram", "block_tokens": 16384}
+  ],
+  "vocabulary_policy": "Frozen from prior S2/S3 training and controls before any S5 measurement; no validation feedback",
+  "validation": "previous full-file regression plus unseen Calgary validation sources and new synthetic regimes",
+  "test_policy": "original 14 synthetic tests and assigned Calgary final-test files remain reserved",
+  "promotion": "none until S9 frozen fresh-test gates"
+}

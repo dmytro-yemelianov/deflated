@@ -1,13 +1,17 @@
 # Investigation: automatic encoder tuning and GPU-assisted search
 
 Status: runnable phase-zero pilot, validated parameter adapter, controlled
-factorial and initial three-seed CPU optimizer comparison. Production presets
+factorial, initial three-seed CPU optimizer comparison, and a measured S5
+context-policy spike with nested grouped validation. Production presets
 and the Lean model are unchanged.
 The adapter exposes five bounded axes behind `research-tuning`; model fitting,
 latent-space learning and Bayesian optimization remain future spikes. See
 [the CPU search report](cpu-search-report.md) for the initial implementation
 and [the campaign report](cpu-search-campaign-report.md) for mixed workloads,
 full-file regression checks and process RSS.
+See [the context-policy report](context-policy-report.md) for charged native
+selection costs and [the completion audit](autotuning-completion-audit.md)
+for remaining deliverables.
 
 The aim is to discover useful speed/size/memory tradeoffs and then decide
 whether adaptive selection and GPU-assisted optimization are worth their

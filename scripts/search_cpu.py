@@ -144,6 +144,7 @@ def source_files():
              "scripts/search_corpus.py", "scripts/search_poc.py", "scripts/search_workloads.py",
              "scripts/search_optimizer.py", "scripts/search_campaign.py", "scripts/search_protocol.json"]
     fixed.append("scripts/optimizer-requirements.txt")
+    fixed.append("crates/deflate-core/examples/support/policy.rs")
     return fixed + [str(p.relative_to(ROOT)) for p in sorted((ROOT / "crates/deflate-core/src").rglob("*.rs"))]
 
 

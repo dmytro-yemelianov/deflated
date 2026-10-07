@@ -4,15 +4,18 @@ use std::hint::black_box;
 use std::path::Path;
 use std::time::{Duration, Instant};
 
+#[path = "support/policy.rs"]
+mod policy;
+
 #[derive(Clone, Copy)]
-enum Method {
+enum BaseMethod {
     Preset(deflate_core::CompressionLevel),
     Stored,
     Configured(Config),
     Reference(u8),
 }
 
-impl Method {
+impl BaseMethod {
     fn parse(text: &str) -> Result<Self, String> {
         use deflate_core::CompressionLevel;
         match text {
@@ -61,6 +64,27 @@ impl Method {
     }
 }
 
+enum Method {
+    Base(BaseMethod),
+    Policy(policy::Policy),
+}
+
+impl Method {
+    fn parse(text: &str) -> Result<Self, String> {
+        if let Some(path) = text.strip_prefix("policy@") {
+            return policy::Policy::load(path).map(Self::Policy);
+        }
+        BaseMethod::parse(text).map(Self::Base)
+    }
+
+    fn encode(&self, raw: &[u8]) -> Vec<u8> {
+        match self {
+            Self::Base(method) => method.encode(raw),
+            Self::Policy(selector) => selector.choose(raw).encode(raw),
+        }
+    }
+}
+
 fn sample(mut encode: impl FnMut() -> Vec<u8>, minimum: Duration) -> f64 {
     let start = Instant::now();
     let mut count = 0_u32;
@@ -76,6 +100,14 @@ fn sample(mut encode: impl FnMut() -> Vec<u8>, minimum: Duration) -> f64 {
 
 fn main() -> Result<(), String> {
     let args: Vec<_> = std::env::args().skip(1).collect();
+    if args.first().is_some_and(|arg| arg == "--features") {
+        if args.len() != 2 {
+            return Err("tune_config --features INPUT".into());
+        }
+        let raw = std::fs::read(&args[1]).map_err(|e| e.to_string())?;
+        println!("{:?}", policy::features(&raw));
+        return Ok(());
+    }
     if args.first().is_some_and(|arg| arg == "--memory") {
         if args.len() != 4 {
             return Err("tune_config --memory INPUT OUTPUT METHOD".into());
