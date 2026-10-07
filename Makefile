@@ -65,6 +65,8 @@ research-check:
 	@python3 scripts/test_search_campaign_artifacts.py
 	@python3 scripts/test_search_policy.py
 	@python3 scripts/test_search_policy_artifacts.py
+	@python3 scripts/test_search_surrogate.py
+	@python3 scripts/test_search_surrogate_artifacts.py
 
 research-policy-check:
 	@cargo build -p deflate-core --example tune_config --features research-tuning --release
