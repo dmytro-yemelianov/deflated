@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "study": "new-methods-v1",
+  "status": "preregistered; G0 reference lock required before screening",
+  "baseline_revision": "b7d5e0fc79f4f72d2ba772312ec9a22497699ed5",
+  "specifications": ["docs/matcher-prototype-spec.md", "docs/structured-codec-spec.md"],
+  "budgets": {
+    "a_equivalent_configurations": 12,
+    "a_coverage_configurations": 8,
+    "b_configurations": 12,
+    "training_sessions": 1,
+    "validation_sessions": 3,
+    "final_sessions": 10,
+    "a_finalists_max": 2,
+    "b_finalists_max": 1,
+    "conditional_a_b_combinations_max": 1,
+    "reference_setup_attempts_max": 2,
+    "cloud_spending": 0
+  },
+  "axes": {
+    "a_equivalent": {
+      "tag": ["none", "exact24", "guarded32"],
+      "layout": ["sidecar", "interleaved"],
+      "batch": [1, 4]
+    },
+    "a_coverage": {
+      "buckets": [4096, 8192],
+      "ways": [4, 8],
+      "index": ["trigram", "dual"]
+    },
+    "b": {
+      "chunk_log2": [16, 18],
+      "dictionary": ["off", "keys", "all-quoted"],
+      "numbers": ["off", "checked-delta"]
+    }
+  },
+  "references": [
+    {"codec": "deflate-core-b7", "levels": ["fast", "balanced", "best"], "primary_framing": "raw-deflate"},
+    {"codec": "miniz_oxide", "version": "0.8.9", "levels": [1, 6, 9], "primary_framing": "raw-deflate"},
+    {"codec": "zlib", "levels": [1, 6, 9], "primary_framing": "raw-deflate"},
+    {"codec": "zlib-ng", "levels": [1, 6, 9], "primary_framing": "raw-deflate"},
+    {"codec": "libdeflate", "levels": [1, 6, 9, 12], "primary_framing": "raw-deflate"},
+    {"codec": "zstd", "levels": [-1, 1, 3, 9], "primary_framing": "zstd-frame-content-size-checksum"},
+    {"codec": "lz4", "levels": ["default", "hc9"], "primary_framing": "lz4-frame-content-size-block-and-content-checksums"},
+    {"codec": "brotli", "levels": [1, 5, 9], "primary_framing": "BRF1-u64-size-u32-crc32-plus-brotli-stream"},
+    {"codec": "lzma2", "levels": [1, 6], "primary_framing": "xz-crc32"}
+  ],
+  "reference_rules": {
+    "threads": 1,
+    "external_dictionary": false,
+    "primary_context": "allocate, initialize, encode, finish, destroy inside each measured call",
+    "reusable_context": "separate track; report initialization and charge reset, no data history across files",
+    "openzl": "optional; pin and record supported description/training and all frame costs before screening",
+    "secondary_container_tracks": ["gzip-matched-fields", "zip-single-entry-matched-fields"],
+    "lock": "scripts/reports/new-methods-reference-lock.json",
+    "lock_required": ["release", "source_commit_or_archive_sha256", "compiler", "flags", "apis", "settings", "library_sha256", "adapter_sha256", "independent_roundtrip_evidence"]
+  },
+  "data": {
+    "source_groups_per_split_per_track_target": 8,
+    "held_groups_per_track_minimum_for_headline": 6,
+    "maximum_primary_case_bytes": 1048576,
+    "separate_long_stress_bytes": 8388608,
+    "synthetic_regimes": {"train": [13, 14], "validation": [15, 16], "test": [17, 18]},
+    "old_data_scope": "regression only; whole previously measured source lineages excluded from new holdout",
+    "cross_track_grouping": "same lineage must have same split in both tracks",
+    "held_access": "acquisition, provenance, hashes and deduplication only before freeze"
+  },
+  "measurement": {
+    "resident_input": true,
+    "exclude_startup_io_from_codec_timing": true,
+    "charge_discarded_passes_metadata_crc_allocations_and_state": true,
+    "warm_minimum_ns": 20000000,
+    "tiny_minimum_ns": 2000000,
+    "first_call": "fresh process with resident input; include library initialization",
+    "bootstrap_unit": "complete paired session",
+    "bootstrap_resamples": 10000,
+    "confidence": 0.95,
+    "rss": "separate encode/decode whole-process peak, three replicates per preregistered case",
+    "throughput_aggregation": "sum input bytes / sum per-file times within declared scope",
+    "size_aggregation": "sum complete packed bytes / sum reference complete packed bytes",
+    "no_retuning_after_holdout": true
+  },
+  "targets": {
+    "a_equivalent": {
+      "reference": "b7-balanced",
+      "packet_identity": true,
+      "warm_speed_ratio_lower95_min": 1.10,
+      "first_speed_ratio_lower95_min": 1.00
+    },
+    "a_coverage": {
+      "reference": "b7-balanced",
+      "warm_speed_ratio_lower95_min": 1.50,
+      "first_speed_ratio_lower95_min": 1.50,
+      "aggregate_packed_ratio_max": 1.01,
+      "each_file_packed_ratio_max": 1.20,
+      "scopes": ["primary", "synthetic", "regression", "long-stress"]
+    },
+    "a_common": {
+      "each_file_warm_and_first_decode_time_ratio_upper95_max": 1.10,
+      "each_tiny_encode_and_decode_time_ratio_upper95_max": 1.20,
+      "encode_peak_rss_growth_bytes_max": 8388608,
+      "decode_peak_rss_growth_bytes_max": 8388608,
+      "actual_default_cli_growth_bytes_max": 65536
+    },
+    "b_size": {
+      "reference": "zstd-level3-checksummed-frame",
+      "primary_aggregate_packed_ratio_max": 0.95,
+      "warm_and_first_encode_speed_ratio_lower95_min": 0.25,
+      "warm_and_first_decode_time_ratio_upper95_max": 3.0,
+      "primary_and_structured_regression_each_file_packed_ratio_max": 1.10,
+      "own_same_framing_untransformed_aggregate_packed_ratio_max": 0.98
+    },
+    "b_compromise_stretch": {
+      "reference": "zstd-level3-checksummed-frame",
+      "warm_and_first_encode_speed_ratio_lower95_min": 1.10,
+      "primary_aggregate_packed_ratio_max": 1.01,
+      "required_for_b_size_promotion": false
+    },
+    "b_common": {
+      "each_tiny_encode_and_decode_time_ratio_upper95_max": 2.0,
+      "encode_peak_rss_growth_vs_zstd3_bytes_max": 33554432,
+      "decode_peak_rss_growth_vs_zstd3_bytes_max": 16777216,
+      "standalone_tool_growth_vs_b7_cli_bytes_max": 262144,
+      "default_output_limit_bytes": 67108864,
+      "byte_exact": true,
+      "complete_frame_model_required_for_promotion": true
+    }
+  },
+  "gpu": {
+    "proposal_loop_share_reopen_min": 0.05,
+    "alternative_trigger": "measured larger-batch whole-loop benefit",
+    "full_encoder_requires_separate_bounded_spike": true,
+    "cloud_spending": 0
+  },
+  "completion": "all G0-G6 resolved with reproducible evidence, including honest negative results; no numerical or novelty target is assumed achieved"
+}

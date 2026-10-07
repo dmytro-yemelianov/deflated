@@ -48,6 +48,7 @@ jobs:
           python3 scripts/test_encoder_selector.py
           python3 scripts/test_encoder_final.py
           python3 scripts/test_encoder_final_artifacts.py
+          python3 scripts/test_structured_reference.py
           make research-check
           make research-defaults
           make research-policy-check
@@ -65,6 +66,13 @@ jobs:
         run: |
           ! grep -rnw 'unsafe' crates/deflate-core/src/
           ! grep -rnw 'std' crates/deflate-core/src/
+          ! grep -rnw 'unsafe' crates/structured-codec/src/ --exclude-dir=bin
+          ! grep -rnw 'std' crates/structured-codec/src/ --exclude-dir=bin
+
+      - name: Experimental DSC1 independent correspondence
+        run: |
+          cargo build --locked --release -p structured-codec --features cli
+          python3 scripts/structured_correspondence.py
 
       - name: Lean model (lake build, no sorry/native_decide, axiom gate)
         run: |

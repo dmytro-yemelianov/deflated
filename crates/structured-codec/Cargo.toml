@@ -1,0 +1,20 @@
+[package]
+name = "structured-codec"
+description = "Experimental byte-exact DSC1 transform; outside the existing DEFLATE proof boundary"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+publish = false
+
+[dependencies]
+deflate-core = { path = "../deflate-core" }
+
+[features]
+cli = []
+
+[[bin]]
+name = "structured-tool"
+path = "src/bin/structured-tool.rs"
+required-features = ["cli"]

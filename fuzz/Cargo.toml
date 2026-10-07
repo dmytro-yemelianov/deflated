@@ -13,6 +13,7 @@ cargo-fuzz = true
 libfuzzer-sys = "0.4"
 deflate-core = { path = "../crates/deflate-core", features = ["research-tuning"] }
 miniz_oxide = "0.8"
+structured-codec = { path = "../crates/structured-codec" }
 
 [[bin]]
 name = "inflate"
@@ -41,5 +42,17 @@ doc = false
 [[bin]]
 name = "dynamic_lengths"
 path = "fuzz_targets/dynamic_lengths.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "structured_decode"
+path = "fuzz_targets/structured_decode.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "structured_roundtrip"
+path = "fuzz_targets/structured_roundtrip.rs"
 test = false
 doc = false
