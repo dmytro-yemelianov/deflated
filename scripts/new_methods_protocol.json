@@ -15,6 +15,8 @@
     "b_finalists_max": 1,
     "conditional_a_b_combinations_max": 1,
     "reference_setup_attempts_max": 2,
+    "native_adapter_compile_checks_max": 6,
+    "native_adapter_contract_fix_rounds_max": 2,
     "cloud_spending": 0
   },
   "axes": {

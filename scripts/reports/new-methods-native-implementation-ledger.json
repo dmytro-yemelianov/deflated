@@ -1,0 +1,30 @@
+{
+  "checks": [
+    "initial fresh-state worker",
+    "LZ4 one-block and monotonic-clock contract fixes",
+    "planned context reuse implementation",
+    "reset-check argument guard and full validation build",
+    {
+      "note": "Report zero initialization for one-shot APIs; enforce implementation budget and frozen directories",
+      "number": 5,
+      "source_sha256": "8a9b8c5c8d47fab7e1e9a3b5e999cf3419d577d338e3e2c0161ad6cdb1b46462",
+      "status": "passed",
+      "utc": "2026-10-07T18:32:05.239733+00:00"
+    }
+  ],
+  "compile_checks_cap": 6,
+  "compile_checks_used": 5,
+  "contract_fix_rounds_cap": 2,
+  "contract_fix_rounds_used": 1,
+  "dependency_build_attempts": {
+    "brotli": 1,
+    "libdeflate": 1,
+    "lz4": 1,
+    "lzma2": 1,
+    "zlib": 1,
+    "zlib-ng": 1,
+    "zstd": 1
+  },
+  "schema_version": 1,
+  "study_screening_started": false
+}

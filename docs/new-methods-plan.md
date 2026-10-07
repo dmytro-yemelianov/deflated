@@ -1,10 +1,11 @@
 # New compression methods: bounded investigation plan
 
 Status: active goal, specifications frozen for the initial roster; baseline
-sealed and independent DSC1/Rust correctness prototype implemented. Native
-libraries are built; adapters, fresh data, screening and proofs remain pending.
-No performance or
-research-novelty claim follows from this plan. Baseline:
+sealed and independent DSC1/Rust correctness prototype implemented. The seven
+mandatory native workers and three Rust workers pass independent framing and
+resident-input timer contracts. OpenZL's library is built; its optional adapter
+and the complete G0 reference lock remain pending. Fresh data, screening and
+proofs remain pending. No performance or research-novelty claim follows from this plan. Baseline:
 `b7d5e0fc79f4f72d2ba772312ec9a22497699ed5`.
 
 ## Objective and deliverables
@@ -43,7 +44,7 @@ that reference; they do not justify substituting old numbers.
   liblzma LZMA2. Lock exact releases/builds before screening. OpenZL is an
   additional structured reference when its bounded setup succeeds; record
   absence explicitly. At most two documented setup/build attempts per adapter
-  before narrowing claims to the available verified controls.
+  dependency before narrowing claims to the available verified controls.
 - [ ] Validate adapters against independent decoders, empty/tiny data and
   incorrect/truncated framing. Use resident-input library calls, not CLI
   subprocess startup as encoder time. Charge creation/destruction of codec
@@ -237,6 +238,28 @@ python3 scripts/new_methods_references.py --out target/new-methods/reference-rep
 ```
 
 The last two commands refuse successful-output replacement; use a fresh path.
-Next checkpoint: G0 resident-input native adapters and framing checks, G1 fresh
-source-grouped data/generators, then G2/G3 charged training screens. Promotion
-and G4–G6 completion have not occurred.
+The subsequent [worker checkpoint](new-methods-benchmarking.md) documents the
+mandatory resident-input adapters, matched framing, charged state and independent
+contract checks. Next checkpoint: optional OpenZL feasibility and the full G0
+reference lock, G1 fresh source-grouped data/generators, then G2/G3 charged
+training screens. Promotion and G4–G6 completion have not occurred.
+
+## G0 budget clarification, before study screening (2026-10-07)
+
+The two-attempt dependency setup cap remains: each of the seven native source
+libraries built on its first attempt. Adapter development now has an explicit
+maximum of six compiler checks and two contract-fix rounds for the common C
+worker, separate from dependency feasibility. This clarification is recorded
+before any train/validation/held codec measurement; it does not expand A/B's
+configuration, selection or final-session budgets.
+
+Five common C compiler checks have been used: fresh-state worker; correction
+of native LZ4's independent one-block header and macOS clock resolution;
+implementation of the planned reusable-context track; reset-check argument
+guard; zero initialization accounting for unsupported one-shot reset APIs and
+build-budget enforcement. One contract-fix round was used. Clock/format
+diagnostics use shared correctness witnesses only. Resets on A→B→A inputs and
+reusable timer contracts now pass. Brotli/LZMA2 remain fresh state with zero
+separate initialization reported. Later implementation recompilation after
+dependency feasibility is established is not a new dependency setup spike;
+preserve its own bounded build/fix ledger.

@@ -1,0 +1,93 @@
+{
+  "baseline_core_sha256": {
+    "crates/deflate-core/Cargo.toml": "27e824b076208ffe2864e6c1fae8b836429a393c26c62788e36f53acf1ff65e2",
+    "crates/deflate-core/src/bitstream.rs": "95e941fcc379cafd8ae920f12ed4f6327e12062edfe39015f66eb43a9b094186",
+    "crates/deflate-core/src/bitwriter.rs": "e79886707cf12e58f86c26548eedb3ce8dd1023b131a8e17f790b9037b9d6cda",
+    "crates/deflate-core/src/block.rs": "b99d28faf70ea823b251544f2040f0c4850b9871bcbd9e331742661545310eee",
+    "crates/deflate-core/src/compress.rs": "ed3854e0f1c02db1056c465a4740f9c3212b06ebac4406cb59017adcf999a405",
+    "crates/deflate-core/src/crc32.rs": "3166b0a90dc6cded7a07e5beae9b5cee0c843349123e80dd2e7cc898f71e7fad",
+    "crates/deflate-core/src/deflate.rs": "419e757fa99e22675f77628fc652badcfeb0817852835f790eb584aaebc67507",
+    "crates/deflate-core/src/encode_dynamic.rs": "0a10d270561609bcb1c9b883992880734c6395dfd532ad9ecd2bed54bc4a52ec",
+    "crates/deflate-core/src/encode_fixed.rs": "b4459d0cc109c2f50ebd28467ad1923fbf96a527480dd3f64399601cfa459fd1",
+    "crates/deflate-core/src/error.rs": "fe3ac5fc29296fd8e7e0539dc76c615717fe8a72bb3456608edd18efbb21fecd",
+    "crates/deflate-core/src/gzip.rs": "44a8044d6fd55a5f78fab74f75ba5815b004a4e83ffcbf08ae8254909021b5bd",
+    "crates/deflate-core/src/huffman.rs": "326b31f0fda785d2418f24c7348490520f7f869082fed3316f9f870bfe0fd964",
+    "crates/deflate-core/src/huffman_build.rs": "c2eef9c5c7d53eaf435b65cbc2eb6ad19f28e3df1aef87f6952024c8879ccc58",
+    "crates/deflate-core/src/inflate.rs": "ae4c905a7da364c4b05f4f8c4754ca01ad513b695ea82c28a06c2375dfcde272",
+    "crates/deflate-core/src/lib.rs": "82e81c94fbdad579be6157b3f9cd6b73f3d51ec526c68fda8d731d7f23070d68",
+    "crates/deflate-core/src/lz77.rs": "67991a3fb79ef37a65accdff089b3c34d90157e8eed43745fcbba60f432589c1",
+    "crates/deflate-core/src/matcher.rs": "eedea6a0be4d486bab0ce2a8046a982b4f05e5e4d940ef12decb0d092a04f474",
+    "crates/deflate-core/src/matcher_flat.rs": "2cb9257a6b93edce133891c4292690ef78e5edf87ccdbce976667d0d6d587890",
+    "crates/deflate-core/src/research.rs": "63046c8b3f3a85cc5f3148cbf0aee4a2640618e199cde29ca27a3c3035b7179b",
+    "crates/deflate-core/src/tokens.rs": "5e2f16a94e1a8a35400be25e04280ecae25dd550ad7bd92e398715f16f84f839",
+    "crates/deflate-core/src/zip.rs": "e92492d2c4d61be74e8f6f73da43725992ca0c6be807d8da0d104e2e3a6ae731"
+  },
+  "baseline_revision": "b7d5e0fc79f4f72d2ba772312ec9a22497699ed5",
+  "baseline_seal_schema_version": 1,
+  "binaries": {
+    "core_worker": {
+      "bytes": 540128,
+      "sha256": "03187028b93e9df8ed89823dba8bfca34c73384f5315baae9f706d65851b7804"
+    },
+    "miniz_worker": {
+      "bytes": 516368,
+      "sha256": "fb0018785539b77d3b2738db26f72adf6d7072d41e261e85b3f57824e56b96df"
+    },
+    "structured-tool": {
+      "bytes": 538688,
+      "sha256": "eb29a9ec14edc8f3905943f1f6d61bcbc3dd78f35567f010737425b92f3632cf"
+    },
+    "structured_worker": {
+      "bytes": 578624,
+      "sha256": "20cce6f6ee283414bbe0f9073651b1f5d7898541525bfbaaa18f660c993c676e"
+    },
+    "vdeflate": {
+      "bytes": 542304,
+      "sha256": "8909ef77aba682880acebbc6f7b5e0da25c3635ddce19180fb9858fde168d61c"
+    }
+  },
+  "command": [
+    "cargo",
+    "+1.88.0",
+    "build",
+    "--locked",
+    "--release",
+    "-p",
+    "new-methods-bench",
+    "-p",
+    "vdeflate",
+    "-p",
+    "structured-codec",
+    "--features",
+    "structured-codec/cli"
+  ],
+  "context": "fresh codec state and output allocation each call; reusable mode explicitly reports fresh-no-reuse-adapter",
+  "decoder_scope": "core/miniz tooling drivers charge exact member consumption and known size; public core suffix behavior unchanged",
+  "default_cli_identity": "byte-identical b7 when its local sealed binary is available",
+  "inputs_sha256": {
+    "Cargo.lock": "cc7a3ba36cacf4b26169baffe6ca8637300216a888cc9e7577b01c27e6e4fca3",
+    "Cargo.toml": "60cece29d520d66a8df76bf5d7d88a2790dffeec348f19daf6ef0e819d0a84cf",
+    "crates/structured-codec/Cargo.toml": "91019fdfa30080c427d7688949d4d5bd2def12347259a2c40642c82542b2656a",
+    "crates/structured-codec/src/bin/structured-tool.rs": "09a605701c981f9ef7e3ccc1e1cd59c45e3ecc0e3ea67a033a149490c68cdef7",
+    "crates/structured-codec/src/decode.rs": "4e93500edda933682c0c63ab21538dc8384c6a552bad90a704b20a11bb47a749",
+    "crates/structured-codec/src/encode.rs": "cd00719359ad76fb7c80864893264caab59daaa67b186466581be95004c29469",
+    "crates/structured-codec/src/lib.rs": "5a8fc4c3a7faa541d4b5021d18aa3088afd01d675ca087b2016dd689f984d535",
+    "crates/structured-codec/src/wire.rs": "00a067ec36465eb16e324dac5815ea21c59e7e4bc12e5861234a22a7058c18ce",
+    "rust-toolchain.toml": "6c04f2e2d44428d94d3b65cc72041c5ed03d97eac18d6cdc13e95d21355a6869",
+    "tools/new-methods-bench/Cargo.toml": "a415cebe02d28fdb8c335cc7a5883987be5be04ec3291be2c2711de78806f9ac",
+    "tools/new-methods-bench/src/bin/core_worker.rs": "11e0fcb8bf57f4cd1c760e69a6e9ddd3fbcf3e2c14a7d2735efe433149991c42",
+    "tools/new-methods-bench/src/bin/miniz_worker.rs": "3b4570ae89cd3ab24ebb6fdeab1aa9acd8624261b5896f5944d291b5e2b86681",
+    "tools/new-methods-bench/src/bin/structured_worker.rs": "02e566b5556e72bb009ddc3c1946e28fa07c35b28aa5d96eb1d477e948a1e724",
+    "tools/new-methods-bench/src/framing.rs": "6690fdf7209215b060e9f3221f2d8002d1c821ad5e0c0d681bcfba4960b94c34",
+    "tools/new-methods-bench/src/lib.rs": "37e7070851a0b698b8c0ccee0a59ae740c147a12b27acdadc3e0599c0bad2f8d",
+    "tools/new-methods-bench/src/worker.rs": "e86e083c29aa6ecbdd4da7e49e19ec33432e52f3b8166ec021fba0289c65b99d"
+  },
+  "removed_environment": {},
+  "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)\nbinary: rustc\ncommit-hash: 6b00bc3880198600130e1cf62b8f8a93494488cc\ncommit-date: 2025-06-23\nhost: aarch64-apple-darwin\nrelease: 1.88.0\nLLVM version: 20.1.5\n",
+  "schema_version": 1,
+  "status": "built; shared worker contract validation required",
+  "tooling_sha256": {
+    "scripts/new_methods_rust_build.py": "af6881d3c95a354136db0a2917da48ec2e610639fb26af0a874c030be3970b77",
+    "scripts/test_rust_codec_workers.py": "92923c82a2bc65649303f4ab63c9c71e204d340923c05a872804ecd98712bbc5"
+  }
+}

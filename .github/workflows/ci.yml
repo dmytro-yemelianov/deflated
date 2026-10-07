@@ -49,6 +49,7 @@ jobs:
           python3 scripts/test_encoder_final.py
           python3 scripts/test_encoder_final_artifacts.py
           python3 scripts/test_structured_reference.py
+          python3 scripts/test_new_methods_worker_artifacts.py
           make research-check
           make research-defaults
           make research-policy-check
@@ -73,6 +74,11 @@ jobs:
         run: |
           cargo build --locked --release -p structured-codec --features cli
           python3 scripts/structured_correspondence.py
+
+      - name: Resident-input research worker contracts
+        run: |
+          cargo build --locked --release -p new-methods-bench
+          python3 scripts/test_rust_codec_workers.py
 
       - name: Lean model (lake build, no sorry/native_decide, axiom gate)
         run: |

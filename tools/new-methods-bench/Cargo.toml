@@ -1,0 +1,25 @@
+[package]
+name = "new-methods-bench"
+description = "Resident-input research workers; outside the codec runtime and proof boundary"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+deflate-core = { path = "../../crates/deflate-core" }
+structured-codec = { path = "../../crates/structured-codec" }
+miniz_oxide = "=0.8.9"
+
+[[bin]]
+name = "core_worker"
+path = "src/bin/core_worker.rs"
+
+[[bin]]
+name = "miniz_worker"
+path = "src/bin/miniz_worker.rs"
+
+[[bin]]
+name = "structured_worker"
+path = "src/bin/structured_worker.rs"

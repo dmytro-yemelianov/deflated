@@ -1,0 +1,264 @@
+{
+  "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin27.2.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin\n",
+  "schema_version": 1,
+  "source_sha256": "8a9b8c5c8d47fab7e1e9a3b5e999cf3419d577d338e3e2c0161ad6cdb1b46462",
+  "status": "built; independent adapter validation pending",
+  "table_sha256": "f2ebef916fa6f1791ef10f21bbed0f271bee83ff9be763a56db9dd82fbd8fd62",
+  "tooling_sha256": {
+    "scripts/native_codec_worker.c": "8a9b8c5c8d47fab7e1e9a3b5e999cf3419d577d338e3e2c0161ad6cdb1b46462",
+    "scripts/new_methods_native_build.py": "f8b2e6efe75072aa0b287e565d900eaeeac8a693b371a7e598a46dc0e063857d",
+    "scripts/test_native_codec_workers.py": "69fc19e6b09cc95d87ea05e26991d7fec2ee622bc9f2f2a5ce0a5cfc30d30422"
+  },
+  "workers": [
+    {
+      "binary_bytes": 37816,
+      "binary_sha256": "43fc5fa4fc6626aa98867a89e0b23bb7862457a565cfb7908ea8f75ccf578def",
+      "codec": "zlib",
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-function",
+        "-DNATIVE_CODEC=1",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib/install/include",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1",
+        "/Users/dmytro/github/deflated/scripts/native_codec_worker.c",
+        "-L",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib/install/lib",
+        "-Wl,-rpath,/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib/install/lib",
+        "-lz",
+        "-o",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/zlib"
+      ],
+      "library_hashes": {
+        "install/lib/libz.1.3.2.dylib": "30143a51390d3739a70cade369aa61839fb33f886bcc0f27335d513c98bfd241"
+      },
+      "linkage": "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/zlib:\n\t@rpath/libz.1.dylib (compatibility version 1.0.0, current version 1.3.2)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+      "version": {
+        "codec": "zlib",
+        "version": "1.3.2"
+      }
+    },
+    {
+      "binary_bytes": 37896,
+      "binary_sha256": "1f11cc3f2cd50b699a6a72834d98735331190a5b7f397abcd4a6a115f0b30097",
+      "codec": "zlib-ng",
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-function",
+        "-DNATIVE_CODEC=2",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib-ng/install/include",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1",
+        "/Users/dmytro/github/deflated/scripts/native_codec_worker.c",
+        "-L",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib-ng/install/lib",
+        "-Wl,-rpath,/Users/dmytro/github/deflated/target/new-methods/references-v1/zlib-ng/install/lib",
+        "-lz-ng",
+        "-o",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/zlib-ng"
+      ],
+      "library_hashes": {
+        "install/lib/libz-ng.2.3.3.dylib": "fa72660131a0854e397871d9cdc89c4617f4fd18eae07f1350492eb0573e14b9"
+      },
+      "linkage": "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/zlib-ng:\n\t@rpath/libz-ng.2.dylib (compatibility version 2.0.0, current version 2.3.3)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+      "version": {
+        "codec": "zlib-ng",
+        "version": "2.3.3"
+      }
+    },
+    {
+      "binary_bytes": 37688,
+      "binary_sha256": "d5bbbb9a0738a493933d54e20c146c8626339d340bbe0f7668fa429c84b7552a",
+      "codec": "libdeflate",
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-function",
+        "-DNATIVE_CODEC=3",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/libdeflate/install/include",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1",
+        "/Users/dmytro/github/deflated/scripts/native_codec_worker.c",
+        "-L",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/libdeflate/install/lib",
+        "-Wl,-rpath,/Users/dmytro/github/deflated/target/new-methods/references-v1/libdeflate/install/lib",
+        "-ldeflate",
+        "-o",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/libdeflate"
+      ],
+      "library_hashes": {
+        "install/lib/libdeflate.0.dylib": "6549dad42e5de7911a710b0251ae3f9f66c53a58fb35f8779d8458a70e2cfba4"
+      },
+      "linkage": "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/libdeflate:\n\t@rpath/libdeflate.0.dylib (compatibility version 0.0.0, current version 0.0.0)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+      "version": {
+        "codec": "libdeflate",
+        "version": "1.26",
+        "version_origin": "sealed header; library has no runtime version API"
+      }
+    },
+    {
+      "binary_bytes": 37960,
+      "binary_sha256": "8a034bafbab8cb7e51d18b4f40f8d70b38b5de5a4031248bbf2215b4c2ed43ed",
+      "codec": "zstd",
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-function",
+        "-DNATIVE_CODEC=4",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/zstd/install/include",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1",
+        "/Users/dmytro/github/deflated/scripts/native_codec_worker.c",
+        "-L",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/zstd/install/lib",
+        "-Wl,-rpath,/Users/dmytro/github/deflated/target/new-methods/references-v1/zstd/install/lib",
+        "-lzstd",
+        "-o",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/zstd"
+      ],
+      "library_hashes": {
+        "install/lib/libzstd.1.5.7.dylib": "59c3cc6ac97450c878af6413111294092b25fde6652026b560313ea5c74aee88"
+      },
+      "linkage": "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/zstd:\n\t@rpath/libzstd.1.dylib (compatibility version 1.0.0, current version 1.5.7)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+      "version": {
+        "codec": "zstd",
+        "version": "1.5.7"
+      }
+    },
+    {
+      "binary_bytes": 37920,
+      "binary_sha256": "e93307135faf430b9af68f949c90f46c56e76ca6b87352fd953aac23ec9a4057",
+      "codec": "lz4",
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-function",
+        "-DNATIVE_CODEC=5",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/lz4/install/include",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1",
+        "/Users/dmytro/github/deflated/scripts/native_codec_worker.c",
+        "-L",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/lz4/install/lib",
+        "-Wl,-rpath,/Users/dmytro/github/deflated/target/new-methods/references-v1/lz4/install/lib",
+        "-llz4",
+        "-o",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/lz4"
+      ],
+      "library_hashes": {
+        "install/lib/liblz4.1.10.0.dylib": "95e0a30ddccc6ccc8ace5be87e933528952a92ba273694f5ff9a9574546c7c25"
+      },
+      "linkage": "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/lz4:\n\t@rpath/liblz4.1.dylib (compatibility version 1.0.0, current version 1.10.0)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+      "version": {
+        "codec": "lz4",
+        "version": "1.10.0"
+      }
+    },
+    {
+      "binary_bytes": 36920,
+      "binary_sha256": "83f39f5e54a55a6920dea717b28121373116e8b6fccc26a8a3b29669d91b8aeb",
+      "codec": "brotli",
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-function",
+        "-DNATIVE_CODEC=6",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/brotli/install/include",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1",
+        "/Users/dmytro/github/deflated/scripts/native_codec_worker.c",
+        "-L",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/brotli/install/lib",
+        "-Wl,-rpath,/Users/dmytro/github/deflated/target/new-methods/references-v1/brotli/install/lib",
+        "-lbrotlienc",
+        "-lbrotlidec",
+        "-lbrotlicommon",
+        "-o",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/brotli"
+      ],
+      "library_hashes": {
+        "install/lib/libbrotlicommon.1.2.0.dylib": "6bcffe14ef101c1017619f485b707591e11338abea27f71ce26c12933d1b1e83",
+        "install/lib/libbrotlidec.1.2.0.dylib": "bbbd4ddd7a3fde0d2231ea0cf523d22aa95abf96251816750e9e2a114d82a7a8",
+        "install/lib/libbrotlienc.1.2.0.dylib": "62322e8b03dd0389b80adc079070cffe310780b86512cac9e426aff34e4d48d7"
+      },
+      "linkage": "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/brotli:\n\t@rpath/libbrotlienc.1.dylib (compatibility version 1.0.0, current version 1.2.0)\n\t@rpath/libbrotlidec.1.dylib (compatibility version 1.0.0, current version 1.2.0)\n\t@rpath/libbrotlicommon.1.dylib (compatibility version 1.0.0, current version 1.2.0)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+      "version": {
+        "codec": "brotli",
+        "version_integer": 16785408
+      }
+    },
+    {
+      "binary_bytes": 36632,
+      "binary_sha256": "98584c58582e8f1ac8c8d1bf40f993e81bf0e326486529554a7bffcd47f6718d",
+      "codec": "lzma2",
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-function",
+        "-DNATIVE_CODEC=7",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/lzma2/install/include",
+        "-I",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1",
+        "/Users/dmytro/github/deflated/scripts/native_codec_worker.c",
+        "-L",
+        "/Users/dmytro/github/deflated/target/new-methods/references-v1/lzma2/install/lib",
+        "-Wl,-rpath,/Users/dmytro/github/deflated/target/new-methods/references-v1/lzma2/install/lib",
+        "-llzma",
+        "-o",
+        "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/lzma2"
+      ],
+      "library_hashes": {
+        "install/lib/liblzma.5.8.4.dylib": "a7a5355a5bad8cbf44e9cb17e3c6e74aec8db3502d7137ce77558ab37536a434"
+      },
+      "linkage": "/Users/dmytro/github/deflated/target/new-methods/native-workers-v1/lzma2:\n\t@rpath/liblzma.5.dylib (compatibility version 14.0.0, current version 14.4.0)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+      "version": {
+        "codec": "lzma2",
+        "version": "5.8.4"
+      }
+    }
+  ]
+}

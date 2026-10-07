@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/deflate-core", "crates/vdeflate", "crates/structured-codec"]
+members = ["crates/deflate-core", "crates/vdeflate", "crates/structured-codec", "tools/new-methods-bench"]
 resolver = "3"
 
 [workspace.package]

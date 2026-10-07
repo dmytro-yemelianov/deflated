@@ -62,6 +62,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "new-methods-bench"
+version = "0.1.0"
+dependencies = [
+ "deflate-core",
+ "miniz_oxide 0.8.9",
+ "structured-codec",
+]
+
+[[package]]
 name = "simd-adler32"
 version = "0.3.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
