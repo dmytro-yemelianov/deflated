@@ -13,6 +13,7 @@ from encoder_baseline import BASELINE, check as check_baseline
 from encoder_corpus import validate
 from encoder_measure import inputs
 from encoder_profile import attribute, symbol_labels
+from encoder_synthetic import REGIMES, payload as synthetic_payload
 
 
 def sha(raw):
@@ -123,6 +124,47 @@ class ArtifactIntegrity(unittest.TestCase):
         self.assertEqual(result["inclusive_samples"], {"caller": 2, "leaf": 2})
         self.assertEqual(result["exclusive_samples"], {"leaf": 2})
         self.assertEqual(sum(result["exclusive_pct"].values()), 100)
+
+
+class SyntheticContracts(unittest.TestCase):
+    def test_regimes_are_disjoint_and_new(self):
+        sets = [set(regimes) for regimes in REGIMES.values()]
+        self.assertTrue(all(min(values) > 6 for values in sets))
+        self.assertEqual(len(set.union(*sets)), sum(map(len, sets)))
+
+    def test_aligned_keys_collide_under_production_hashes(self):
+        for kind, width, endian, multiplier in (
+            ("trigram", 3, "big", 0x9e3779b1),
+            ("fourbyte", 4, "little", 0x1e35a7bd),
+            ("cost_trigram", 3, "little", 0x1e35a7bd),
+        ):
+            for regime in (7, 12):
+                [raw], evidence = synthetic_payload("collision_" + kind, regime, 43, 65536)
+                stride = width + evidence["suffix_bytes"]
+                buckets = {((int.from_bytes(raw[i:i+width], endian) * multiplier) & 0xffffffff) >> 17
+                           for i in range(0, len(raw)-width+1, stride)}
+                self.assertEqual(buckets, {evidence["bucket"]})
+                self.assertEqual(evidence["hash_bits"], 15)
+
+    def test_transform_relationships_and_determinism(self):
+        transforms = set()
+        for regime in range(7, 13):
+            bodies, evidence = synthetic_payload("paired_transforms", regime, 43, 65536)
+            self.assertEqual((bodies, evidence), synthetic_payload("paired_transforms", regime, 43, 65536))
+            base, changed = bodies
+            self.assertEqual(sha(base), evidence["base_sha256"])
+            self.assertNotEqual(base, changed)
+            transform = evidence["transform"]
+            transforms.add(transform)
+            if transform == "duplicate":
+                self.assertEqual(changed, base + base)
+            elif transform in ("append", "concatenate"):
+                self.assertTrue(changed.startswith(base))
+            elif transform == "prepend":
+                self.assertTrue(changed.endswith(base))
+            else:
+                self.assertEqual(len(changed), len(base))
+        self.assertEqual(transforms, {"prepend", "append", "concatenate", "duplicate", "mutate", "change_point"})
 
 
 if __name__ == "__main__":

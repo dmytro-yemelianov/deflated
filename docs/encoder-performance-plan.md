@@ -1,8 +1,9 @@
 # Next goal: encoder performance and compression improvements
 
-Status: active. P0 real-corpus/control contract and P1 profiling are implemented;
-new synthetic regimes and P2–P6 remain pending.
+Status: active. P0 corpus/control contract and P1 profiling are implemented;
+P2 isolated speed experiments are underway, with P3–P6 still pending.
 Evidence: [refreshed encoder profiles](encoder-profile-report.md).
+Initial implementation evidence: [isolated speed spikes](encoder-speed-spikes.md).
 Baseline: `14f15e63e1a8955c5cfebf869ce065f29dd950fc` (completed S0–S9).
 
 ## Objective
@@ -62,7 +63,7 @@ from a finite corpus or one machine.
 - [x] Report real-only throughput/size as the primary headline, with synthetic,
   mixed, family and per-file results separately. Use the same preregistered
   order, roles and weights throughout; do not choose a favorable scope afterward.
-- [ ] Extend existing generators only where needed: competing distance/length
+- [x] Extend existing generators only where needed: competing distance/length
   costs, collisions under the actual hash, moving change points, short random
   islands, sampling traps, ring wraps and paired input transformations.
   Tiny/boundary cases are shared stress tests, not independent holdout evidence.

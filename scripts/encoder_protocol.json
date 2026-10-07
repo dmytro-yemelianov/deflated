@@ -3,9 +3,36 @@
   "baseline_commit": "14f15e63e1a8955c5cfebf869ce065f29dd950fc",
   "corpus_manifest_sha256": "7e2e2eec698be421e4e933b5117bc11defe74b042d45b1a9f5dd4e4f0aefde85",
   "primary_scope": "new-real-test",
-  "secondary_scopes": ["new-synthetic-test", "old-regression", "tiny", "per-family", "per-file"],
-  "reference": {"name":"miniz_oxide", "version":"0.8.9", "levels":[1,6,9], "framing":"raw DEFLATE"},
-  "controls": ["fast","balanced","best","miniz1","miniz6","miniz9","bayesian-speed","bayesian-compromise","bayesian-size","policy-speed","policy-size"],
+  "secondary_scopes": [
+    "new-synthetic-test",
+    "old-regression",
+    "tiny",
+    "per-family",
+    "per-file"
+  ],
+  "reference": {
+    "name": "miniz_oxide",
+    "version": "0.8.9",
+    "levels": [
+      1,
+      6,
+      9
+    ],
+    "framing": "raw DEFLATE"
+  },
+  "controls": [
+    "fast",
+    "balanced",
+    "best",
+    "miniz1",
+    "miniz6",
+    "miniz9",
+    "bayesian-speed",
+    "bayesian-compromise",
+    "bayesian-size",
+    "policy-speed",
+    "policy-size"
+  ],
   "measurement": {
     "sessions": 10,
     "warm_minimum_batch_ms": 20,
@@ -16,30 +43,70 @@
     "serial_native_runs": true,
     "rotate_files_methods_and_pair_order": true,
     "first_call": "separate process; resident input and parsed policy; no encode/decode priming; startup and disk I/O excluded",
-    "include": ["allocations","matching","features","policy selection","all retry/refinement/fallback passes","emission"],
-    "exclude": ["input I/O","oracle checks","process startup"],
+    "include": [
+      "allocations",
+      "matching",
+      "features",
+      "policy selection",
+      "all retry/refinement/fallback passes",
+      "emission"
+    ],
+    "exclude": [
+      "input I/O",
+      "oracle checks",
+      "process startup"
+    ],
     "headline_speed_estimator": "sum paired per-file baseline medians / sum candidate per-file medians",
     "speed_guard_estimator": "paired session-mean ratio lower bootstrap 95% bound; reported separately"
   },
   "roles": {
-    "speed": {"baseline":"balanced","warm_speed_lower_95_min":1.5,"first_call_speed_lower_95_min":1.5,"aggregate_size_ratio_max":1.20,"per_file_size_ratio_max":1.20},
-    "compromise": {"baseline":"balanced","warm_speed_lower_95_min":1.5,"first_call_speed_lower_95_min":1.5,"aggregate_size_ratio_max":1.01,"per_file_size_ratio_max":1.20},
-    "size": {"baseline":"best","warm_speed_lower_95_min":0.5,"first_call_speed_lower_95_min":0.5,"aggregate_size_ratio_max":0.998,"per_file_size_ratio_max":1.20}
+    "speed": {
+      "baseline": "balanced",
+      "warm_speed_lower_95_min": 1.5,
+      "first_call_speed_lower_95_min": 1.5,
+      "aggregate_size_ratio_max": 1.2,
+      "per_file_size_ratio_max": 1.2
+    },
+    "compromise": {
+      "baseline": "balanced",
+      "warm_speed_lower_95_min": 1.5,
+      "first_call_speed_lower_95_min": 1.5,
+      "aggregate_size_ratio_max": 1.01,
+      "per_file_size_ratio_max": 1.2
+    },
+    "size": {
+      "baseline": "best",
+      "warm_speed_lower_95_min": 0.5,
+      "first_call_speed_lower_95_min": 0.5,
+      "aggregate_size_ratio_max": 0.998,
+      "per_file_size_ratio_max": 1.2
+    }
   },
   "common_guards": {
-    "decoder_time_upper_95_ratio_max":1.20,
-    "worst_tiny_warm_median_ratio_max":1.20,
-    "max_per_case_median_process_rss_increase_bytes":8388608,
-    "portable_release_binary_growth_bytes_max":65536,
-    "size_guards_apply_to_synthetic_and_regression_scopes":true,
-    "require_new_frontier_point_among_same_guard_qualifying_profiles":true
+    "decoder_time_upper_95_ratio_max": 1.2,
+    "worst_tiny_warm_median_ratio_max": 1.2,
+    "max_per_case_median_process_rss_increase_bytes": 8388608,
+    "portable_release_binary_growth_bytes_max": 65536,
+    "size_guards_apply_to_synthetic_and_regression_scopes": true,
+    "require_new_frontier_point_among_same_guard_qualifying_profiles": true
   },
   "freeze": {
-    "required_before_test_encoding": ["candidate sources and binaries","policies","corpus manifest","protocol","baseline artifacts"],
+    "required_before_test_encoding": [
+      "candidate sources and binaries",
+      "policies",
+      "corpus manifest",
+      "protocol",
+      "baseline artifacts"
+    ],
     "forbid_final_test_feedback": true,
-    "pilot_and_profile_partitions": ["train","validation","old-regression"],
-    "previous_final_tests_are_regressions":true
+    "pilot_and_profile_partitions": [
+      "train",
+      "validation",
+      "old-regression"
+    ],
+    "previous_final_tests_are_regressions": true
   },
-  "gpu_reopen_optimizer_fraction_min":0.05,
-  "completion": "resolve P0-P6 and GPU/Lean decisions with evidence; promotion conditional on guards; missed numerical targets explicitly reported"
+  "gpu_reopen_optimizer_fraction_min": 0.05,
+  "completion": "resolve P0-P6 and GPU/Lean decisions with evidence; promotion conditional on guards; missed numerical targets explicitly reported",
+  "synthetic_manifest_sha256": "a0ce2bef055f0c82ff57c923305f457c502b1f23ee449505e4db7cc7560568e6"
 }

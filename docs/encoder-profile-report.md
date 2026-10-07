@@ -1,7 +1,8 @@
 # P0/P1: refreshed Rust encoder profiles
 
-Status: real-corpus contract, original controls and initial profiling complete;
-new synthetic regimes and implementation experiments remain pending.
+Status: real-corpus contract, original controls and initial profiling complete.
+Subsequent synthetic construction and implementation experiments are tracked
+in [the P2 report](encoder-speed-spikes.md).
 
 The original S9 worker is sealed at commit `14f15e63e1a8955c5cfebf869ce065f29dd950fc`,
 including its exact binary, source archive, compiler/flags and both policy payloads.
