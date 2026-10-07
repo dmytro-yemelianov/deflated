@@ -35,6 +35,19 @@ periodic wraps and short inputs. Exact fallback compares actual packet sizes.
 Native pilot pairs additionally check exact zlib consumption and identical
 internal Balanced packets against the sealed original.
 
+On the three S9 outliers, the original speed profile grows bytes 67.908%
+aggregate (1.950× worst file), compromise grows 18.753% (1.456×), and old
+speed policy grows 12.989% (1.207×). These exact sizes are preserved in the
+[original control screen](../scripts/reports/encoder-baseline-train.json).
+By construction, cheap configurations limit candidate coverage and some
+also insert fewer match-interior positions; generic sampling can route an
+ambiguous input to that cheaper search. This is a qualitative explanation
+consistent with the packet-size regressions, not an independent attribution
+of each matcher branch. Full-history dual regional search repairs the old
+size caps below, while its real/synthetic costs show why that repair cannot
+be enabled everywhere. The drift stored-prediction failure is a different,
+explicitly reproduced issue: byte-alphabet compression missed by word reuse.
+
 ## Initial training result
 
 The frozen initial implementation is commit `64e7cdd`. The serial screen
