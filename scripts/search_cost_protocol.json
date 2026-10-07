@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "study": "S7 exact fixed-code oracle and bounded encoded-cost parsing",
+  "seed": 195115,
+  "training_rounds": 5,
+  "validation_rounds": 7,
+  "minimum_batch_ms": 5,
+  "exact_max_bytes": 4096,
+  "exact_cases": 128,
+  "cost_chunk_bytes": 262144,
+  "methods": ["longest:16:4096:fixed", "cost:16:4096:fixed", "cost:4:512:auto", "cost:16:4096:auto", "cost:64:16384:auto", "balanced", "best"],
+  "geometry": [
+    {"hash_bits": 12, "window_bytes": 1024},
+    {"hash_bits": 12, "window_bytes": 32768},
+    {"hash_bits": 15, "window_bytes": 1024},
+    {"hash_bits": 15, "window_bytes": 32768},
+    {"hash_bits": 18, "window_bytes": 1024},
+    {"hash_bits": 18, "window_bytes": 32768},
+    {"hash_bits": 13, "window_bytes": 4096},
+    {"hash_bits": 17, "window_bytes": 16384}
+  ],
+  "geometry_method": "cost:16:4096:auto",
+  "geometry_scope": "compile table width and effective history into isolated research-parser binaries; never widen DEFLATE distances",
+  "selection": "training only before validation; size and speed representatives plus production controls",
+  "guardrails": {"maximum_file_size_vs_balanced": 1.2, "speed_aggregate_size_vs_balanced": 1.2, "compromise_aggregate_size_vs_balanced": 1.01},
+  "optimality": "single fixed-code block with all legal matches only; auto Huffman and bounded candidate graphs have no global-optimality claim",
+  "promotion": "none until S9; no reserved final-test encoding"
+}

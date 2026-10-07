@@ -46,6 +46,7 @@ jobs:
           make research-check
           make research-defaults
           make research-policy-check
+          make research-cost-check
 
       - name: Optional CPU optimizer adapter
         run: |
