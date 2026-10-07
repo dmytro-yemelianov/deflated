@@ -17,6 +17,25 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 class FinalArtifactTests(unittest.TestCase):
+    def assert_reconstructed(self, actual, expected, path='metric'):
+        # Python versions/platforms differ by a few ulps in float summation.
+        # Only derived floats use this microscopic reconstruction tolerance;
+        # data hashes, counts, byte sizes, keys and guard booleans stay exact.
+        if isinstance(expected, float):
+            self.assertIsInstance(actual, float, path)
+            self.assertTrue(math.isclose(actual, expected, rel_tol=1e-12, abs_tol=1e-12),
+                            f'{path}: {actual} != {expected}')
+        elif isinstance(expected, dict):
+            self.assertEqual(set(actual), set(expected), path)
+            for key, value in expected.items():
+                self.assert_reconstructed(actual[key], value, f'{path}.{key}')
+        elif isinstance(expected, list):
+            self.assertEqual(len(actual), len(expected), path)
+            for index, (left, right) in enumerate(zip(actual, expected)):
+                self.assert_reconstructed(left, right, f'{path}[{index}]')
+        else:
+            self.assertEqual(actual, expected, path)
+
     def test_complete_matrix_rotates_positions_and_pairs(self):
         report = json.loads((ROOT / 'scripts/reports/search-final.json').read_text())
         payload = (ROOT / report['raw_ledger']).read_bytes()
@@ -57,11 +76,11 @@ class FinalArtifactTests(unittest.TestCase):
         seed = report['protocol']['seed']
         for name, observations in grouped.items():
             for scope in ('fresh', 'tiny'):
-                self.assertEqual(summary([r for r in observations if r['scope'] == scope], seed), report['metrics'][name][scope])
+                self.assert_reconstructed(summary([r for r in observations if r['scope'] == scope], seed), report['metrics'][name][scope])
         for name in report['protocol']['roles'].values():
             for ref in ('balanced', 'best', 'miniz1', 'miniz6', 'miniz9'):
                 for scope in ('fresh', 'tiny'):
-                    self.assertEqual(direct([r for r in grouped[name] if r['scope'] == scope], [r for r in grouped[ref] if r['scope'] == scope], seed), report['direct_references'][name][ref][scope])
+                    self.assert_reconstructed(direct([r for r in grouped[name] if r['scope'] == scope], [r for r in grouped[ref] if r['scope'] == scope], seed), report['direct_references'][name][ref][scope])
             self.assertEqual(gates(name, report, report['metrics'][name], report['direct_references'][name]), report['decisions'][name])
         self.assertFalse(report['adaptive_test_feedback'])
 
