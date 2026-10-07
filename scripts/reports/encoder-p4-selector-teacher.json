@@ -1,0 +1,1121 @@
+{
+  "cpu_model_seconds": 0.1506637080165092,
+  "fitted": {
+    "depth": 1,
+    "inner": [
+      {
+        "choices": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "depth": -1,
+        "feasible": true,
+        "objective": 0.9983414235177198,
+        "scopes": {
+          "new-real-train": {
+            "size_vs_balanced": 1.0,
+            "speed_vs_balanced": 1.0016613319283458,
+            "worst_file_size_ratio": 1.0
+          },
+          "new-synthetic-train": {
+            "size_vs_balanced": 1.0,
+            "speed_vs_balanced": 0.994557616027507,
+            "worst_file_size_ratio": 1.0
+          },
+          "old-regression": {
+            "size_vs_balanced": 1.0,
+            "speed_vs_balanced": 1.0105895101046962,
+            "worst_file_size_ratio": 1.0
+          }
+        }
+      },
+      {
+        "choices": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "depth": 0,
+        "feasible": true,
+        "objective": 0.9983414235177198,
+        "scopes": {
+          "new-real-train": {
+            "size_vs_balanced": 1.0,
+            "speed_vs_balanced": 1.0016613319283458,
+            "worst_file_size_ratio": 1.0
+          },
+          "new-synthetic-train": {
+            "size_vs_balanced": 1.0,
+            "speed_vs_balanced": 0.994557616027507,
+            "worst_file_size_ratio": 1.0
+          },
+          "old-regression": {
+            "size_vs_balanced": 1.0,
+            "speed_vs_balanced": 1.0105895101046962,
+            "worst_file_size_ratio": 1.0
+          }
+        }
+      },
+      {
+        "choices": [
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        "depth": 1,
+        "feasible": true,
+        "objective": 0.8360936964808683,
+        "scopes": {
+          "new-real-train": {
+            "size_vs_balanced": 1.0050618762170114,
+            "speed_vs_balanced": 1.1960382002747012,
+            "worst_file_size_ratio": 1.030662094807169
+          },
+          "new-synthetic-train": {
+            "size_vs_balanced": 1.0023073802541196,
+            "speed_vs_balanced": 1.2411679871183092,
+            "worst_file_size_ratio": 1.1502256608639587
+          },
+          "old-regression": {
+            "size_vs_balanced": 1.0,
+            "speed_vs_balanced": 1.0105895101046962,
+            "worst_file_size_ratio": 1.0
+          }
+        }
+      },
+      {
+        "choices": [
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1
+        ],
+        "depth": 2,
+        "feasible": false,
+        "objective": 0.8006938328444185,
+        "scopes": {
+          "new-real-train": {
+            "size_vs_balanced": 1.006391000656287,
+            "speed_vs_balanced": 1.2489168256080578,
+            "worst_file_size_ratio": 1.030662094807169
+          },
+          "new-synthetic-train": {
+            "size_vs_balanced": 1.0030636286040744,
+            "speed_vs_balanced": 1.2702224652517864,
+            "worst_file_size_ratio": 1.1502256608639587
+          },
+          "old-regression": {
+            "size_vs_balanced": 1.119998073867193,
+            "speed_vs_balanced": 1.832016266761569,
+            "worst_file_size_ratio": 1.2066163668020893
+          }
+        }
+      }
+    ],
+    "nested_result": {
+      "choices": [
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "feasible": true,
+      "scopes": {
+        "new-real-train": {
+          "size_vs_balanced": 1.001380367024219,
+          "speed_vs_balanced": 1.0192096183671424,
+          "worst_file_size_ratio": 1.030662094807169
+        },
+        "new-synthetic-train": {
+          "size_vs_balanced": 1.0008134856895918,
+          "speed_vs_balanced": 1.0793150026793243,
+          "worst_file_size_ratio": 1.0948083204400894
+        },
+        "old-regression": {
+          "size_vs_balanced": 1.0,
+          "speed_vs_balanced": 1.0105895101046962,
+          "worst_file_size_ratio": 1.0
+        }
+      }
+    },
+    "outer": [
+      {
+        "depth": 1,
+        "fold": 0,
+        "held_groups": [
+          "new-synthetic-train:change_points",
+          "new-synthetic-train:collision_cost_trigram",
+          "new-synthetic-train:cost_sensitive",
+          "new-synthetic-train:random_islands",
+          "old-regression:feature_sampling_trap",
+          "old-regression:template_edits",
+          "real:aws-ec2-api"
+        ],
+        "held_ids": [
+          "train/aws-ec2-api.raw",
+          "test/fresh-1-feature_sampling_trap-5-0.raw",
+          "test/fresh-0-new-template_edits-1021.raw",
+          "train/cost_sensitive-7-0.raw",
+          "train/cost_sensitive-10-0.raw",
+          "train/collision_cost_trigram-7-0.raw",
+          "train/collision_cost_trigram-10-0.raw",
+          "train/change_points-7-0.raw",
+          "train/change_points-10-0.raw",
+          "train/random_islands-7-0.raw",
+          "train/random_islands-10-0.raw"
+        ],
+        "inner": [
+          {
+            "choices": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "depth": -1,
+            "feasible": true,
+            "objective": 0.9984259108673205,
+            "scopes": {
+              "new-real-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.001576570795636,
+                "worst_file_size_ratio": 1.0
+              },
+              "new-synthetic-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 0.9978382220330095,
+                "worst_file_size_ratio": 1.0
+              },
+              "old-regression": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0123666254049801,
+                "worst_file_size_ratio": 1.0
+              }
+            }
+          },
+          {
+            "choices": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "depth": 0,
+            "feasible": true,
+            "objective": 0.9984259108673205,
+            "scopes": {
+              "new-real-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.001576570795636,
+                "worst_file_size_ratio": 1.0
+              },
+              "new-synthetic-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 0.9978382220330095,
+                "worst_file_size_ratio": 1.0
+              },
+              "old-regression": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0123666254049801,
+                "worst_file_size_ratio": 1.0
+              }
+            }
+          },
+          {
+            "choices": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              1
+            ],
+            "depth": 1,
+            "feasible": true,
+            "objective": 0.785404448285765,
+            "scopes": {
+              "new-real-train": {
+                "size_vs_balanced": 1.0064009907771208,
+                "speed_vs_balanced": 1.2732293561395207,
+                "worst_file_size_ratio": 1.032985664618755
+              },
+              "new-synthetic-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0974886544457658,
+                "worst_file_size_ratio": 1.0
+              },
+              "old-regression": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0123666254049801,
+                "worst_file_size_ratio": 1.0
+              }
+            }
+          },
+          {
+            "choices": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1
+            ],
+            "depth": 2,
+            "feasible": false,
+            "objective": 0.785404448285765,
+            "scopes": {
+              "new-real-train": {
+                "size_vs_balanced": 1.0064009907771208,
+                "speed_vs_balanced": 1.2732293561395207,
+                "worst_file_size_ratio": 1.032985664618755
+              },
+              "new-synthetic-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0974886544457658,
+                "worst_file_size_ratio": 1.0
+              },
+              "old-regression": {
+                "size_vs_balanced": 1.2066163668020893,
+                "speed_vs_balanced": 3.022606701910044,
+                "worst_file_size_ratio": 1.2066163668020893
+              }
+            }
+          }
+        ],
+        "result": {
+          "choices": [
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0
+          ],
+          "feasible": false,
+          "scopes": {
+            "new-real-train": {
+              "size_vs_balanced": 1.030662094807169,
+              "speed_vs_balanced": 1.3027871823118673,
+              "worst_file_size_ratio": 1.030662094807169
+            },
+            "new-synthetic-train": {
+              "size_vs_balanced": 1.001643821356955,
+              "speed_vs_balanced": 1.2508503532011508,
+              "worst_file_size_ratio": 1.0948083204400894
+            },
+            "old-regression": {
+              "size_vs_balanced": 1.0,
+              "speed_vs_balanced": 1.0069124082795458,
+              "worst_file_size_ratio": 1.0
+            }
+          }
+        },
+        "train_groups": [
+          "new-synthetic-train:collision_fourbyte",
+          "new-synthetic-train:collision_trigram",
+          "new-synthetic-train:drift",
+          "new-synthetic-train:feature_sampling_trap",
+          "new-synthetic-train:paired_transforms",
+          "old-regression:collision_trigram",
+          "real:busybox",
+          "real:chinook",
+          "real:cpython",
+          "real:llvm",
+          "real:noto-sans",
+          "real:whatwg-html",
+          "real:zlib-archive"
+        ],
+        "tree": {
+          "feature": 10,
+          "left": {
+            "config": 0
+          },
+          "right": {
+            "config": 1
+          },
+          "threshold": 24.0
+        }
+      },
+      {
+        "depth": -1,
+        "fold": 1,
+        "held_groups": [
+          "new-synthetic-train:collision_fourbyte",
+          "new-synthetic-train:paired_transforms",
+          "old-regression:collision_trigram",
+          "real:busybox",
+          "real:noto-sans",
+          "real:whatwg-html",
+          "real:zlib-archive"
+        ],
+        "held_ids": [
+          "train/whatwg-html.raw",
+          "train/busybox.raw",
+          "train/zlib-archive.raw",
+          "train/noto-sans.raw",
+          "test/fresh-1-collision_trigram-5-0.raw",
+          "train/collision_fourbyte-7-0.raw",
+          "train/collision_fourbyte-10-0.raw",
+          "train/paired_transforms-7-0.raw",
+          "train/paired_transforms-7-1.raw",
+          "train/paired_transforms-10-0.raw",
+          "train/paired_transforms-10-1.raw"
+        ],
+        "inner": [
+          {
+            "choices": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "depth": -1,
+            "feasible": true,
+            "objective": 0.9973042904654875,
+            "scopes": {
+              "new-real-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0027029960266733,
+                "worst_file_size_ratio": 1.0
+              },
+              "new-synthetic-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 0.9927732428658623,
+                "worst_file_size_ratio": 1.0
+              },
+              "old-regression": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0069124082795458,
+                "worst_file_size_ratio": 1.0
+              }
+            }
+          },
+          {
+            "choices": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "depth": 0,
+            "feasible": true,
+            "objective": 0.9973042904654875,
+            "scopes": {
+              "new-real-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0027029960266733,
+                "worst_file_size_ratio": 1.0
+              },
+              "new-synthetic-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 0.9927732428658623,
+                "worst_file_size_ratio": 1.0
+              },
+              "old-regression": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0069124082795458,
+                "worst_file_size_ratio": 1.0
+              }
+            }
+          },
+          {
+            "choices": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "depth": 1,
+            "feasible": false,
+            "objective": 0.9973042904654875,
+            "scopes": {
+              "new-real-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0027029960266733,
+                "worst_file_size_ratio": 1.0
+              },
+              "new-synthetic-train": {
+                "size_vs_balanced": 1.0048695741413372,
+                "speed_vs_balanced": 1.272609054369508,
+                "worst_file_size_ratio": 1.4054029957203995
+              },
+              "old-regression": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0069124082795458,
+                "worst_file_size_ratio": 1.0
+              }
+            }
+          },
+          {
+            "choices": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              0,
+              1,
+              0,
+              1,
+              0,
+              1,
+              0,
+              0,
+              1,
+              1
+            ],
+            "depth": 2,
+            "feasible": false,
+            "objective": 0.9973042904654875,
+            "scopes": {
+              "new-real-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0027029960266733,
+                "worst_file_size_ratio": 1.0
+              },
+              "new-synthetic-train": {
+                "size_vs_balanced": 1.0057330933854278,
+                "speed_vs_balanced": 1.3348203724354253,
+                "worst_file_size_ratio": 1.4054029957203995
+              },
+              "old-regression": {
+                "size_vs_balanced": 1.0236044107512061,
+                "speed_vs_balanced": 1.808989678194292,
+                "worst_file_size_ratio": 1.0323439580233378
+              }
+            }
+          }
+        ],
+        "result": {
+          "choices": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "feasible": true,
+          "scopes": {
+            "new-real-train": {
+              "size_vs_balanced": 1.0,
+              "speed_vs_balanced": 1.000975680982983,
+              "worst_file_size_ratio": 1.0
+            },
+            "new-synthetic-train": {
+              "size_vs_balanced": 1.0,
+              "speed_vs_balanced": 1.0162253405869273,
+              "worst_file_size_ratio": 1.0
+            },
+            "old-regression": {
+              "size_vs_balanced": 1.0,
+              "speed_vs_balanced": 1.0123666254049801,
+              "worst_file_size_ratio": 1.0
+            }
+          }
+        },
+        "train_groups": [
+          "new-synthetic-train:change_points",
+          "new-synthetic-train:collision_cost_trigram",
+          "new-synthetic-train:collision_trigram",
+          "new-synthetic-train:cost_sensitive",
+          "new-synthetic-train:drift",
+          "new-synthetic-train:feature_sampling_trap",
+          "new-synthetic-train:random_islands",
+          "old-regression:feature_sampling_trap",
+          "old-regression:template_edits",
+          "real:aws-ec2-api",
+          "real:chinook",
+          "real:cpython",
+          "real:llvm"
+        ],
+        "tree": {
+          "config": 0
+        }
+      },
+      {
+        "depth": -1,
+        "fold": 2,
+        "held_groups": [
+          "new-synthetic-train:collision_trigram",
+          "new-synthetic-train:drift",
+          "new-synthetic-train:feature_sampling_trap",
+          "real:chinook",
+          "real:cpython",
+          "real:llvm"
+        ],
+        "held_ids": [
+          "train/cpython.raw",
+          "train/llvm.raw",
+          "train/chinook.raw",
+          "train/collision_trigram-7-0.raw",
+          "train/collision_trigram-10-0.raw",
+          "train/drift-7-0.raw",
+          "train/drift-10-0.raw",
+          "train/feature_sampling_trap-7-0.raw",
+          "train/feature_sampling_trap-10-0.raw"
+        ],
+        "inner": [
+          {
+            "choices": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "depth": -1,
+            "feasible": true,
+            "objective": 0.9988343588973312,
+            "scopes": {
+              "new-real-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0011670014074763,
+                "worst_file_size_ratio": 1.0
+              },
+              "new-synthetic-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 0.9936694136150437,
+                "worst_file_size_ratio": 1.0
+              },
+              "old-regression": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0105895101046962,
+                "worst_file_size_ratio": 1.0
+              }
+            }
+          },
+          {
+            "choices": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "depth": 0,
+            "feasible": true,
+            "objective": 0.9988343588973312,
+            "scopes": {
+              "new-real-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0011670014074763,
+                "worst_file_size_ratio": 1.0
+              },
+              "new-synthetic-train": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 0.9936694136150437,
+                "worst_file_size_ratio": 1.0
+              },
+              "old-regression": {
+                "size_vs_balanced": 1.0,
+                "speed_vs_balanced": 1.0105895101046962,
+                "worst_file_size_ratio": 1.0
+              }
+            }
+          },
+          {
+            "choices": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1
+            ],
+            "depth": 1,
+            "feasible": false,
+            "objective": 0.8997404675081996,
+            "scopes": {
+              "new-real-train": {
+                "size_vs_balanced": 1.0049468949229088,
+                "speed_vs_balanced": 1.1114316140180576,
+                "worst_file_size_ratio": 1.030662094807169
+              },
+              "new-synthetic-train": {
+                "size_vs_balanced": 1.003246068244655,
+                "speed_vs_balanced": 1.11877423540387,
+                "worst_file_size_ratio": 1.1178454247174627
+              },
+              "old-regression": {
+                "size_vs_balanced": 1.119998073867193,
+                "speed_vs_balanced": 1.832016266761569,
+                "worst_file_size_ratio": 1.2066163668020893
+              }
+            }
+          },
+          {
+            "choices": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1
+            ],
+            "depth": 2,
+            "feasible": false,
+            "objective": 0.8752038965111,
+            "scopes": {
+              "new-real-train": {
+                "size_vs_balanced": 1.0063329060166009,
+                "speed_vs_balanced": 1.1425908910899338,
+                "worst_file_size_ratio": 1.032985664618755
+              },
+              "new-synthetic-train": {
+                "size_vs_balanced": 1.0048029123602942,
+                "speed_vs_balanced": 1.11066668193914,
+                "worst_file_size_ratio": 1.1178454247174627
+              },
+              "old-regression": {
+                "size_vs_balanced": 1.119998073867193,
+                "speed_vs_balanced": 1.832016266761569,
+                "worst_file_size_ratio": 1.2066163668020893
+              }
+            }
+          }
+        ],
+        "result": {
+          "choices": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "feasible": true,
+          "scopes": {
+            "new-real-train": {
+              "size_vs_balanced": 1.0,
+              "speed_vs_balanced": 1.0027012560631698,
+              "worst_file_size_ratio": 1.0
+            },
+            "new-synthetic-train": {
+              "size_vs_balanced": 1.0,
+              "speed_vs_balanced": 0.9952883109802796,
+              "worst_file_size_ratio": 1.0
+            }
+          }
+        },
+        "train_groups": [
+          "new-synthetic-train:change_points",
+          "new-synthetic-train:collision_cost_trigram",
+          "new-synthetic-train:collision_fourbyte",
+          "new-synthetic-train:cost_sensitive",
+          "new-synthetic-train:paired_transforms",
+          "new-synthetic-train:random_islands",
+          "old-regression:collision_trigram",
+          "old-regression:feature_sampling_trap",
+          "old-regression:template_edits",
+          "real:aws-ec2-api",
+          "real:busybox",
+          "real:noto-sans",
+          "real:whatwg-html",
+          "real:zlib-archive"
+        ],
+        "tree": {
+          "config": 0
+        }
+      }
+    ],
+    "tree": {
+      "feature": 10,
+      "left": {
+        "config": 0
+      },
+      "right": {
+        "config": 1
+      },
+      "threshold": 217.0
+    }
+  },
+  "frozen": {
+    "baseline": "f17e4cb88c625ac11906b4da5736dcaf4e1bb31f2cb6fd0a2b3c4fad3c64fb69",
+    "binary": "c92f1178e7ca7e08cc89c9d6a4b5779ddd99b8435ea2ef7cb8af6c099a8762c9",
+    "build_overrides": {},
+    "real": "7e2e2eec698be421e4e933b5117bc11defe74b042d45b1a9f5dd4e4f0aefde85",
+    "source_commit": "43c6fa6e8def31c2acbc427cc5ba905f57cad523",
+    "sources": {
+      "Cargo.lock": "8ce82932f19c583ec37870d2f01dc9e72cb492b0aa02dde7e14b43142857a15d",
+      "Cargo.toml": "d8e747c012cba553ad19cdba4436e5c43dd30a10adce9e89933c3d538c4f4a39",
+      "crates/deflate-core/Cargo.toml": "27e824b076208ffe2864e6c1fae8b836429a393c26c62788e36f53acf1ff65e2",
+      "crates/deflate-core/examples/final_bench.rs": "f4ce0e0b3fe5e85a41d484ad872a0546c6e56c0fc213a09e3c6340377a1eca2a",
+      "crates/deflate-core/examples/support/adaptive.rs": "3743d7e174adfee696d3dcb87d5aff7ca1851e4b7c336ec307927d69448b5bac",
+      "crates/deflate-core/examples/support/bounded_parse.rs": "e7545af7442856c491e6eabedc90879d364f6848031659467ce2a0ecb2635262",
+      "crates/deflate-core/examples/support/final_bench.rs": "b30b948a3d1341d3b2f3b85f32d7703a716852f668e0dfdac29aa1c40d6aff70",
+      "crates/deflate-core/examples/support/policy.rs": "529af50ef1222ddaa864c6ab16aba044ee42f3f5c1954365244cd0f0ff4d30b4",
+      "crates/deflate-core/examples/support/streaming_blocks.rs": "cf4db02f87fef283002c5b8028b2e75c0d2f2faea9ccaac71046e97e4470e595",
+      "crates/deflate-core/src/bitstream.rs": "95e941fcc379cafd8ae920f12ed4f6327e12062edfe39015f66eb43a9b094186",
+      "crates/deflate-core/src/bitwriter.rs": "0b6ff21ba48422ed34557f9b5e56dd89cd91315cac9a498f9bed306b3cd96588",
+      "crates/deflate-core/src/block.rs": "b99d28faf70ea823b251544f2040f0c4850b9871bcbd9e331742661545310eee",
+      "crates/deflate-core/src/compress.rs": "ed3854e0f1c02db1056c465a4740f9c3212b06ebac4406cb59017adcf999a405",
+      "crates/deflate-core/src/crc32.rs": "3166b0a90dc6cded7a07e5beae9b5cee0c843349123e80dd2e7cc898f71e7fad",
+      "crates/deflate-core/src/deflate.rs": "419e757fa99e22675f77628fc652badcfeb0817852835f790eb584aaebc67507",
+      "crates/deflate-core/src/encode_dynamic.rs": "0a10d270561609bcb1c9b883992880734c6395dfd532ad9ecd2bed54bc4a52ec",
+      "crates/deflate-core/src/encode_fixed.rs": "b4459d0cc109c2f50ebd28467ad1923fbf96a527480dd3f64399601cfa459fd1",
+      "crates/deflate-core/src/error.rs": "fe3ac5fc29296fd8e7e0539dc76c615717fe8a72bb3456608edd18efbb21fecd",
+      "crates/deflate-core/src/gzip.rs": "44a8044d6fd55a5f78fab74f75ba5815b004a4e83ffcbf08ae8254909021b5bd",
+      "crates/deflate-core/src/huffman.rs": "326b31f0fda785d2418f24c7348490520f7f869082fed3316f9f870bfe0fd964",
+      "crates/deflate-core/src/huffman_build.rs": "c2eef9c5c7d53eaf435b65cbc2eb6ad19f28e3df1aef87f6952024c8879ccc58",
+      "crates/deflate-core/src/inflate.rs": "ae4c905a7da364c4b05f4f8c4754ca01ad513b695ea82c28a06c2375dfcde272",
+      "crates/deflate-core/src/lib.rs": "82e81c94fbdad579be6157b3f9cd6b73f3d51ec526c68fda8d731d7f23070d68",
+      "crates/deflate-core/src/lz77.rs": "67991a3fb79ef37a65accdff089b3c34d90157e8eed43745fcbba60f432589c1",
+      "crates/deflate-core/src/matcher.rs": "74b63ea24ea7f41b62d121a4d3df59dfb9fccb0435751138aa4daf447b3cc5f0",
+      "crates/deflate-core/src/matcher_flat.rs": "2cb9257a6b93edce133891c4292690ef78e5edf87ccdbce976667d0d6d587890",
+      "crates/deflate-core/src/research.rs": "63046c8b3f3a85cc5f3148cbf0aee4a2640618e199cde29ca27a3c3035b7179b",
+      "crates/deflate-core/src/tokens.rs": "5e2f16a94e1a8a35400be25e04280ecae25dd550ad7bd92e398715f16f84f839",
+      "crates/deflate-core/src/zip.rs": "e92492d2c4d61be74e8f6f73da43725992ca0c6be807d8da0d104e2e3a6ae731",
+      "scripts/encoder_baseline.py": "d1b5d7a5bb0b8c47e301b447744ac6029955f405247584094112fa13e4dc590d",
+      "scripts/encoder_corpus.py": "7c7cce08e46fce09a6ed3b1ea8f6f5e726a96f9587229ca6c4e070b9eca49645",
+      "scripts/encoder_measure.py": "e56985aa311e173f2cf79432c5aa6428c3545811caa8ea8e36f76f4c16649c0c",
+      "scripts/encoder_parse_campaign.py": "c88fbd2bbc0a2ab789b877b337416cfa4baed7d1c7298ef069ccf998d16fb55a",
+      "scripts/encoder_selector.py": "a1c65fb05d035dfcab7006aac40f0050187022c7bf178ac8d42032de83a7eedf",
+      "scripts/search_corpus.py": "ff99039e63e31f41805a433777ba454a8e6276706e4357d2f6273febe78f03c3",
+      "scripts/search_cost_oracle.py": "484c4740ab6b6fbe8febb1c1b43e2b1d92696a76bc7107cbb92dcc3d66527bdd",
+      "scripts/search_poc.py": "bde8f0bb0976f0197281eaa7e9c03445a6b628a28b04f5ab315d7a319d0e1763",
+      "scripts/search_policy.py": "723d4af70d2d52667be2411553aee7d218d5ce172dddc9e2cee608067d35e141"
+    },
+    "synthetic": "a0ce2bef055f0c82ff57c923305f457c502b1f23ee449505e4db7cc7560568e6"
+  },
+  "limitations": [
+    "teacher leaf timings exclude feature cost; native policy verification includes it",
+    "one warm pilot session; not final confidence",
+    "nested CV conditional on this frozen vocabulary; validation remains separate"
+  ],
+  "model_fraction_of_measured_loop": 0.020840592482418336,
+  "native_seconds_including_features_and_verification": 7.078675291995751,
+  "policy_sha256": "ce3a2eeb459aa1fb12f2c2262c120d3e5846aba189df2d8d4a5e39387d43d2d5",
+  "rows": 124
+}

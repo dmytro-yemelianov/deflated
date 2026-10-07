@@ -1,7 +1,8 @@
 # P4: regional effort and block decisions
 
-Status: initial regional/predictor training screen complete; corrected
-predictor, streaming blocks and learned policies remain separate P4 work.
+Status: the initial 24-recipe P4 investigation and independent validation
+are complete. No recipe reaches its primary role target. P5 final protocol,
+useful P2 combinations and P6 integration remain separate work.
 Final-test inputs stay reserved and no new preset/default is promoted.
 
 The initial 15-method screen consumes 15 of the declared 24 P4 recipe budget:
@@ -148,6 +149,65 @@ candidate and Balanced, choosing by actual packet length with integer 1%
 arithmetic. Tiny inputs take Balanced directly in all three modes.
 Teacher leaf timings omit features and cannot establish a speed result;
 the fully charged native policy screen and independent validation decide it.
+
+At commit `43c6fa6`, 124 original-worker teacher measurements and native/
+Python feature comparisons produced a depth-one tree: lag-256 equality count
+<=217 selects Balanced, otherwise 16-probe lazy trigram. Both enhanced
+features were available but neither appears in the selected tree. Nested
+source-group CV is feasible but predicts only 1.019× real speed. Retain this
+generalization warning instead of presenting the 1.196× inner-CV prediction
+as an independent performance result. The current v2 runtime still computes
+all 15 features; any feature pruning needs separate native measurement.
+
+All 93 training pairs, 62 controls and 93 native/Python policy-choice checks
+pass; three-session validation adds 279 pairs and 186 controls. The feature
+policy gives 1.251× Balanced, +0.591% real bytes and 1.033× worst-file bytes
+on training. On real validation it gives 1.108×, +0.325% and 1.021×; synthetic
+and old-regression packets equal Balanced. It repairs the observed old
+size-cap failures, but misses the 1.5× main speed target.
+
+Regional replacement is 0.957× Balanced with +0.013% real validation bytes;
+the larger effort does not justify its cost here. Exact baseline comparison
+is 0.529× with +0.059% real bytes, respecting the integer per-input 1% cap.
+Its two complete passes confirm the speed cost of an unconditional guard.
+No size savings versus Best or superiority over native miniz is claimed.
+
+Evidence: [teacher and nested CV](../scripts/reports/encoder-p4-selector-teacher.json),
+[training](../scripts/reports/encoder-p4-selector-train.json),
+[validation](../scripts/reports/encoder-p4-selector-validation.json),
+[frozen policy](../scripts/reports/encoder-p4-selector-teacher.policy).
+Each summary has paired/control/diagnostic compressed ledgers beside it;
+the teacher also retains its complete matrix, protocol and policy-choice
+checks. Exact binaries and commit archives are sealed in the local run
+directories. The complete P4 screen has 744 training pairs (24 ×31),
+558 confirmation pairs, 620 old-policy/miniz6 controls and 124 teacher rows.
+All new final-test data remains unencoded.
+
+An [export receipt](../scripts/reports/encoder-p4-receipts.json) records every
+exported artifact's compressed and content hashes. The research CI checks
+those receipts and all 93 preserved native policy-choice agreements.
+
+## GPU and Lean decisions
+
+Fresh whole-loop accounting for the selector records 7.079 seconds of
+native measurement, feature comparison and decoder verification, and
+0.151 seconds of CPU fitting (2.084% of their combined time). This is below
+the preregistered 5% GPU reopening threshold even before adding the other
+P4 native screens. Fitting, feature work and verification are all included
+in that observed loop; no transfer or GPU speedup is assumed. Defer GPU
+scoring and full GPU encoding: this investigation has not produced a new
+GPU-suitable bottleneck or demonstrated a larger-batch end-to-end benefit.
+
+The Lean review distinguishes accepted-token heuristics from new emission.
+Existing finder/token and fixed/dynamic split models support experiments
+with regional search; they are not Rust refinement proofs. `encodeStored`
+and `decode_encodeStored` model a fresh byte-aligned stored stream. They do
+not prove arbitrary-prefix stored append or its mixed-block history
+invariant. Since all streaming recipes miss the primary size target, keep
+them in the research example and do not promote mixed emission. A new
+append/alignment model and corresponding roundtrip proof remain required
+before any later promotion. P5 packet correspondence and P6 model/axiom
+checks still apply; earlier green CI does not certify this new revision.
 
 The initial screen uses all eight real training sources, 20 new synthetic
 cases and the three old outliers. Original Best and separately timed Balanced

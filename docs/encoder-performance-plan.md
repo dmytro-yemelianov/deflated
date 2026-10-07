@@ -2,7 +2,7 @@
 
 Status: active. P0 corpus/control contract and P1 profiling are implemented;
 P2 isolated speed pilots and P3 bounded-cost investigation are complete;
-P4 regional/predictor work is underway; P5–P6 remain pending.
+P4 adaptive-policy/block investigation is complete; P5–P6 remain pending.
 Evidence: [refreshed encoder profiles](encoder-profile-report.md).
 Initial implementation evidence: [isolated speed spikes](encoder-speed-spikes.md).
 Bounded parser prototype: [P3 investigation](encoder-bounded-parser.md).
@@ -164,29 +164,41 @@ isolated; P4 continues with regional effort and block selection.
 
 ## P4 — Adaptive compromise and block decisions
 
-- [ ] Diagnose the S9 fast/compromise outliers with existing regression data.
+- [x] Diagnose the S9 fast/compromise outliers with existing regression data.
   Extend the current cheap policy using source-grouped validation and new
   features only when their native overhead is justified.
-- [ ] Vary search effort by region: fast effort on easy regions, a bounded
+- [x] Vary search effort by region: fast effort on easy regions, a bounded
   larger budget on ambiguous regions. Include sampling traps and regime drift.
-- [ ] Compare feature-only selection, restricted local retries and a fully
+- [x] Compare feature-only selection, restricted local retries and a fully
   charged exact baseline-comparison fallback. The latter can enforce a
   per-input baseline-size threshold but requires extra encoding work; a
   predictor alone cannot guarantee it for unseen inputs. Distinguish measured
   holdout limits from any claimed universal bound.
-- [ ] Spike streaming fixed/dynamic/stored selection at detected regime changes,
+- [x] Spike streaming fixed/dynamic/stored selection at detected regime changes,
   reusing frequencies and avoiding eager whole-input tokens/evidence allocation.
   Compare identical partitions first, then adaptive boundaries; charge headers,
   byte alignment, stored length limits and any retained buffers.
-- [ ] Preserve history across blocks and exactly one final block. Review Lean
+- [x] Preserve history across blocks and exactly one final block. Review Lean
   emitter scope before production integration of mixed stored blocks.
-- [ ] Retain separate maximum-speed, minimum-size and compromise profiles.
+- [x] Retain separate maximum-speed, minimum-size and compromise profiles.
   Looser opt-in tradeoffs need explicit reporting and must not silently relax
   the main compromise guards after seeing results.
 
 Initial budget: at most 24 adaptive-policy/block variants. Evaluate standalone
 and selected P2/P3 combinations; control total search rather than exhaustive
 cross-products. Cheap, interpretable CPU selection remains the baseline.
+
+Delivered: [P4 evidence](encoder-adaptive-investigation.md), 24 training
+recipes, 1302 paired rows, 620 direct controls, 124 teacher rows, grouped
+nested CV and 93 independent native policy-choice checks. No standalone
+recipe meets its primary role target. The feature policy is 1.108× Balanced
+with +0.325% real validation bytes and fixes measured old-outlier size caps;
+regional replacement and exact baseline comparison cost more. Streaming
+does not improve real size versus Best, so mixed emission is not promoted.
+Existing separate speed/compromise/size profiles remain controls; P5 will
+freeze role-specific combinations and report missed targets. New final-test
+inputs remain reserved. Fresh CPU fitting consumes 2.084% of the selector
+measurement/verification loop, below the 5% GPU reopening threshold.
 
 ## GPU and Lean checkpoints
 

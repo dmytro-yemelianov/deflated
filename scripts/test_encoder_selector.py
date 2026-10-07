@@ -1,9 +1,25 @@
 import unittest
+import gzip
+import hashlib
+import json
+from pathlib import Path
 
 from encoder_selector import folds, scope_summary, serialize
 
 
 class SelectorContract(unittest.TestCase):
+    def test_preserved_p4_receipts_and_choice_agreement(self):
+        reports=Path(__file__).resolve().parent/"reports"
+        receipt=json.loads((reports/"encoder-p4-receipts.json").read_text())
+        for name,expected in receipt["files"].items():
+            data=(reports/name).read_bytes()
+            self.assertEqual(hashlib.sha256(data).hexdigest(),expected["sha256"],name)
+            if name.endswith(".gz"):
+                self.assertEqual(hashlib.sha256(gzip.decompress(data)).hexdigest(),expected["uncompressed_sha256"],name)
+        checks=json.loads(gzip.decompress((reports/"encoder-p4-selector-train-selector-choices.json.gz").read_bytes()))
+        self.assertEqual(len(checks),93)
+        self.assertTrue(all(c["expected_sha256"]==c["observed_sha256"] for c in checks))
+
     def test_source_and_paired_family_groups_never_cross_folds(self):
         cases=[{"group":f"source-{i//2}","id":i} for i in range(24)]
         held=folds(cases,1951)

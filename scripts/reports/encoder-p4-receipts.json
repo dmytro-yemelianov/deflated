@@ -1,0 +1,181 @@
+{
+  "files": {
+    "encoder-p4-entropy-controls.jsonl.gz": {
+      "bytes": 6905,
+      "sha256": "011e52747a10f2f507efde7c2a10c90e0c09941e4c1e1570edde96b14360123b",
+      "uncompressed_bytes": 38071,
+      "uncompressed_sha256": "7ef5a3c75356a6ab8b31b971b947085a41426bf25d05182f29fd9bce4137df53"
+    },
+    "encoder-p4-entropy-diagnostics.json.gz": {
+      "bytes": 1207,
+      "sha256": "13850dd273bb42dff63e95c11e2a32909335a344c88f25fdf776bbced3f887b4",
+      "uncompressed_bytes": 13272,
+      "uncompressed_sha256": "0e90114783dda7f2801183c8fd526471b1adfae94774657f18e152f488fa4f18"
+    },
+    "encoder-p4-entropy-measurements.jsonl.gz": {
+      "bytes": 11995,
+      "sha256": "296ec0818620e13aad04511e8ae5262b9f6de9bf2bb782f46e5b2f04d175ac5d",
+      "uncompressed_bytes": 105087,
+      "uncompressed_sha256": "bc2c40a973f24cb1a1c8a482fc2e7b1c756d7658ed14b91b85e6d9227d242575"
+    },
+    "encoder-p4-entropy.json": {
+      "bytes": 144792,
+      "sha256": "f527ea2048574a13f24209aea91284f7a86790cc1dc3eadac9ecaa032c10346e"
+    },
+    "encoder-p4-initial-controls.jsonl.gz": {
+      "bytes": 6936,
+      "sha256": "f0e5612fb05aef8482d8a4e28e45bd85c949779b31343ce05fe43d4c7b7f029b",
+      "uncompressed_bytes": 38130,
+      "uncompressed_sha256": "f70122bc3771adb942b06a6202cdada6eda8fe6b1e2db51bba33e658fbeb34ba"
+    },
+    "encoder-p4-initial-diagnostics.json.gz": {
+      "bytes": 3382,
+      "sha256": "74361442c36b2dc003dafb4f5cc8df5e68b2d65b83ad01e93c944e062b1f94ad",
+      "uncompressed_bytes": 56151,
+      "uncompressed_sha256": "e6b786e01342cfb0c14ddea9c61c2c875f27c36ef12f89d2344e74368d8bf835"
+    },
+    "encoder-p4-initial-measurements.jsonl.gz": {
+      "bytes": 44800,
+      "sha256": "e89dfe64725294b55ea119451c694c9ba284174ac2abd075ca8e72ac885eef79",
+      "uncompressed_bytes": 519567,
+      "uncompressed_sha256": "345598f3ba10ee18052e90f78af7cab967959aed43da5deae35e3ed5457b7207"
+    },
+    "encoder-p4-initial.json": {
+      "bytes": 348160,
+      "sha256": "f77dd03cf8af95acfd03799aa407acd691db401515cdb19b4934e316babb4ffb"
+    },
+    "encoder-p4-selector-teacher-matrix.json.gz": {
+      "bytes": 10368,
+      "sha256": "d1e82fd40fbec5b17c1d6e9ded54aff1b4d01c5ea58c56e44e529d83b73c2552",
+      "uncompressed_bytes": 45157,
+      "uncompressed_sha256": "5603210768b3c9e24f77b91cc5347fc6eee5543bfbceb21aca6c76a1634de8e6"
+    },
+    "encoder-p4-selector-teacher-measurements.jsonl.gz": {
+      "bytes": 11401,
+      "sha256": "d3b55e4985ea58c32034403f99c918e5469be7af9e6f57864ff23acf6ab4afba",
+      "uncompressed_bytes": 74700,
+      "uncompressed_sha256": "ec1012cea889ec60af3ef7c59ffe989578ca3f3080320b2407262afbfcf65083"
+    },
+    "encoder-p4-selector-teacher-protocol.json.gz": {
+      "bytes": 12968,
+      "sha256": "545980ce804236acd0dcfb8489c2a0998ca35cd25c09e491ec6a5a2c53d28a0d",
+      "uncompressed_bytes": 85606,
+      "uncompressed_sha256": "f1c495bf3b7a9b51d4751157790fd896c197d51092402da18b3aacd0cd021e61"
+    },
+    "encoder-p4-selector-teacher.json": {
+      "bytes": 31969,
+      "sha256": "43972b281e77cbe8cbee683195a40e529375d83f392237b512222d0769f10b94"
+    },
+    "encoder-p4-selector-teacher.policy": {
+      "bytes": 99,
+      "sha256": "ce3a2eeb459aa1fb12f2c2262c120d3e5846aba189df2d8d4a5e39387d43d2d5"
+    },
+    "encoder-p4-selector-train-controls.jsonl.gz": {
+      "bytes": 6976,
+      "sha256": "c6ae6c0eecc7c280c290d07ff72d4092ff5256858cf4dc39ed0e14f3b6c55e74",
+      "uncompressed_bytes": 38150,
+      "uncompressed_sha256": "a1befad897709a04f4e77e99e24d13ae7203e48261ba96970c78b337777b86fa"
+    },
+    "encoder-p4-selector-train-diagnostics.json.gz": {
+      "bytes": 1227,
+      "sha256": "681af1ee5c106b9c1722b37e50491818f14cfd2a6ade1a446a7f393caebdad26",
+      "uncompressed_bytes": 15023,
+      "uncompressed_sha256": "4fe9fcb75be2fd01a98653871addb95b0ac90794fd6c4f891e923c3e535983e6"
+    },
+    "encoder-p4-selector-train-measurements.jsonl.gz": {
+      "bytes": 11646,
+      "sha256": "15b0905ca0b66d8e44e9648fd95a8c27e2d2e617f6cc203d9241a88c729aaf6a",
+      "uncompressed_bytes": 111113,
+      "uncompressed_sha256": "8bda74d86e8a2f8552ab5b179eb669bc57011fe4429b60ad46b15d03404988fe"
+    },
+    "encoder-p4-selector-train-protocol.json.gz": {
+      "bytes": 13134,
+      "sha256": "f985dbd7cd0136a62b55347fa046e27b8e1ec3cd54ffd21383e1097329cf6c1f",
+      "uncompressed_bytes": 86321,
+      "uncompressed_sha256": "ea52ffecaae255b935905c580a3333a12f5d546aa70cf50043b6016d5a3d23fd"
+    },
+    "encoder-p4-selector-train-selector-choices.json.gz": {
+      "bytes": 2682,
+      "sha256": "e7052d7419d32621da9f6cae3abd9a414a121b50b7b73e1eea2b453733e590fe",
+      "uncompressed_bytes": 35889,
+      "uncompressed_sha256": "5cef0a5e7813be73758f2e1b41479d0e28a3c0f9b10c7c8707b082198022325a"
+    },
+    "encoder-p4-selector-train.json": {
+      "bytes": 145171,
+      "sha256": "ee74574839ad49638ce3dcf2fe6223c11fa764290c4f2807803598767c16add3"
+    },
+    "encoder-p4-selector-validation-controls.jsonl.gz": {
+      "bytes": 20023,
+      "sha256": "a1059c073e00f312b008b749d2a528e6768897b38e3d1ab48d49755eb25f4946",
+      "uncompressed_bytes": 116314,
+      "uncompressed_sha256": "75df8bf05dd8bb80ffde90236f754e1b92749fd165cfea7b38435f92191c4b0f"
+    },
+    "encoder-p4-selector-validation-diagnostics.json.gz": {
+      "bytes": 1270,
+      "sha256": "090bff81989efc64f3e23faa330b6b628a6808e780e6a4d7461463c7b06fe8ba",
+      "uncompressed_bytes": 15104,
+      "uncompressed_sha256": "d5a38d354549a9961bcd660d487cea5cfd1ed45f7c4771618209890f966f70fd"
+    },
+    "encoder-p4-selector-validation-measurements.jsonl.gz": {
+      "bytes": 33074,
+      "sha256": "5a6a5694e1724e1f768b1ae4aa04239c9e83161afcde0abece7bf734c9b5e1ac",
+      "uncompressed_bytes": 336349,
+      "uncompressed_sha256": "61ed7143537dc42174a6ca849c6aa6f1fc5ce98a6c7691ba90d643e7cf64f776"
+    },
+    "encoder-p4-selector-validation-protocol.json.gz": {
+      "bytes": 13873,
+      "sha256": "4964237833a0206d3e2be950d1e2fdc18cf3091467b42d2448e6b0e215135d0a",
+      "uncompressed_bytes": 89687,
+      "uncompressed_sha256": "172584edb9f9cb01ec3253238ad979db4ba9ea70df02eac033f118c2bcdd12ab"
+    },
+    "encoder-p4-selector-validation.json": {
+      "bytes": 149297,
+      "sha256": "a575627c6354952f3cbe4d777d0849599aa8813eaea24f1b2c1127996ebd73af"
+    },
+    "encoder-p4-sentinels-controls.jsonl.gz": {
+      "bytes": 19889,
+      "sha256": "f8289a721d98c98547242d19bc7cf5661f8c45af6761464924f89154a33bd0ea",
+      "uncompressed_bytes": 116027,
+      "uncompressed_sha256": "d2b0725b2d0fc0143ef05a096a7e6a214a55ae959e9b801e9781b0571ede9605"
+    },
+    "encoder-p4-sentinels-diagnostics.json.gz": {
+      "bytes": 1815,
+      "sha256": "86b7bb3375e972e72831c2494cbc98bc8c0467895df099eda408e29086cd740c",
+      "uncompressed_bytes": 13505,
+      "uncompressed_sha256": "77740b0cfbaeba75049fab5be80e4a6d8ea2a6fb66a9ca19a6cc6e29f868b8d4"
+    },
+    "encoder-p4-sentinels-measurements.jsonl.gz": {
+      "bytes": 40994,
+      "sha256": "15d48cdb57ccdac6e49e0e4459136f28d8991a25691ccd47795f2986175d26d8",
+      "uncompressed_bytes": 314874,
+      "uncompressed_sha256": "897bea85b0536fccbc8950282e9fb54c94fe7bfc99392064741dbd053b71b128"
+    },
+    "encoder-p4-sentinels.json": {
+      "bytes": 148981,
+      "sha256": "d8886a62295aa940bd3e25b76269fb80296719514f77257028090d382909d48c"
+    },
+    "encoder-p4-stream-controls.jsonl.gz": {
+      "bytes": 6928,
+      "sha256": "1bf718e121364f19d2dbd66675e888ed72ba1750b799d0b7c06ba3a6cd2b4d24",
+      "uncompressed_bytes": 38129,
+      "uncompressed_sha256": "466acb59683cd0ab26580bd5ff6280fe0d2e4f63b18d3b62166f0066aa0dc2ec"
+    },
+    "encoder-p4-stream-diagnostics.json.gz": {
+      "bytes": 1206,
+      "sha256": "62d15e546be9606353e9815e1806903d72285c788bdb43c94fe3f8dfa5c74b04",
+      "uncompressed_bytes": 14223,
+      "uncompressed_sha256": "6f0b912c6f41430bfef9c85e25d0165601be9011616dc04b8c56742d0b9380b4"
+    },
+    "encoder-p4-stream-measurements.jsonl.gz": {
+      "bytes": 12583,
+      "sha256": "5f33e737407876be842e869c5fa2337ac5393695f1311d01fa7fe3b3f646c6a7",
+      "uncompressed_bytes": 103210,
+      "uncompressed_sha256": "343dbc2f7440a78a9cc301403c19a359a543826238180eb3cd60c47ef5aa2719"
+    },
+    "encoder-p4-stream.json": {
+      "bytes": 144256,
+      "sha256": "4310082844c3cb6a36dfe845717407668195a2b4969ce7b5630f31763a5e4fd1"
+    }
+  },
+  "purpose": "immutable P4 exported artifact receipts; source/binary/corpus freezes live in the linked summaries"
+}
