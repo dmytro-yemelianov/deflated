@@ -96,6 +96,23 @@ regime boundaries, default-partition packet equivalence and instrumentation
 identity. These are native tests, not new Lean theorems; promotion of mixed
 emission still requires the model review described below.
 
+The three streaming recipes at commit `58fa5fb` passed 93 paired rows and
+62 controls in 19.115 seconds. On real training, identical partitions without
+stored are 1.032× Best with +0.338% bytes; enabling stored changes this to
+1.030× and +0.264%. Adaptive boundaries are 0.857× Best with +0.131% bytes.
+The adaptive version saves 0.347% versus Best on the old outliers but remains
+0.002% larger on new synthetic training. None meets the minimum-size role
+on the primary real scope; the cheaper partition loses Best's size savings.
+Evidence: [summary](../scripts/reports/encoder-p4-stream.json),
+[pairs](../scripts/reports/encoder-p4-stream-measurements.jsonl.gz),
+[controls](../scripts/reports/encoder-p4-stream-controls.jsonl.gz),
+[diagnostics](../scripts/reports/encoder-p4-stream-diagnostics.json.gz).
+Before fitting policies, confirm three training-selected sentinels on
+validation: corrected 4096-sample predictor (highest real training speed),
+regional 16/16/dual (old-outlier size benefit), and adaptive streaming
+(smallest new real training packet among streaming recipes). This is a
+confirmation screen, not an expansion or restart of the 24-recipe budget.
+
 The initial screen uses all eight real training sources, 20 new synthetic
 cases and the three old outliers. Original Best and separately timed Balanced
 are paired; old size policy and miniz6 remain direct controls. Diagnostic

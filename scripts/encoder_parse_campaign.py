@@ -151,7 +151,8 @@ def run(out,binary,real,synthetic,baseline,partition,rounds,minimum,names, *,
             raw=Path(case["raw_path"]).read_bytes()
             for name in names:
                 current={"phase":"diagnostic","input":case["raw_path"],"method":name}
-                data=json.loads(subprocess.check_output([str(binary),inspector,case["raw_path"],str(out/"diagnostic-streams"),name],text=True,timeout=120))
+                inspect_method=inspector[name] if isinstance(inspector,dict) else inspector
+                data=json.loads(subprocess.check_output([str(binary),inspect_method,case["raw_path"],str(out/"diagnostic-streams"),name],text=True,timeout=120))
                 packet=(out/"diagnostic-streams/candidate.deflate").read_bytes()
                 decode_exact(packet,raw)
                 if "attempted_stream_bits" in data and data["attempted_stream_bits"]!=data["actual_payload_bits"]+data["header_and_eob_bits"]:

@@ -6,6 +6,7 @@ from pathlib import Path
 from encoder_baseline import DEFAULT_OUT as BASELINE_OUT
 from encoder_corpus import DEFAULT_OUT as CORPUS_OUT, ROOT
 from encoder_parse_campaign import run
+from encoder_stream_campaign import methods as streaming_methods
 
 
 def methods():
@@ -30,4 +31,6 @@ if __name__=="__main__":
     parser.add_argument("--methods",nargs="+",default=methods())
     args=parser.parse_args()
     run(args.out.resolve(),args.binary.resolve(),args.real.resolve(),args.synthetic.resolve(),args.baseline.resolve(),args.partition,args.rounds,args.minimum_ms,args.methods,
-        allowed_methods=methods()+corrected_methods(),inspector="--adaptive-inspect",run_oracle=False,extra_sources=(Path(__file__),),label="P4 adaptive")
+        allowed_methods=methods()+corrected_methods()+streaming_methods(),
+        inspector={m:("--stream-inspect" if m.startswith("stream:") else "--adaptive-inspect") for m in args.methods},
+        run_oracle=False,extra_sources=(Path(__file__),ROOT/"scripts/encoder_stream_campaign.py"),label="P4 adaptive")
