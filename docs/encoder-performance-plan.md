@@ -1,7 +1,7 @@
 # Next goal: encoder performance and compression improvements
 
 Status: active. P0 corpus/control contract and P1 profiling are implemented;
-P2 isolated speed experiments are underway, with P3–P6 still pending.
+P2 isolated speed pilots are complete, with P3–P6 still pending.
 Evidence: [refreshed encoder profiles](encoder-profile-report.md).
 Initial implementation evidence: [isolated speed spikes](encoder-speed-spikes.md).
 Baseline: `14f15e63e1a8955c5cfebf869ce065f29dd950fc` (completed S0–S9).
@@ -105,17 +105,24 @@ position bookkeeping, and equivalent accepted-match range checks.
 
 ## P2 — Speed improvements with unchanged search semantics where possible
 
-- [ ] Implement the selected P1 spikes in isolation; prefer reducing work over
+- [x] Implement the selected P1 spikes in isolation; prefer reducing work over
   changing coverage. Keep experimental branching and instrumentation out of
   the default hot path.
-- [ ] For equivalence-preserving changes, compare against the scalar/current
+- [x] For equivalence-preserving changes, compare against the scalar/current
   implementation's token stream and output on meaningful collision, tail,
   periodic and wraparound cases. Do not duplicate already completed optimizations.
-- [ ] For changed search coverage, validate each accepted match, complete token
+- [x] For changed search coverage, validate each accepted match, complete token
   expansion and deterministic emission; measure size rather than assuming it.
-- [ ] Measure native end-to-end cost, tiny latency and separate process RSS.
+- [x] Measure native end-to-end cost, tiny latency and separate process RSS.
   Try portable changes first; isolate target-specific variants and compiler flags.
-- [ ] Combine only independently useful changes, then remeasure interactions.
+- [x] Combine only independently useful changes, then remeasure interactions.
+
+Delivered: [P2 evidence](encoder-speed-spikes.md), 3900 serial paired rows,
+162 separate RSS processes, and scalar/legacy equivalence gates. Code reversal
+is retained (1.042× Balanced on real validation); iterator, range-check and
+position rewrites are rejected. No changed-coverage implementation or
+multi-change combination was admitted. First-call and integrated binary-size
+guards remain P5 work; final-test inputs are still reserved.
 
 Initial budget: at most three bounded implementation spikes and 32 canonical
 variant evaluations. Extend only when a documented result justifies the next

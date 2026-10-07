@@ -81,13 +81,54 @@ NEW_ITERATOR = '''        // Keep the existing position-plus-one representation 
             candidate = if delta != 0 && delta <= c { candidate - delta } else { 0 };
             Some(c)
         })'''
+OLD_POSITION = '''        let i = self.i;
+        let byte = *self.input.get(i)?;
+
+        // Ensure the hash tables are populated up to current position
+        self.insert_up_to(i);
+
+        // Find best match at current position
+        let current = self.find_best(i);
+
+        // Lazy matching: check if next position has a better match
+        if let Some((len, dist)) = current {
+            if self.level.lazy() && self.better_next(len, dist) {
+                // Emit literal instead, advance by 1
+                self.i = i.saturating_add(1);
+                self.pending = None;
+                return Some(Token::Literal(byte));
+            }
+            // Emit the match
+            self.i = i.saturating_add(len);
+            self.pending = Some((i, self.i, dist));
+            if let (Ok(l), Ok(d)) = (u16::try_from(len), u16::try_from(dist)) {
+                return Some(Token::Match { len: l, dist: d });
+            }
+        }
+
+        // No match or match not better than lookahead - emit literal
+        self.i = i.saturating_add(1);
+        self.pending = None;
+        Some(Token::Literal(byte))'''
+NEW_POSITION = OLD_POSITION.replace("i.saturating_add(1)", "i + 1").replace(
+    "i.saturating_add(len)", "i + len").replace(
+    '''            if let (Ok(l), Ok(d)) = (u16::try_from(len), u16::try_from(dist)) {
+                return Some(Token::Match { len: l, dist: d });
+            }''',
+    '''            // find_best retains only accept-checked matches: len <= 258,
+            // dist <= 32768 and i+len <= input.len(). No truncation or overflow.
+            debug_assert!((MIN_MATCH..=MAX_MATCH).contains(&len));
+            debug_assert!((1..=WINDOW).contains(&dist));
+            return Some(Token::Match { len: len as u16, dist: dist as u16 });''')
 PATCHES = {
     "reverse": ("crates/deflate-core/src/bitwriter.rs", OLD_REVERSE, NEW_REVERSE),
     "iterator": ("crates/deflate-core/src/matcher.rs", OLD_ITERATOR, NEW_ITERATOR),
     "accept": ("crates/deflate-core/src/matcher.rs", OLD_ACCEPT, NEW_ACCEPT),
+    "position": ("crates/deflate-core/src/matcher.rs", OLD_POSITION, NEW_POSITION),
 }
 VARIANTS = {"control": [], "reverse": ["reverse"], "iterator": ["iterator"],
-            "accept": ["accept"], "combined": ["reverse", "iterator", "accept"]}
+            "accept": ["accept"], "combined": ["reverse", "iterator", "accept"],
+            "position": ["position"], "reverse-position": ["reverse", "position"]}
 
 WRITER_TESTS = r'''
 #[cfg(test)]
@@ -188,6 +229,60 @@ mod encoder_p2_matcher_equivalence {
 }
 '''
 
+POSITION_TESTS = r'''
+#[cfg(test)]
+mod encoder_p2_progression_equivalence {
+    use super::*;
+    fn legacy_next<P: SearchPolicy>(m: &mut Matcher<'_, P>) -> Option<Token> {
+LEGACY_BODY
+    }
+    fn compare<P: SearchPolicy>(mut actual: Matcher<'_, P>, mut expected: Matcher<'_, P>) {
+        let mut position = 0;
+        loop {
+            let token = actual.next();
+            assert_eq!(token, legacy_next(&mut expected), "position={position}");
+            assert_eq!(actual.i, expected.i);
+            assert_eq!(actual.pending, expected.pending);
+            match token {
+                Some(Token::Literal(byte)) => {
+                    assert_eq!(actual.input[position], byte);
+                    position += 1;
+                }
+                Some(Token::Match {len,dist}) => {
+                    assert!(accept(actual.input,position,len as usize,dist as usize));
+                    position += len as usize;
+                }
+                None => break,
+            }
+        }
+        assert_eq!(position, actual.input.len());
+        assert_eq!(actual.next(), None);
+    }
+    #[test]
+    fn token_stream_state_and_accepted_ranges_match_legacy_progression() {
+        let mut word = 43_u32;
+        let random: Vec<u8> = (0..3*WINDOW+17).map(|_| {
+            word = word.wrapping_mul(1664525).wrapping_add(1013904223);
+            (word >> 24) as u8
+        }).collect();
+        let periodic: Vec<u8> = (0..3*WINDOW+17).map(|i| b"abcab"[i%5]).collect();
+        for input in [&random[..], &periodic[..]] {
+            for len in [0,1,2,3,15,16,17,257,258,259,WINDOW-1,WINDOW+1,input.len()] {
+                let input = &input[..len];
+                for level in [CompressionLevel::Fast,CompressionLevel::Balanced,CompressionLevel::Best] {
+                    compare(Matcher::new(input,level), Matcher::new(input,level));
+                }
+                #[cfg(feature="research-tuning")]
+                for config in [crate::research::Config::new(1,false,8,crate::research::Index::Trigram,16384).unwrap(),
+                               crate::research::Config::new(32,false,16,crate::research::Index::Trigram,16384).unwrap()] {
+                    compare(Matcher::configured(input,config), Matcher::configured(input,config));
+                }
+            }
+        }
+    }
+}
+'''.replace("LEGACY_BODY", OLD_POSITION.replace("self.", "m."))
+
 
 def build(name, out, baseline):
     seal = check_baseline(baseline)
@@ -204,6 +299,10 @@ def build(name, out, baseline):
         existing = json.loads(receipt.read_text())
         if existing["identity"] != identity or sha(Path(existing["binary"])) != existing["binary_sha256"]:
             raise ValueError("cached variant changed")
+        if sha(folder / "tests.log") != existing["test_log_sha256"] or any(
+            sha(folder / "source" / relative) != digest for relative, digest in existing["source_sha256"].items()
+        ):
+            raise ValueError("cached source/test evidence changed")
         return existing
     source = folder / "source"
     source.mkdir(parents=True, exist_ok=False)
@@ -220,7 +319,7 @@ def build(name, out, baseline):
             raise ValueError("patch anchor differs: " + patch)
         path.write_text(text.replace(old, new))
     for relative, tests in (("crates/deflate-core/src/bitwriter.rs", WRITER_TESTS),
-                            ("crates/deflate-core/src/matcher.rs", MATCHER_TESTS)):
+                            ("crates/deflate-core/src/matcher.rs", MATCHER_TESTS + POSITION_TESTS)):
         path = source / relative
         path.write_text(path.read_text() + tests)
     manifest = source / "Cargo.toml"

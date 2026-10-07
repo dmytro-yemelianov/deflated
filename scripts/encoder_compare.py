@@ -37,7 +37,7 @@ def aggregate(rows, cases, builds, methods):
                     candidate.append(statistics.median(r["candidate"]["encode_ns"] for r in found))
                     original_method.append(statistics.median(r["original"]["encode_ns"] for r in found))
                     reference.append(statistics.median(r["original"]["baseline_encode_ns"] for r in found))
-                    ratios.append(statistics.median(r["candidate"]["encode_ns"] / r["original"]["encode_ns"] for r in found))
+                    ratios.append(candidate[-1] / original_method[-1])
                 table[variant][name] = {"speed_vs_original_same_method": sum(original_method)/sum(candidate),
                     "speed_vs_original_balanced": sum(reference)/sum(candidate), "packed_change_from_same_method_pct": 0,
                     "worst_input_median_time_ratio": max(ratios), "raw_bytes": sum(c["bytes"] for c in selected)}
@@ -62,13 +62,15 @@ def tiny_cases(out):
 
 def run(out, build_path, corpus, baseline, partition, rounds, minimum, names, with_aux):
     out = out.resolve()
-    if rounds < 1 or minimum < 1 or not names or any(n not in METHODS for n in names):
+    if rounds < 1 or minimum < 1 or not names or len(names) != len(set(names)) or any(n not in METHODS for n in names):
         raise ValueError("invalid measurement options")
     seal = check_baseline(baseline)
     builds = json.loads(build_path.read_text())
+    if not builds or "original" in builds:
+        raise ValueError("empty builds or reserved original build name")
     compiler = subprocess.check_output(["rustc", "--version"], text=True).strip()
     for name, build in builds.items():
-        if sha(Path(build["binary"])) != build["binary_sha256"] or build["identity"]["rustc"] != compiler:
+        if sha(Path(build["binary"])) != build["binary_sha256"] or build["identity"]["rustc"] != compiler or build["identity"]["flags"] != seal["build_overrides"] or build["identity"]["source_archive_sha256"] != sha(baseline / "source.tar.gz"):
             raise ValueError("variant binary/compiler changed: " + name)
     cases = inputs(corpus, partition)
     methods = json.loads((baseline / "methods.json").read_text())
@@ -77,6 +79,8 @@ def run(out, build_path, corpus, baseline, partition, rounds, minimum, names, wi
         cases += tiny_cases(out)
     frozen = {"builds_sha256":sha(build_path), "baseline_sha256":sha(baseline / "baseline.json"),
               "corpus_manifest_sha256":sha(corpus / "manifest.json"), "driver_sha256":sha(Path(__file__))}
+    dependencies = ["encoder_baseline.py", "encoder_corpus.py", "encoder_measure.py", "search_final_campaign.py", "search_poc.py"]
+    frozen["helper_sha256"] = {name: sha(Path(__file__).parent / name) for name in dependencies}
     protocol = {"cases":cases, "builds":builds, "methods":names, "frozen":frozen,
                 "partition":partition,"rounds":rounds,"minimum_ms":minimum,"tiny_minimum_ms":2,
                 "purpose":"isolated semantic-equivalence pilot; original and candidate builds paired serially"}
@@ -151,6 +155,8 @@ def run(out, build_path, corpus, baseline, partition, rounds, minimum, names, wi
         for build in builds.values():
             if sha(Path(build["binary"]))!=build["binary_sha256"]:
                 raise ValueError("variant changed during timing")
+        if any(sha(Path(__file__).parent / name) != digest for name, digest in frozen["helper_sha256"].items()):
+            raise ValueError("measurement helper changed during timing")
         result={"protocol":protocol,"rows":len(rows),"metrics":aggregate(rows,cases,builds,names),"rss":rss,
                 "elapsed_seconds":time.perf_counter()-started,"raw_ledger_sha256":sha(out/"measurements.jsonl"),
                 "limitations":["warm pilot; not final first-call confidence or blind-test evidence","fixed cases on one machine","zero size changes required by exact packet checks"]}

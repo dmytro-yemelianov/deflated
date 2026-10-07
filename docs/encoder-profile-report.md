@@ -100,6 +100,9 @@ inputs, hashes, source/build provenance, samples and weighting components.
 
 ```sh
 python3 scripts/encoder_baseline.py --check
+# Fresh clones reconstruct the archived original when its ignored binary is absent.
+# An explicit rebuild also verifies exact binary reproduction:
+python3 scripts/encoder_baseline.py --out target/encoder-performance/baseline-NEW --rebuild
 python3 scripts/encoder_corpus.py --check
 python3 scripts/test_encoder_tools.py
 python3 scripts/encoder_measure.py --out target/encoder-performance/baseline-train-NEW

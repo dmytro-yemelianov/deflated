@@ -1,6 +1,7 @@
 # P2: isolated encoder speed experiments
 
-Status: training pilot complete; validation and auxiliary guards pending.
+Status: P2 training/validation and auxiliary pilots complete; code reversal
+is retained for later candidates. The other rewrites are rejected.
 The current production core is unchanged. The principal 1.5×/+1% goal is
 not established by these results.
 
@@ -44,8 +45,42 @@ is the only clearly useful candidate here and advances to validation.
 The all-three combination was compiled and tested but not measured or selected:
 combining independently negative experiments would spend the search budget
 without a supported reason. A bounded follow-up within the matcher bookkeeping
-spike will test progression arithmetic after accepted-match bounds; this is
-not a new search-coverage optimization.
+spike tested progression arithmetic after accepted-match bounds. It passed
+28 library tests, including legacy token/state comparisons across tails,
+periodic/random inputs and ring wraps. Another 660 paired rows found Balanced
+1.000×, compromise 0.997×, Best 1.004× and size policy 0.994× on real training.
+The no-change control was 0.998× for Balanced. This rewrite is rejected too;
+there is no supported second change to combine. Four implementations × six
+canonical methods used 24 of the initial 32 evaluation budget.
+
+## Independent validation and auxiliary pilots
+
+Eight disjoint real validation sources, three old regressions and 21 tiny
+inputs were measured in five sessions, for 1920 paired rows. The tiny cases
+cover zero/short inputs and match-length boundaries; they are shared stress
+tests, not a holdout population. Every candidate and internal-baseline packet
+also passed direct byte comparison with the sealed original.
+
+| Method | Real-training reversal speed | Real-validation reversal speed |
+| --- | ---: | ---: |
+| Balanced | 1.053× | 1.042× |
+| Old compromise | 1.055× | 1.065× |
+| Old fast candidate | 1.118× | 1.095× |
+| Best | 1.022× | 1.015× |
+| Old speed policy | 1.034× | 1.048× |
+| Old size policy | 1.018× | 1.027× |
+
+All ratios compare the original same method. Old regressions show smaller,
+noisy effects; the fast candidate is 0.977× on that three-file scope in the
+validation run. It is not a universal speedup. Worst tiny per-case median
+time ratio across the six methods is 1.052×, below the 1.20× guard.
+
+Separate-process RSS uses LLVM, zlib archive and Chinook training inputs,
+three repetitions per method/build, including original and no-change control:
+162 processes. The maximum per-case median RSS increase for reversal is zero
+bytes. Timings and RSS checks ran serially, without competing build/profile
+jobs. These pilot guards do not replace the final ten-session warm/first-call
+campaign or actual integrated binary measurement.
 
 The fresh synthetic corpus adds 60 inputs, 20 per split, using disjoint regimes
 7–12 across actual-hash collisions, competing match costs, drift/change points,
@@ -59,6 +94,17 @@ new synthetic or real final-test inputs.
 [exact initial driver](../scripts/reports/encoder-p2-initial-driver.py.gz), and
 [synthetic construction metadata](../scripts/reports/encoder-synthetic.json)
 retain results, hashes and rejected alternatives.
+The [position follow-up](../scripts/reports/encoder-p2-position.json), its
+[ledger](../scripts/reports/encoder-p2-position-measurements.jsonl.gz), and the
+[validation/RSS report](../scripts/reports/encoder-p2-validation.json) with
+[raw validation ledger](../scripts/reports/encoder-p2-validation-measurements.jsonl.gz)
+retain the subsequent evidence. The [subsequent driver snapshot](../scripts/reports/encoder-p2-position-driver.py.gz)
+matches both later campaigns. The original builder is preserved at commit
+`117499b`; build identities and source hashes distinguish the follow-up.
+The [baseline reconstruction receipt](../scripts/reports/encoder-baseline-reconstruction.json)
+confirms that rebuilding the historical archive after current checkout changes
+still produces the exact S9 binary. Fresh clones can reconstruct this reference
+without needing previously ignored build artifacts.
 
 ```sh
 python3 scripts/encoder_synthetic.py
@@ -67,11 +113,13 @@ python3 scripts/test_encoder_tools.py
 python3 scripts/encoder_spikes.py --out target/encoder-performance/p2-builds-NEW
 # Select control/reverse/iterator/accept receipts into a study manifest.
 python3 scripts/encoder_compare.py --builds STUDY.json --out target/encoder-performance/p2-study-NEW
+# For the retained reversal, use a manifest with control/reverse only.
+python3 scripts/encoder_compare.py --builds VALIDATION.json --partition validation --aux --out target/encoder-performance/p2-validation-NEW
 ```
 
 Reproduction needs the sealed baseline and real/regression inputs described
 in [the profiling report](encoder-profile-report.md). Native timings include
 allocations, matching, policies and emission, excluding I/O and validation.
-This pilot has no first-call confidence, independent test results, integrated
-binary-size evidence or auxiliary memory/tiny guard verdicts. P3/P4 algorithmic
+These pilots have no first-call confidence, independent final-test results or
+integrated binary-size evidence. P3/P4 algorithmic
 experiments and the final P5/P6 campaign remain required.

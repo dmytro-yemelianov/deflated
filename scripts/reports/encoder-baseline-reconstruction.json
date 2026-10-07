@@ -1,0 +1,15 @@
+{
+  "commit": "14f15e63e1a8955c5cfebf869ce065f29dd950fc",
+  "rustc": "rustc 1.88.0 (6b00bc388 2025-06-23)",
+  "reconstruction": "rebuilt historical archive; exact S9 binary hash verified",
+  "build_overrides": {},
+  "artifacts": {
+    "final_bench": "52906b4f7880f7882634f150230e52a44cd3814bf0ac9b3f52306b49aef1bea9",
+    "source.tar.gz": "961c97f84921f632260573da8830164626afadd2d6ac1435bbc404c1e667e056",
+    "rebuild.log": "eab162f95961e9eaf6ff8d20bf0ae66f3182f7b56b4bd4d02549365c5b36194e",
+    "methods.json": "e7d405db40d1f9c72af153e981859aec257bea7027855587a99192348c4aa7f6",
+    "policy-size.policy": "f6c93ac5b169db4b84a750564d81dd660d9974a15d4e2a00f9d5c4ccd5cb78cd",
+    "policy-speed.policy": "e1fe8b0d9bdc0a86dd08865432d0d39e02d11d1fdbe32d453437490ee6d3438c"
+  },
+  "note": "reconstructed after P1 worker changes; current source equality is no longer a freeze requirement"
+}
