@@ -8,6 +8,8 @@ mod adaptive;
 mod bounded_parse;
 #[path = "policy.rs"]
 mod policy;
+#[path = "streaming_blocks.rs"]
+mod streaming_blocks;
 #[derive(Clone, Copy)]
 pub(crate) enum BaseMethod {
     Preset(deflate_core::CompressionLevel),
@@ -16,11 +18,15 @@ pub(crate) enum BaseMethod {
     Reference(u8),
     Bounded(bounded_parse::Settings),
     Adaptive(adaptive::Settings),
+    Streaming(streaming_blocks::Settings),
 }
 
 impl BaseMethod {
     fn parse(text: &str) -> Result<Self, String> {
         use deflate_core::CompressionLevel;
+        if text.starts_with("stream:") {
+            return streaming_blocks::Settings::parse(text).map(Self::Streaming);
+        }
         if text.starts_with("adaptive:") || text.starts_with("adaptive-entropy:") {
             return adaptive::Settings::parse(text).map(Self::Adaptive);
         }
@@ -71,6 +77,7 @@ impl BaseMethod {
             Self::Reference(level) => miniz_oxide::deflate::compress_to_vec(raw, level),
             Self::Bounded(settings) => bounded_parse::encode::<false>(raw, settings).packet,
             Self::Adaptive(settings) => adaptive::encode(raw, settings),
+            Self::Streaming(settings) => streaming_blocks::encode::<false>(raw, settings).packet,
         }
     }
 }
@@ -132,6 +139,41 @@ pub fn memory(method: &str, input: &str, output: &str) -> Result<(), String> {
 
 pub fn run() -> Result<(), String> {
     let args: Vec<_> = std::env::args().skip(1).collect();
+    if args.first().is_some_and(|a| a == "--stream-inspect") {
+        if args.len() != 4 {
+            return Err("final_bench --stream-inspect INPUT OUT METHOD".into());
+        }
+        let raw = std::fs::read(&args[1]).map_err(|e| e.to_string())?;
+        let settings = streaming_blocks::Settings::parse(&args[3])?;
+        let output = streaming_blocks::encode::<true>(&raw, settings);
+        assert_eq!(deflate_core::inflate(&output.packet).unwrap(), raw);
+        assert_eq!(
+            miniz_oxide::inflate::decompress_to_vec(&output.packet).unwrap(),
+            raw
+        );
+        assert_eq!(
+            output.packet,
+            streaming_blocks::encode::<false>(&raw, settings).packet
+        );
+        write_packets(&args[2], &output.packet, None)?;
+        let s = output.stats;
+        println!(
+            "{{\"raw_bytes\":{},\"packed_bytes\":{},\"blocks\":{},\"stored_blocks\":{},\"dynamic_blocks\":{},\"adaptive_boundaries\":{},\"maximum_buffer_tokens\":{},\"cross_block_matches\":{},\"matches_after_stored\":{},\"huffman_analyses\":{},\"stream_bits_before_fallback\":{},\"whole_stored_fallback\":{}}}",
+            raw.len(),
+            output.packet.len(),
+            s.blocks,
+            s.stored_blocks,
+            s.dynamic_blocks,
+            s.adaptive_boundaries,
+            s.maximum_buffer_tokens,
+            s.cross_block_matches,
+            s.matches_after_stored,
+            s.huffman_analyses,
+            s.attempted_stream_bits,
+            s.whole_stored_fallback
+        );
+        return Ok(());
+    }
     if args.first().is_some_and(|a| a == "--adaptive-inspect") {
         if args.len() != 4 {
             return Err("final_bench --adaptive-inspect INPUT OUT METHOD".into());

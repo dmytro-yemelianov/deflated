@@ -66,6 +66,36 @@ Evidence: [summary](../scripts/reports/encoder-p4-initial.json),
 The exact initial binary and source archive are sealed alongside the local
 run at `target/encoder-performance/p4-train-v1`.
 
+The three corrected recipes at commit `1606258` passed 93 native pairs and
+62 controls (17.155 seconds). They remove both drift stored false positives:
+synthetic aggregate growth falls to 1.241%, although the regional matcher
+still causes a 1.361× worst-file ratio. Real speed is 0.907–0.946× Balanced
+with +1.519% bytes, so all three remain rejected as standalone candidates.
+Evidence: [summary](../scripts/reports/encoder-p4-entropy.json),
+[pairs](../scripts/reports/encoder-p4-entropy-measurements.jsonl.gz),
+[controls](../scripts/reports/encoder-p4-entropy-controls.jsonl.gz),
+[diagnostics](../scripts/reports/encoder-p4-entropy-diagnostics.json.gz).
+
+## Streaming prototype
+
+The next three recipes share one Best token iterator and a 16384-token
+buffer plus a single peeked token. First compare fixed/dynamic selection
+without Best's separate quarter-split heuristic, then permit stored at the
+identical partition, then permit regime boundaries after at least 256 tokens.
+Two consecutive 64-token windows must agree on a changed long-match regime;
+at most 128 tokens are retained. Frequencies are updated as tokens arrive,
+with retained-tail frequencies subtracted before one Huffman analysis.
+There is no full-input token collection or timed evidence list.
+
+Stored costs include starting bit offset, padding, LEN/NLEN and 65535-byte
+subblocks. Greedy choices are not globally optimal; the complete stream
+still pays for the exact whole-input stored fallback. Diagnostic specializations
+assert recomputed frequencies and actual bit costs. Tests cover all eight
+append offsets, stored length boundaries, stored-to-compressed backreferences,
+regime boundaries, default-partition packet equivalence and instrumentation
+identity. These are native tests, not new Lean theorems; promotion of mixed
+emission still requires the model review described below.
+
 The initial screen uses all eight real training sources, 20 new synthetic
 cases and the three old outliers. Original Best and separately timed Balanced
 are paired; old size policy and miniz6 remain direct controls. Diagnostic

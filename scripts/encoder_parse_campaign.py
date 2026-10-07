@@ -41,8 +41,9 @@ def sources():
         "crates/deflate-core/examples/support/bounded_parse.rs","crates/deflate-core/examples/support/policy.rs",
         "scripts/encoder_parse_campaign.py","scripts/encoder_measure.py","scripts/encoder_corpus.py",
         "scripts/encoder_baseline.py","scripts/search_corpus.py","scripts/search_poc.py","scripts/search_cost_oracle.py")]
-    adaptive=ROOT/"crates/deflate-core/examples/support/adaptive.rs"
-    if adaptive.exists():paths.append(adaptive)
+    for name in ("adaptive", "streaming_blocks"):
+        optional=ROOT/f"crates/deflate-core/examples/support/{name}.rs"
+        if optional.exists():paths.append(optional)
     return {str(p.relative_to(ROOT)):sha(p) for p in paths}
 
 
@@ -200,7 +201,9 @@ def run(out,binary,real,synthetic,baseline,partition,rounds,minimum,names, *,
             raise ValueError("frozen parser protocol/source/corpus changed")
         result={"protocol":protocol,"oracle":oracle,"diagnostics_sha256":sha(out/"diagnostics.json"),"rows":len(rows),"control_rows":len(controls),"controls_ledger_sha256":sha(out/"controls.jsonl"),
                 "metrics":summary(rows,selected,names),"raw_ledger_sha256":sha(out/"measurements.jsonl"),"elapsed_seconds":time.perf_counter()-begun,
-                "limitations":["warm pilot, not final warm/first-call confidence","no RSS/tiny/integrated size guard decision","per-block refinement check does not guarantee a global size improvement when feedback changes future parsing"]}
+                "limitations":["warm pilot, not final warm/first-call confidence","no RSS/tiny/integrated size guard decision"] +
+                    (["per-block refinement check does not guarantee a global size improvement when feedback changes future parsing"] if run_oracle else
+                     ["heuristic decisions provide no universal per-input size bound unless exact baseline comparison is enabled"])}
         write_json(out/"result.json",result)
         print(json.dumps({"rows":len(rows),"oracle":oracle,"seconds":result["elapsed_seconds"]}),flush=True)
     except BaseException as error:
