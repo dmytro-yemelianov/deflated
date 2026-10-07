@@ -1,0 +1,723 @@
+{
+  "cap_bytes": 1048576,
+  "excluded_old_lineages": [
+    "cpython",
+    "llvm",
+    "aws-ec2-api",
+    "whatwg-html",
+    "busybox",
+    "zlib-archive",
+    "chinook",
+    "noto-sans",
+    "rust",
+    "postgresql",
+    "natural-earth",
+    "w3c-svg",
+    "fd",
+    "bzip2-archive",
+    "lshort",
+    "dejavu",
+    "linux",
+    "openssl",
+    "cldr",
+    "ecma262",
+    "ripgrep",
+    "xz-archive",
+    "nyc-tlc",
+    "liberation"
+  ],
+  "known_related_sources": [
+    {
+      "lineage": "Loki/Prometheus 20kseries",
+      "policy": "Exclude both copies; train Loki dashboard, held Prometheus Docker tasks."
+    },
+    {
+      "lineage": "NativeJSON/Jackson CITM",
+      "policy": "Exclude both copies; neither repository is a primary source."
+    },
+    {
+      "lineage": "NPM package-lock templates",
+      "policy": "Training NPM only; no validation/held package locks."
+    },
+    {
+      "lineage": "JSON-LD API/syntax",
+      "policy": "One validation JSON-LD API group only."
+    },
+    {
+      "lineage": "Jupyter notebook templates",
+      "policy": "Held nbformat notebook only; validation TensorRT uses performance schema."
+    }
+  ],
+  "schema_version": 1,
+  "selection_policy": "Path, extension, size and source/license metadata only. Fixed before body acquisition and every codec measurement. Held access: acquisition/hash/dedup only. Raw real data are local and not redistributed.",
+  "sources": [
+    {
+      "class": "source",
+      "declared_download_bytes": 244081,
+      "download_git_blob_sha1": "a8d717367231573b04d9692837d4f5276520da29",
+      "file": "src/runtime/proc.go",
+      "id": "go",
+      "license": "BSD-3-Clause",
+      "license_git_blob_sha1": "2a7cf70da6e498df9c11ab6a5eaa2ddd7af34da4",
+      "license_url": "https://raw.githubusercontent.com/golang/go/0b026fcb0a399626c9caad22c31d77b91fa153f5/LICENSE",
+      "lineage": "golang/go",
+      "partition": "train",
+      "pinned_commit": "0b026fcb0a399626c9caad22c31d77b91fa153f5",
+      "tracks": [
+        "A"
+      ],
+      "upstream_repo": "golang/go",
+      "url": "https://raw.githubusercontent.com/golang/go/0b026fcb0a399626c9caad22c31d77b91fa153f5/src/runtime/proc.go"
+    },
+    {
+      "class": "prose",
+      "declared_download_bytes": 206108,
+      "download_git_blob_sha1": "bf752d89f878014ebc47b37299016e8a7e2dd99e",
+      "file": "spec.txt",
+      "id": "commonmark",
+      "license": "CC-BY-SA-4.0 specification; BSD/MIT bundled code",
+      "license_git_blob_sha1": "a370ccc234f41b4130986862be8d09370657bddb",
+      "license_url": "https://raw.githubusercontent.com/commonmark/commonmark-spec/3da939428d80f146f270cd1765e4ba462e96bb1b/LICENSE",
+      "lineage": "commonmark/commonmark-spec",
+      "partition": "train",
+      "pinned_commit": "3da939428d80f146f270cd1765e4ba462e96bb1b",
+      "tracks": [
+        "A"
+      ],
+      "upstream_repo": "commonmark/commonmark-spec",
+      "url": "https://raw.githubusercontent.com/commonmark/commonmark-spec/3da939428d80f146f270cd1765e4ba462e96bb1b/spec.txt"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 339359,
+      "download_git_blob_sha1": "79ca1b1f6792d599d4fc680782e1f81f5923b636",
+      "file": "json/licenses.json",
+      "id": "spdx",
+      "license": "NOASSERTION: upstream README records generated metadata origin; raw files not redistributed",
+      "license_git_blob_sha1": "2b861e4f36d79209d032a534bd6d28b1d27d7cb9",
+      "license_url": "https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/README.md",
+      "lineage": "spdx/license-list-data",
+      "partition": "train",
+      "pinned_commit": "31ba1a50e5397e00a304dbadc76531740e89ee48",
+      "tracks": [
+        "A",
+        "B"
+      ],
+      "upstream_repo": "spdx/license-list-data",
+      "url": "https://raw.githubusercontent.com/spdx/license-list-data/31ba1a50e5397e00a304dbadc76531740e89ee48/json/licenses.json"
+    },
+    {
+      "class": "line-records",
+      "declared_download_bytes": 48219,
+      "download_git_blob_sha1": "0f38b53bdc1c42c5e5d484f33b9d4d7b229e0e59",
+      "file": "data/seattle-weather.csv",
+      "id": "vega-weather",
+      "license": "Per-dataset terms and provenance in upstream datapackage.md",
+      "license_git_blob_sha1": "82d0ae23e9268d97fda7508a90dc55c235c26646",
+      "license_url": "https://raw.githubusercontent.com/vega/vega-datasets/a0477904965b173c837b22149f48567f7fc42892/datapackage.md",
+      "lineage": "vega/vega-datasets",
+      "partition": "train",
+      "pinned_commit": "a0477904965b173c837b22149f48567f7fc42892",
+      "tracks": [
+        "A",
+        "B"
+      ],
+      "upstream_repo": "vega/vega-datasets",
+      "url": "https://raw.githubusercontent.com/vega/vega-datasets/a0477904965b173c837b22149f48567f7fc42892/data/seattle-weather.csv"
+    },
+    {
+      "class": "font",
+      "declared_download_bytes": 879708,
+      "download_git_blob_sha1": "4ab79e0102bbe0ffa1ed879b13e52ac8c6487833",
+      "file": "docs/font-files/InterVariable.ttf",
+      "id": "inter",
+      "license": "OFL-1.1",
+      "license_git_blob_sha1": "9b2ca37b3ffc77391d8b2ebef4a974ef32bf46ea",
+      "license_url": "https://raw.githubusercontent.com/rsms/inter/353b61b9f4430d5f420d56605a6e7993e0941470/LICENSE.txt",
+      "lineage": "rsms/inter",
+      "partition": "train",
+      "pinned_commit": "353b61b9f4430d5f420d56605a6e7993e0941470",
+      "tracks": [
+        "A"
+      ],
+      "upstream_repo": "rsms/inter",
+      "url": "https://raw.githubusercontent.com/rsms/inter/353b61b9f4430d5f420d56605a6e7993e0941470/docs/font-files/InterVariable.ttf"
+    },
+    {
+      "archive_policy": "Compressed repository archive bytes; first 1MiB if larger",
+      "class": "archive",
+      "extraction": "identity",
+      "id": "toml-archive",
+      "license": "MIT",
+      "license_git_blob_sha1": "01b5743200b847d124309d07aa288b8d7738fd4c",
+      "license_url": "https://raw.githubusercontent.com/BurntSushi/toml/d733fc535e4a9f3c454e421a87b90ade5d49bf31/COPYING",
+      "lineage": "burntsushi/toml",
+      "partition": "train",
+      "pinned_commit": "d733fc535e4a9f3c454e421a87b90ade5d49bf31",
+      "tracks": [
+        "A"
+      ],
+      "upstream_repo": "BurntSushi/toml",
+      "url": "https://codeload.github.com/BurntSushi/toml/tar.gz/d733fc535e4a9f3c454e421a87b90ade5d49bf31"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 4134,
+      "download_git_blob_sha1": "33e72c4b53aa9fdad6549de5e6e10251aa0a5236",
+      "file": "examples/metrics.json",
+      "id": "otel",
+      "license": "Apache-2.0",
+      "license_git_blob_sha1": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "license_url": "https://raw.githubusercontent.com/open-telemetry/opentelemetry-proto/4d394fcbf35e65d932e8dda58c602e7d8d446e56/LICENSE",
+      "lineage": "open-telemetry/opentelemetry-proto",
+      "partition": "train",
+      "pinned_commit": "4d394fcbf35e65d932e8dda58c602e7d8d446e56",
+      "tracks": [
+        "A",
+        "B"
+      ],
+      "upstream_repo": "open-telemetry/opentelemetry-proto",
+      "url": "https://raw.githubusercontent.com/open-telemetry/opentelemetry-proto/4d394fcbf35e65d932e8dda58c602e7d8d446e56/examples/metrics.json"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 13602,
+      "download_git_blob_sha1": "01de28e429e7f41651137542e7bd99f27b9dcb88",
+      "file": "versions/results/26.7.1.1315.json",
+      "id": "clickbench",
+      "license": "CC-BY-NC-SA-4.0",
+      "license_git_blob_sha1": "0f55d62d28dafa303fb67f3427bbbd7c78db2df5",
+      "license_url": "https://raw.githubusercontent.com/ClickHouse/ClickBench/29b09614bf8ffcbd46ac83f64804cb060422c15d/LICENSE",
+      "lineage": "clickhouse/clickbench",
+      "partition": "train",
+      "pinned_commit": "29b09614bf8ffcbd46ac83f64804cb060422c15d",
+      "tracks": [
+        "A",
+        "B"
+      ],
+      "upstream_repo": "ClickHouse/ClickBench",
+      "url": "https://raw.githubusercontent.com/ClickHouse/ClickBench/29b09614bf8ffcbd46ac83f64804cb060422c15d/versions/results/26.7.1.1315.json"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 437416,
+      "download_git_blob_sha1": "ec6ec30dd06549a6df33600b41ec1e2babf459af",
+      "file": "package-lock.json",
+      "id": "npm",
+      "license": "Artistic-2.0 and bundled terms",
+      "license_git_blob_sha1": "0b6c2287459632e4aaf63bd7d53eb9ba054b57ea",
+      "license_url": "https://raw.githubusercontent.com/npm/cli/b317f16c80df02ea3628cfa77170d5ae9b59720c/LICENSE",
+      "lineage": "npm/cli",
+      "partition": "train",
+      "pinned_commit": "b317f16c80df02ea3628cfa77170d5ae9b59720c",
+      "tracks": [
+        "B"
+      ],
+      "upstream_repo": "npm/cli",
+      "url": "https://raw.githubusercontent.com/npm/cli/b317f16c80df02ea3628cfa77170d5ae9b59720c/package-lock.json"
+    },
+    {
+      "class": "ndjson",
+      "declared_download_bytes": 2366222,
+      "download_git_blob_sha1": "6ca3233b777cdf165c312267b08b4bac7c786df8",
+      "extraction": "gzip",
+      "file": "examples/quickstart/tutorial/wikiticker-2015-09-12-sampled.json.gz",
+      "id": "druid",
+      "license": "Apache-2.0 repository; tutorial Wikipedia-derived data",
+      "license_git_blob_sha1": "5adaa9c76394f952ef21543fab0933353c51c861",
+      "license_url": "https://raw.githubusercontent.com/apache/druid/bd61838ac04e2f6f42342340c49de2083c9142f8/LICENSE",
+      "lineage": "apache/druid",
+      "partition": "train",
+      "pinned_commit": "bd61838ac04e2f6f42342340c49de2083c9142f8",
+      "tracks": [
+        "B"
+      ],
+      "upstream_repo": "apache/druid",
+      "url": "https://raw.githubusercontent.com/apache/druid/bd61838ac04e2f6f42342340c49de2083c9142f8/examples/quickstart/tutorial/wikiticker-2015-09-12-sampled.json.gz"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 259509,
+      "download_git_blob_sha1": "149dfacd857d3a24fbed39d385c54323b9ec5821",
+      "file": "production/loki-mixin-compiled/dashboards/loki-bloom-build.json",
+      "id": "loki",
+      "license": "AGPL-3.0",
+      "license_git_blob_sha1": "be3f7b28e564e7dd05eaf59d64adba1a4065ac0e",
+      "license_url": "https://raw.githubusercontent.com/grafana/loki/e1cbc94a3b2eefd9e681ae824ffdafeb1bd1327b/LICENSE",
+      "lineage": "grafana/loki",
+      "partition": "train",
+      "pinned_commit": "e1cbc94a3b2eefd9e681ae824ffdafeb1bd1327b",
+      "tracks": [
+        "B"
+      ],
+      "upstream_repo": "grafana/loki",
+      "url": "https://raw.githubusercontent.com/grafana/loki/e1cbc94a3b2eefd9e681ae824ffdafeb1bd1327b/production/loki-mixin-compiled/dashboards/loki-bloom-build.json"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 813352,
+      "download_git_blob_sha1": "145e3bc2db92b737ccf6934826aa69b18b70fe57",
+      "file": "staging/src/k8s.io/kubectl/testdata/openapi/v3/apis/apps/v1.json",
+      "id": "kubernetes",
+      "license": "Apache-2.0",
+      "license_git_blob_sha1": "d645695673349e3947e8e5ae42332d0ac3164cd7",
+      "license_url": "https://raw.githubusercontent.com/kubernetes/kubernetes/a3589c024aae3326028b981e4ff1c0b813f390b8/LICENSE",
+      "lineage": "kubernetes/kubernetes",
+      "partition": "train",
+      "pinned_commit": "a3589c024aae3326028b981e4ff1c0b813f390b8",
+      "tracks": [
+        "B"
+      ],
+      "upstream_repo": "kubernetes/kubernetes",
+      "url": "https://raw.githubusercontent.com/kubernetes/kubernetes/a3589c024aae3326028b981e4ff1c0b813f390b8/staging/src/k8s.io/kubectl/testdata/openapi/v3/apis/apps/v1.json"
+    },
+    {
+      "class": "source",
+      "declared_download_bytes": 101265,
+      "download_git_blob_sha1": "25d1ff6d95b86ebf4efa17483077da447e4c1d4d",
+      "file": "lib/std/Build.zig",
+      "id": "zig",
+      "license": "MIT",
+      "license_git_blob_sha1": "9ce01373c89082fd81e8ea0793aab0978140526b",
+      "license_url": "https://raw.githubusercontent.com/ziglang/zig/738d2be9d6b6ef3ff3559130c05159ef53336224/LICENSE",
+      "lineage": "ziglang/zig",
+      "partition": "validation",
+      "pinned_commit": "738d2be9d6b6ef3ff3559130c05159ef53336224",
+      "tracks": [
+        "A"
+      ],
+      "upstream_repo": "ziglang/zig",
+      "url": "https://raw.githubusercontent.com/ziglang/zig/738d2be9d6b6ef3ff3559130c05159ef53336224/lib/std/Build.zig"
+    },
+    {
+      "class": "prose",
+      "declared_download_bytes": 10061,
+      "download_git_blob_sha1": "6331285da32e86dc88827467a82cc0776d694084",
+      "file": "docs/dev/architecture.md",
+      "id": "typst",
+      "license": "Apache-2.0",
+      "license_git_blob_sha1": "1b5ec8b78e237b5c3b3d812a7c0a6589d0f7161d",
+      "license_url": "https://raw.githubusercontent.com/typst/typst/e58a63af09032a486b12241d08ebd04131483221/LICENSE",
+      "lineage": "typst/typst",
+      "partition": "validation",
+      "pinned_commit": "e58a63af09032a486b12241d08ebd04131483221",
+      "tracks": [
+        "A"
+      ],
+      "upstream_repo": "typst/typst",
+      "url": "https://raw.githubusercontent.com/typst/typst/e58a63af09032a486b12241d08ebd04131483221/docs/dev/architecture.md"
+    },
+    {
+      "additional_provenance_urls": [
+        "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/edc7c9e67c639d230715049ee31f9a96a6babbbe/Models/FlightHelmet/README.md"
+      ],
+      "class": "json",
+      "declared_download_bytes": 18698,
+      "download_git_blob_sha1": "03b53b40cffe79b6b6647af7a51c37c4abfabf9b",
+      "file": "Models/FlightHelmet/glTF/FlightHelmet.gltf",
+      "id": "gltf",
+      "license": "CC0-1.0; model README attribution retained",
+      "license_git_blob_sha1": "c5973e7f807ec7cf710d801d4df133bbd3085247",
+      "license_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/edc7c9e67c639d230715049ee31f9a96a6babbbe/LICENSES/CC0-1.0.txt",
+      "lineage": "khronosgroup/gltf-sample-assets",
+      "partition": "validation",
+      "pinned_commit": "edc7c9e67c639d230715049ee31f9a96a6babbbe",
+      "tracks": [
+        "A",
+        "B"
+      ],
+      "upstream_repo": "KhronosGroup/glTF-Sample-Assets",
+      "url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/edc7c9e67c639d230715049ee31f9a96a6babbbe/Models/FlightHelmet/glTF/FlightHelmet.gltf"
+    },
+    {
+      "class": "line-records",
+      "declared_download_bytes": 53098,
+      "download_git_blob_sha1": "ba99fbd527f0bb983b3d9615ef5c81a5917ab7d9",
+      "file": "inst/extdata/penguins_raw.csv",
+      "id": "penguins",
+      "license": "CC0-1.0",
+      "license_git_blob_sha1": "139c68e01e28bba8d0b30d1d804f4039f35f66b4",
+      "license_url": "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/8957207b78d6ccd1b4654a9dd9c9041b657478ab/LICENSE.md",
+      "lineage": "allisonhorst/palmerpenguins",
+      "partition": "validation",
+      "pinned_commit": "8957207b78d6ccd1b4654a9dd9c9041b657478ab",
+      "tracks": [
+        "A",
+        "B"
+      ],
+      "upstream_repo": "allisonhorst/palmerpenguins",
+      "url": "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/8957207b78d6ccd1b4654a9dd9c9041b657478ab/inst/extdata/penguins_raw.csv"
+    },
+    {
+      "class": "font",
+      "declared_download_bytes": 403924,
+      "download_git_blob_sha1": "d9fdc0e922030c6836a9ad5f808fd7e1c5970873",
+      "file": "ttf/FiraSans-Regular.ttf",
+      "id": "fira",
+      "license": "OFL-1.1",
+      "license_git_blob_sha1": "b82722716de236b6d2c771e89a1c907006a677d5",
+      "license_url": "https://raw.githubusercontent.com/mozilla/Fira/fd8c8c0a3d353cd99e8ca1662942d165e6961407/LICENSE",
+      "lineage": "mozilla/fira",
+      "partition": "validation",
+      "pinned_commit": "fd8c8c0a3d353cd99e8ca1662942d165e6961407",
+      "tracks": [
+        "A"
+      ],
+      "upstream_repo": "mozilla/Fira",
+      "url": "https://raw.githubusercontent.com/mozilla/Fira/fd8c8c0a3d353cd99e8ca1662942d165e6961407/ttf/FiraSans-Regular.ttf"
+    },
+    {
+      "archive_policy": "Compressed repository archive bytes; first 1MiB if larger",
+      "class": "archive",
+      "extraction": "identity",
+      "id": "fzf-archive",
+      "license": "MIT",
+      "license_git_blob_sha1": "f63057ce12075081be3c2b3e31bafff9d9359545",
+      "license_url": "https://raw.githubusercontent.com/junegunn/fzf/b1be3a8be1b833ce5b92fbbac11637643d60a046/LICENSE",
+      "lineage": "junegunn/fzf",
+      "partition": "validation",
+      "pinned_commit": "b1be3a8be1b833ce5b92fbbac11637643d60a046",
+      "tracks": [
+        "A"
+      ],
+      "upstream_repo": "junegunn/fzf",
+      "url": "https://codeload.github.com/junegunn/fzf/tar.gz/b1be3a8be1b833ce5b92fbbac11637643d60a046"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 15557,
+      "download_git_blob_sha1": "46121ba3a4d6bc54f6bc2f748642a5e050d36cfc",
+      "file": ".agents/skills/trt-perf-analysis/schemas/analyze-data.schema.json",
+      "id": "tensorrt",
+      "license": "Apache-2.0 and bundled terms",
+      "license_git_blob_sha1": "416373ad2b6a5242e4e16a7eff13df79dd5a1e7f",
+      "license_url": "https://raw.githubusercontent.com/NVIDIA/TensorRT/98adec82349b3ae22aa3f753d733b9a1a84d497d/LICENSE",
+      "lineage": "nvidia/tensorrt",
+      "partition": "validation",
+      "pinned_commit": "98adec82349b3ae22aa3f753d733b9a1a84d497d",
+      "tracks": [
+        "A",
+        "B"
+      ],
+      "upstream_repo": "NVIDIA/TensorRT",
+      "url": "https://raw.githubusercontent.com/NVIDIA/TensorRT/98adec82349b3ae22aa3f753d733b9a1a84d497d/.agents/skills/trt-perf-analysis/schemas/analyze-data.schema.json"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 50423,
+      "download_git_blob_sha1": "de6411ea9344d36f9e67509f03943cfb08a09792",
+      "file": "tests/draft2020-12/unevaluatedProperties.json",
+      "id": "json-schema",
+      "license": "MIT",
+      "license_git_blob_sha1": "c28adbadd9114a30a302fef37c3d14f490645c1c",
+      "license_url": "https://raw.githubusercontent.com/json-schema-org/JSON-Schema-Test-Suite/5b0ee1613e45fcc2bddac00e07c19cd49b00d8a8/LICENSE",
+      "lineage": "json-schema-org/json-schema-test-suite",
+      "partition": "validation",
+      "pinned_commit": "5b0ee1613e45fcc2bddac00e07c19cd49b00d8a8",
+      "tracks": [
+        "A",
+        "B"
+      ],
+      "upstream_repo": "json-schema-org/JSON-Schema-Test-Suite",
+      "url": "https://raw.githubusercontent.com/json-schema-org/JSON-Schema-Test-Suite/5b0ee1613e45fcc2bddac00e07c19cd49b00d8a8/tests/draft2020-12/unevaluatedProperties.json"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 83507,
+      "download_git_blob_sha1": "0f258f9df03c1826fe444ca9b399b4765627faf5",
+      "file": "core/src/test/resources/HistoryServerExpectations/stage_task_list_w__offset___length_expectation.json",
+      "id": "spark",
+      "license": "Apache-2.0",
+      "license_git_blob_sha1": "ef8192ec38d05a41ac6a17d8827a99b71bd7c63a",
+      "license_url": "https://raw.githubusercontent.com/apache/spark/1dd81715a37d545426abb67b24c024cf27a138aa/LICENSE",
+      "lineage": "apache/spark",
+      "partition": "validation",
+      "pinned_commit": "1dd81715a37d545426abb67b24c024cf27a138aa",
+      "tracks": [
+        "B"
+      ],
+      "upstream_repo": "apache/spark",
+      "url": "https://raw.githubusercontent.com/apache/spark/1dd81715a37d545426abb67b24c024cf27a138aa/core/src/test/resources/HistoryServerExpectations/stage_task_list_w__offset___length_expectation.json"
+    },
+    {
+      "class": "ndjson",
+      "declared_download_bytes": 4349375,
+      "download_git_blob_sha1": "2c105fb408db2442d44c48181a973656dbef0afa",
+      "file": "data/json/5000.jsonl",
+      "id": "duckdb",
+      "license": "MIT; published generated test fixture",
+      "license_git_blob_sha1": "2719c9a23d2a37c1dfb7402e79f03bd615701e53",
+      "license_url": "https://raw.githubusercontent.com/duckdb/duckdb/e64b6a6b738edba0ef6620c2d468f0f872980d6b/LICENSE",
+      "lineage": "duckdb/duckdb",
+      "partition": "validation",
+      "pinned_commit": "e64b6a6b738edba0ef6620c2d468f0f872980d6b",
+      "tracks": [
+        "B"
+      ],
+      "upstream_repo": "duckdb/duckdb",
+      "url": "https://raw.githubusercontent.com/duckdb/duckdb/e64b6a6b738edba0ef6620c2d468f0f872980d6b/data/json/5000.jsonl"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 4806,
+      "download_git_blob_sha1": "fb354f8783ebce4608e220a97286e9251ac860ad",
+      "file": "tests/resources/db/db_version_7ac759974ad8_with_metrics_expected_values.json",
+      "id": "mlflow",
+      "license": "Apache-2.0",
+      "license_git_blob_sha1": "db7cb10b5e330d56b40370bc178974ccabe71458",
+      "license_url": "https://raw.githubusercontent.com/mlflow/mlflow/09bdb2cca50a1ab31feefd513ea059bfbd252269/LICENSE.txt",
+      "lineage": "mlflow/mlflow",
+      "partition": "validation",
+      "pinned_commit": "09bdb2cca50a1ab31feefd513ea059bfbd252269",
+      "tracks": [
+        "B"
+      ],
+      "upstream_repo": "mlflow/mlflow",
+      "url": "https://raw.githubusercontent.com/mlflow/mlflow/09bdb2cca50a1ab31feefd513ea059bfbd252269/tests/resources/db/db_version_7ac759974ad8_with_metrics_expected_values.json"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 157402,
+      "download_git_blob_sha1": "1d2c9267f4b7aa087e68d4d5f8c47cddb7a29031",
+      "file": "tests/toRdf-manifest.jsonld",
+      "id": "json-ld",
+      "license": "W3C test-suite terms referenced by pinned license file",
+      "license_git_blob_sha1": "5342a9b197ea979a82fe2b79deba1e02b53ca05d",
+      "license_url": "https://raw.githubusercontent.com/w3c/json-ld-api/55514738d854e56bb8bad4c53cda2f0e23be4a50/tests/LICENSE.md",
+      "lineage": "w3c/json-ld-api",
+      "partition": "validation",
+      "pinned_commit": "55514738d854e56bb8bad4c53cda2f0e23be4a50",
+      "tracks": [
+        "B"
+      ],
+      "upstream_repo": "w3c/json-ld-api",
+      "url": "https://raw.githubusercontent.com/w3c/json-ld-api/55514738d854e56bb8bad4c53cda2f0e23be4a50/tests/toRdf-manifest.jsonld"
+    },
+    {
+      "class": "source",
+      "declared_download_bytes": 523552,
+      "download_git_blob_sha1": "545cf17b18e1f26486500daf6294431fe7f0c5ab",
+      "file": "parse.y",
+      "id": "ruby",
+      "license": "Ruby and BSD-2-Clause choices in COPYING",
+      "license_git_blob_sha1": "428ce03ed7e6f08aed87b8f997a827f1b8e681d8",
+      "license_url": "https://raw.githubusercontent.com/ruby/ruby/6203c21e58e4c27a91a3336ff2140a9641079025/COPYING",
+      "lineage": "ruby/ruby",
+      "partition": "test",
+      "pinned_commit": "6203c21e58e4c27a91a3336ff2140a9641079025",
+      "tracks": [
+        "A"
+      ],
+      "upstream_repo": "ruby/ruby",
+      "url": "https://raw.githubusercontent.com/ruby/ruby/6203c21e58e4c27a91a3336ff2140a9641079025/parse.y"
+    },
+    {
+      "class": "prose",
+      "declared_download_bytes": 308665,
+      "download_git_blob_sha1": "e86201045427bd0f29d0787d1879b07ef81af38f",
+      "file": "MANUAL.txt",
+      "id": "pandoc",
+      "license": "GPL-2.0-or-later",
+      "license_git_blob_sha1": "9b0a1084e77afd0a8fb5709c70ec416b69dec0f2",
+      "license_url": "https://raw.githubusercontent.com/jgm/pandoc/e51c9c6054c8f4ec5c3209d5abe10939dfe2963e/COPYING.md",
+      "lineage": "jgm/pandoc",
+      "partition": "test",
+      "pinned_commit": "e51c9c6054c8f4ec5c3209d5abe10939dfe2963e",
+      "tracks": [
+        "A"
+      ],
+      "upstream_repo": "jgm/pandoc",
+      "url": "https://raw.githubusercontent.com/jgm/pandoc/e51c9c6054c8f4ec5c3209d5abe10939dfe2963e/MANUAL.txt"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 87306,
+      "download_git_blob_sha1": "270d5c71217fa2023ae22b1bb91d4b76040eea07",
+      "file": "src/test/data/tx_valid.json",
+      "id": "bitcoin",
+      "license": "MIT",
+      "license_git_blob_sha1": "89960cbf2f221a29852ed162b25bda2afc0b2dd6",
+      "license_url": "https://raw.githubusercontent.com/bitcoin/bitcoin/9dfde64cc3262329051fd05fffe40eecc786a99f/COPYING",
+      "lineage": "bitcoin/bitcoin",
+      "partition": "test",
+      "pinned_commit": "9dfde64cc3262329051fd05fffe40eecc786a99f",
+      "tracks": [
+        "A",
+        "B"
+      ],
+      "upstream_repo": "bitcoin/bitcoin",
+      "url": "https://raw.githubusercontent.com/bitcoin/bitcoin/9dfde64cc3262329051fd05fffe40eecc786a99f/src/test/data/tx_valid.json"
+    },
+    {
+      "additional_provenance_urls": [
+        "https://raw.githubusercontent.com/owid/co2-data/382ee6c662b0ece26e111f263b44c029afad7787/owid-co2-codebook.csv"
+      ],
+      "class": "line-records",
+      "declared_download_bytes": 14377942,
+      "download_git_blob_sha1": "e5e2073753e5a623f883f95b166f2e66eb7c1c21",
+      "file": "owid-co2-data.csv",
+      "id": "owid-co2",
+      "license": "CC-BY-4.0 OWID-produced data; underlying third-party terms in README",
+      "license_git_blob_sha1": "5392d654c23619e096e4ca25427841fe6b63f37f",
+      "license_url": "https://raw.githubusercontent.com/owid/co2-data/382ee6c662b0ece26e111f263b44c029afad7787/README.md",
+      "lineage": "owid/co2-data",
+      "partition": "test",
+      "pinned_commit": "382ee6c662b0ece26e111f263b44c029afad7787",
+      "tracks": [
+        "A",
+        "B"
+      ],
+      "upstream_repo": "owid/co2-data",
+      "url": "https://raw.githubusercontent.com/owid/co2-data/382ee6c662b0ece26e111f263b44c029afad7787/owid-co2-data.csv"
+    },
+    {
+      "class": "font",
+      "declared_download_bytes": 131128,
+      "download_git_blob_sha1": "16c7b0bec18e490c06c625ac331907d48174f360",
+      "file": "OTF/SourceCodePro-Regular.otf",
+      "id": "source-code-pro",
+      "license": "OFL-1.1",
+      "license_git_blob_sha1": "70288a864f8dfd1314aa0315748eece0cf80fdda",
+      "license_url": "https://raw.githubusercontent.com/adobe-fonts/source-code-pro/803b7e23ec97ae58b6232ea76519a76d428ba268/LICENSE.md",
+      "lineage": "adobe-fonts/source-code-pro",
+      "partition": "test",
+      "pinned_commit": "803b7e23ec97ae58b6232ea76519a76d428ba268",
+      "tracks": [
+        "A"
+      ],
+      "upstream_repo": "adobe-fonts/source-code-pro",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-code-pro/803b7e23ec97ae58b6232ea76519a76d428ba268/OTF/SourceCodePro-Regular.otf"
+    },
+    {
+      "archive_policy": "Compressed repository archive bytes; first 1MiB if larger",
+      "class": "archive",
+      "extraction": "identity",
+      "id": "jq-archive",
+      "license": "MIT and bundled terms",
+      "license_git_blob_sha1": "c21d3f1645c72de28f3b46f9d8e01f20e0e496c8",
+      "license_url": "https://raw.githubusercontent.com/jqlang/jq/a19efdd45dfe91329a7d266efb2ac0a64279a938/COPYING",
+      "lineage": "jqlang/jq",
+      "partition": "test",
+      "pinned_commit": "a19efdd45dfe91329a7d266efb2ac0a64279a938",
+      "tracks": [
+        "A"
+      ],
+      "upstream_repo": "jqlang/jq",
+      "url": "https://codeload.github.com/jqlang/jq/tar.gz/a19efdd45dfe91329a7d266efb2ac0a64279a938"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 46130,
+      "download_git_blob_sha1": "c109ee3e60b164e171f6e324b7852aab7fd1c608",
+      "file": "tests/test2.ipynb",
+      "id": "nbformat",
+      "license": "BSD-3-Clause",
+      "license_git_blob_sha1": "076177a497fae1482179137af028465c4f6b9c94",
+      "license_url": "https://raw.githubusercontent.com/jupyter/nbformat/4346f97c9d435f41ddfe76d28758b23796fdcf5a/LICENSE",
+      "lineage": "jupyter/nbformat",
+      "partition": "test",
+      "pinned_commit": "4346f97c9d435f41ddfe76d28758b23796fdcf5a",
+      "tracks": [
+        "A",
+        "B"
+      ],
+      "upstream_repo": "jupyter/nbformat",
+      "url": "https://raw.githubusercontent.com/jupyter/nbformat/4346f97c9d435f41ddfe76d28758b23796fdcf5a/tests/test2.ipynb"
+    },
+    {
+      "additional_provenance_urls": [
+        "https://raw.githubusercontent.com/apache/beam/e26d6bacb937561d40975788415d72fde17c8678/NOTICE"
+      ],
+      "class": "json",
+      "declared_download_bytes": 993937,
+      "download_git_blob_sha1": "ae6d3327430caba12417b84bfd3d86583b112bcb",
+      "file": "sdks/java/io/google-cloud-platform/src/test/resources/STU3/Shavonne800_Hilll811_3024090f-fe14-40a9-8fae-79952d3c95ce.json",
+      "id": "beam",
+      "license": "Apache-2.0; published synthetic healthcare fixture",
+      "license_git_blob_sha1": "3b335e38d36d85a9ab5f283231c6214dee1521aa",
+      "license_url": "https://raw.githubusercontent.com/apache/beam/e26d6bacb937561d40975788415d72fde17c8678/LICENSE",
+      "lineage": "apache/beam",
+      "partition": "test",
+      "pinned_commit": "e26d6bacb937561d40975788415d72fde17c8678",
+      "tracks": [
+        "A",
+        "B"
+      ],
+      "upstream_repo": "apache/beam",
+      "url": "https://raw.githubusercontent.com/apache/beam/e26d6bacb937561d40975788415d72fde17c8678/sdks/java/io/google-cloud-platform/src/test/resources/STU3/Shavonne800_Hilll811_3024090f-fe14-40a9-8fae-79952d3c95ce.json"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 59555,
+      "download_git_blob_sha1": "af5ff9fe2837eadcf86d289118485c7ae3b3bd3f",
+      "file": "discovery/moby/testdata/swarmprom/tasks.json",
+      "id": "prometheus",
+      "license": "Apache-2.0",
+      "license_git_blob_sha1": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "license_url": "https://raw.githubusercontent.com/prometheus/prometheus/d4467eede8e6d171c7ee06c0307a34878339a237/LICENSE",
+      "lineage": "prometheus/prometheus",
+      "partition": "test",
+      "pinned_commit": "d4467eede8e6d171c7ee06c0307a34878339a237",
+      "tracks": [
+        "B"
+      ],
+      "upstream_repo": "prometheus/prometheus",
+      "url": "https://raw.githubusercontent.com/prometheus/prometheus/d4467eede8e6d171c7ee06c0307a34878339a237/discovery/moby/testdata/swarmprom/tasks.json"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 651049,
+      "download_git_blob_sha1": "bc73616f484d1c95e6231e05c1a4edfb2490e612",
+      "file": "modules/lang-painless/src/main/generated/whitelist-json/painless-common.json",
+      "id": "elasticsearch",
+      "license": "Per-component AGPL/SSPL/Elastic/Apache terms in LICENSE.txt",
+      "license_git_blob_sha1": "060d0d0e8f13c91a77f98655967f2b80fdf023ff",
+      "license_url": "https://raw.githubusercontent.com/elastic/elasticsearch/61af9faf6c376e7572600663b413b17154d9ec82/LICENSE.txt",
+      "lineage": "elastic/elasticsearch",
+      "partition": "test",
+      "pinned_commit": "61af9faf6c376e7572600663b413b17154d9ec82",
+      "tracks": [
+        "B"
+      ],
+      "upstream_repo": "elastic/elasticsearch",
+      "url": "https://raw.githubusercontent.com/elastic/elasticsearch/61af9faf6c376e7572600663b413b17154d9ec82/modules/lang-painless/src/main/generated/whitelist-json/painless-common.json"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 6188,
+      "download_git_blob_sha1": "34e4186eaea8532c0990b212506edcf1d10e8095",
+      "file": "settings/address-levels.json",
+      "id": "nominatim",
+      "license": "GPL-3.0-or-later",
+      "license_git_blob_sha1": "f6cdd22a6c1fbc887e08a215cb4beb3c47048041",
+      "license_url": "https://raw.githubusercontent.com/osm-search/Nominatim/09c864c429ca99d27b1c71980b0e39ff6aaf357d/COPYING",
+      "lineage": "osm-search/nominatim",
+      "partition": "test",
+      "pinned_commit": "09c864c429ca99d27b1c71980b0e39ff6aaf357d",
+      "tracks": [
+        "B"
+      ],
+      "upstream_repo": "osm-search/Nominatim",
+      "url": "https://raw.githubusercontent.com/osm-search/Nominatim/09c864c429ca99d27b1c71980b0e39ff6aaf357d/settings/address-levels.json"
+    },
+    {
+      "class": "json",
+      "declared_download_bytes": 15193,
+      "download_git_blob_sha1": "a2d737ba72a43f485b3a5e31149937367a0ebb69",
+      "file": "src/mongo/client/mongo_uri_tests/mongo-uri-unix-sockets-relative.json",
+      "id": "mongodb",
+      "license": "SSPL-1.0 and additional terms",
+      "license_git_blob_sha1": "4e1383df1ee4c2e34d3c091e859408d5ed8d1574",
+      "license_url": "https://raw.githubusercontent.com/mongodb/mongo/03a2138bee424ace8cf3a57843a1f30c81fa0979/LICENSE-Community.txt",
+      "lineage": "mongodb/mongo",
+      "partition": "test",
+      "pinned_commit": "03a2138bee424ace8cf3a57843a1f30c81fa0979",
+      "tracks": [
+        "B"
+      ],
+      "upstream_repo": "mongodb/mongo",
+      "url": "https://raw.githubusercontent.com/mongodb/mongo/03a2138bee424ace8cf3a57843a1f30c81fa0979/src/mongo/client/mongo_uri_tests/mongo-uri-unix-sockets-relative.json"
+    }
+  ],
+  "study": "new-methods-v1"
+}

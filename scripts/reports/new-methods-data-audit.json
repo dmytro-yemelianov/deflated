@@ -1,0 +1,93 @@
+{
+  "codec_measurements": 0,
+  "held_access": "acquisition, signatures/hashes/deduplication and deterministic generation only",
+  "real": {
+    "bytes": 11791873,
+    "coverage": {
+      "test": {
+        "A": {
+          "classes": [
+            "archive",
+            "font",
+            "json",
+            "line-records",
+            "prose",
+            "source"
+          ],
+          "source_groups": 8
+        },
+        "B": {
+          "classes": [
+            "json",
+            "line-records"
+          ],
+          "source_groups": 8
+        }
+      },
+      "train": {
+        "A": {
+          "classes": [
+            "archive",
+            "font",
+            "json",
+            "line-records",
+            "prose",
+            "source"
+          ],
+          "source_groups": 8
+        },
+        "B": {
+          "classes": [
+            "json",
+            "line-records",
+            "ndjson"
+          ],
+          "source_groups": 8
+        }
+      },
+      "validation": {
+        "A": {
+          "classes": [
+            "archive",
+            "font",
+            "json",
+            "line-records",
+            "prose",
+            "source"
+          ],
+          "source_groups": 8
+        },
+        "B": {
+          "classes": [
+            "json",
+            "line-records",
+            "ndjson"
+          ],
+          "source_groups": 8
+        }
+      }
+    },
+    "dedup_pair_checks": 1494,
+    "fresh_source_groups": 36,
+    "old_regression_groups": 24
+  },
+  "regression": {
+    "fresh_nonshared_cases_checked_for_old_hashes": 114,
+    "fresh_real_manifest_sha256": "7500e2a0cfd755c06a50645f272d0ce3d3e62d3c68ed84ecff5d80c907202a60",
+    "fresh_synthetic_manifest_sha256": "d5ac5afcce4b46bee01ddaa1d40755f729af0901785598f63ede713a820ca2e2",
+    "index_sha256": "cbaed6a2f52c678a9924ce4c673573a18dca57de58796577412312d70cb57ff2",
+    "old_case_records": 1252,
+    "old_manifests": 18,
+    "old_real_unique_inputs": 50,
+    "old_unique_hashes": 399,
+    "real_pair_comparisons": 1800,
+    "schema_version": 1,
+    "scope_limit": "Exact historical bytes plus real-data content-defined/contained copies; not a semantic/schema independence proof. Synthetic families intentionally share recipes with disjoint regimes.",
+    "status": "passed",
+    "tool_sha256": "822db5a1c3a32485689f8d7dd791b43ce2d6854a3fc67c93f5d0782b670ea964"
+  },
+  "schema_version": 1,
+  "stage": "G1 data acquisition and generation, before screening",
+  "synthetic_cases": 99,
+  "synthetic_long_stress_cases": 6
+}

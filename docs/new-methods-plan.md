@@ -5,7 +5,8 @@ sealed and independent DSC1/Rust correctness prototype implemented. The seven
 mandatory native workers and three Rust workers pass independent framing and
 resident-input timer contracts. G0's nine-control reference lock is frozen;
 optional OpenZL qualification was excluded after its two bounded setup attempts.
-Fresh data, screening and proofs remain pending. No performance or
+G1's 36 source groups, 99 synthetic/stress cases and historical regression index
+are acquired, frozen and audited; screening and proofs remain pending. No performance or
 research-novelty claim follows from this plan. Baseline:
 `b7d5e0fc79f4f72d2ba772312ec9a22497699ed5`.
 
@@ -60,28 +61,35 @@ Use all preregistered levels, not a favorable level selected on final data.
 
 ## G1 — Fresh data and synthetic stress
 
-- [ ] Acquire versioned corpora with eight train/validation/test source groups
+- [x] Acquire versioned corpora with eight train/validation/test source groups
   per track (up to 48 groups total; a source may occur in both tracks only in
   the same split). A includes six general-content classes; B includes JSON,
   NDJSON and line records, with at least two classes per split. Aim for eight
   independent held groups in each primary scope; document shortfalls before
   any test encoding, and prohibit an independent headline with fewer than six.
-- [ ] Exclude every previously measured source lineage from new holdout
+- [x] Exclude every previously measured source lineage from new holdout
   eligibility. Group project versions, mirrors, schema/template relatives and
   paired transforms together across both tracks. Preserve URLs, pinned versions,
   licenses, extraction ranges, hashes and copy/near-copy checks.
-- [ ] Use complete files up to 1 MiB or recorded bounded slices. Preregister
+- [x] Use complete files up to 1 MiB or recorded bounded slices. Preregister
   a small separate 8 MiB long-history/chunk-boundary stress track; do not
   silently aggregate it into the primary score.
-- [ ] Keep acquisition limited to downloading, signature/hash validation and
+- [x] Keep acquisition limited to downloading, signature/hash validation and
   deduplication. No held encoding, feature extraction, teacher labels, fitted
   schema or dictionary construction before G5 freeze.
-- [ ] Extend deterministic generators using disjoint regimes 13/14 train,
+- [x] Extend deterministic generators using disjoint regimes 13/14 train,
   15/16 validation and 17/18 held. Add actual-hash/tag collisions, 3-byte matches
   with unequal fourth bytes, cache eviction, ring generations, lazy pending
   candidates, numeric spellings/overflow, escaped quotes, raw invalid UTF-8,
   schema drift, unique keys and chunk-spanning lexemes. Keep tiny/boundary
   witnesses shared stress, and all prior corpora labelled regression.
+
+The [data checkpoint](new-methods-data.md) records 36 source groups, eight per
+track/split, 72 synthetic cases, six separate 8 MiB long cases and 21 shared
+tiny/boundary witnesses. The eighteen historical manifests retain 1,252 case
+records / 399 unique hashes; all fifty unique old real inputs pass comparison
+against the fresh real files. Byte deduplication is not a semantic independence
+proof. No study corpus has been encoded; held access remains restricted until G5.
 
 ## G2 — Matcher screen
 
@@ -243,8 +251,9 @@ The subsequent [worker checkpoint](new-methods-benchmarking.md) documents the
 mandatory resident-input adapters, matched framing, charged state and independent
 contract checks. G0 is now resolved by the immutable
 `scripts/reports/new-methods-reference-lock.json`; OpenZL's bounded exclusion is
-part of that lock. Next checkpoint: G1 fresh source-grouped data/generators,
-then G2/G3 charged training screens. Promotion and G4–G6 completion have not occurred.
+part of that lock. G1 is resolved by the published data/audit/regression receipts.
+Next checkpoint: G2/G3 charged training screens. Promotion and G4–G6 completion
+have not occurred.
 
 ## G0 budget clarification, before study screening (2026-10-07)
 
