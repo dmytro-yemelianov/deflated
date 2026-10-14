@@ -41,14 +41,31 @@ pooled MB/s on a busy host moves by several percent between identical binaries.
 Gate future screens on paired medians as well. Its receipt is
 `scripts/reports/library-decode-v12-hot-loop.json.gz`.
 
-Next work should target measured decoder costs: attribute the raw gap with
-hardware counters (cycles, branch mispredicts, L1D misses) before writing more
-candidates, then optimize the raw DEFLATE hot path, measure table/setup
-overhead and memory, and add independent holdout inputs before making broader
-performance claims. Keep the portable core usable without optional
-dependencies, and compare against both native libraries using the existing
-pinned, alternating benchmark protocol. See the roadmap for sequencing and
-acceptance criteria.
+The [v13 x86-64 counter attribution](library-decode-v13-x86-counters.md) ran
+Linux `perf` on a shared i7-8700 host inside a container that had only
+CAP_PERFMON added. On that host the core trails zlib-ng (394 vs 487 MB/s raw),
+and libdeflate is 1.75× faster than the core. The gap is mostly instruction
+count: 1.5–1.6× libdeflate's instructions per token, at 6–13% lower IPC.
+Smaller contributions come from mispredicts (1.4–1.7× per token; about a
+quarter of them at the conditional refill) and from L1D load misses (about
+3× per byte; 62–71% at the 16 KiB literal/length table). An x86-64-v3 build
+cuts instructions by 9% per raw byte. No source changed. The receipt is
+`scripts/reports/library-decode-v13-x86-counters.json.gz`; arm64 counters
+were not measured.
+
+Next work should target those measured costs. Screen each candidate
+separately with paired medians on both arm64 and x86-64:
+
+1. A 10–11-bit literal/length root table with a second-level path.
+2. A branch-free fast-loop refill.
+3. A BMI2 path in `deflate-accel`. This needs a design decision on the
+   accelerator's unsafe and target-feature boundary.
+
+Then measure table/setup overhead and memory, and add independent holdout
+inputs before making broader performance claims. Keep the portable core usable
+without optional dependencies, and compare against both native libraries using
+the existing pinned, alternating benchmark protocol. See the roadmap for
+sequencing and acceptance criteria.
 
 ## Historical record: 2026-10-07 closure
 

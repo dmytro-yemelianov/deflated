@@ -120,8 +120,11 @@ checkout when reconstructing that study; it intentionally rejects current code.
    implemented and measured. An optional CRC backend is implemented and
    measured on the current arm64 host. A [v12 hot-loop screen](library-decode-v12-report.md)
    rejected three safe match-path reshapings (no paired improvement; one
-   compiled identically); next attribute the raw gap with hardware counters
-   before writing further candidates. Next investigate the remaining decode
+   compiled identically). [v13 x86-64 counters](library-decode-v13-x86-counters.md)
+   attribute the libdeflate gap mainly to instructions per token, then to
+   mispredicts at refill and literal exits and to L1D misses at the 16 KiB
+   literal/length table. Next screen a smaller root table, branch-free refill
+   and an accelerator BMI2 path. Next investigate the remaining decode
    gap, small-gzip latency, x86-64 behavior, and allocator/peak-memory costs.
    Evaluate whether the optional package boundary should cover more backends.
    Each change must
