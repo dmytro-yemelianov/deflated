@@ -60,6 +60,7 @@ const SHORT_COPY: usize = 16;
 /// window from `start` to the end, so the window doubles and stays a multiple
 /// of `dist`, which puts every chunk in phase with the byte-wise copy. The
 /// differential and `lz77_tests` reference checks hold the two together.
+#[inline]
 pub fn copy_back(out: &mut Vec<u8>, dist: usize, len: usize) -> Result<(), Error> {
     let start = match out.len().checked_sub(dist) {
         Some(s) if dist != 0 => s,
@@ -69,8 +70,8 @@ pub fn copy_back(out: &mut Vec<u8>, dist: usize, len: usize) -> Result<(), Error
     if len < SHORT_COPY {
         // Short matches dominate text; here a bulk copy's per-call cost
         // outweighs what it saves, so this is `copyGo` as written.
-        for _ in 0..len {
-            let b = match out.len().checked_sub(dist).and_then(|i| out.get(i)) {
+        for offset in 0..len {
+            let b = match out.get(start + offset) {
                 Some(b) => *b,
                 None => return Err(Error::InvalidDistance),
             };

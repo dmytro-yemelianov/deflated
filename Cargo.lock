@@ -24,6 +24,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "deflate-accel"
+version = "0.1.0"
+dependencies = [
+ "crc32fast",
+ "deflate-core",
+]
+
+[[package]]
 name = "deflate-core"
 version = "0.1.0"
 dependencies = [

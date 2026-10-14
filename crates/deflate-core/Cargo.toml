@@ -1,6 +1,7 @@
 [package]
 name = "deflate-core"
 description = "RFC 1951 DEFLATE core: no_std, zero dependencies, no unsafe"
+readme = "README.md"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

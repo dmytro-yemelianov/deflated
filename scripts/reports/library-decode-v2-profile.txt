@@ -1,0 +1,99 @@
+Analysis of sampling library_decode (pid 63017) every 1 millisecond
+Process:         library_decode [63017]
+Path:            /Users/USER/*/library_decode
+Load Address:    0x10023c000
+Identifier:      library_decode
+Version:         0
+Code Type:       ARM64
+Platform:        macOS
+Parent Process:  Python [63016]
+Target Type:     live task
+
+Date/Time:       2026-10-14 10:24:10.706 +0300
+Launch Time:     2026-10-14 10:24:10.652 +0300
+OS Version:      macOS 27.2 (26B5086k)
+Report Version:  7
+Analysis Tool:   /usr/bin/sample
+
+Physical footprint:         1856K
+Physical footprint (peak):  2032K
+Idle exit:                  untracked
+----
+
+Call graph:
+    2504 Thread_31114891   DispatchQueue_1: com.apple.main-thread  (serial)
+      2504 start  (in dyld) + 6688  [0x1843f7ef0]
+        2504 main  (in library_decode) + 52  [0x10023d984]
+          2504 std::rt::lang_start_internal::ha7d36e169a6a9a91  (in library_decode) + 888  [0x100259ff8]
+            2504 std::rt::lang_start::_$u7b$$u7b$closure$u7d$$u7d$::h2f4793c2d7062bb3  (in library_decode) + 16  [0x10023d9a0]
+              2504 std::sys::backtrace::__rust_begin_short_backtrace::h35ec4946d3713333  (in library_decode) + 12  [0x10023d9b8]
+                2502 library_decode::main::h045b0e30e34575be  (in library_decode) + 1804  [0x10023d6e0]
+                + 2502 library_decode::decode::h52015af5d3b78b36  (in library_decode) + 104  [0x10023cc94]
+                +   2502 deflate_core::inflate::inflate_into::h306113033e898eda  (in library_decode) + 52  [0x100240010]
+                +     2250 deflate_core::inflate::decode_into::h4430c39a7193c614  (in library_decode) + 648  [0x1002402e4]
+                +     ! 1122 deflate_core::block::decode_huff_block::hf75d935d766e38df  (in library_decode) + 356,336,...  [0x10023ea54,0x10023ea40,...]
+                +     ! 1064 deflate_core::block::decode_huff_block::hf75d935d766e38df  (in library_decode) + 1528  [0x10023eee8]
+                +     ! : 941 deflate_core::lz77::copy_back::ha3b1a6d78a0046d6  (in library_decode) + 368,112,...  [0x10024062c,0x10024052c,...]
+                +     ! : 123 deflate_core::lz77::copy_back::ha3b1a6d78a0046d6  (in library_decode) + 316  [0x1002405f8]
+                +     ! :   117 _platform_memmove  (in libsystem_platform.dylib) + 460,428,...  [0x1847daf2c,0x1847daf0c,...]
+                +     ! :   6 DYLD-STUB$$memcpy  (in library_decode) + 4  [0x10027b464]
+                +     ! 64 deflate_core::lz77::copy_back::ha3b1a6d78a0046d6  (in library_decode) + 388,392,...  [0x100240640,0x100240644,...]
+                +     251 deflate_core::inflate::decode_into::h4430c39a7193c614  (in library_decode) + 488  [0x100240244]
+                +     ! 68 deflate_core::block::read_dynamic_tables::hf4bbe705da5a4b7e  (in library_decode) + 2040  [0x10023f7f8]
+                +     ! : 57 deflate_core::huffman::HuffmanTable::from_lengths::h642fee6ce6cf3fd0  (in library_decode) + 876,892,...  [0x10023e3a0,0x10023e3b0,...]
+                +     ! : 7 deflate_core::huffman::HuffmanTable::from_lengths::h642fee6ce6cf3fd0  (in library_decode) + 984  [0x10023e40c]
+                +     ! : | 7 _platform_memmove  (in libsystem_platform.dylib) + 180  [0x1847dae14]
+                +     ! : 4 deflate_core::huffman::HuffmanTable::from_lengths::h642fee6ce6cf3fd0  (in library_decode) + 736  [0x10023e314]
+                +     ! :   4 _platform_memset  (in libsystem_platform.dylib) + 140  [0x1847dab1c]
+                +     ! 67 deflate_core::block::read_dynamic_tables::hf4bbe705da5a4b7e  (in library_decode) + 1964  [0x10023f7ac]
+                +     ! : 61 deflate_core::huffman::HuffmanTable::from_lengths::h642fee6ce6cf3fd0  (in library_decode) + 876,892,...  [0x10023e3a0,0x10023e3b0,...]
+                +     ! : 4 deflate_core::huffman::HuffmanTable::from_lengths::h642fee6ce6cf3fd0  (in library_decode) + 736  [0x10023e314]
+                +     ! : | 4 _platform_memset  (in libsystem_platform.dylib) + 140,160  [0x1847dab1c,0x1847dab30]
+                +     ! : 1 deflate_core::huffman::HuffmanTable::from_lengths::h642fee6ce6cf3fd0  (in library_decode) + 556  [0x10023e260]
+                +     ! : | 1 _xzm_xzone_malloc_freelist_outlined  (in libsystem_malloc.dylib) + 324  [0x1845ec2f0]
+                +     ! : |   1 _xzm_xzone_find_and_malloc_from_freelist_chunk  (in libsystem_malloc.dylib) + 584  [0x1845ecce4]
+                +     ! : |     1 _xzm_chunk_list_pop  (in libsystem_malloc.dylib) + 20  [0x1845ed3f4]
+                +     ! : 1 deflate_core::huffman::HuffmanTable::from_lengths::h642fee6ce6cf3fd0  (in library_decode) + 984  [0x10023e40c]
+                +     ! :   1 _platform_memmove  (in libsystem_platform.dylib) + 180  [0x1847dae14]
+                +     ! 57 deflate_core::block::read_dynamic_tables::hf4bbe705da5a4b7e  (in library_decode) + 1428  [0x10023f594]
+                +     ! : 52 deflate_core::huffman::HuffmanTable::from_lengths::h642fee6ce6cf3fd0  (in library_decode) + 876,892,...  [0x10023e3a0,0x10023e3b0,...]
+                +     ! : 3 deflate_core::huffman::HuffmanTable::from_lengths::h642fee6ce6cf3fd0  (in library_decode) + 736  [0x10023e314]
+                +     ! : | 3 _platform_memset  (in libsystem_platform.dylib) + 140  [0x1847dab1c]
+                +     ! : 2 deflate_core::huffman::HuffmanTable::from_lengths::h642fee6ce6cf3fd0  (in library_decode) + 984  [0x10023e40c]
+                +     ! :   2 _platform_memmove  (in libsystem_platform.dylib) + 180  [0x1847dae14]
+                +     ! 28 deflate_core::block::read_dynamic_tables::hf4bbe705da5a4b7e  (in library_decode) + 1700,1736,...  [0x10023f6a4,0x10023f6c8,...]
+                +     ! 24 deflate_core::block::read_dynamic_tables::hf4bbe705da5a4b7e  (in library_decode) + 1628  [0x10023f65c]
+                +     ! : 24 deflate_core::bitstream::BitReader::peek_bits::h5a877fc8ab016924  (in library_decode) + 44,296,...  [0x10023fca4,0x10023fda0,...]
+                +     ! 3 deflate_core::block::read_dynamic_tables::hf4bbe705da5a4b7e  (in library_decode) + 1812  [0x10023f714]
+                +     ! : 3 deflate_core::bitstream::BitReader::read_bits::h2c2b7004743d5108  (in library_decode) + 44,52,...  [0x10023fb68,0x10023fb70,...]
+                +     ! 2 deflate_core::block::read_dynamic_tables::hf4bbe705da5a4b7e  (in library_decode) + 1924  [0x10023f784]
+                +     ! : 1 alloc::vec::Vec$LT$T$C$A$GT$::resize::hb65ccc1a1b114073  (in library_decode) + 96  [0x1002406a8]
+                +     ! : | 1 _platform_memset  (in libsystem_platform.dylib) + 200  [0x1847dab58]
+                +     ! : 1 alloc::vec::Vec$LT$T$C$A$GT$::resize::hb65ccc1a1b114073  (in library_decode) + 32  [0x100240668]
+                +     ! 1 deflate_core::block::read_dynamic_tables::hf4bbe705da5a4b7e  (in library_decode) + 2688  [0x10023fa80]
+                +     ! : 1 __xzm_xzone_free_to_freelist_chunk  (in libsystem_malloc.dylib) + 424  [0x1845efa38]
+                +     ! :   1 mach_absolute_time  (in libsystem_kernel.dylib) + 108  [0x18478c0f8]
+                +     ! 1 deflate_core::block::read_dynamic_tables::hf4bbe705da5a4b7e  (in library_decode) + 2696  [0x10023fa88]
+                +     !   1 core::ptr::drop_in_place$LT$deflate_core..huffman..HuffmanTable$GT$::he38dd1961bb4c95f  (in library_decode) + 80  [0x10023e5e0]
+                +     !     1 __xzm_xzone_free_to_freelist_chunk  (in libsystem_malloc.dylib) + 424  [0x1845efa38]
+                +     !       1 mach_absolute_time  (in libsystem_kernel.dylib) + 112  [0x18478c0fc]
+                +     1 deflate_core::inflate::decode_into::h4430c39a7193c614  (in library_decode) + 692  [0x100240310]
+                +       1 __xzm_xzone_free_to_freelist_chunk  (in libsystem_malloc.dylib) + 424  [0x1845efa38]
+                +         1 mach_absolute_time  (in libsystem_kernel.dylib) + 108  [0x18478c0f8]
+                1 library_decode::main::h045b0e30e34575be  (in library_decode) + 1764  [0x10023d6b8]
+                + 1 alloc::raw_vec::RawVecInner$LT$A$GT$::with_capacity_in::h4f09d0fdb6f1d24d  (in library_decode) + 44  [0x10023cbc4]
+                +   1 xzm_malloc_zone_malloc_type_malloc_tc  (in libsystem_malloc.dylib) + 0  [0x1845f15e8]
+                1 library_decode::main::h045b0e30e34575be  (in library_decode) + 1748  [0x10023d6a8]
+
+Total number in stack (recursive counted multiple, when >=5):
+
+Sort by top of stack, same collapsed (when >= 5):
+        deflate_core::block::decode_huff_block::hf75d935d766e38df  (in library_decode)        1122
+        deflate_core::lz77::copy_back::ha3b1a6d78a0046d6  (in library_decode)        1005
+        deflate_core::huffman::HuffmanTable::from_lengths::h642fee6ce6cf3fd0  (in library_decode)        170
+        _platform_memmove  (in libsystem_platform.dylib)        127
+        deflate_core::block::read_dynamic_tables::hf4bbe705da5a4b7e  (in library_decode)        28
+        deflate_core::bitstream::BitReader::peek_bits::h5a877fc8ab016924  (in library_decode)        24
+        _platform_memset  (in libsystem_platform.dylib)        12
+        DYLD-STUB$$memcpy  (in library_decode)        6
+

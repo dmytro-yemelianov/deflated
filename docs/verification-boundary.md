@@ -150,3 +150,131 @@ in `spec/scripts/axioms.lean`. Rust correspondence remains test evidence:
 the raw differential corpus has 20,197 streams and zero findings, with
 focused framing checks in `oracles/framing.py`. The framing exclusions above
 and the lack of a Rust refinement proof remain explicit boundaries.
+
+## Library restart: Rust implementation changes (2026-10-14)
+
+`inflate_into` reports byte consumption and replaces a caller-owned buffer;
+`gunzip_into` reuses output storage and checks all members. Errors clear the
+output. The one-shot wrappers retain their previous stream/error semantics.
+Neither buffer lifecycle nor the new consumption result has a Lean refinement
+proof. API regression tests cover suffixes, limits, truncation, recovery and
+member/checksum validation; the existing differential suite still applies.
+
+Fixed Huffman tables now share compile-time RFC tables rather than constructing
+them for every block. Canonical reconstruction and literal table-evaluation
+tests check every entry. Dynamic tables remain constructed from checked lengths.
+CRC32 uses portable slicing by sixteen with an eight-byte/bytewise tail, checked against an independent bitwise
+reference across offsets, tails and incremental chunk boundaries. These are
+Rust test claims, not new Lean theorems. `no_std`, zero runtime dependencies and
+`forbid(unsafe_code)` remain in force.
+
+### Bulk token lookahead
+
+The public symbol-table block decoder resolves complete table-hit tokens from a bounded
+64-bit load. A successful load supplies at least 57 real bits; the current
+tables and extras need at most 42 per token. Unused bits are retained across
+tokens, refilled below 42, and discarded before scalar fallback. The reader
+still commits each token's consumed bits immediately. Table misses, reserved
+symbols and short input fall back without speculative consumption. The scalar
+reference tests in `block_fast_tests.rs` compare exact errors, bit positions and
+partial output using canonical Huffman decoding and independent byte copies.
+The short-copy index is computed once rather than from the growing output on
+every byte. Existing copy-reference, full differential and bounded fuzz checks
+pass. These are finite Rust correspondence checks, not a Lean proof of this
+lookahead implementation. Explicit tests also interleave buffered literal runs
+with fifteen-bit codes and check every output limit through the run. See
+[the v2 report](library-decode-v2-report.md) and
+[the buffered decoder report](library-decode-v3-report.md).
+
+### Dynamic-table preparation
+
+The Rust Huffman builder now grows the table by copying each populated prefix
+into its upper half before adding longer codes. Tests compare every lookup slot
+with the canonical decoder for 2,000 complete trees and degenerate cases. The
+dynamic-header parser uses a 316-byte local array after validating HLIT/HDIST;
+reference tests compare its result and exact cursor with a growable parser using
+canonical symbol decoding, including repeat overruns and truncations. Public
+constructor tests also cover count overflow and symbol indices outside `u16`.
+These are finite Rust checks; no new Lean refinement proof covers these memory
+or construction changes. See [the v4 report](library-decode-v4-report.md).
+
+### Reusable decoder state
+
+`Decompressor` retains allocations for three dynamic Huffman tables and gzip
+member scratch storage. Every header rebuilds its tables before use; a failed
+rebuild is never decoded. Existing output is cleared before each stream and
+after errors. Tests alternate table shapes (including empty/degenerate trees),
+verify stale entries are overwritten without replacing table allocations, and
+compare fresh/reused results across multiple blocks, mixed raw/gzip inputs,
+truncations, limits, explicit release and error recovery. The `reuse` fuzz
+target compares both API paths with state retained across inputs. This is
+finite Rust evidence; retained allocation lifecycle has no Lean refinement
+proof. See [the v5 report](library-decode-v5-report.md).
+
+### Packed actions and initialized output batches
+
+Whole-buffer APIs now use private packed-action tables with 12/9/7-bit roots
+for literal-length, distance and code-length alphabets. Entries encode the
+action type, base/literal value, symbol index, code length and total consumed
+bits (including extra bits). Misses retain the canonical
+walk, including partial consumption on malformed codes; they do not zero-pad
+input. Tests compare all root entries and error cursors against the public
+canonical API, including degenerate, long and reserved codes. This is not the
+same representation as Lean's public 12-bit symbol table, so the existing Lean
+table theorem is not a proof of the packed implementation.
+
+The batch decoder initializes at most 8192 additional output bytes within the
+decoded-length limit. A 264-byte guard covers every match: the word-copy path
+writes at least forty bytes, then rounds longer matches to eight bytes, up to
+264 for the maximum length of 258. A three-byte match can therefore write thirty-seven
+padding bytes. Only the logical output prefix is valid history, and
+speculative suffix bytes are truncated before return. Complete tokens advance a
+local bit cursor; it is committed before a fallback, error or return. A long
+code can resume in the same initialized region. Small fixed blocks retain the
+compact public decoder. Tests compare both paths' exact results, positions and
+partial output across copy, batch, dispatch and limit boundaries.
+The next packed action can be read before copying a match. This lookup stays
+inside the table and consumes no input; a refill replaces it before use when
+the remaining real bits cannot support a full token. Exhaustive copy-length
+tests compare the logical output with bytewise history expansion. V9 expresses
+the copy source and destination relative to one checked region; the ARM64
+compiler unrolls the continuation. Distances below eight use a separate function with
+the same checked fill/prefix-expansion semantics; no path is marked unreachable
+or allowed to read uninitialized history.
+
+The v8 batch loop derives its logical bit position as `next_byte * 8 - available`.
+It appends real input bytes into the bit buffer, advances the byte cursor and
+retains 56–63 counted bits without consuming a token. Any overlapping high bits
+are from the same input bytes. No input padding is assumed. The token guard also
+covers three maximum-width literal codes, which may share one iteration. Tests
+compare exact scalar positions across all initial alignments, each truncation
+of short literal runs, every group-ending position and output limits. Every
+possible extra length/distance value is checked independently against the RFC
+base/extra arrays. These are additional finite checks, not a proof of the refill
+or grouped decoder.
+
+The wider portable CRC loop is checked against the independent bitwise reference
+across tails, offsets, empty updates and incremental chunks. The implementation
+remains safe `no_std` Rust with no runtime dependencies. Full differential and
+bounded fuzz checks provide finite correspondence evidence; no Rust refinement
+proof or new Lean theorem is claimed. See the [v6](library-decode-v6-report.md)
+[v7](library-decode-v7-report.md) and [v8](library-decode-v8-report.md) reports.
+
+### Gzip header consumption without metadata allocation
+
+V10's decompression path checks byte-aligned gzip headers without constructing
+owned metadata. A valid minimal ten-byte header commits one cursor advance;
+optional fields are scanned as bounded byte slices. Header CRC is computed only
+when FHCRC is present, and is still validated. Incomplete, invalid, checksum-bad
+or unaligned headers enter the unchanged public `read_gzip_header` from the
+original reader position, preserving its error precedence and partial cursor.
+The public metadata API, payload CRC, output limits, member isolation and
+zero-padding rules remain unchanged.
+
+Tests compare results and exact positions with that public parser for all 32
+valid flag combinations, alignments, truncations, header mutations, maximum
+extra-field length, long strings and readers positioned past the end. The
+`gzip_header` fuzz target independently uses the public parser's accepted
+boundary to frame an empty DEFLATE payload, and compares header rejection
+before decoding. Optional gzip headers remain outside the Lean framing model;
+these are finite Rust correspondence checks, not a new refinement proof.

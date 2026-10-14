@@ -12,6 +12,7 @@ cargo-fuzz = true
 [dependencies]
 libfuzzer-sys = "0.4"
 deflate-core = { path = "../crates/deflate-core", features = ["research-tuning"] }
+deflate-accel = { path = "../crates/deflate-accel" }
 miniz_oxide = "0.8"
 structured-codec = { path = "../crates/structured-codec" }
 
@@ -54,5 +55,23 @@ doc = false
 [[bin]]
 name = "structured_roundtrip"
 path = "fuzz_targets/structured_roundtrip.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "reuse"
+path = "fuzz_targets/reuse.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "gzip_header"
+path = "fuzz_targets/gzip_header.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "accel_gunzip"
+path = "fuzz_targets/accel_gunzip.rs"
 test = false
 doc = false

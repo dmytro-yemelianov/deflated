@@ -1,25 +1,57 @@
 # verified-deflate
 
 A raw DEFLATE (RFC 1951) decoder and compressing encoder with gzip and minimal
-single-entry ZIP framing in Rust, with zero
-runtime dependencies, beside an executable Lean 4 model of the same semantics.
+single-entry ZIP framing in Rust. The portable core has zero runtime
+dependencies; an optional accelerated crate supplies optimized backends. An
+executable Lean 4 model describes the core semantics.
 
-**Status: maintenance mode (2026-10-07).** Active compression research is closed
-by the maintainer's decision. Keep the existing implementation, correctness
-checks and published evidence; there is no active performance roadmap.
-See the [handover](docs/handover.md) for maintenance commands and unresolved
-limits, and the [closure report](docs/new-methods-report.md) for the last study.
-The DSC1 family was rejected on training; the proposed new matcher was not
-implemented. Neither result establishes superiority over established codecs.
+**Status: active library development (2026-10-14).** Work has resumed with
+whole-buffer DEFLATE/GZIP decompression and a usable Rust API as the first
+priority. Direct performance references are zlib-ng and libdeflate. See the
+[library plan and measurement boundary](docs/library-roadmap.md) and the
+[crate usage guide](crates/deflate-core/README.md). The
+[reusable decoder report](docs/library-decode-v5-report.md) covers `Decompressor`,
+its checks, and fair state/output reuse comparisons on pinned real files.
+The [native source/AST audit](docs/native-decode-audit.md) identifies copy,
+bit-buffer and checksum costs using the compiled ARM paths and profiles.
+The [v6 implementation](docs/library-decode-v6-report.md) adds bounded batches,
+packed decode tables and faster portable CRC. The
+[v7 report](docs/library-decode-v7-report.md) measures next-action lookahead and
+short copies. The [v8 report](docs/library-decode-v8-report.md) combines
+native-style action entries, literal grouping and bit-buffer refill. The
+[v9 report](docs/library-decode-v9-report.md) reduces match-copy checks and
+separates small-distance copies: another 4% raw and 3.4% gzip on the six-file
+arm64 development pool. Raw decoding exceeds the pinned zlib-ng build by about
+11%; libdeflate remains about 37% faster raw. Native gzip decoding remains ahead,
+and individual packets and tiny gzip calls can regress.
+The latest [v10 report](docs/library-decode-v10-report.md) removes discarded
+gzip header metadata and unnecessary header CRC work: short gzip latency falls
+about 28–35%, with larger gains on optional headers. Large-buffer throughput
+does not improve; paired raw results regress about 1%. The subsequent
+[runtime profile](docs/library-decode-v10-profile.md) identifies substantial
+per-call timer overhead in tiny-input timings; those are instrumented-worker
+results pending batched-clock remeasurement.
+The [v11 checksum backend report](docs/library-decode-v11-crc-accelerator.md)
+adds an optional `deflate-accel` crate backed by `crc32fast`. It preserves the
+portable core and improves reused GZIP throughput by 24.5% in a four-file
+diagnostic; the measured pool beats zlib-ng and remains behind libdeflate.
+A competitive release is a
+target, not an established claim across workloads or architectures.
 
+The earlier compression research remains closed and its immutable evidence is
+retained. The [historical handover](docs/handover.md) and
+[closure report](docs/new-methods-report.md) describe that study, not the scope
+of the new library work.
 - `crates/deflate-core/` — the decoder and encoder. `no_std`, no runtime
   dependencies, `#![forbid(unsafe_code)]`.
+- `crates/deflate-accel/` — opt-in accelerated decoding; dependencies are kept
+  outside the portable core.
 - `spec/Deflate/` — the Lean 4 model and kernel-checked proofs, with headline
   theorems checked for standard axioms only,
   with no `sorry`, no `admit` and no `native_decide`.
 - `oracles/` — a differential harness running `deflate-core`, the Lean model,
   and `zlib` over the same corpus, with optional `lean-zip` advisories.
-- `fuzz/` — five core `cargo-fuzz` targets and two experimental DSC1 targets;
+- `fuzz/` — six core `cargo-fuzz` targets and two experimental DSC1 targets;
   see the [target descriptions](fuzz/README.md).
 
 **What is proved, and what is not.** The theorems are statements about the
@@ -49,8 +81,8 @@ The optional optimizer campaign needs Python 3.12+ and a local research venv.
 
 ## Retained research
 
-Research commands and reports are retained for reproduction. They do not
-schedule new searches; `research-poc`, `research-search`, `research-campaign`
+Historical compression research commands and reports are retained for reproduction.
+They do not schedule new searches; `research-poc`, `research-search`, `research-campaign`
 and `research-policy` explicitly run historical experiments when invoked.
 The closed tuning investigation covered multidimensional parameter search,
 GPU-assisted proposals, synthetic generators and verification gates. Its

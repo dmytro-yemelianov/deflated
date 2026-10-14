@@ -1,5 +1,50 @@
 # Maintenance handover
 
+## Current handover — 2026-10-14
+
+Library development has resumed with a focus on a Rust DEFLATE/GZIP
+decompression library that can compete with zlib-ng and libdeflate. The active
+scope and priorities are in the [library roadmap](library-roadmap.md). The
+latest implementation and benchmark evidence are in the
+[v11 CRC accelerator report](library-decode-v11-crc-accelerator.md).
+
+The workspace now has an optional `deflate-accel` crate alongside
+`deflate-core`. The core remains `no_std`, dependency-free, and free of unsafe
+code. It exposes a GZIP CRC callback seam; the accelerator uses `crc32fast`
+through that seam while leaving raw DEFLATE decoding in the portable core. This
+keeps the optimized dependency out of core users' builds.
+
+On the recorded Apple M5 benchmark pool, the accelerated decoder improved GZIP
+throughput by 24.5% over the rebuilt current core and by 9.4% over zlib-ng.
+libdeflate remained about 43% faster than the accelerator. Raw-DEFLATE results
+were also measured, and CRC microbenchmarks show that hardware acceleration is
+most useful for medium and large buffers. These are diagnostic results from
+four historical inputs, not holdout or release evidence; see the report for
+the exact protocol and limitations. The immutable receipt is
+`scripts/reports/library-decode-v11-crc-accelerator.json.gz`.
+
+The v11 build, Clippy, formatting, receipt/hash, and benchmark contract checks
+passed. A follow-up on 2026-10-14 added `deflate-accel` equivalence tests
+(result, output bytes, errors and output clearing must match the core on valid,
+multi-member, CRC/ISIZE-corrupted, truncated, suffixed and limit-bounded
+packets) and an `accel_gunzip` fuzz target; `gzip_header` and `accel_gunzip`
+now run in `make fuzz`. Formatting, all-features Clippy, `make test` (Rust,
+Lean, differential and framing oracles), the new accelerator tests and all ten
+60-second `make fuzz` targets passed with no findings. This is correctness
+evidence on one arm64 host; it does not make v11 a release candidate under the
+roadmap's release gate.
+
+Next work should target measured decoder costs: profile and optimize the raw
+DEFLATE hot path, measure table/setup overhead and memory, and add independent
+holdout inputs before making broader performance claims. Keep the portable
+core usable without optional dependencies, and compare against both native
+libraries using the existing pinned, alternating benchmark protocol. See the
+roadmap for sequencing and acceptance criteria.
+
+## Historical record: 2026-10-07 closure
+
+The compression campaigns and their source/measurement locks remain historical.
+
 Date: 2026-10-07. The maintainer ended active compression research and moved
 the project to maintenance mode. This is a scope cancellation, not completion
 of every item in the former research plan. No new matcher, GPU search or codec
@@ -101,7 +146,7 @@ python3 scripts/new_methods_b_publish.py --check
 
 On the original machine, add `--local` to each lock audit and run
 `python3 scripts/new_methods_b_publish.py --check --local` to check cached
-worker, raw-input and packet hashes. `make fuzz` runs the seven bounded targets;
+worker, raw-input and packet hashes. `make fuzz` runs the ten bounded targets;
 CI also checks default-feature Clippy, research artifacts and decoder contracts.
 No extra benchmark campaign is needed for this documentation-only closure.
 

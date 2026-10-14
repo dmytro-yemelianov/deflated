@@ -246,48 +246,148 @@ pub fn write_gzip_trailer(w: &mut BitWriter, crc32: u32, isize: u32) {
 /// Trailing zero padding is accepted; other trailing bytes (including a member
 /// after padding) are rejected. Every member's header and trailer are validated.
 pub fn gunzip(input: &[u8], limit: usize) -> Result<Vec<u8>, Error> {
-    let mut offset = 0;
     let mut out = Vec::new();
-    loop {
-        let mut r = BitReader::new(&input[offset..]);
-        read_gzip_header(&mut r)?;
-        // A fresh buffer prevents backreferences across member boundaries.
-        let mut member = Vec::new();
-        let member_limit = limit.saturating_sub(out.len());
-        loop {
-            let header = crate::block::read_block_header(&mut r)?;
-            match header.btype {
-                crate::block::BlockType::Stored => {
-                    let budget = member_limit.saturating_sub(member.len());
-                    crate::block::read_stored(&mut r, &mut member, budget)?;
+    gunzip_into(input, &mut out, limit)?;
+    Ok(out)
+}
+
+/// Decode all gzip members into a reusable buffer with a cumulative limit.
+///
+/// Replaces the contents of `out`, reusing its allocation for the first member.
+/// On error the buffer is empty. Every member's checksum and size are checked;
+/// member history is isolated. Optional headers, concatenated members and final
+/// zero padding have the same behavior as [`gunzip`]. The returned size equals
+/// `out.len()`. This API consumes the whole input and is not streaming.
+pub fn gunzip_into(input: &[u8], out: &mut Vec<u8>, limit: usize) -> Result<usize, Error> {
+    gunzip_reusing(
+        input,
+        out,
+        &mut Vec::new(),
+        limit,
+        crate::inflate::decode_into,
+    )
+}
+
+pub(crate) fn gunzip_reusing(
+    input: &[u8],
+    out: &mut Vec<u8>,
+    member: &mut Vec<u8>,
+    limit: usize,
+    decode: impl FnMut(&mut BitReader<'_>, &mut Vec<u8>, usize) -> Result<(), Error>,
+) -> Result<usize, Error> {
+    gunzip_reusing_with_crc32(input, out, member, limit, decode, Crc32::compute)
+}
+
+pub(crate) fn gunzip_reusing_with_crc32(
+    input: &[u8],
+    out: &mut Vec<u8>,
+    member: &mut Vec<u8>,
+    limit: usize,
+    decode: impl FnMut(&mut BitReader<'_>, &mut Vec<u8>, usize) -> Result<(), Error>,
+    crc32: impl FnMut(&[u8]) -> u32,
+) -> Result<usize, Error> {
+    out.clear();
+    core::mem::swap(out, member);
+    out.clear();
+    member.clear();
+    let result = decode_members(input, out, member, limit, decode, crc32);
+    if let Err(error) = result {
+        if member.capacity() > out.capacity() {
+            core::mem::swap(out, member);
+        }
+        out.clear();
+        member.clear();
+        return Err(error);
+    }
+    member.clear();
+    Ok(out.len())
+}
+
+// Decompression needs the boundary, not owned header metadata. Inspect a
+// byte-aligned header without committing input; malformed or unaligned headers
+// use the public parser so error precedence and reader position stay exact.
+fn skip_gzip_header(r: &mut BitReader<'_>) -> Result<(), Error> {
+    if r.bit_pos() % 8 == 0 {
+        if let Some(header) = r.byte_window().first_chunk::<10>() {
+            if header[..3] == [0x1f, 0x8b, 8] && header[3] & 0xe0 == 0 {
+                if header[3] & !1 == 0 {
+                    r.skip_bits(80);
+                    return Ok(());
                 }
-                crate::block::BlockType::Fixed => {
-                    let lit = crate::huffman::fixed_litlen();
-                    let dst = crate::huffman::fixed_dist();
-                    crate::block::decode_huff_block(&lit, &dst, &mut r, &mut member, member_limit)?;
+                if let Some(bits) = optional_header_len(r.byte_window(), header[3])
+                    .and_then(|bytes| bytes.checked_mul(8))
+                    .filter(|&bits| bits <= r.bit_len().saturating_sub(r.bit_pos()))
+                {
+                    r.skip_bits(bits);
+                    return Ok(());
                 }
-                crate::block::BlockType::Dynamic => {
-                    let (lit, dst) = crate::block::read_dynamic_tables(&mut r)?;
-                    crate::block::decode_huff_block(&lit, &dst, &mut r, &mut member, member_limit)?;
-                }
-            }
-            if header.is_final {
-                break;
             }
         }
+    }
+    read_gzip_header(r).map(|_| ())
+}
+
+// The caller has checked the fixed ten-byte prefix and reserved flags. Keep
+// optional-field scanning and checksum setup off the common minimal-header path.
+#[inline(never)]
+fn optional_header_len(input: &[u8], flags: u8) -> Option<usize> {
+    let mut end = 10usize;
+    if flags & 4 != 0 {
+        let bytes = input.get(end..)?.first_chunk::<2>()?;
+        let len = u16::from_le_bytes(*bytes) as usize;
+        end += 2;
+        end = end.checked_add(len)?;
+        input.get(..end)?;
+    }
+    for flag in [8, 16] {
+        if flags & flag != 0 {
+            let len = input.get(end..)?.iter().position(|&byte| byte == 0)?;
+            end = end.checked_add(len + 1)?;
+        }
+    }
+    if flags & 2 != 0 {
+        let expected = u16::from_le_bytes(*input.get(end..)?.first_chunk::<2>()?);
+        if Crc32::compute(&input[..end]) as u16 != expected {
+            return None;
+        }
+        end += 2;
+    }
+    Some(end)
+}
+
+fn decode_members(
+    input: &[u8],
+    out: &mut Vec<u8>,
+    member: &mut Vec<u8>,
+    limit: usize,
+    mut decode: impl FnMut(&mut BitReader<'_>, &mut Vec<u8>, usize) -> Result<(), Error>,
+    mut crc32: impl FnMut(&[u8]) -> u32,
+) -> Result<(), Error> {
+    let mut offset = 0;
+    loop {
+        let mut r = BitReader::new(&input[offset..]);
+        skip_gzip_header(&mut r)?;
+        // Reuse scratch space, but never history, between members.
+        member.clear();
+        let member_limit = limit.saturating_sub(out.len());
+        decode(&mut r, member, member_limit)?;
         r.align_to_byte();
         let (expected_crc, expected_size) = read_gzip_trailer(&mut r)?;
-        if Crc32::compute(&member) != expected_crc {
+        if crc32(member) != expected_crc {
             return Err(Error::InvalidHuffmanTree);
         }
         if member.len() as u32 != expected_size {
             return Err(Error::InvalidStoredLength);
         }
         offset += r.bit_pos() / 8;
-        out.extend_from_slice(&member);
+        if out.is_empty() {
+            core::mem::swap(out, member);
+        } else {
+            out.extend_from_slice(member);
+        }
         let tail = &input[offset..];
         if tail.is_empty() || tail.iter().all(|&b| b == 0) {
-            return Ok(out);
+            return Ok(());
         }
         // Any non-padding tail must parse as another complete member.
     }
@@ -337,6 +437,104 @@ fn frame_gzip(input: &[u8], deflate_data: &[u8]) -> Vec<u8> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn compare_header_skip(input: &[u8], offset: usize) {
+        let mut fast = BitReader::new(input);
+        let mut reference = BitReader::new(input);
+        fast.skip_bits(offset);
+        reference.skip_bits(offset);
+        assert_eq!(
+            (skip_gzip_header(&mut fast), fast.bit_pos()),
+            (
+                read_gzip_header(&mut reference).map(|_| ()),
+                reference.bit_pos()
+            ),
+            "offset={offset}, input={input:?}"
+        );
+    }
+
+    #[test]
+    fn skipped_headers_preserve_public_parser_errors_and_positions() {
+        for flags in 0..32 {
+            for size in [0, 3, 31] {
+                let extra: Vec<u8> = (0..size).map(|i| (i * 71) as u8).collect();
+                let name = alloc::vec![b'n'; size];
+                let comment = alloc::vec![b'c'; size];
+                for offset in 0..8 {
+                    let mut writer = BitWriter::new();
+                    writer.write_bits(0x55, offset);
+                    write_gzip_header(
+                        &mut writer,
+                        GzipFlags::from_byte(flags),
+                        0xdeadbeef,
+                        2,
+                        255,
+                        Some(&extra),
+                        Some(&name),
+                        Some(&comment),
+                    );
+                    let input = writer.finish();
+                    for end in 0..=input.len() {
+                        compare_header_skip(&input[..end], offset as usize);
+                    }
+                    if offset == 0 {
+                        for index in 0..input.len() {
+                            let mut changed = input.clone();
+                            changed[index] ^= 0x80;
+                            compare_header_skip(&changed, 0);
+                        }
+                    }
+                }
+            }
+        }
+        let minimal = [0x1f, 0x8b, 8, 0, 0, 0, 0, 0, 0, 255];
+        for index in 0..minimal.len() {
+            for byte in 0..=255 {
+                let mut changed = minimal;
+                changed[index] = byte;
+                compare_header_skip(&changed, 0);
+            }
+        }
+    }
+
+    #[test]
+    fn skipped_large_optional_fields_and_past_end_positions_match() {
+        let extra = alloc::vec![0xa5; 65535];
+        let name = alloc::vec![b'x'; 8192];
+        let mut writer = BitWriter::new();
+        write_gzip_header(
+            &mut writer,
+            GzipFlags::from_byte(31),
+            123,
+            0,
+            3,
+            Some(&extra),
+            Some(&name),
+            Some(&name),
+        );
+        let input = writer.finish();
+        for end in [
+            0,
+            10,
+            11,
+            12,
+            65546,
+            65547,
+            input.len() - 2,
+            input.len() - 1,
+            input.len(),
+        ] {
+            compare_header_skip(&input[..end], 0);
+        }
+        for offset in [
+            input.len() * 8,
+            input.len() * 8 + 8,
+            usize::MAX - 7,
+            usize::MAX,
+        ] {
+            compare_header_skip(&input, offset);
+        }
+    }
 
     #[test]
     fn gzip_roundtrip_simple() {

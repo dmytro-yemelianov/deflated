@@ -29,10 +29,9 @@ impl<'a> BitReader<'a> {
         self.pos
     }
 
-    /// Total bits in the stream. `bytes.len()` is bounded by `isize::MAX`, so
-    /// this cannot overflow on any platform Rust supports.
+    /// Total bits in the stream, saturated to the representable bit offset.
     pub fn bit_len(&self) -> usize {
-        self.bytes.len() * 8
+        self.bytes.len().saturating_mul(8)
     }
 
     /// One bit, least significant first within each byte.
@@ -64,7 +63,7 @@ impl<'a> BitReader<'a> {
         if n > 32 {
             return Err(Error::InvalidCode);
         }
-        if self.pos + (n as usize) > self.bit_len() {
+        if self.pos > self.bit_len() || n as usize > self.bit_len() - self.pos {
             return Err(Error::UnexpectedEof);
         }
         // Same value as `n` calls to `read_bit` (the Lean `readBits` loop),
@@ -86,6 +85,21 @@ impl<'a> BitReader<'a> {
         Ok(((window >> (self.pos % 8)) & mask) as u32)
     }
 
+    /// A bounded lookahead for a whole Huffman token. At least 57 real bits
+    /// remain after shifting, enough for two 12-bit codes and their extras.
+    /// Loading ahead never changes the logical position or consumes a suffix.
+    #[inline]
+    pub(crate) fn peek_word(&self) -> Option<u64> {
+        let word = self.bytes.get(self.pos / 8..)?.first_chunk::<8>()?;
+        Some(u64::from_le_bytes(*word) >> (self.pos % 8))
+    }
+
+    /// Bytes beginning at the current (possibly partial) byte. A batch decoder
+    /// keeps its own bounded cursor and commits only complete tokens afterwards.
+    pub(crate) fn byte_window(&self) -> &[u8] {
+        self.bytes.get(self.pos / 8..).unwrap_or(&[])
+    }
+
     /// Consume `n` bits already examined with `peek_bits(m)`, `m >= n`.
     /// Saturating, so a misuse cannot panic; it would only leave the
     /// reader past the end, where every read is `UnexpectedEof`.
@@ -100,14 +114,14 @@ impl<'a> BitReader<'a> {
 
     /// Skip to the next byte boundary (RFC 1951 §3.2.4).
     pub fn align_to_byte(&mut self) {
-        self.pos = self.pos.div_ceil(8) * 8;
+        self.pos = self.pos.div_ceil(8).saturating_mul(8);
     }
 
     /// A byte-aligned little-endian `u16`. Aligns first, as `LEN`/`NLEN` need.
     pub fn read_aligned_u16_le(&mut self) -> Result<u16, Error> {
         let start = self.pos;
         self.align_to_byte();
-        if self.pos + 16 > self.bit_len() {
+        if self.pos > self.bit_len() || self.bit_len() - self.pos < 16 {
             self.pos = start;
             return Err(Error::UnexpectedEof);
         }

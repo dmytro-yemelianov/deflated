@@ -22,3 +22,20 @@ pub enum Error {
     /// Decoding would have produced more bytes than the caller allowed.
     OutputLimitExceeded,
 }
+
+impl core::fmt::Display for Error {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        f.write_str(match self {
+            Self::UnexpectedEof => "unexpected end of compressed input",
+            Self::InvalidBlockType => "invalid block type or container header",
+            Self::InvalidStoredLength => "invalid stored length or container size",
+            Self::InvalidHuffmanTree => "invalid Huffman tree or container checksum",
+            Self::InvalidCode => "invalid Huffman code",
+            Self::InvalidDistance => "invalid back-reference distance",
+            Self::InvalidLength => "invalid match length",
+            Self::OutputLimitExceeded => "decompressed output exceeds the limit",
+        })
+    }
+}
+
+impl core::error::Error for Error {}

@@ -176,3 +176,16 @@ fn read_bits_matches_bit_by_bit_reference_everywhere() {
         }
     }
 }
+
+#[test]
+fn skipped_past_address_space_reads_fail_without_overflow() {
+    let mut reader = BitReader::new(&[0xff; 8]);
+    reader.skip_bits(usize::MAX);
+    for n in [0, 1, 12, 32] {
+        assert_eq!(reader.peek_bits(n), Err(Error::UnexpectedEof));
+        assert_eq!(reader.read_bits(n), Err(Error::UnexpectedEof));
+        assert_eq!(reader.bit_pos(), usize::MAX);
+    }
+    assert_eq!(reader.read_aligned_u16_le(), Err(Error::UnexpectedEof));
+    assert_eq!(reader.bit_pos(), usize::MAX);
+}

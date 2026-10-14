@@ -17,6 +17,7 @@ pub mod bitwriter;
 pub mod block;
 pub mod compress;
 pub mod crc32;
+mod decode_table;
 pub mod deflate;
 pub mod encode_dynamic;
 pub mod encode_fixed;
@@ -36,5 +37,8 @@ pub mod zip;
 pub use compress::{default_split_for, deflate, deflate_with_level};
 pub use deflate::{MAX_STORED, deflate_stored};
 pub use error::Error;
-pub use inflate::{DEFAULT_LIMIT, inflate, inflate_with_limit};
+pub use gzip::{gunzip, gunzip_into};
+pub use inflate::{
+    DEFAULT_LIMIT, Decompressor, InflateResult, inflate, inflate_into, inflate_with_limit,
+};
 pub use matcher::CompressionLevel;

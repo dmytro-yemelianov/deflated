@@ -18,6 +18,12 @@ Persistent fuzz targets using `libfuzzer-sys` and `cargo-fuzz`.
 7. **`structured_roundtrip`**: Requires byte-exact DSC1 encode/decode recovery
    across the research settings, with bounded input length.
 
+8. **`reuse`**: Retains one `Decompressor` across fuzz inputs and compares raw/gzip results, errors and output with fresh calls. Exercises recovery, limits and explicit buffer release.
+
+9. **`gzip_header`**: Compares header rejection and accepted boundaries with the public metadata parser, then verifies an empty payload through fresh and reused gzip APIs.
+
+10. **`accel_gunzip`**: Compares a retained `deflate-accel` decoder with the core `gunzip_into`, including errors, limits, output clearing and buffer release, so the accelerated CRC cannot change observable results.
+
 DSC1 remains a rejected research prototype after the
 [campaign closure](../docs/new-methods-report.md). Its fuzz targets preserve
 finite regression evidence and do not establish formal verification or promotion.
@@ -25,6 +31,9 @@ finite regression evidence and do not establish formal verification or promotion
 ## Running
 
 ```bash
+cargo +nightly fuzz run gzip_header    -- -max_total_time=60 -rss_limit_mb=4096
+cargo +nightly fuzz run reuse          -- -max_total_time=60 -rss_limit_mb=4096
+cargo +nightly fuzz run accel_gunzip   -- -max_total_time=60 -rss_limit_mb=4096
 cargo +nightly fuzz run inflate        -- -max_total_time=60 -rss_limit_mb=4096
 cargo +nightly fuzz run dynamic_header -- -max_total_time=60 -rss_limit_mb=4096
 cargo +nightly fuzz run differential   -- -max_total_time=60 -rss_limit_mb=4096

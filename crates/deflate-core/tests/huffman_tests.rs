@@ -168,3 +168,46 @@ fn primary_table_width_matches_lean_model() {
         .expect("literal Lean table width");
     assert_eq!(deflate_core::huffman::TABLE_BITS, width);
 }
+
+#[test]
+fn shared_fixed_tables_equal_independently_built_tables() {
+    let lengths: Vec<u8> = (0..288)
+        .map(|symbol| match symbol {
+            0..=143 => 8,
+            144..=255 => 9,
+            256..=279 => 7,
+            _ => 8,
+        })
+        .collect();
+    assert_eq!(
+        deflate_core::huffman::fixed_litlen(),
+        HuffmanTable::from_lengths(&lengths, Completeness::Complete).unwrap()
+    );
+    assert_eq!(
+        deflate_core::huffman::fixed_dist(),
+        HuffmanTable::from_lengths(&[5; 32], Completeness::Complete).unwrap()
+    );
+}
+
+#[test]
+fn oversized_public_alphabets_do_not_overflow_or_truncate_symbols() {
+    for completeness in [Completeness::Complete, Completeness::AllowDegenerate] {
+        assert_eq!(
+            HuffmanTable::from_lengths(&vec![1; 65536], completeness),
+            Err(Error::InvalidHuffmanTree)
+        );
+    }
+    let mut lengths = vec![0; 65537];
+    lengths[65536] = 1;
+    assert_eq!(
+        HuffmanTable::from_lengths(&lengths, Completeness::AllowDegenerate),
+        Err(Error::InvalidHuffmanTree)
+    );
+    // Every representable symbol remains supported. Symbols too wide for
+    // the packed fast entry must fall back without losing their upper bits.
+    lengths[65536] = 0;
+    lengths[65535] = 1;
+    let table = HuffmanTable::from_lengths(&lengths, Completeness::AllowDegenerate).unwrap();
+    assert_eq!(table.decode(&mut BitReader::new(&[0; 3])), Ok(65535));
+    assert_eq!(table.decode_fast(&mut BitReader::new(&[0; 3])), Ok(65535));
+}

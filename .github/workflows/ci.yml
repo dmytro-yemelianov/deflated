@@ -19,6 +19,9 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Historical benchmark receipts audit their pinned source revision.
+          fetch-depth: 0
 
       - name: Show toolchain
         run: rustc --version && cargo --version && python3 --version
@@ -42,6 +45,7 @@ jobs:
           sh scripts/test_axiom_gate.sh
           cargo test --workspace
           cargo test --workspace --all-features
+          python3 scripts/test_library_bench.py
           python3 scripts/tuning_report.py --check
           python3 scripts/test_encoder_tools.py
           python3 scripts/test_encoder_parse.py

@@ -8,6 +8,7 @@ import hashlib
 import itertools
 import json
 from pathlib import Path
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORTS = ROOT / "scripts/reports"
@@ -33,7 +34,12 @@ def main():
     for relative, expected in rust["inputs_sha256"].items():
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected, relative
     for relative, expected in rust["baseline_core_sha256"].items():
-        assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected, relative
+        # This receipt describes the frozen b7 control, not today's library.
+        # Read its exact committed bytes; never rewrite a historical source pin
+        # to make a new implementation appear validated by the old experiment.
+        content = subprocess.check_output(
+            ["git", "show", f"{rust['baseline_revision']}:{relative}"], cwd=ROOT)
+        assert hashlib.sha256(content).hexdigest() == expected, relative
     baseline = read("new-methods-baseline-seal.json")
     assert rust["baseline_revision"] == baseline["revision"]
     assert rust["binaries"]["vdeflate"]["sha256"] == baseline["binaries"]["cli"]["sha256"]
