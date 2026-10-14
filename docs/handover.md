@@ -34,12 +34,21 @@ Lean, differential and framing oracles), the new accelerator tests and all ten
 evidence on one arm64 host; it does not make v11 a release candidate under the
 roadmap's release gate.
 
-Next work should target measured decoder costs: profile and optimize the raw
-DEFLATE hot path, measure table/setup overhead and memory, and add independent
-holdout inputs before making broader performance claims. Keep the portable
-core usable without optional dependencies, and compare against both native
-libraries using the existing pinned, alternating benchmark protocol. See the
-roadmap for sequencing and acceptance criteria.
+The [v12 hot-loop screen](library-decode-v12-report.md) then inspected the raw
+decode loop and screened three safe match-path changes. None improved paired
+medians, so none was kept, and sources are unchanged. An A/A run showed that
+pooled MB/s on a busy host moves by several percent between identical binaries.
+Gate future screens on paired medians as well. Its receipt is
+`scripts/reports/library-decode-v12-hot-loop.json.gz`.
+
+Next work should target measured decoder costs: attribute the raw gap with
+hardware counters (cycles, branch mispredicts, L1D misses) before writing more
+candidates, then optimize the raw DEFLATE hot path, measure table/setup
+overhead and memory, and add independent holdout inputs before making broader
+performance claims. Keep the portable core usable without optional
+dependencies, and compare against both native libraries using the existing
+pinned, alternating benchmark protocol. See the roadmap for sequencing and
+acceptance criteria.
 
 ## Historical record: 2026-10-07 closure
 

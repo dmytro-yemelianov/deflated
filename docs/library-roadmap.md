@@ -118,7 +118,10 @@ checkout when reconstructing that study; it intentionally rejects current code.
    Copy-region checks and small-distance call-state overhead have now also been
    screened and reduced. Gzip header consumption without metadata allocation is
    implemented and measured. An optional CRC backend is implemented and
-   measured on the current arm64 host. Next investigate the remaining decode
+   measured on the current arm64 host. A [v12 hot-loop screen](library-decode-v12-report.md)
+   rejected three safe match-path reshapings (no paired improvement; one
+   compiled identically); next attribute the raw gap with hardware counters
+   before writing further candidates. Next investigate the remaining decode
    gap, small-gzip latency, x86-64 behavior, and allocator/peak-memory costs.
    Evaluate whether the optional package boundary should cover more backends.
    Each change must
