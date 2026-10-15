@@ -6,7 +6,7 @@ Library development has resumed with a focus on a Rust DEFLATE/GZIP
 decompression library that can compete with zlib-ng and libdeflate. The active
 scope and priorities are in the [library roadmap](library-roadmap.md). The
 latest implementation and benchmark evidence are in the
-[v14 decode-candidates report](library-decode-v14-report.md).
+[v15 small-input report](library-decode-v15-report.md).
 
 The workspace now has an optional `deflate-accel` crate alongside
 `deflate-core`. The core remains `no_std`, dependency-free, and free of unsafe
@@ -80,11 +80,27 @@ passed:
 The receipt is `scripts/reports/library-decode-v14-decode-candidates.json.gz`.
 This is still diagnostic evidence from four pinned inputs, not release evidence.
 
-Next, correct the small-input timer (batched clock reads), then measure
-small-gzip latency, peak memory and independent holdout inputs on both
-architectures. The remaining gap to libdeflate is mainly instructions per
-byte (1.49× on x86-64). Candidates for it include multi-literal entries and a
-smaller distance root with subtables. Keep the portable core usable without
+The [v15 small-input study](library-decode-v15-report.md) added a batched
+timer mode to every worker (`--batched`; earlier tiny ns/call figures used
+per-call clock reads and are superseded). Profiles showed that dynamic-block
+headers dominate inputs below about 4 KiB. One of three candidates was kept:
+fused code-length decoding from a 64-bit lookahead word. Small-input paired
+medians improve 6.0% raw and 5.1% gzip (core, reused), dynamic 100 B–1 KiB
+cases by 9–17%, with no large-input file regressing beyond 2%. A `peek_bits`
+fast path was rejected for a reproducible 2.8–3.3% `go` gzip regression, and a
+wide-counter `prepare` for a 20% regression at 100 B. With reused state the
+core now beats libdeflate at 100 B but trails it by 8–59% from 1 KiB upward;
+the remaining small-input cost is mostly table construction. The gates passed
+(fmt, all-features clippy, `make test`, accelerator tests); fuzzing was not
+rerun for this change. The receipt is
+`scripts/reports/library-decode-v15-small-latency.json.gz`.
+
+Next, fuzz `dynamic_header` and `inflate` against the v15 change, reduce table
+construction cost for small dynamic blocks, run the small-input protocol on
+x86-64, and measure peak memory and independent holdout inputs on both
+architectures. The remaining large-input gap to libdeflate is mainly
+instructions per byte (1.49× on x86-64). Candidates for it include
+multi-literal entries and a smaller distance root with subtables. Keep the portable core usable without
 optional dependencies, and compare against both native libraries using the
 existing pinned, alternating benchmark protocol. See the roadmap for
 sequencing and acceptance criteria.

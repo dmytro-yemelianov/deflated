@@ -540,7 +540,27 @@ fn read_dynamic_lengths(
     let mut used = 0;
     while used < total {
         // The table is built anyway; `decodeSymFast_eq` holds for every code.
-        let sym = cl.decode_symbol(r)?;
+        // With a full word ahead (at least 57 bits), a 7-bit code and its at
+        // most 7 extra bits come from that word, consuming the same bits in
+        // the same order; otherwise, and on a miss, use the checked reader.
+        let (sym, mut ahead) = match r.peek_word() {
+            Some(word) if cl.lookup(word) & LITERAL != 0 => {
+                let entry = cl.lookup(word);
+                let bits = (entry >> 5) & 15;
+                r.skip_bits(bits as usize);
+                ((entry >> 16) as u16, Some(word >> bits))
+            }
+            _ => (cl.decode_symbol(r)?, None),
+        };
+        let mut extra = |n: u32| -> Result<usize, Error> {
+            match ahead.take() {
+                Some(word) => {
+                    r.skip_bits(n as usize);
+                    Ok((word & ((1 << n) - 1)) as usize)
+                }
+                None => Ok(r.read_bits(n)? as usize),
+            }
+        };
         match sym {
             0..=15 => {
                 lengths[used] = sym as u8;
@@ -551,7 +571,7 @@ fn read_dynamic_lengths(
                     Some(p) => *p,
                     None => return Err(Error::InvalidHuffmanTree),
                 };
-                let n = 3 + r.read_bits(2)? as usize;
+                let n = 3 + extra(2)?;
                 if used + n > total {
                     return Err(Error::InvalidHuffmanTree);
                 }
@@ -559,14 +579,14 @@ fn read_dynamic_lengths(
                 used += n;
             }
             17 => {
-                let n = 3 + r.read_bits(3)? as usize;
+                let n = 3 + extra(3)?;
                 if used + n > total {
                     return Err(Error::InvalidHuffmanTree);
                 }
                 used += n;
             }
             18 => {
-                let n = 11 + r.read_bits(7)? as usize;
+                let n = 11 + extra(7)?;
                 if used + n > total {
                     return Err(Error::InvalidHuffmanTree);
                 }

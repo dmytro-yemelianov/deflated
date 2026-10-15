@@ -1,6 +1,10 @@
 //! Whole-buffer public API benchmark. Input I/O is outside the timer.
 use std::{fs, hint::black_box, time::Instant};
 
+/// Batched mode: smallest timed batch and its call cap.
+const BATCH_NS: u128 = 100_000;
+const MAX_BATCH: u64 = 1 << 20;
+
 fn decode(packet: &[u8], frame: &str, expected: usize, out: &mut Vec<u8>) -> Result<(), String> {
     match frame {
         "raw" => {
@@ -25,9 +29,12 @@ fn run() -> Result<(), String> {
     let args: Vec<_> = std::env::args().collect();
     if args.len() != 9
         || args[2] != "core"
-        || !matches!(args[1].as_str(), "cold" | "warm" | "reuse-warm")
+        || !matches!(
+            args[1].as_str(),
+            "cold" | "warm" | "reuse-warm" | "batched-warm"
+        )
     {
-        return Err("library_decode cold|warm|reuse-warm core balanced raw|gzip PACKET OUTPUT MIN_NS EXPECTED".into());
+        return Err("library_decode cold|warm|reuse-warm|batched-warm core balanced raw|gzip PACKET OUTPUT MIN_NS EXPECTED".into());
     }
     let expected: usize = args[8].parse().map_err(|_| "expected size")?;
     let minimum: u128 = args[7].parse().map_err(|_| "duration")?;
@@ -42,7 +49,36 @@ fn run() -> Result<(), String> {
     fs::write(&args[6], &out).map_err(|e| e.to_string())?;
     let reuse = args[1] == "reuse-warm";
     let (mut duration, mut count) = (first as f64, 1u64);
-    if args[1] != "cold" {
+    let mut batch = 0u64;
+    if args[1] == "batched-warm" {
+        // Batched timer (v15): fresh output (and decoder) per call as in
+        // `warm`; calibrate untimed until one clock pair covers at least
+        // 100 µs. The last output of each batch is compared outside the timer.
+        let mut last = Vec::new();
+        let timed_batch = |batch: u64, last: &mut Vec<u8>| -> Result<u128, String> {
+            let start = Instant::now();
+            for _ in 0..batch {
+                let mut fresh = Vec::with_capacity(expected);
+                decode(black_box(&packet), &args[4], expected, &mut fresh)?;
+                *last = black_box(fresh);
+            }
+            Ok(start.elapsed().as_nanos())
+        };
+        batch = 1;
+        while timed_batch(batch, &mut last)? < BATCH_NS && batch < MAX_BATCH {
+            batch *= 2;
+        }
+        let mut elapsed = 0u128;
+        count = 0;
+        while elapsed < minimum {
+            elapsed += timed_batch(batch, &mut last)?;
+            count += batch;
+            if last != out {
+                return Err("batch output".into());
+            }
+        }
+        duration = elapsed as f64 / count as f64;
+    } else if args[1] != "cold" {
         let start = Instant::now();
         count = 0;
         loop {
@@ -67,8 +103,13 @@ fn run() -> Result<(), String> {
     } else {
         "fresh-decoder-only"
     };
+    let batch_field = if batch > 0 {
+        format!(",\"batch_calls\":{batch}")
+    } else {
+        String::new()
+    };
     println!(
-        "{{\"decode_ns\":{duration},\"first_decode_ns\":{first},\"decode_iterations\":{count},\"raw_bytes\":{},\"packed_bytes\":{},\"context\":\"{context}\",\"encoder_calls\":0}}",
+        "{{\"decode_ns\":{duration},\"first_decode_ns\":{first},\"decode_iterations\":{count},\"raw_bytes\":{},\"packed_bytes\":{},\"context\":\"{context}\",\"encoder_calls\":0{batch_field}}}",
         out.len(),
         packet.len()
     );

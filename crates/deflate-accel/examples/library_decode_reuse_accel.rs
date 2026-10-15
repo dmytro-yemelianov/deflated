@@ -1,6 +1,10 @@
 //! Whole-buffer public API benchmark. Input I/O is outside the timer.
 use std::{fs, hint::black_box, time::Instant};
 
+/// Batched mode: smallest timed batch and its call cap.
+const BATCH_NS: u128 = 100_000;
+const MAX_BATCH: u64 = 1 << 20;
+
 fn decode_reusing(
     decoder: &mut deflate_accel::Decompressor,
     packet: &[u8],
@@ -34,9 +38,12 @@ fn run() -> Result<(), String> {
     let args: Vec<_> = std::env::args().collect();
     if args.len() != 9
         || args[2] != "core"
-        || !matches!(args[1].as_str(), "context-warm" | "context-cold")
+        || !matches!(
+            args[1].as_str(),
+            "context-warm" | "context-cold" | "context-batched"
+        )
     {
-        return Err("library_decode_reuse_accel context-cold|context-warm core balanced raw|gzip PACKET OUTPUT MIN_NS EXPECTED".into());
+        return Err("library_decode_reuse_accel context-cold|context-warm|context-batched core balanced raw|gzip PACKET OUTPUT MIN_NS EXPECTED".into());
     }
     let expected: usize = args[8].parse().map_err(|_| "expected size")?;
     let minimum: u128 = args[7].parse().map_err(|_| "duration")?;
@@ -57,7 +64,52 @@ fn run() -> Result<(), String> {
     )?;
     let first = start.elapsed().as_nanos();
     let (mut duration, mut count) = (first as f64, 1u64);
-    if !cold {
+    let mut batch = 0u64;
+    if args[1] == "context-batched" {
+        // Batched timer (v15): calibrate untimed until one clock pair covers
+        // at least 100 µs, then time whole batches. Every call still checks
+        // its size; the bytes are compared after each batch, outside the timer.
+        let reference = out.clone();
+        batch = 1;
+        loop {
+            let start = Instant::now();
+            for _ in 0..batch {
+                decode_reusing(
+                    &mut decoder,
+                    black_box(&packet),
+                    &args[4],
+                    expected,
+                    &mut out,
+                )?;
+                black_box(&out);
+            }
+            if start.elapsed().as_nanos() >= BATCH_NS || batch >= MAX_BATCH {
+                break;
+            }
+            batch *= 2;
+        }
+        let mut elapsed = 0u128;
+        count = 0;
+        while elapsed < minimum {
+            let start = Instant::now();
+            for _ in 0..batch {
+                decode_reusing(
+                    &mut decoder,
+                    black_box(&packet),
+                    &args[4],
+                    expected,
+                    &mut out,
+                )?;
+                black_box(&out);
+            }
+            elapsed += start.elapsed().as_nanos();
+            count += batch;
+            if out != reference {
+                return Err("batch output".into());
+            }
+        }
+        duration = elapsed as f64 / count as f64;
+    } else if !cold {
         let start = Instant::now();
         count = 0;
         loop {
@@ -79,8 +131,13 @@ fn run() -> Result<(), String> {
     }
     fs::write(&args[6], &out).map_err(|e| e.to_string())?;
     let context = "reuse-state-output";
+    let batch_field = if batch > 0 {
+        format!(",\"batch_calls\":{batch}")
+    } else {
+        String::new()
+    };
     println!(
-        "{{\"decode_ns\":{duration},\"first_decode_ns\":{first},\"decode_iterations\":{count},\"raw_bytes\":{},\"packed_bytes\":{},\"context\":\"{context}\",\"encoder_calls\":0}}",
+        "{{\"decode_ns\":{duration},\"first_decode_ns\":{first},\"decode_iterations\":{count},\"raw_bytes\":{},\"packed_bytes\":{},\"context\":\"{context}\",\"encoder_calls\":0{batch_field}}}",
         out.len(),
         packet.len()
     );

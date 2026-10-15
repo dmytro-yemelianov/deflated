@@ -127,8 +127,12 @@ checkout when reconstructing that study; it intentionally rejects current code.
    (11-bit root with subtables, branch-free refill, BMI2 dispatch in
    `deflate-accel`) were kept: final raw paired medians are +7.0%/+8.7% on
    arm64 and +19.2%/+23.2% on x86-64 (core/accelerator), where the core now
-   matches zlib-ng. Next investigate the remaining decode
-   gap, small-gzip latency, x86-64 behavior, and allocator/peak-memory costs.
+   matches zlib-ng. [v15](library-decode-v15-report.md) adds a batched
+   small-input timer and fused code-length decoding (small-input paired
+   medians +6.0% raw / +5.1% gzip, dynamic 100 B–1 KiB +9–17%); a `peek_bits`
+   fast path and a wide-counter `prepare` were rejected. Next investigate table
+   construction for small dynamic blocks, the remaining large-input decode gap,
+   small-input behavior on x86-64, and allocator/peak-memory costs.
    Evaluate whether the optional package boundary should cover more backends.
    Each change must
    preserve exact errors/limits or document an approved

@@ -73,12 +73,31 @@ static Buffer decode_reusing(Buffer packet, size_t expected, const char *frame, 
     return out;
 }
 
+/* Batched mode: smallest timed batch and its call cap. A fresh call keeps
+ * the last output of the batch so it can be checked; earlier ones are freed
+ * inside the timer exactly as in `warm`. */
+#define BATCH_NS 100000u
+#define MAX_BATCH (1u << 20)
+static Buffer batched_call(Buffer packet, size_t expected, const char *frame, Buffer out, int reuse) {
+    if (reuse) {
+        out = decode_reusing(packet, expected, frame, out);
+        if (out.size) sink ^= out.data[out.size - 1];
+        return out;
+    }
+    Buffer next = decode_public(packet, expected, frame);
+    if (next.size) sink ^= next.data[next.size - 1];
+    free(out.data);
+    return next;
+}
+
 int main(int argc, char **argv) {
     if (argc == 2 && !strcmp(argv[1], "--version")) { version(); return 0; }
     require(argc == 9, "decoder warm|cold CODEC LEVEL raw|gzip PACKET OUT MIN_NS EXPECTED");
-    int reuse = !strcmp(argv[1], "context-warm") || !strcmp(argv[1], "context-cold");
+    int batched = !strcmp(argv[1], "batched-warm") || !strcmp(argv[1], "context-batched");
+    int reuse = !strcmp(argv[1], "context-warm") || !strcmp(argv[1], "context-cold") ||
+                !strcmp(argv[1], "context-batched");
     int cold = !strcmp(argv[1], "cold") || !strcmp(argv[1], "context-cold");
-    require(reuse || cold || !strcmp(argv[1], "warm"), "mode");
+    require(reuse || cold || batched || !strcmp(argv[1], "warm"), "mode");
     require(!strcmp(argv[2], names[NATIVE_CODEC]), "codec");
     uint64_t expected = number(argv[8]), minimum = number(argv[7]);
     require(expected <= (64 << 20), "output limit");
@@ -89,7 +108,30 @@ int main(int argc, char **argv) {
                          decode_public(packet, (size_t)expected, argv[4]);
     uint64_t first = clock_ns() - start, count = 1;
     double elapsed = (double)first;
-    if (!cold) {
+    uint64_t batch = 0;
+    if (batched) {
+        /* Batched timer (v15): calibrate untimed until one clock pair covers
+         * at least 100 us, then time whole batches. Every call keeps its full
+         * validation; bytes are compared after each batch, outside the timer. */
+        Buffer reference = allocate(out.size + 1);
+        memcpy(reference.data, out.data, out.size);
+        uint64_t total = 0;
+        for (batch = 1;; batch *= 2) {
+            uint64_t t = clock_ns();
+            for (uint64_t i = 0; i < batch; i++) out = batched_call(packet, (size_t)expected, argv[4], out, reuse);
+            if (clock_ns() - t >= BATCH_NS || batch >= MAX_BATCH) break;
+        }
+        count = 0;
+        while (total < minimum) {
+            uint64_t t = clock_ns();
+            for (uint64_t i = 0; i < batch; i++) out = batched_call(packet, (size_t)expected, argv[4], out, reuse);
+            total += clock_ns() - t;
+            count += batch;
+            require(out.size == expected && !memcmp(out.data, reference.data, out.size), "batch output");
+        }
+        elapsed = (double)total / (double)count;
+        free(reference.data);
+    } else if (!cold) {
         start = clock_ns(); count = 0;
         do {
             if (reuse) {
@@ -106,8 +148,10 @@ int main(int argc, char **argv) {
     }
     write_file(argv[6], out);
     printf("{\"decode_ns\":%.9g,\"first_decode_ns\":%" PRIu64 ",\"decode_iterations\":%" PRIu64
-           ",\"raw_bytes\":%zu,\"packed_bytes\":%zu,\"context\":\"%s\",\"encoder_calls\":0}\n",
+           ",\"raw_bytes\":%zu,\"packed_bytes\":%zu,\"context\":\"%s\",\"encoder_calls\":0",
            elapsed, first, count, out.size, packet.size, reuse ? "reuse-state-output" : "fresh-decoder-only");
+    if (batched) printf(",\"batch_calls\":%" PRIu64, batch);
+    printf("}\n");
     if (reuse_initialized) {
 #if NATIVE_CODEC == 2
         require(I_END(&cached_dec) == Z_OK, "reuse end");

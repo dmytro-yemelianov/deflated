@@ -128,6 +128,8 @@ def measure(args):
         args.candidate = ROOT / "target/release/examples" / ("library_decode_reuse" if args.reuse else "library_decode")
     cold_mode = "context-cold" if args.reuse else "cold"
     warm_mode = "context-warm" if args.reuse else "warm"
+    if args.batched:  # v15: many calls between clock reads; see the v15 report.
+        warm_mode = "context-batched" if args.reuse else "batched-warm"
     context = "reuse-state-output" if args.reuse else "fresh-decoder-only"
     if len(args.levels) != len(set(args.levels)):
         raise ValueError("duplicate compression levels")
@@ -234,6 +236,7 @@ def measure(args):
                         or sample["raw_bytes"] != packet["raw_bytes"]
                         or sample["packed_bytes"] != Path(packet["path"]).stat().st_size
                         or sample["decode_iterations"] < 1
+                        or args.batched != ("batch_calls" in sample)
                         or sample["decode_ns"] * sample["decode_iterations"] < args.minimum_ns * 0.999):
                     raise ValueError("timed decode failed validation")
                 rows.append({**packet, **sample, "method": method, "session": session})
@@ -260,6 +263,7 @@ def measure(args):
               "scope": manifest.get("scope", "custom diagnostic corpus") if manifest else
                        "diagnostic repository/synthetic/tiny corpus; no holdout or universal performance claim",
               "context": context,
+              "timer": "batched (>=100 us per clock pair)" if args.batched else "per-call clock read",
               "timing": "same packet per decoder; " +
                         ("reused state/output, initialization excluded from warm timer" if args.reuse else "fresh state/output per call") +
                         "; resident input, native gzip checksums; IO excluded",
@@ -280,6 +284,8 @@ def main():
     bench.add_argument("--candidate", type=Path, help="defaults to library_decode or library_decode_reuse according to --reuse")
     bench.add_argument("--baseline", type=Path)
     bench.add_argument("--reuse", action="store_true", help="reuse state AND output for every decoder")
+    bench.add_argument("--batched", action="store_true",
+                       help="time batches of calls between clock reads (v15 workers required)")
     bench.add_argument("--out", type=Path, required=True)
     bench.add_argument("--baseline-receipt", type=Path)
     bench.add_argument("--candidate-freeze", type=Path)
