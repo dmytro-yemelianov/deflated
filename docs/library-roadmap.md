@@ -123,8 +123,11 @@ checkout when reconstructing that study; it intentionally rejects current code.
    compiled identically). [v13 x86-64 counters](library-decode-v13-x86-counters.md)
    attribute the libdeflate gap mainly to instructions per token, then to
    mispredicts at refill and literal exits and to L1D misses at the 16 KiB
-   literal/length table. Next screen a smaller root table, branch-free refill
-   and an accelerator BMI2 path. Next investigate the remaining decode
+   literal/length table. The [v14 candidates](library-decode-v14-report.md)
+   (11-bit root with subtables, branch-free refill, BMI2 dispatch in
+   `deflate-accel`) were kept: final raw paired medians are +7.0%/+8.7% on
+   arm64 and +19.2%/+23.2% on x86-64 (core/accelerator), where the core now
+   matches zlib-ng. Next investigate the remaining decode
    gap, small-gzip latency, x86-64 behavior, and allocator/peak-memory costs.
    Evaluate whether the optional package boundary should cover more backends.
    Each change must

@@ -11,6 +11,15 @@ use alloc::{borrow::Cow, boxed::Box, vec::Vec};
 // lookup on a shorter dependency chain. Zero is a miss or reserved symbol.
 pub(crate) const LITERAL: u32 = 1 << 14;
 pub(crate) const END: u32 = 1 << 15;
+// A root entry for codes longer than the root width: END with index 31, which
+// no end-of-block action carries. Value is the subtable offset, code bits the
+// root width and total bits the subtable width. Checked only after END.
+const SUBTABLE: u32 = END | 31 << 9;
+
+#[inline(always)]
+pub(crate) fn is_subtable(entry: u32) -> bool {
+    entry & SUBTABLE == SUBTABLE
+}
 
 pub(crate) const fn action(symbol: u16, bits: u32, distance: bool) -> u32 {
     let (base, extra, index, flags) = if distance {
@@ -42,16 +51,33 @@ pub(crate) fn match_value(entry: u32, word: u64) -> usize {
 }
 
 pub(crate) trait TokenTable {
+    /// Root width.
     const BITS: u32;
+    /// Longest code that `lookup_full` resolves; `BITS` without subtables.
+    const MAX_BITS: u32;
+    /// Root entry: an action, a miss (zero) or a subtable pointer.
     fn lookup(&self, word: u64) -> u32;
+    /// The action addressed by a subtable pointer and the same `word`.
+    fn resolve(&self, entry: u32, word: u64) -> u32;
+    #[inline(always)]
+    fn lookup_full(&self, word: u64) -> u32 {
+        let entry = self.lookup(word);
+        if Self::MAX_BITS > Self::BITS && is_subtable(entry) {
+            self.resolve(entry, word)
+        } else {
+            entry
+        }
+    }
     fn decode_symbol(&self, reader: &mut BitReader<'_>) -> Result<u16, Error>;
 }
 
 #[derive(Debug)]
-pub(crate) struct PackedTable<const N: usize, const DISTANCE: bool> {
+pub(crate) struct PackedTable<const N: usize, const DISTANCE: bool, const SUB: bool = false> {
     counts: [u16; MAX_CODE_LEN + 1],
     symbols: Cow<'static, [u16]>,
     fast: Lookup<N>,
+    // Second-level entries for codes longer than the root (SUB only).
+    sub: Vec<u32>,
 }
 
 #[derive(Debug)]
@@ -78,7 +104,7 @@ impl<const N: usize> Lookup<N> {
     }
 }
 
-impl<const N: usize, const DISTANCE: bool> PackedTable<N, DISTANCE> {
+impl<const N: usize, const DISTANCE: bool, const SUB: bool> PackedTable<N, DISTANCE, SUB> {
     pub(crate) fn from_lengths(lengths: &[u8], completeness: Completeness) -> Result<Self, Error> {
         let mut symbols = Vec::new();
         let counts = prepare(lengths, completeness, &mut symbols)?;
@@ -86,6 +112,7 @@ impl<const N: usize, const DISTANCE: bool> PackedTable<N, DISTANCE> {
             counts,
             symbols: Cow::Owned(symbols),
             fast: Lookup::Built(Box::new([0; N])),
+            sub: Vec::new(),
         };
         table.build();
         Ok(table)
@@ -102,7 +129,7 @@ impl<const N: usize, const DISTANCE: bool> PackedTable<N, DISTANCE> {
     }
 
     fn build(&mut self) {
-        // Root widths are private power-of-two constants: 7, 9 and 12 bits.
+        // Root widths are private power-of-two constants: 7, 9 and 11 bits.
         let fast = self.fast.entries_mut();
         fast[..2].fill(0);
         let mut first = 0u32;
@@ -121,20 +148,72 @@ impl<const N: usize, const DISTANCE: bool> PackedTable<N, DISTANCE> {
                 fast.copy_within(..filled, filled);
             }
         }
+        self.sub.clear();
+        if !SUB {
+            return;
+        }
+        // Canonical codes sharing their first BITS bits are contiguous and
+        // non-decreasing in length, so each prefix's last code is its longest.
+        let root = Self::BITS;
+        let mut widest = [0u8; N];
+        let mut code = first;
+        for bits in root + 1..=MAX_CODE_LEN as u32 {
+            let count = u32::from(self.counts[bits as usize]);
+            for c in code..code + count {
+                widest[(c >> (bits - root)) as usize] = (bits - root) as u8;
+            }
+            code = (code + count) << 1;
+        }
+        let mut current = usize::MAX;
+        let mut base = 0;
+        for bits in root + 1..=MAX_CODE_LEN as u32 {
+            let count = self.counts[bits as usize];
+            for i in 0..count {
+                let c = first + u32::from(i);
+                let prefix = (c >> (bits - root)) as usize;
+                let width = u32::from(widest[prefix]);
+                if prefix != current {
+                    current = prefix;
+                    base = self.sub.len();
+                    self.sub.resize(base + (1 << width), 0);
+                    let slot = (prefix as u32).reverse_bits() >> (32 - root);
+                    fast[slot as usize] = (base as u32) << 16 | SUBTABLE | root << 5 | width;
+                }
+                let rest = bits - root;
+                let symbol = self.symbols[index + usize::from(i)];
+                let entry = action(symbol, bits, DISTANCE);
+                let mut slot = ((c & ((1 << rest) - 1)).reverse_bits() >> (32 - rest)) as usize;
+                while slot < 1 << width {
+                    self.sub[base + slot] = entry;
+                    slot += 1 << rest;
+                }
+            }
+            index += usize::from(count);
+            first = (first + u32::from(count)) << 1;
+        }
     }
 }
 
-impl<const N: usize, const DISTANCE: bool> TokenTable for PackedTable<N, DISTANCE> {
+impl<const N: usize, const DISTANCE: bool, const SUB: bool> TokenTable
+    for PackedTable<N, DISTANCE, SUB>
+{
     const BITS: u32 = N.trailing_zeros();
+    const MAX_BITS: u32 = if SUB { MAX_CODE_LEN as u32 } else { Self::BITS };
     #[inline(always)]
     fn lookup(&self, word: u64) -> u32 {
         self.fast.entries()[(word & (N as u64 - 1)) as usize]
     }
     #[inline]
+    fn resolve(&self, entry: u32, word: u64) -> u32 {
+        let index = (word >> Self::BITS) & ((1 << (entry & 31)) - 1);
+        let index = (entry >> 16) as usize + index as usize;
+        self.sub.get(index).copied().unwrap_or(0)
+    }
+    #[inline]
     fn decode_symbol(&self, reader: &mut BitReader<'_>) -> Result<u16, Error> {
         if let Ok(word) = reader.peek_bits(Self::BITS) {
             let entry = self.lookup(u64::from(word));
-            if entry != 0 {
+            if entry != 0 && !(SUB && is_subtable(entry)) {
                 reader.skip_bits(((entry >> 5) & 15) as usize);
                 return Ok(if entry & LITERAL != 0 {
                     (entry >> 16) as u16
@@ -149,7 +228,7 @@ impl<const N: usize, const DISTANCE: bool> TokenTable for PackedTable<N, DISTANC
     }
 }
 
-pub(crate) type LitTable = PackedTable<4096, false>;
+pub(crate) type LitTable = PackedTable<2048, false, true>;
 pub(crate) type DistTable = PackedTable<512, true>;
 pub(crate) type CodeTable = PackedTable<128, false>;
 
@@ -178,7 +257,7 @@ const fn fixed<const N: usize>(distance: bool) -> [u32; N] {
     fast
 }
 
-static FIXED_LIT: [u32; 4096] = fixed(false);
+static FIXED_LIT: [u32; 2048] = fixed(false);
 static FIXED_DIST: [u32; 512] = fixed(true);
 
 pub(crate) fn fixed_tables() -> (LitTable, DistTable) {
@@ -190,17 +269,19 @@ pub(crate) fn fixed_tables() -> (LitTable, DistTable) {
             counts: lit_counts,
             symbols: Cow::Borrowed(lit_symbols),
             fast: Lookup::Fixed(&FIXED_LIT),
+            sub: Vec::new(),
         },
         PackedTable {
             counts: dist_counts,
             symbols: Cow::Borrowed(dist_symbols),
             fast: Lookup::Fixed(&FIXED_DIST),
+            sub: Vec::new(),
         },
     )
 }
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use super::*;
     use crate::huffman::HuffmanTable;
 
@@ -237,21 +318,30 @@ mod tests {
         }
     }
 
-    fn compare<const N: usize, const DIST: bool>(lengths: &[u8], completeness: Completeness) {
-        let table = PackedTable::<N, DIST>::from_lengths(lengths, completeness).unwrap();
+    fn compare<const N: usize, const DIST: bool, const SUB: bool>(
+        lengths: &[u8],
+        completeness: Completeness,
+    ) {
+        let table = PackedTable::<N, DIST, SUB>::from_lengths(lengths, completeness).unwrap();
         let canonical = HuffmanTable::from_lengths(lengths, completeness).unwrap();
-        // Exhaust every root prefix, including misses and reserved symbols.
-        for prefix in 0..N {
-            let bytes = (prefix as u64).to_le_bytes();
+        let max = PackedTable::<N, DIST, SUB>::MAX_BITS;
+        // Exhaust every prefix the tables can resolve, including subtable
+        // codes, misses and reserved symbols. Bits above it must not matter.
+        for prefix in 0..1u64 << max {
+            let bytes = prefix.to_le_bytes();
             let mut reader = BitReader::new(&bytes);
             let symbol = canonical.decode(&mut reader);
             let expected = match symbol {
-                Ok(symbol) if reader.bit_pos() <= PackedTable::<N, DIST>::BITS as usize => {
+                Ok(symbol) if reader.bit_pos() <= max as usize => {
                     action(symbol, reader.bit_pos() as u32, DIST)
                 }
                 _ => 0,
             };
-            assert_eq!(table.lookup(prefix as u64), expected);
+            assert_eq!(table.lookup_full(prefix), expected, "prefix={prefix:#x}");
+            assert_eq!(table.lookup_full(prefix | u64::MAX << max), expected);
+            if !SUB {
+                assert!(!is_subtable(table.lookup(prefix)));
+            }
         }
         let mut seed = 0x1951_1952_1234_5678u64;
         for _ in 0..128 {
@@ -283,26 +373,66 @@ mod tests {
         }
         comb[256] = 15;
         comb[285] = 15;
-        compare::<4096, false>(&comb, Completeness::Complete);
-        compare::<4096, false>(&[8; 256], Completeness::Complete);
-        compare::<128, false>(
+        compare::<2048, false, true>(&comb, Completeness::Complete);
+        compare::<2048, false, true>(&[8; 256], Completeness::Complete);
+        for seed in 1..=24 {
+            compare::<2048, false, true>(
+                &random_complete_lengths(seed, 286),
+                Completeness::Complete,
+            );
+        }
+        compare::<128, false, false>(
             &[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15],
             Completeness::Complete,
         );
-        compare::<512, true>(&[5; 32], Completeness::Complete);
+        compare::<512, true, false>(&[5; 32], Completeness::Complete);
         for bits in 0..=15 {
             let mut lengths = [0; 30];
             lengths[29] = bits;
-            compare::<512, true>(&lengths, Completeness::AllowDegenerate);
+            compare::<512, true, false>(&lengths, Completeness::AllowDegenerate);
         }
+    }
+
+    /// A complete code with many 12..15-bit codes: split random leaves of a
+    /// one-leaf tree (preserving completeness), then shuffle the lengths.
+    pub(crate) fn random_complete_lengths(mut seed: u64, symbols: usize) -> alloc::vec::Vec<u8> {
+        let mut next = move || {
+            seed ^= seed << 13;
+            seed ^= seed >> 7;
+            seed ^= seed << 17;
+            seed
+        };
+        let mut leaves = alloc::vec![1u8, 1];
+        while leaves.len() < symbols {
+            // Favor the deepest splittable leaves to produce long codes.
+            let pick = leaves.len() - 1 - (next() as usize % leaves.len().min(4));
+            let i = if leaves[pick] < 15 {
+                pick
+            } else {
+                match leaves.iter().position(|&l| l < 15) {
+                    Some(i) => i,
+                    None => break,
+                }
+            };
+            leaves[i] += 1;
+            let length = leaves[i];
+            leaves.push(length);
+        }
+        for i in (1..leaves.len()).rev() {
+            leaves.swap(i, next() as usize % (i + 1));
+        }
+        leaves
     }
 
     #[test]
     fn packed_rebuild_clears_stale_entries_and_retains_allocations() {
-        let mut table = LitTable::from_lengths(&[8; 256], Completeness::Complete).unwrap();
+        // Start at the largest symbol count so retained capacity is observable.
+        let start = random_complete_lengths(3, 286);
+        let mut table = LitTable::from_lengths(&start, Completeness::Complete).unwrap();
         let fast = table.fast.entries().as_ptr();
         let symbols = table.symbols.as_ptr();
         for (lengths, completeness) in [
+            (random_complete_lengths(7, 286), Completeness::Complete),
             (alloc::vec![1, 1], Completeness::Complete),
             (alloc::vec![], Completeness::AllowDegenerate),
             (alloc::vec![15], Completeness::AllowDegenerate),
@@ -312,6 +442,7 @@ mod tests {
             table.rebuild(&lengths, completeness).unwrap();
             let rebuilt = LitTable::from_lengths(&lengths, completeness).unwrap();
             assert_eq!(table.fast.entries(), rebuilt.fast.entries());
+            assert_eq!(table.sub, rebuilt.sub);
             assert_eq!(table.fast.entries().as_ptr(), fast);
             assert_eq!(table.symbols.as_ptr(), symbols);
         }

@@ -53,7 +53,7 @@ pub fn read_stored(r: &mut BitReader, out: &mut Vec<u8>, budget: usize) -> Resul
 }
 
 use crate::decode_table::{
-    CodeTable, DistTable, END, LITERAL, LitTable, PackedTable, TokenTable, match_value,
+    CodeTable, DistTable, END, LITERAL, LitTable, PackedTable, TokenTable, is_subtable, match_value,
 };
 use crate::huffman::{HuffmanTable, TABLE_BITS};
 use crate::lz77::{
@@ -166,6 +166,7 @@ pub fn decode_huff_block(
     }
 }
 
+#[inline(always)]
 pub(crate) fn decode_tokens<L: TokenTable, D: TokenTable>(
     lit: &L,
     dist: &D,
@@ -211,6 +212,7 @@ pub(crate) fn decode_tokens<L: TokenTable, D: TokenTable>(
 // All writes are inside initialized `out`. At most thirty-seven bytes beyond
 // a match are copied; those bytes never enter history until subsequent tokens
 // write them. No token is committed on a miss, invalid distance or short input.
+#[inline(always)]
 fn decode_batch<L: TokenTable, D: TokenTable>(
     lit: &L,
     dist: &D,
@@ -219,28 +221,36 @@ fn decode_batch<L: TokenTable, D: TokenTable>(
     out: &mut [u8],
     mut cursor: usize,
 ) -> (usize, usize, bool) {
-    let max_bits = (L::BITS + 5 + D::BITS + 13).max(3 * L::BITS) as usize;
+    // Every token is bounded by one refill: a match uses at most
+    // L::MAX_BITS + 5 + D::BITS + 13 bits and a literal group one resolved
+    // code plus two root codes. The next root lookup then still has
+    // L::BITS valid bits.
+    const {
+        assert!(L::MAX_BITS + 5 + D::BITS + 13 <= 56 - L::BITS);
+        assert!(L::MAX_BITS + 2 * L::BITS <= 56 - L::BITS);
+    };
     let Some(bytes) = input.first_chunk::<8>() else {
         return (cursor, 0, false);
     };
-    let mut next = 8;
+    // Claim only the first seven bytes so `available` stays below 64 and
+    // the unconditional refill shift is always in range.
+    let mut next = 7;
     let mut word = u64::from_le_bytes(*bytes) >> offset;
-    let mut available = 64 - offset;
+    let mut available = 56 - offset;
     let mut entry = lit.lookup(word);
-    while cursor <= out.len() - 264 {
-        if available < max_bits {
-            let Some(bytes) = input.get(next..).and_then(|b| b.first_chunk::<8>()) else {
-                break;
-            };
-            // The logical bit position is next * 8 - available. Refill whole
-            // bytes without changing that position, retaining 56..63 bits.
-            // Bits above `available` may overlap the next load; they come from
-            // those same real input bytes, so OR preserves their values.
-            word |= u64::from_le_bytes(*bytes) << available;
-            next += (63 - available) / 8;
-            available |= 56;
-            entry = lit.lookup(word);
-        }
+    // Hoisting the input bound leaves the refill without a data-dependent
+    // branch. Each iteration consumes fewer bits than one refill supplies.
+    let last = input.len().saturating_sub(8);
+    while cursor <= out.len() - 264 && next <= last {
+        // The logical bit position is next * 8 - available. Refill whole
+        // bytes without changing that position, retaining 56..63 bits.
+        // Bits above `available` may overlap the next load; they come from
+        // those same real input bytes, so OR preserves their values. The
+        // preloaded entry used at least L::BITS valid bits and is unchanged.
+        let bytes: &[u8; 8] = input[next..][..8].try_into().unwrap();
+        word |= u64::from_le_bytes(*bytes) << available;
+        next += (63 - available) / 8;
+        available |= 56;
         if entry == 0 {
             break;
         }
@@ -261,6 +271,15 @@ fn decode_batch<L: TokenTable, D: TokenTable>(
             }
             continue;
         } else if entry & END != 0 {
+            if L::MAX_BITS > L::BITS && is_subtable(entry) {
+                // A refill just supplied at least 56 bits >= L::MAX_BITS.
+                // The resolved action is dispatched without consuming input.
+                entry = lit.resolve(entry, word);
+                if entry == 0 {
+                    break;
+                }
+                continue;
+            }
             return (cursor, next * 8 - available + bits - offset, true);
         } else {
             let len = match_value(entry, word);
@@ -334,6 +353,7 @@ fn copy_small_distance(out: &mut [u8], cursor: usize, distance: usize, len: usiz
     }
 }
 
+#[inline]
 fn decode_slice_token<L: TokenTable, D: TokenTable>(
     lit: &L,
     dist: &D,
@@ -359,6 +379,7 @@ fn decode_slice_token<L: TokenTable, D: TokenTable>(
     Ok(false)
 }
 
+#[inline]
 fn decode_huff_tail<L: TokenTable, D: TokenTable>(
     lit: &L,
     dist: &D,
@@ -366,7 +387,7 @@ fn decode_huff_tail<L: TokenTable, D: TokenTable>(
     out: &mut Vec<u8>,
     limit: usize,
 ) -> Result<(), Error> {
-    let max_bits = (L::BITS + 5 + D::BITS + 13) as usize;
+    let max_bits = (L::MAX_BITS + 5 + D::BITS + 13) as usize;
     let mut buffered = 0u64;
     let mut available = 0usize;
     loop {
@@ -378,7 +399,7 @@ fn decode_huff_tail<L: TokenTable, D: TokenTable>(
         }
         if available >= max_bits {
             let word = buffered;
-            let entry = lit.lookup(word);
+            let entry = lit.lookup_full(word);
             if entry != 0 {
                 let bits = (entry & 31) as usize;
                 if entry & LITERAL != 0 {
@@ -396,7 +417,7 @@ fn decode_huff_tail<L: TokenTable, D: TokenTable>(
                     return Ok(());
                 }
                 let len = match_value(entry, word);
-                let entry = dist.lookup(word >> bits);
+                let entry = dist.lookup_full(word >> bits);
                 if entry != 0 {
                     let distance = match_value(entry, word >> bits);
                     let bits = bits + (entry & 31) as usize;
@@ -462,11 +483,11 @@ pub(crate) struct DynamicTables {
     dist: Option<DistTable>,
 }
 
-fn update_table<'a, const N: usize, const DIST: bool>(
-    slot: &'a mut Option<PackedTable<N, DIST>>,
+fn update_table<'a, const N: usize, const DIST: bool, const SUB: bool>(
+    slot: &'a mut Option<PackedTable<N, DIST, SUB>>,
     lengths: &[u8],
     completeness: Completeness,
-) -> Result<&'a PackedTable<N, DIST>, Error> {
+) -> Result<&'a PackedTable<N, DIST, SUB>, Error> {
     match slot {
         Some(table) => {
             table.rebuild(lengths, completeness)?;
@@ -660,6 +681,100 @@ mod batch_tests {
                     (got, actual.bit_pos(), out),
                     (want, reference.bit_pos(), expected)
                 );
+            }
+        }
+    }
+
+    fn canonical_codes(lengths: &[u8]) -> Vec<u32> {
+        let mut count = [0u32; 16];
+        for &l in lengths {
+            count[usize::from(l)] += 1;
+        }
+        count[0] = 0;
+        let mut next = [0u32; 16];
+        for bits in 1..16 {
+            next[bits] = (next[bits - 1] + count[bits - 1]) << 1;
+        }
+        lengths
+            .iter()
+            .map(|&l| {
+                let code = next[usize::from(l)];
+                next[usize::from(l)] += 1;
+                code
+            })
+            .collect()
+    }
+
+    #[test]
+    fn subtable_literal_codes_match_symbol_blocks() {
+        // Dynamic literal/length codes up to fifteen bits exercise the
+        // second-level path inside the batch, the tail and slice tokens.
+        let history: Vec<u8> = (0..32768).map(|i| (i * 29 + i / 211) as u8).collect();
+        let dist_lengths = [5u8; 32];
+        let dist_codes = canonical_codes(&dist_lengths);
+        let packed_dist = DistTable::from_lengths(&dist_lengths, Completeness::Complete).unwrap();
+        let dist = HuffmanTable::from_lengths(&dist_lengths, Completeness::Complete).unwrap();
+        for seed in 1..=6u64 {
+            let lengths = crate::decode_table::tests::random_complete_lengths(seed, 286);
+            assert!(lengths.iter().any(|&l| l >= 14));
+            let codes = canonical_codes(&lengths);
+            let packed_lit = LitTable::from_lengths(&lengths, Completeness::Complete).unwrap();
+            let lit = HuffmanTable::from_lengths(&lengths, Completeness::Complete).unwrap();
+            let mut state = seed.wrapping_mul(0x9e37_79b9_7f4a_7c15);
+            let mut rand = move |n: u32| {
+                state ^= state << 13;
+                state ^= state >> 7;
+                state ^= state << 17;
+                (state % u64::from(n)) as u32
+            };
+            let mut writer = BitWriter::new();
+            for _ in 0..3000 {
+                // Prefer long codes: half of all symbols are the longest ones.
+                let symbol = if rand(2) == 0 {
+                    let longest = *lengths.iter().max().unwrap();
+                    let long: Vec<usize> = (0..286)
+                        .filter(|&s| lengths[s] == longest && s != 256)
+                        .collect();
+                    long[rand(long.len() as u32) as usize]
+                } else {
+                    let mut s = rand(286) as usize;
+                    if s == 256 {
+                        s = 0;
+                    }
+                    s
+                };
+                writer.write_code(codes[symbol], u32::from(lengths[symbol]));
+                if symbol > 256 {
+                    let extra = u32::from(LENGTH_EXTRA[symbol - 257]);
+                    writer.write_bits(rand(1 << extra), extra);
+                    let d = rand(30) as usize;
+                    writer.write_code(dist_codes[d], 5);
+                    let extra = u32::from(DIST_EXTRA[d]);
+                    writer.write_bits(rand(1 << extra), extra);
+                }
+            }
+            writer.write_code(codes[256], u32::from(lengths[256]));
+            let mut bytes = writer.finish();
+            bytes.extend_from_slice(&[0xa5; 16]);
+            for end in (0..bytes.len())
+                .step_by(331)
+                .chain([bytes.len() - 17, bytes.len()])
+            {
+                for additional in [0, 1, 263, 264, 265, 8192, 1 << 20] {
+                    let mut actual = BitReader::new(&bytes[..end]);
+                    let mut reference = BitReader::new(&bytes[..end]);
+                    let mut out = history.clone();
+                    let mut expected = history.clone();
+                    let limit = history.len() + additional;
+                    let got =
+                        decode_tokens(&packed_lit, &packed_dist, &mut actual, &mut out, limit);
+                    let want = decode_huff_block(&lit, &dist, &mut reference, &mut expected, limit);
+                    assert_eq!(
+                        (got, actual.bit_pos(), out),
+                        (want, reference.bit_pos(), expected),
+                        "seed={seed}, end={end}, additional={additional}"
+                    );
+                }
             }
         }
     }

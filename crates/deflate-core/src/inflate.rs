@@ -82,12 +82,14 @@ pub(crate) fn decode_into(
     decode_reusing(&mut crate::block::DynamicTables::default(), r, out, limit)
 }
 
-#[inline]
-fn decode_blocks(
+// Always inlined, with its hot callees, so an optional crate can compile the
+// same safe decoder inside a function with additional target features.
+#[inline(always)]
+pub(crate) fn decode_reusing(
+    tables: &mut crate::block::DynamicTables,
     r: &mut BitReader<'_>,
     out: &mut Vec<u8>,
     limit: usize,
-    mut dynamic: impl FnMut(&mut BitReader<'_>, &mut Vec<u8>, usize) -> Result<(), Error>,
 ) -> Result<(), Error> {
     loop {
         let header = read_block_header(r)?;
@@ -96,39 +98,30 @@ fn decode_blocks(
                 let budget = limit.saturating_sub(out.len());
                 read_stored(r, out, budget)?;
             }
-            BlockType::Fixed => {
-                if r.byte_window().len() < 64 {
-                    // Avoid batch/table-action setup for tiny fixed blocks.
-                    // This is the existing compact symbol decoder, with the
-                    // same cursor, suffix and error behavior as the bulk path.
-                    let lit = crate::huffman::fixed_litlen();
-                    let dst = crate::huffman::fixed_dist();
-                    decode_huff_block(&lit, &dst, r, out, limit)?;
-                } else {
-                    let (lit, dst) = fixed_tables();
-                    decode_tokens(&lit, &dst, r, out, limit)?;
-                }
+            BlockType::Fixed if r.byte_window().len() < 64 => {
+                // Avoid batch/table-action setup for tiny fixed blocks.
+                // This is the existing compact symbol decoder, with the
+                // same cursor, suffix and error behavior as the bulk path.
+                let lit = crate::huffman::fixed_litlen();
+                let dst = crate::huffman::fixed_dist();
+                decode_huff_block(&lit, &dst, r, out, limit)?;
             }
-            BlockType::Dynamic => {
-                dynamic(r, out, limit)?;
+            btype => {
+                // One call site keeps a single inlined copy of the bulk loop.
+                let fixed;
+                let (lit, dist) = if btype == BlockType::Fixed {
+                    fixed = fixed_tables();
+                    (&fixed.0, &fixed.1)
+                } else {
+                    tables.read(r)?
+                };
+                decode_tokens(lit, dist, r, out, limit)?;
             }
         }
         if header.is_final {
             return Ok(());
         }
     }
-}
-
-fn decode_reusing(
-    tables: &mut crate::block::DynamicTables,
-    r: &mut BitReader<'_>,
-    out: &mut Vec<u8>,
-    limit: usize,
-) -> Result<(), Error> {
-    decode_blocks(r, out, limit, |r, out, limit| {
-        let (lit, dist) = tables.read(r)?;
-        decode_tokens(lit, dist, r, out, limit)
-    })
 }
 
 /// Whole-buffer DEFLATE/gzip decoder with reusable working allocations.
@@ -171,6 +164,7 @@ impl Decompressor {
 
     /// Decode one raw stream, replacing output and returning its consumption.
     /// See [`inflate_into`] for suffix, limit and error behavior.
+    #[inline(always)]
     pub fn inflate_into(
         &mut self,
         input: &[u8],
@@ -206,6 +200,7 @@ impl Decompressor {
     /// The default [`Self::gunzip_into`] keeps the portable implementation in
     /// this crate. This hook lets a separate platform crate provide hardware
     /// acceleration without adding dependencies or `unsafe` to the core.
+    #[inline(always)]
     pub fn gunzip_into_with_crc32(
         &mut self,
         input: &[u8],
@@ -218,7 +213,7 @@ impl Decompressor {
             out,
             &mut self.member,
             limit,
-            |r, out, limit| decode_reusing(&mut self.tables, r, out, limit),
+            &mut self.tables,
             crc32,
         )
     }

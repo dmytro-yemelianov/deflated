@@ -6,7 +6,7 @@ Library development has resumed with a focus on a Rust DEFLATE/GZIP
 decompression library that can compete with zlib-ng and libdeflate. The active
 scope and priorities are in the [library roadmap](library-roadmap.md). The
 latest implementation and benchmark evidence are in the
-[v11 CRC accelerator report](library-decode-v11-crc-accelerator.md).
+[v14 decode-candidates report](library-decode-v14-report.md).
 
 The workspace now has an optional `deflate-accel` crate alongside
 `deflate-core`. The core remains `no_std`, dependency-free, and free of unsafe
@@ -53,18 +53,40 @@ cuts instructions by 9% per raw byte. No source changed. The receipt is
 `scripts/reports/library-decode-v13-x86-counters.json.gz`; arm64 counters
 were not measured.
 
-Next work should target those measured costs. Screen each candidate
-separately with paired medians on both arm64 and x86-64:
+The [v14 decode candidates](library-decode-v14-report.md) implemented all
+three v13 candidates and kept them after separate paired-median screens on both
+hosts: an 11-bit literal/length root with subtables, a branch-free refill, and
+BMI2 runtime dispatch in `deflate-accel`. That dispatch adds two guarded
+`unsafe` calls; the core stays `forbid(unsafe_code)`, and the boundary is
+documented in the accelerator README. The final paired raw medians, with
+gzip in brackets, are:
 
-1. A 10–11-bit literal/length root table with a second-level path.
-2. A branch-free fast-loop refill.
-3. A BMI2 path in `deflate-accel`. This needs a design decision on the
-   accelerator's unsafe and target-feature boundary.
+| Host | Core | Accelerator |
+|---|---:|---:|
+| arm64 | +7.0% (+5.0%) | +8.7% (+7.1%) |
+| x86-64 | +19.2% (+8.1%) | +23.2% (+24.5%) |
 
-Then measure table/setup overhead and memory, and add independent holdout
-inputs before making broader performance claims. Keep the portable core usable
-without optional dependencies, and compare against both native libraries using
-the existing pinned, alternating benchmark protocol. See the roadmap for
+On x86-64 the core now matches zlib-ng raw, and the accelerator exceeds it on
+raw and gzip. libdeflate remains 36–41% faster on x86-64 and about 23% faster
+on arm64. Forced inlining grows the arm64 worker's code by 3–5%. The gates all
+passed:
+
+- fmt and clippy, including an x86-64 clippy run
+- a `no_std` target build
+- `make test` and the accelerator tests
+- all ten fuzz targets
+- the x86-64 tests on the BMI2 path
+
+The receipt is `scripts/reports/library-decode-v14-decode-candidates.json.gz`.
+This is still diagnostic evidence from four pinned inputs, not release evidence.
+
+Next, correct the small-input timer (batched clock reads), then measure
+small-gzip latency, peak memory and independent holdout inputs on both
+architectures. The remaining gap to libdeflate is mainly instructions per
+byte (1.49× on x86-64). Candidates for it include multi-literal entries and a
+smaller distance root with subtables. Keep the portable core usable without
+optional dependencies, and compare against both native libraries using the
+existing pinned, alternating benchmark protocol. See the roadmap for
 sequencing and acceptance criteria.
 
 ## Historical record: 2026-10-07 closure

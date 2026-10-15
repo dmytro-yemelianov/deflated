@@ -259,38 +259,30 @@ pub fn gunzip(input: &[u8], limit: usize) -> Result<Vec<u8>, Error> {
 /// zero padding have the same behavior as [`gunzip`]. The returned size equals
 /// `out.len()`. This API consumes the whole input and is not streaming.
 pub fn gunzip_into(input: &[u8], out: &mut Vec<u8>, limit: usize) -> Result<usize, Error> {
-    gunzip_reusing(
+    gunzip_reusing_with_crc32(
         input,
         out,
         &mut Vec::new(),
         limit,
-        crate::inflate::decode_into,
+        &mut crate::block::DynamicTables::default(),
+        Crc32::compute,
     )
 }
 
-pub(crate) fn gunzip_reusing(
-    input: &[u8],
-    out: &mut Vec<u8>,
-    member: &mut Vec<u8>,
-    limit: usize,
-    decode: impl FnMut(&mut BitReader<'_>, &mut Vec<u8>, usize) -> Result<(), Error>,
-) -> Result<usize, Error> {
-    gunzip_reusing_with_crc32(input, out, member, limit, decode, Crc32::compute)
-}
-
+#[inline(always)]
 pub(crate) fn gunzip_reusing_with_crc32(
     input: &[u8],
     out: &mut Vec<u8>,
     member: &mut Vec<u8>,
     limit: usize,
-    decode: impl FnMut(&mut BitReader<'_>, &mut Vec<u8>, usize) -> Result<(), Error>,
+    tables: &mut crate::block::DynamicTables,
     crc32: impl FnMut(&[u8]) -> u32,
 ) -> Result<usize, Error> {
     out.clear();
     core::mem::swap(out, member);
     out.clear();
     member.clear();
-    let result = decode_members(input, out, member, limit, decode, crc32);
+    let result = decode_members(input, out, member, limit, tables, crc32);
     if let Err(error) = result {
         if member.capacity() > out.capacity() {
             core::mem::swap(out, member);
@@ -355,12 +347,13 @@ fn optional_header_len(input: &[u8], flags: u8) -> Option<usize> {
     Some(end)
 }
 
+#[inline(always)]
 fn decode_members(
     input: &[u8],
     out: &mut Vec<u8>,
     member: &mut Vec<u8>,
     limit: usize,
-    mut decode: impl FnMut(&mut BitReader<'_>, &mut Vec<u8>, usize) -> Result<(), Error>,
+    tables: &mut crate::block::DynamicTables,
     mut crc32: impl FnMut(&[u8]) -> u32,
 ) -> Result<(), Error> {
     let mut offset = 0;
@@ -370,7 +363,7 @@ fn decode_members(
         // Reuse scratch space, but never history, between members.
         member.clear();
         let member_limit = limit.saturating_sub(out.len());
-        decode(&mut r, member, member_limit)?;
+        crate::inflate::decode_reusing(tables, &mut r, member, member_limit)?;
         r.align_to_byte();
         let (expected_crc, expected_size) = read_gzip_trailer(&mut r)?;
         if crc32(member) != expected_crc {
