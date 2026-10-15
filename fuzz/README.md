@@ -22,7 +22,7 @@ Persistent fuzz targets using `libfuzzer-sys` and `cargo-fuzz`.
 
 9. **`gzip_header`**: Compares header rejection and accepted boundaries with the public metadata parser, then verifies an empty payload through fresh and reused gzip APIs.
 
-10. **`accel_gunzip`**: Compares a retained `deflate-accel` decoder with the core `gunzip_into`, including errors, limits, output clearing and buffer release, so the accelerated CRC cannot change observable results.
+10. **`accel_gunzip`**: Compares a retained `deflate-accel` decoder with the core `inflate_into`/`gunzip_into` on arbitrary and freshly compressed raw/gzip input, including errors, limits, output clearing and buffer release, so neither the accelerated CRC nor the x86-64 BMI2 decode path can change observable results.
 
 DSC1 remains a rejected research prototype after the
 [campaign closure](../docs/new-methods-report.md). Its fuzz targets preserve
