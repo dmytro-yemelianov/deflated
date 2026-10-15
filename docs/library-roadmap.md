@@ -142,6 +142,14 @@ checkout when reconstructing that study; it intentionally rejects current code.
    both arm64 and x86-64. Measure first call, warm fresh calls, reuse, peak memory
    and linked size. Freeze candidates before independent evaluation; include
    uncertainty and per-file regressions, not only aggregate throughput.
+   The first preregistered evaluation ([v16](library-decode-v16-holdout-report.md))
+   froze `2222a1d` and used the pinned validation partition on arm64 and x86-64.
+   No workload met the both-references rule: libdeflate led every cell.
+   `deflate-accel` beat zlib-ng on most arm64 bands, and the portable core beat
+   it only on arm64 raw. Malformed-input agreement with zlib was complete. The
+   test partition stays reserved for the release decision. Open measurement gaps
+   are Linux peak RSS (the v16 method was invalid there) and decoder-only
+   linked size.
 4. **Packaging:** verify an external Cargo consumer and publishable package,
    document API stability and supported targets, and prepare a versioned release
    only after the correctness and performance contract is satisfied.

@@ -1,12 +1,13 @@
 # Maintenance handover
 
-## Current handover — 2026-10-14
+## Current handover — 2026-10-15
 
 Library development has resumed with a focus on a Rust DEFLATE/GZIP
 decompression library that can compete with zlib-ng and libdeflate. The active
 scope and priorities are in the [library roadmap](library-roadmap.md). The
-latest implementation and benchmark evidence are in the
-[v15 small-input report](library-decode-v15-report.md).
+latest evidence is the
+[v16 holdout evaluation](library-decode-v16-holdout-report.md); the latest
+implementation change is in the [v15 small-input report](library-decode-v15-report.md).
 
 The workspace now has an optional `deflate-accel` crate alongside
 `deflate-core`. The core remains `no_std`, dependency-free, and free of unsafe
@@ -95,15 +96,39 @@ the remaining small-input cost is mostly table construction. The gates passed
 rerun for this change. The receipt is
 `scripts/reports/library-decode-v15-small-latency.json.gz`.
 
-Next, fuzz `dynamic_header` and `inflate` against the v15 change, reduce table
-construction cost for small dynamic blocks, run the small-input protocol on
-x86-64, and measure peak memory and independent holdout inputs on both
-architectures. The remaining large-input gap to libdeflate is mainly
-instructions per byte (1.49× on x86-64). Candidates for it include
-multi-literal entries and a smaller distance root with subtables. Keep the portable core usable without
-optional dependencies, and compare against both native libraries using the
-existing pinned, alternating benchmark protocol. See the roadmap for
-sequencing and acceptance criteria.
+The v15 change was fuzzed before commit (`dynamic_header`, `dynamic_lengths`,
+`inflate`, `differential`, `reuse`, 60 s each, no findings), and the BMI2 path
+was fuzzed on x86-64 for 10 minutes (`accel_gunzip`, no findings).
+
+The [v16 holdout evaluation](library-decode-v16-holdout-report.md) is the first
+independent test. It was preregistered
+([protocol](library-decode-v16-preregistration.md)) before any timing, with the
+candidate frozen at `2222a1d`. It used eleven pinned bodies from the
+never-tuned **validation** partition plus derived 600-byte prefixes and a
+5 MiB concatenation; 414 packets in all (three encoders × levels 1/6/9, raw
+and gzip). It ran on both arm64 and x86-64, fresh and reused. **No workload
+met the release rule** of matching or beating both references: libdeflate was
+faster in every cell. Against zlib-ng alone, `deflate-accel` passes in every
+arm64 band (reuse) and in small/large bands on x86-64. The portable core
+passes only for raw input on arm64. The portable gzip CRC caps core gzip on
+compressible data (spark: 0.28× libdeflate core vs 0.72× accel). On 1,242
+malformed inputs per architecture, all decoders agreed with Python zlib.
+x86-64 peak-RSS figures are invalid due to a fork-before-exec artifact; arm64
+shows core using 50–130 KiB more RSS than the references. The receipt is
+`scripts/reports/library-decode-v16-holdout.json.gz` (`archive_v16_holdout.py
+--check` re-derives every verdict). The **test** partition remains untouched
+and is reserved for a future release decision; the validation partition is
+now spent for tuning claims.
+
+Next work: speed up the portable gzip CRC, or document `deflate-accel` as the
+gzip path; reduce x86-64 instructions per byte in the bulk loop (multi-literal
+entries, a smaller distance root with subtables); and reduce table-construction
+cost for small dynamic blocks. Two measurement fixes are also needed: a Linux
+peak-RSS method that measures the worker alone, and a decoder-only
+linked-size comparison. Keep the portable core usable without optional
+dependencies, and compare against both native libraries using the existing
+pinned, alternating benchmark protocol. See the roadmap for sequencing and
+acceptance criteria.
 
 ## Historical record: 2026-10-07 closure
 
